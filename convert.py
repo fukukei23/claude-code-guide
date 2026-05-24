@@ -213,6 +213,13 @@ CHAPTER_TEMPLATE = Template("""\
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI {{ title }}の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="{{ title }} — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI {{ title }}の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/{{ slug }}.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
@@ -293,6 +300,12 @@ INDEX_TEMPLATE = Template("""\
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claude Code 完全ガイド</title>
     <meta name="description" content="AIコーディングアシスタント Claude Code CLI の使い方を基礎から応用まで完全解説">
+    <meta property="og:title" content="Claude Code 完全ガイド">
+    <meta property="og:description" content="AIコーディングアシスタント Claude Code CLI の使い方を基礎から応用まで完全解説">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="assets/style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
@@ -552,6 +565,7 @@ def main():
 
         full_html = CHAPTER_TEMPLATE.render(
             title=ch["title"],
+            slug=ch["slug"],
             current_slug=ch["slug"],
             content=html_body,
             chapters=chapters,
