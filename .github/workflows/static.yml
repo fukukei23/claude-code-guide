@@ -26,7 +26,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install markdown-it-py jinja2
+        run: pip install markdown-it-py jinja2 pytest
+
+      - name: Run tests
+        run: python3 -m pytest test_convert.py -v
 
       - name: Convert Markdown to HTML
         run: python3 convert.py
