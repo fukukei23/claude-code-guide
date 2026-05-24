@@ -45,6 +45,48 @@ REMOVE_PATTERNS = [
     "あなたの",
 ]
 
+INLINE_REPLACEMENTS = [
+    # 個人ルーティング情報 → 汎用化
+    (r"GLM-5\.1にルーティング", "Anthropic APIまたは代替プロバイダー経由で利用可能"),
+    (r"GLM-4\.7にルーティング", "Anthropic APIまたは代替プロバイダー経由で利用可能"),
+    (r"GLM-4\.5-Airにルーティング", "Anthropic APIまたは代替プロバイダー経由で利用可能"),
+    (r"GLM-5\.1がデフォルト", "デフォルトモデルが自動選択"),
+    (r"あなたの環境:\s*GLM-5\.1\s*→\s*MiniMax\s*→\s*Sonnet", "モデルは /model コマンドで切替可能"),
+    (r"あなたの環境ではGLM-5\.1にルーティング", "API経由で利用可能"),
+    (r"あなたの環境ではGLM-4\.7にルーティング", "API経由で利用可能"),
+    (r"GLM-4\.5-Air に切替", "Haiku に切替"),
+    (r"GLM-4\.7 に戻す", "Sonnet に戻す"),
+    (r"通常タスク → 🟡 GLM-5\.1（glm_ask経由）", "通常タスク → Opus または Sonnet"),
+    (r"フォールバック → 🟠 MiniMax（minimax_ask経由）", "フォールバック → Haiku"),
+    (r"大量処理委譲 → 🟠 MiniMax（自動委譲）", "大量処理 → Haiku等の軽量モデル"),
+    # 内部パス参照 → 除去
+    (r"→ `00_SYSTEM/共通ルール/LLMルーティング\.md`", ""),
+    (r"→ `00_SYSTEM/MCPツール使い分けガイド\.md`", ""),
+    (r"あなたのobsidian-ssotリポジトリがこれに該当。", "単一リポジトリで一元管理する構成がこれに該当。"),
+    (r"あなたのグローバルCLAUDE\.mdに含まれるもの:", "グローバルCLAUDE.mdに含まれるもの:"),
+    (r"あなたの現在のメイン環境（WSL2）", "Linuxターミナル環境"),
+    (r"LLMルーティング（GLM → MiniMax → Sonnet）", "モデルルーティング（上位モデル → バランス型 → 軽量型）"),
+    (r"バッジ表示ルール（🟡\[GLM\]等）", "使用モデル表示ルール"),
+    (r"GLM-5\.1", "Claude"),
+    (r"GLM-4\.7", "Claude"),
+    (r"GLM-4\.5-Air", "Claude"),
+    (r"LLM（Claude / GLM / MiniMax）", "LLM（Claude）"),
+    (r"Claude, GLM, MiniMax等", "Claude等"),
+    (r"Opus/Sonnet/Haiku \+ GLM", "Opus / Sonnet / Haiku"),
+    # 「あなたの設定」テーブル列 → 行ごと書き換え
+    (r"\| あなたの設定 \|.*?\|", "| 備考 | なし |"),
+]
+
+TABLE_COL_SANITIZE = [
+    # テーブルヘッダーから「あなたの設定」列を除去するパターン
+    (r"\|\s*あなたの設定\s*\|", "| 備考 |"),
+    (r"\|\s*`~/.secrets\.env`\s+からAPIキーを注入.*?\|", "| APIキーは環境変数で管理 |"),
+    (r"\|\s*`check-command-safety\.py`\s+が危険コマンドを自動ブロック.*?\|", "| 危険コマンドを自動ブロック |"),
+    (r"\|\s*MCP設定変更時の使い分けガイド自動更新.*?\|", "| 設定変更を自動検知 |"),
+    (r"\|\s*セッション終了時のサマリー記録.*?\|", "| セッション終了時に記録 |"),
+    (r"\|\s*Anthropic APIまたは代替プロバイダー経由で利用可能\s*\|", "| API経由で利用可能 |"),
+]
+
 MERMAID_DIAGRAMS = {
     "01_基礎概念.md": [
         (
@@ -148,14 +190,14 @@ MERMAID_DIAGRAMS = {
         (
             "## モデル切替",
             """graph TD
-    A["📋 タスク受付"] --> B{"GLM-5.1<br/>デフォルト"}
+    A["📋 タスク受付"] --> B{"Opus<br/>デフォルト"}
     B -->|"成功"| C["✅ 結果返却"]
-    B -->|"失敗"| D{"MiniMax<br/>フォールバック"}
+    B -->|"失敗"| D{"Haiku<br/>フォールバック"}
     D -->|"成功"| C
-    B -->|"大量処理"| E["MiniMaxに委譲"]
+    B -->|"大量処理"| E["軽量モデルに委譲"]
     E --> C
-    B -->|"高品質必要"| F{"👤 ユーザー許可"}
-    F -->|"許可"| G["Sonnetで処理"]
+    B -->|"高品質必要"| F{"👤 ユーザー確認"}
+    F -->|"許可"| G["上位モデルで処理"]
     G --> C
     F -->|"拒否"| B""",
         ),
@@ -296,7 +338,7 @@ INDEX_TEMPLATE = Template("""\
                 <div class="feature-item">
                     <span class="feature-icon">📱</span>
                     <h3>モバイル対応</h3>
-                    <p>スマホからいつでも見返せるレスポンシブ设计</p>
+                    <p>スマホからいつでも見返せるレスポンシブデザイン</p>
                 </div>
                 <div class="feature-item">
                     <span class="feature-icon">🌙</span>
@@ -351,6 +393,16 @@ def filter_sections(text: str) -> str:
     text = text.replace("yn4416", "<USER>")
     text = text.replace("fukukei23", "<USERNAME>")
     text = text.replace("fukukei", "<USERNAME>")
+
+    # インライン個人情報のサニタイズ
+    for pattern, replacement in INLINE_REPLACEMENTS:
+        text = re.sub(pattern, replacement, text)
+    for pattern, replacement in TABLE_COL_SANITIZE:
+        text = re.sub(pattern, replacement, text)
+
+    # 未処理の「あなたの」を行内テキストから除去
+    text = re.sub(r"あなたの環境では", "", text)
+    text = re.sub(r"あなたの環境:", "", text)
 
     return text
 
