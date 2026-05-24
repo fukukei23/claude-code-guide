@@ -36,6 +36,13 @@ REMOVE_SECTIONS = [
     "## あなたの設定ファイル一覧",
     "## あなたのLLMルーティング",
     "## あなたの環境での使い方",
+    "## あなたの環境の特記事項",
+    "## あなたのMCPサーバー構成",
+    "## あなたのフック一覧",
+]
+
+REMOVE_PATTERNS = [
+    "あなたの",
 ]
 
 MERMAID_DIAGRAMS = {
@@ -321,13 +328,18 @@ def filter_sections(text: str) -> str:
     for line in lines:
         stripped = line.strip()
 
-        # 除去対象セクションの開始
+        # 除去対象セクションの開始（## または ### セクション）
         if stripped.startswith("## ") and any(stripped.startswith(s) for s in REMOVE_SECTIONS):
             skip = True
             continue
 
-        # 次の ## セクションでスキップ解除
-        if skip and stripped.startswith("## ") and not any(stripped.startswith(s) for s in REMOVE_SECTIONS):
+        # 「あなたの」で始まる## / ### セクションも除去
+        if (stripped.startswith("## ") or stripped.startswith("### ")) and any(p in stripped for p in REMOVE_PATTERNS):
+            skip = True
+            continue
+
+        # 次の ## セクションでスキップ解除（### はスキップ解除しない）
+        if skip and stripped.startswith("## ") and not any(p in stripped for p in REMOVE_PATTERNS):
             skip = False
 
         if not skip:
@@ -376,15 +388,44 @@ def inject_mermaid(html: str, filename: str) -> str:
 
 def rewrite_links(html: str) -> str:
     """内部リンクをHTML URLに書き換え."""
+    from urllib.parse import quote, unquote
+
     for filename, info in CHAPTER_MAP.items():
-        # [テキスト](XX_YY.md) → chapters/XX-yy.html
+        # [テキスト](XX_YY.md) → XX-yy.html
         html = html.replace(f'href="{filename}', f'href="{info["slug"]}.html')
-        # [テキスト](XX_YY.md#anchor) → chapters/XX-yy.html#anchor
+        # [テキスト](XX_YY.md#anchor) → XX-yy.html#anchor
         html = re.sub(
             rf'href="{re.escape(filename)}#',
             f'href="{info["slug"]}.html#',
             html,
         )
+
+        # URLエンコードされたリンク（例: 11_%E7%8F%BE%E5%A0%B4...）も処理
+        encoded_name = quote(filename, safe='')
+        if encoded_name != filename:
+            html = html.replace(f'href="{encoded_name}', f'href="{info["slug"]}.html')
+            html = re.sub(
+                rf'href="{re.escape(encoded_name)}#',
+                f'href="{info["slug"]}.html#',
+                html,
+            )
+
+    # 未変換の.mdリンクをすべて処理
+    def replace_md_link(match):
+        href = match.group(1)
+        for filename, info in CHAPTER_MAP.items():
+            # hrefの中にファイル名が含まれているか
+            decoded = unquote(href)
+            if filename in decoded or filename in href:
+                anchor = ""
+                if "#" in href:
+                    anchor = "#" + href.split("#", 1)[1]
+                elif "#" in decoded:
+                    anchor = "#" + decoded.split("#", 1)[1]
+                return f'href="{info["slug"]}.html{anchor}"'
+        return f'href="#"'
+
+    html = re.sub(r'href="([^"]*\.md[^"]*)"', replace_md_link, html)
 
     # 外部リンク（obsidian-ssot内の他ファイル）を除去
     html = re.sub(r'href="\.\./[^"]*"', 'href="#"', html)
