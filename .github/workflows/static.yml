@@ -32,7 +32,10 @@ jobs:
         run: python3 convert.py
 
       - name: Copy assets
-        run: cp -r assets docs/assets
+        run: |
+          rm -rf docs/assets
+          cp -r assets docs/assets
+          ls -la docs/assets/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
