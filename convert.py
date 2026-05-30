@@ -25,6 +25,7 @@ CHAPTER_MAP = {
     "09_統合.md": {"slug": "09-integration", "title": "統合", "icon": "🔗", "desc": "IDE連携・リモート・モデル切替"},
     "10_用語集.md": {"slug": "10-glossary", "title": "用語集", "icon": "📖", "desc": "A〜Zの用語解説"},
     "11_現場の知見.md": {"slug": "11-tips", "title": "現場の知見", "icon": "💡", "desc": "実践テクニックと落とし穴"},
+    "12_dev-cycle.md": {"slug": "12-dev-cycle", "title": "dev-cycle", "icon": "🔄", "desc": "コード品質改善サイクル — スイープ→レビュー→Issue化→自律実装"},
 }
 
 REMOVE_SECTIONS = [

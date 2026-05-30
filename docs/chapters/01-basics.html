@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基礎概念 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 基礎概念の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="基礎概念 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 基礎概念の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/01-basics.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="00-cheatsheet.html" class="nav-prev">← 早見表</a>
+            
+            
+            <a href="02-commands.html" class="nav-next">コマンド一覧 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>01 基礎概念 — Claude Code とは</h1>
+<h2>Claude Code の3つの形態</h2>
+<p>Claude Code は Anthropic が提供する AI コーディングアシスタント。3つの形態で利用できる。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>形態</th>
+<th>説明</th>
+<th>使い方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CLI</strong></td>
+<td>ターミナル上で動作。Linuxターミナル環境</td>
+<td><code>claude</code> コマンドで起動</td>
+</tr>
+<tr>
+<td><strong>Desktop App</strong></td>
+<td>Windows/Mac用のデスクトップアプリ</td>
+<td>スタンドアロンで起動</td>
+</tr>
+<tr>
+<td><strong>IDE拡張</strong></td>
+<td>VS Code・JetBrains用プラグイン</td>
+<td>IDE内のパネルで操作</td>
+</tr>
+<tr>
+<td><strong>Web App</strong></td>
+<td>claude.ai/code でブラウザから利用</td>
+<td>ブラウザでアクセス</td>
+</tr>
+</tbody>
+</table></div>
+<p>このガイドは主に <strong>CLI（WSL2環境）</strong> を前提に書かれている。</p>
+<hr />
+<div class="mermaid-wrapper"><div class="mermaid">
+graph TD
+    User["👤 ユーザー"] --> CLI["💻 Claude Code CLI"]
+    CLI --> SP["📋 システムプロンプト"]
+    CLI --> MCP["🔌 MCPツール定義"]
+    CLI --> SK["🎯 スキル定義"]
+    CLI --> MEM["🧠 メモリ読込"]
+    CLI --> LLM["🤖 LLM"]
+    LLM --> Tools["🔧 ツール実行"]
+    Tools --> Files["📁 ファイル操作"]
+    Tools --> Shell["💻 シェル実行"]
+    Tools --> API["🌐 API呼出"]
+    Tools --> Agent["🤖 サブエージェント"]
+    LLM --> Resp["💬 レスポンス"]
+    Resp --> User
+</div></div><h2>アーキテクチャ</h2>
+<pre><code>ユーザー（あなた）
+  │
+  ▼
+Claude Code CLI（ターミナル）
+  │
+  ├─ システムプロンプトを読み込み（CLAUDE.md等）
+  ├─ MCPツール定義を読み込み（83ツール）
+  ├─ スキル定義を読み込み（30+スキル）
+  ├─ メモリを読み込み（MEMORY.md等）
+  │
+  ▼
+LLM（Claude）
+  │
+  ├─ ツール実行要求（Read, Edit, Bash, Agent等）
+  │    ├─ ローカルファイル操作
+  │    ├─ シェルコマンド実行
+  │    ├─ MCPツール呼び出し（GitHub, Brave Search等）
+  │    └─ サブエージェント起動
+  │
+  ▼
+レスポンス（テキスト + ファイル変更）
+  │
+  ▼
+ユーザーに表示
+</code></pre>
+<hr />
+<div class="mermaid-wrapper"><div class="mermaid">
+graph LR
+    subgraph "200K トークン コンテキストウィンドウ"
+        A["システムプロンプト<br/>~3%"]
+        B["ツール定義<br/>~20%"]
+        C["メモリ・スキル<br/>~4%"]
+        D["会話履歴<br/>~3%"]
+        E["空き容量<br/>~70%"]
+    end
+</div></div><h2>コンテキストの仕組み</h2>
+<p>Claude Code は <strong>コンテキストウィンドウ</strong>（最大200kトークン）の中で動作する。セッション開始時に以下がロードされる。</p>
+<h3>コンテキストの構成要素</h3>
+<pre><code>200k トークン（コンテキストウィンドウ上限）
+├── システムプロンプト      ~5.7k  (2.8%)   ← Claude Codeの基本ルール
+├── システムツール定義     ~18.1k  (9.0%)   ← Read, Edit, Bash等のツール説明
+├── MCPツール定義          ~21.4k (10.7%)   ← 83個のMCPツール説明
+├── カスタムエージェント     ~2.9k  (1.4%)   ← エージェント定義
+├── メモリファイル           ~2.5k  (1.2%)   ← CLAUDE.md + MEMORY.md
+├── スキル定義               ~2.4k  (1.2%)   ← スキル一覧
+├── メッセージ（会話履歴）   ~5.4k  (2.7%)   ← やり取りの履歴
+└── 空き                    ~108.7k (54.3%)
+    ※ Autocompact用バッファ   33k  (16.5%)
+</code></pre>
+<h3>重要なポイント</h3>
+<ul>
+<li><strong>MCPツール定義が最も重い</strong>（21.4k = コンテキストの10.7%）</li>
+<li>セッション開始直後からこの消費が発生する</li>
+<li>会話が進むとメッセージ部分が増加し、空きが減る</li>
+<li><code>/context</code> コマンドで現在の内訳を確認できる</li>
+</ul>
+<h3><a id="autocompact"></a>自動コンパクション</h3>
+<p>空きが少なくなると、古い会話が<strong>自動的に要約</strong>される。これをオートコンパクションと呼ぶ。</p>
+<ul>
+<li><code>/clear</code> は<strong>完全リセット</strong>（会話全破棄）</li>
+<li>オートコンパクションは<strong>要約して圧縮</strong>（文脈は保持）</li>
+<li>バッファとして33kトークンが確保されている</li>
+</ul>
+<hr />
+<h2>入力と出力の非対称性</h2>
+<div class="callout callout-tip"><p>詳解: <a href="11-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
+<p>Claude Codeでは<strong>入力トークン &gt;&gt; 出力トークン</strong>になるのが普通（比率は約13:1）。</p>
+<p>理由は毎ターンで「システムプロンプト + MCP定義 + メモリ + 過去会話すべて」を再送するため。チャットAI（ChatGPT等）では出力が多くなりがちだが、コーディングアシスタントでは逆転する。</p>
+<p>また、<strong>200Kの実質使える量は約160K</strong>。システム・MCP・メモリで約40Kが固定消費される。</p>
+<hr />
+<h2>トークンとは</h2>
+<p>トークンはテキストの最小単位。日本語1文字 ≒ 1〜2トークン、英単語1語 ≒ 1トークン。</p>
+<ul>
+<li><strong>入力トークン</strong>: ユーザー→LLMへの送信（コンテキストに含まれる全て）</li>
+<li><strong>出力トークン</strong>: LLM→ユーザーへの返信</li>
+<li>コストは入力 + 出力のトークン数で計算される</li>
+</ul>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="00-cheatsheet.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">📋 早見表</span>
+            </a>
+            
+            
+            <a href="02-commands.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">⌨️ コマンド一覧</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

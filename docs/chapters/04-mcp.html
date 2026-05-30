@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCPサーバー — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI MCPサーバーの解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="MCPサーバー — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI MCPサーバーの解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/04-mcp.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="03-skills.html" class="nav-prev">← スキルシステム</a>
+            
+            
+            <a href="05-hooks.html" class="nav-next">フック →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>04 MCPサーバー — 外部ツールの統合</h1>
+<h2>MCPとは</h2>
+<p><strong>MCP（Model Context Protocol）</strong> は、Claude Codeから外部ツールを利用するための仕組み。</p>
+<pre><code>Claude Code
+  │
+  ├─ brave-search MCP ──→ Brave検索API ──→ Web検索結果
+  ├─ github MCP ────────→ GitHub API ────→ PR・Issue・ファイル
+  ├─ playwright MCP ────→ Chromium ──────→ ブラウザ操作
+  ├─ context7 MCP ──────→ Docs API ─────→ ライブラリ文档
+  ├─ discord MCP ───────→ Discord API ──→ メッセージ送受信
+  └─ mermaid MCP ───────→ Mermaid API ──→ 図表生成
+</code></pre>
+<p>MCPサーバーを追加すると、Claude Codeが<strong>そのサーバーのツール</strong>を使えるようになる。各ツールはコンテキストを消費するため、必要なものだけを維持する。</p>
+<hr />
+<h2>現在の構成（6サーバー・83ツール）</h2>
+<h3><a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）</h3>
+<p>Web検索に関する各種機能。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>brave_web_search</code></td>
+<td>一般的なWeb検索</td>
+</tr>
+<tr>
+<td><code>brave_image_search</code></td>
+<td>画像検索</td>
+</tr>
+<tr>
+<td><code>brave_video_search</code></td>
+<td>動画検索</td>
+</tr>
+<tr>
+<td><code>brave_news_search</code></td>
+<td>ニュース検索</td>
+</tr>
+<tr>
+<td><code>brave_local_search</code></td>
+<td>ローカルビジネス検索</td>
+</tr>
+<tr>
+<td><code>brave_summarizer</code></td>
+<td>検索結果のAI要約</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: 最新情報の調査、エラーの検索、技術記事の検索</p>
+<h3><a id="github"></a>github（41ツール / ~9.6kトークン）</h3>
+<p>最もツール数が多いサーバー。GitHub上のあらゆる操作が可能。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>カテゴリ</th>
+<th>ツール例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PR操作</td>
+<td><code>create_pull_request</code>, <code>merge_pull_request</code>, <code>pull_request_read</code>, <code>update_pull_request</code></td>
+</tr>
+<tr>
+<td>Issue操作</td>
+<td><code>issue_read</code>, <code>issue_write</code>, <code>list_issues</code>, <code>search_issues</code></td>
+</tr>
+<tr>
+<td>ファイル操作</td>
+<td><code>get_file_contents</code>, <code>create_or_update_file</code>, <code>push_files</code>, <code>delete_file</code></td>
+</tr>
+<tr>
+<td>コミット</td>
+<td><code>get_commit</code>, <code>list_commits</code></td>
+</tr>
+<tr>
+<td>検索</td>
+<td><code>search_code</code>, <code>search_repositories</code>, <code>search_users</code>, <code>search_pull_requests</code></td>
+</tr>
+<tr>
+<td>レビュー</td>
+<td><code>pull_request_review_write</code>, <code>add_comment_to_pending_review</code>, <code>request_copilot_review</code></td>
+</tr>
+<tr>
+<td>その他</td>
+<td><code>create_branch</code>, <code>create_repository</code>, <code>fork_repository</code>, <code>run_secret_scanning</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: PR作成、Issue管理、コード検索、リポジトリ操作</p>
+<h3><a id="playwright"></a>playwright（25ツール / ~4.7kトークン）</h3>
+<p>ブラウザの自動操作。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>カテゴリ</th>
+<th>ツール例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ナビゲーション</td>
+<td><code>browser_navigate</code>, <code>browser_navigate_back</code>, <code>browser_tabs</code></td>
+</tr>
+<tr>
+<td>操作</td>
+<td><code>browser_click</code>, <code>browser_type</code>, <code>browser_hover</code>, <code>browser_drag</code></td>
+</tr>
+<tr>
+<td>フォーム</td>
+<td><code>browser_fill_form</code>, <code>browser_select_option</code>, <code>browser_file_upload</code></td>
+</tr>
+<tr>
+<td>情報取得</td>
+<td><code>browser_snapshot</code>, <code>browser_take_screenshot</code>, <code>browser_console_messages</code></td>
+</tr>
+<tr>
+<td>ネットワーク</td>
+<td><code>browser_network_requests</code>, <code>browser_network_request</code></td>
+</tr>
+<tr>
+<td>高度な操作</td>
+<td><code>browser_evaluate</code>, <code>browser_run_code_unsafe</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: Webアプリのテスト、UI確認、スクレイピング</p>
+<h3><a id="context7"></a>context7（2ツール / ~1.2kトークン）</h3>
+<p>ライブラリの公式ドキュメント検索。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resolve-library-id</code></td>
+<td>ライブラリ名からIDを解決</td>
+</tr>
+<tr>
+<td><code>query-docs</code></td>
+<td>ドキュメントを検索・取得</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: ライブラリの最新API確認、使用方法の調査</p>
+<h3><a id="discord"></a>discord（5ツール / ~0.6kトークン）</h3>
+<p>Discordとの連携。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reply</code></td>
+<td>メッセージ送信</td>
+</tr>
+<tr>
+<td><code>fetch_messages</code></td>
+<td>メッセージ履歴取得</td>
+</tr>
+<tr>
+<td><code>edit_message</code></td>
+<td>メッセージ編集</td>
+</tr>
+<tr>
+<td><code>react</code></td>
+<td>リアクション追加</td>
+</tr>
+<tr>
+<td><code>download_attachment</code></td>
+<td>添付ファイルダウンロード</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: Discord経由での通知、メッセージ監視</p>
+<h3><a id="mermaid"></a>mermaid（4ツール / ~0.4kトークン）</h3>
+<p>図表の生成。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_diagram</code></td>
+<td>図のテンプレート取得</td>
+</tr>
+<tr>
+<td><code>get_diagram_examples</code></td>
+<td>図の例を取得</td>
+</tr>
+<tr>
+<td><code>list_diagrams</code></td>
+<td>対応図の種類一覧</td>
+</tr>
+<tr>
+<td><code>readme</code></td>
+<td>ツールの説明</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: フローチャート、シーケンス図、クラス図の生成</p>
+<hr />
+<h2>コンテキスト消費のトレードオフ</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>サーバー</th>
+<th>ツール数</th>
+<th>トークン</th>
+<th>コンテキスト比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>github</td>
+<td>41</td>
+<td>9.6k</td>
+<td>4.8%</td>
+</tr>
+<tr>
+<td>brave-search</td>
+<td>6</td>
+<td>5.5k</td>
+<td>2.8%</td>
+</tr>
+<tr>
+<td>playwright</td>
+<td>25</td>
+<td>4.7k</td>
+<td>2.4%</td>
+</tr>
+<tr>
+<td>context7</td>
+<td>2</td>
+<td>1.2k</td>
+<td>0.6%</td>
+</tr>
+<tr>
+<td>discord</td>
+<td>5</td>
+<td>0.6k</td>
+<td>0.3%</td>
+</tr>
+<tr>
+<td>mermaid</td>
+<td>4</td>
+<td>0.4k</td>
+<td>0.2%</td>
+</tr>
+<tr>
+<td><strong>合計</strong></td>
+<td><strong>83</strong></td>
+<td><strong>21.4k</strong></td>
+<td><strong>10.7%</strong></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>GitHub</strong>が最も重い（41ツール = 全MCPの半分）</li>
+<li>以前は9サーバー（~35kトークン）だったが、使用頻度分析で6サーバーに最適化済み</li>
+</ul>
+<div class="callout callout-tip"><p><strong>現場の知見</strong>: MCPツールは呼び出した時だけコストが発生するわけではない。<strong>ツール定義だけで毎ターン消費</strong>される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ <a href="11-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
+<hr />
+<h2>サーバーの追加・削除</h2>
+<h3>追加</h3>
+<pre><code class="language-bash">claude mcp add &lt;サーバー名&gt; -- &lt;コマンド&gt;
+</code></pre>
+<h3>削除</h3>
+<pre><code class="language-bash">claude mcp remove &lt;サーバー名&gt;
+</code></pre>
+<h3>確認</h3>
+<pre><code class="language-bash">claude mcp list
+</code></pre>
+<p><strong>注意</strong>: <code>settings.json</code> だけでなく <code>~/.claude.json</code> の両方から削除する必要がある場合がある（2ファイル問題）。</p>
+<hr />
+<h2>MCPツール使い分けガイド</h2>
+<p>詳細な使い分け基準は別ドキュメントを参照:</p>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="03-skills.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🎯 スキルシステム</span>
+            </a>
+            
+            
+            <a href="05-hooks.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">🪝 フック</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

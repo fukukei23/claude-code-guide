@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メモリ — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI メモリの解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="メモリ — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI メモリの解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/06-memory.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="05-hooks.html" class="nav-prev">← フック</a>
+            
+            
+            <a href="07-agents.html" class="nav-next">エージェント →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>06 メモリ — セッションを超えた記憶</h1>
+<h2>メモリとは</h2>
+<p>Claude Codeは<strong>セッションを超えて記憶を保持する</strong>仕組みを持つ。新しいセッションを開始しても、前回の文脈の一部を引き継げる。</p>
+<hr />
+<div class="mermaid-wrapper"><div class="mermaid">
+graph TD
+    subgraph "🧠 メモリシステム"
+        AUTO["Auto Memory<br/>~/.claude/projects/"]
+        USER["User Memory<br/>~/.claude/CLAUDE.md"]
+        PROJ["Project Memory<br/>repo/CLAUDE.md"]
+        IDX["MEMORY.md<br/>インデックス"]
+    end
+    AUTO --> T1["user: 役割・目標"]
+    AUTO --> T2["feedback: 指導"]
+    AUTO --> T3["project: 決定事項"]
+    AUTO --> T4["reference: 外部参照"]
+    IDX --> AUTO
+</div></div><h2>メモリの種類</h2>
+<h3><a id="auto-memory"></a>Auto Memory（自動メモリ）</h3>
+<p>Claude Codeが<strong>自動的に</strong>保存するプロジェクト単位の記憶。</p>
+<ul>
+<li><strong>場所</strong>: <code>~/.claude/projects/&lt;path&gt;/memory/</code></li>
+<li><strong>形式</strong>: Markdownファイル（frontmatter付き）</li>
+<li><strong>自動保存</strong>: セッション中に学んだことを自動的に記録</li>
+<li><strong>自動読込</strong>: 次回セッション開始時に自動的にロード</li>
+</ul>
+<p><strong>記録される内容の例</strong>:</p>
+<ul>
+<li>ユーザーの役割・好み</li>
+<li>プロジェクトの状況・決定事項</li>
+<li>フィードバック（「この方法はやめて」等）</li>
+<li>外部システムへの参照（Linear, Grafana等）</li>
+</ul>
+<h3><a id="user-memory"></a>User Memory（ユーザーメモリ）</h3>
+<p><code>~/.claude/CLAUDE.md</code> に記述されたルール。</p>
+<ul>
+<li><strong>場所</strong>: <code>~/.claude/CLAUDE.md</code></li>
+<li><strong>形式</strong>: Markdown</li>
+<li><strong>スコープ</strong>: 全プロジェクト共通</li>
+<li><strong>内容</strong>: 基本ルール、LLM利用ポリシー、コーディング原則等</li>
+</ul>
+<h3><a id="project-memory"></a>Project Memory（プロジェクトメモリ）</h3>
+<p>各リポジトリの <code>CLAUDE.md</code> に記述されたルール。</p>
+<ul>
+<li><strong>場所</strong>: <code>&lt;repo&gt;/CLAUDE.md</code></li>
+<li><strong>形式</strong>: Markdown</li>
+<li><strong>スコープ</strong>: そのプロジェクト内のみ</li>
+<li><strong>内容</strong>: プロジェクト固有の構造・ルール・コマンド</li>
+</ul>
+<h3><a id="memory-md"></a>MEMORY.md（インデックス）</h3>
+<p>Auto Memoryの<strong>目次ファイル</strong>。</p>
+<ul>
+<li><strong>場所</strong>: <code>memory/MEMORY.md</code></li>
+<li><strong>役割</strong>: 各メモリファイルへのポインタ（1行に1エントリ）</li>
+<li><strong>自動ロード</strong>: セッション開始時に必ず読み込まれる</li>
+<li><strong>制限</strong>: 200行以降は切り捨てられる</li>
+</ul>
+<hr />
+<h2>メモリの4つのタイプ</h2>
+<p>Auto Memoryには4つのタイプがある。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>タイプ</th>
+<th>説明</th>
+<th>保存タイミング</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user</code></td>
+<td>ユーザーの役割・目標・知識レベル</td>
+<td>ユーザー情報を学んだ時</td>
+</tr>
+<tr>
+<td><code>feedback</code></td>
+<td>ユーザーからの指導（「こうして」「これはやめて」）</td>
+<td>指摘・確認を受けた時</td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td>プロジェクトの状況・決定事項</td>
+<td>重要な決定をした時</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>外部システムへのポインタ</td>
+<td>外部リソースを知った時</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>メモリのライフサイクル</h2>
+<pre><code>セッション開始
+  │
+  ├─ MEMORY.md を読み込み（インデックス）
+  ├─ 関連するメモリファイルを読み込み
+  │
+  ▼
+セッション中
+  │
+  ├─ 新しい情報を学ぶ → メモリに保存すべきか判断
+  ├─ ユーザーからフィードバック → feedback メモリに保存
+  ├─ プロジェクトの決定 → project メモリに保存
+  │
+  ▼
+セッション終了
+  │
+  └─ 保存されたメモリは次回セッションで利用可能
+</code></pre>
+<hr />
+<h2>メモリの管理</h2>
+<h3>確認</h3>
+<ul>
+<li>ユーザーが「記憶を確認して」と言う → MEMORY.mdを読み込む</li>
+<li><code>/memory</code> コマンド → メモリ管理画面</li>
+</ul>
+<h3>保存</h3>
+<ul>
+<li>ユーザーが「これを覚えて」と言う → 即座に保存</li>
+<li>Claude Codeが「これは記憶すべき」と判断 → 自動保存</li>
+</ul>
+<h3>削除</h3>
+<ul>
+<li>ユーザーが「これを忘れて」と言う → 該当メモリを削除</li>
+<li>古い・不正確なメモリ → 更新または削除</li>
+</ul>
+<h3>注意点</h3>
+<ul>
+<li>メモリは<strong>古くなる可能性がある</strong> — 鵜呑みにせず、必要に応じて現状を確認</li>
+<li>コードのパターンやファイル構造は<strong>メモリに保存しない</strong>（コードから直接読めるため）</li>
+<li>Git履歴も<strong>メモリに保存しない</strong>（<code>git log</code>が正）</li>
+<li><strong>メモリは無料ではない</strong> — MEMORY.md + 各ファイルが毎ターン読み込まれ、トークンを消費。増えすぎると数千トークン/ターンの固定消費になる → <a href="11-tips.html#d-%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E8%AA%A4%E8%A7%A3">11_現場の知見</a></li>
+</ul>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="05-hooks.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🪝 フック</span>
+            </a>
+            
+            
+            <a href="07-agents.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">🤖 エージェント</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>現場の知見 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 現場の知見の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="現場の知見 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 現場の知見の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/11-tips.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="10-glossary.html" class="nav-prev">← 用語集</a>
+            
+            
+            <a href="12-dev-cycle.html" class="nav-next">dev-cycle →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>11 現場の知見 — 使ってみないとわからないこと</h1>
+<div class="callout callout-info"><p>実際にClaude Codeを使い込んで得た実践知。公式ドキュメントには書いていない「暗黙知」をまとめる。</p></div>
+<hr />
+<h2>A. コンテキスト経済学</h2>
+<p>トークンがどう消費されているかを理解することが、効率的な使い方の第一歩。</p>
+<h3>入力:出力 = 13:1 は正常</h3>
+<p>ChatGPT等のチャットAIでは「短い質問 → 長い回答」なので出力の方が多くなりがち。しかし<strong>Claude Codeでは逆転</strong>する。</p>
+<p><strong>理由</strong>: 毎ターンで「システムプロンプト + MCP定義 + メモリ + 過去の会話すべて + ツール結果」を丸ごと再送しているため。</p>
+<pre><code>ターン1: [システム + MCP + メモリ] = ~40K入力 → 回答 = ~1K出力
+ターン5: [システム + MCP + メモリ + 過去4回] = ~60K入力 → 回答 = ~1K出力
+ターン10: [システム + MCP + メモリ + 過去9回] = ~100K入力 → 回答 = ~1K出力
+</code></pre>
+<p>→ セッションが長くなるほど、1ターンあたりのコストが雪だるま式に増加。</p>
+<h3>200Kの実質使える量は〜160K</h3>
+<p>コンテキストウィンドウは最大200Kトークンだが、<strong>ユーザーが自由に使えるのは約160K</strong>。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>固定消費（毎ターン）</th>
+<th>推定サイズ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCPツール定義（6サーバー83ツール）</td>
+<td>~21K</td>
+</tr>
+<tr>
+<td>システムプロンプト（CLAUDE.md等）</td>
+<td>~15K</td>
+</tr>
+<tr>
+<td>Auto Memory（MEMORY.md + 各ファイル）</td>
+<td>~5〜10K</td>
+</tr>
+<tr>
+<td>その他システム指示</td>
+<td>~5K</td>
+</tr>
+<tr>
+<td><strong>合計</strong></td>
+<td><strong>~40K</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>→ 会話を始める前に既に20%消費済み。長いセッションではすぐに上限に近づく。</p>
+<h3>MCP定義だけで毎ターン消費</h3>
+<p>MCPツールは<strong>呼び出した時だけ</strong>コストが発生するわけではない。ツールの定義（名前・説明・パラメータ）が<strong>毎ターンの入力に含まれる</strong>。</p>
+<ul>
+<li>83ツールの定義 ≒ ~21Kトークン/ターン</li>
+<li>10ターンのセッション → MCP定義だけで 21K × 10 = <strong>210Kトークン</strong>（入力側）</li>
+<li>使わないサーバーは削除するのが最も効果的な節約策</li>
+</ul>
+<h3><code>/context</code> 1回で~4Kトークン消費</h3>
+<p>コンテキスト使用量を確認する <code>/context</code> コマンド自身もトークンを消費する。1回約4K。多用は避け、気になった時だけ使う。</p>
+<hr />
+<h2>B. 落とし穴（ハマりポイント）</h2>
+<h3>設定ファイルが2つ存在する（2ファイル問題）</h3>
+<pre><code>~/.claude.json          ← CLI自動生成（隠れファイル）
+~/.claude/settings.json ← ユーザー編集用
+</code></pre>
+<p>Claude Codeは<strong>両方をマージして読み込む</strong>。片方だけ編集してもう片方に古い設定が残っていると、変更が反映されない。</p>
+<p><strong>対策</strong>: MCPサーバーの追加・削除は手動編集ではなく <code>claude mcp add/remove</code> コマンドを使う。このコマンドは両ファイルを正しく更新する。</p>
+<h3>MCP削除が「復活」する</h3>
+<p>上記2ファイル問題が原因で、<code>settings.json</code> だけ編集してMCPサーバーを削除しても、<code>~/.claude.json</code> に定義が残っていれば次回起動時に復元される。</p>
+<p><strong>対策</strong>: 削除後は両ファイルを確認:</p>
+<pre><code class="language-bash">claude mcp list
+cat ~/.claude.json | jq '.mcpServers | keys'
+cat ~/.claude/settings.json | jq '.mcpServers | keys'
+</code></pre>
+<h3>フックがツールを意図せずブロック</h3>
+<p>PreToolUseフックのスクリプトがエラー（exit code ≠ 0）を返すと、そのツールの実行が<strong>サイレントにブロック</strong>される。エラーメッセージは表示されるが、「フックがブロックした」とは明示されないことがある。</p>
+<p><strong>対策</strong>: 予期せぬツールブロックが起きたら、まずPreToolUseフックのスクリプトを確認。</p>
+<h3><code>/clear</code> しても MCP・メモリは残る</h3>
+<p><code>/clear</code> がリセットするのは<strong>会話履歴のみ</strong>。以下は消えない:</p>
+<ul>
+<li>システムプロンプト（CLAUDE.md）</li>
+<li>MCPツール定義</li>
+<li>Auto Memory</li>
+<li>設定（permissions, hooks）</li>
+</ul>
+<p>完全リセットしたい場合は <code>/clear</code> → セッション再起動。</p>
+<h3>Read ツールで巨大ファイルを読むとコンテキスト爆発</h3>
+<p>1つのファイルでも数千〜数万行なら数万トークン消費。特にログファイル・JSON・生成コードに注意。</p>
+<p><strong>対策</strong>: <code>offset</code> と <code>limit</code> パラメータで必要な範囲だけ読む。</p>
+<h3>セッション開始時にMCPが全ツール一括ロード</h3>
+<p>MCPツールは「必要になったら読み込む」のではなく、<strong>セッション開始時に全ツール定義を一括でロード</strong>する。これがコンテキストの固定消費の主因。</p>
+<hr />
+<h2>C. 効率テクニック</h2>
+<h3>作業が長くなったら <code>/compact</code> か新セッション</h3>
+<p>セッションが長くなると過去の会話が蓄積し、1ターンあたりの入力トークンが増え続ける。</p>
+<ul>
+<li><strong><code>/compact</code></strong>: 古い会話を要約して圧縮。会話の文脈は維持</li>
+<li><strong>新セッション</strong>: <code>/clear</code> または再起動。完全にリセット</li>
+<li><strong>自動コンパクション</strong>: ~167K到達時に自動発動（33Kバッファ）</li>
+</ul>
+<p>手動 <code>/compact</code> を適度に使うのが、最もバランスが良い。</p>
+<h3>バックグラウンドエージェントで並列作業</h3>
+<p><code>Agent</code> ツールを <code>run_in_background: true</code> で使うと、メインコンテキストを消費せずに独立タスクを実行できる。</p>
+<pre><code>メイン: ガイドを書く
+  ├── BG Agent: リポジトリAを調査
+  └── BG Agent: リポジトリBを調査
+</code></pre>
+<p>→ メインのコンテキストを節約しつつ、複数タスクを同時進行可能。</p>
+<h3><code>/model haiku</code> で軽作業は高速化・低コスト化</h3>
+<p>単純な質問・フォーマット変換・短い修正等は、安価なモデルで十分。</p>
+<pre><code class="language-bash">/model haiku    # Haiku に切替
+# ... 軽作業 ...
+/model sonnet   # Sonnet に戻す
+</code></pre>
+<h3>CLAUDE.md は短く保つ</h3>
+<p>CLAUDE.mdの内容は<strong>毎ターン読み込まれる</strong>。長すぎると毎回無駄にトークンを消費。</p>
+<ul>
+<li>グローバルCLAUDE.md: 共通ルールのみ（現状〜5Kトークン）</li>
+<li>プロジェクトCLAUDE.md: プロジェクト固有のみ</li>
+<li>長いドキュメントは別ファイルにして、必要時だけ参照</li>
+</ul>
+<hr />
+<h2>D. よくある誤解</h2>
+<h3>「会話履歴がコンテキスト圧迫の主因」</h3>
+<p><strong>半分正解・半分不正解</strong>。</p>
+<ul>
+<li>MCP定義（~21K）は<strong>固定</strong>で毎ターン消費 — これがベースライン</li>
+<li>会話履歴は<strong>変動</strong>するが、単発のやりとりでは小さい</li>
+<li><strong>長いセッション</strong>になると会話蓄積が主因に変わる</li>
+</ul>
+<p>→ 短いセッションではMCP固定コストが目立つ。長いセッションでは会話蓄積が目立つ。</p>
+<h3>「MCPツールは呼んだ時だけコスト発生」</h3>
+<p><strong>違う</strong>。ツール定義だけで毎ターン消費。呼び出しは<strong>追加</strong>コスト。</p>
+<p>→ 使っていないサーバーを残しておくと、1ターンごとに無駄なトークンを消費し続ける。</p>
+<h3>「メモリは無料」</h3>
+<p><strong>違う</strong>。MEMORY.md + 各メモリファイルが毎ターン読み込まれ、トークンを消費。</p>
+<ul>
+<li>メモリファイルが増えすぎると、それだけで数千トークン/ターンの固定消費になる</li>
+<li>古い・不要なメモリは定期的に整理する</li>
+</ul>
+<h3>「<code>/clear</code> = すべてリセット」</h3>
+<p><strong>違う</strong>。<code>/clear</code>がリセットするのは会話履歴のみ。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>リセットされる</th>
+<th>残る</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>会話履歴</td>
+<td>システムプロンプト（CLAUDE.md）</td>
+</tr>
+<tr>
+<td></td>
+<td>MCPツール定義</td>
+</tr>
+<tr>
+<td></td>
+<td>Auto Memory</td>
+</tr>
+<tr>
+<td></td>
+<td>設定（permissions, hooks）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>「コンパクション（compact）= 要約品質が高い」</h3>
+<p><strong>注意が必要</strong>。自動コンパクションは古い会話を要約して捨てるが、<strong>詳細が失われる</strong>。重要な文脈は compact 前にメモリに保存するか、自分で要約を控えておく。</p>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="10-glossary.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+            
+            <a href="12-dev-cycle.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">🔄 dev-cycle</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 完全ガイド</title>
+    <meta name="description" content="AIコーディングアシスタント Claude Code CLI の使い方を基礎から応用まで完全解説">
+    <meta property="og:title" content="Claude Code 完全ガイド">
+    <meta property="og:description" content="AIコーディングアシスタント Claude Code CLI の使い方を基礎から応用まで完全解説">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body class="index-page">
+    <header class="site-header">
+        <span class="site-title">⚡ Claude Code Guide</span>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <main class="content">
+        <section class="hero">
+            <h1>Claude Code 完全ガイド</h1>
+            <p>AIコーディングアシスタント Claude Code CLI の使い方を、<br>基礎から応用まで完全解説</p>
+        </section>
+
+        <section class="chapter-grid">
+            
+            <a href="chapters/00-cheatsheet.html" class="chapter-card">
+                <div class="card-icon">📋</div>
+                <div class="card-number">第00章</div>
+                <h2 class="card-title">早見表</h2>
+                <p class="card-desc">全機能チートシート</p>
+            </a>
+            
+            <a href="chapters/01-basics.html" class="chapter-card">
+                <div class="card-icon">🏗️</div>
+                <div class="card-number">第01章</div>
+                <h2 class="card-title">基礎概念</h2>
+                <p class="card-desc">Claude Codeの3つの形態とコンテキストの仕組み</p>
+            </a>
+            
+            <a href="chapters/02-commands.html" class="chapter-card">
+                <div class="card-icon">⌨️</div>
+                <div class="card-number">第02章</div>
+                <h2 class="card-title">コマンド一覧</h2>
+                <p class="card-desc">ビルトインコマンドの全解説</p>
+            </a>
+            
+            <a href="chapters/03-skills.html" class="chapter-card">
+                <div class="card-icon">🎯</div>
+                <div class="card-number">第03章</div>
+                <h2 class="card-title">スキルシステム</h2>
+                <p class="card-desc">スキルの仕組みと活用方法</p>
+            </a>
+            
+            <a href="chapters/04-mcp.html" class="chapter-card">
+                <div class="card-icon">🔌</div>
+                <div class="card-number">第04章</div>
+                <h2 class="card-title">MCPサーバー</h2>
+                <p class="card-desc">MCPツールの使い分けと設定</p>
+            </a>
+            
+            <a href="chapters/05-hooks.html" class="chapter-card">
+                <div class="card-icon">🪝</div>
+                <div class="card-number">第05章</div>
+                <h2 class="card-title">フック</h2>
+                <p class="card-desc">4種のフックでClaude Codeを自動化</p>
+            </a>
+            
+            <a href="chapters/06-memory.html" class="chapter-card">
+                <div class="card-icon">🧠</div>
+                <div class="card-number">第06章</div>
+                <h2 class="card-title">メモリ</h2>
+                <p class="card-desc">セッションをまたぐ記憶の仕組み</p>
+            </a>
+            
+            <a href="chapters/07-agents.html" class="chapter-card">
+                <div class="card-icon">🤖</div>
+                <div class="card-number">第07章</div>
+                <h2 class="card-title">エージェント</h2>
+                <p class="card-desc">サブエージェントの並列活用</p>
+            </a>
+            
+            <a href="chapters/08-config.html" class="chapter-card">
+                <div class="card-icon">⚙️</div>
+                <div class="card-number">第08章</div>
+                <h2 class="card-title">設定ファイル</h2>
+                <p class="card-desc">CLAUDE.md・settings.json・3層構造</p>
+            </a>
+            
+            <a href="chapters/09-integration.html" class="chapter-card">
+                <div class="card-icon">🔗</div>
+                <div class="card-number">第09章</div>
+                <h2 class="card-title">統合</h2>
+                <p class="card-desc">IDE連携・リモート・モデル切替</p>
+            </a>
+            
+            <a href="chapters/10-glossary.html" class="chapter-card">
+                <div class="card-icon">📖</div>
+                <div class="card-number">第10章</div>
+                <h2 class="card-title">用語集</h2>
+                <p class="card-desc">A〜Zの用語解説</p>
+            </a>
+            
+            <a href="chapters/11-tips.html" class="chapter-card">
+                <div class="card-icon">💡</div>
+                <div class="card-number">第11章</div>
+                <h2 class="card-title">現場の知見</h2>
+                <p class="card-desc">実践テクニックと落とし穴</p>
+            </a>
+            
+            <a href="chapters/12-dev-cycle.html" class="chapter-card">
+                <div class="card-icon">🔄</div>
+                <div class="card-number">第12章</div>
+                <h2 class="card-title">dev-cycle</h2>
+                <p class="card-desc">コード品質改善サイクル — スイープ→レビュー→Issue化→自律実装</p>
+            </a>
+            
+        </section>
+
+        <section class="features">
+            <h2>📖 このガイドの特徴</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🎯</span>
+                    <h3>初心者向け</h3>
+                    <p>専門用語は初出時に説明。前提知識不要</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <h3>図解付き</h3>
+                    <p>アーキテクチャやフローをMermaid図で視覚化</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📱</span>
+                    <h3>モバイル対応</h3>
+                    <p>スマホからいつでも見返せるレスポンシブデザイン</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🌙</span>
+                    <h3>ダークモード</h3>
+                    <p>目に優しいテーマ切替対応</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a></p>
+    </footer>
+
+    <script src="assets/script.js"></script>
+</body>
+</html>

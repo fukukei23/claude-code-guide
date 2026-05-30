@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コマンド一覧 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI コマンド一覧の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="コマンド一覧 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI コマンド一覧の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/02-commands.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="01-basics.html" class="nav-prev">← 基礎概念</a>
+            
+            
+            <a href="03-skills.html" class="nav-next">スキルシステム →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>02 コマンド一覧 — ビルトインコマンド全解説</h1>
+<div class="callout callout-info"><p>スラッシュ（<code>/</code>）で始まるコマンド。Claude Code本体に組み込まれている。
+プラグイン由来のスキル（<code>/brainstorming</code>等）は <a href="03-skills.html">03_スキルシステム</a> を参照。</p></div>
+<hr />
+<h2>セッション管理</h2>
+<h3><a id="clear"></a><code>/clear</code></h3>
+<p>会話履歴を<strong>完全にリセット</strong>する。</p>
+<ul>
+<li>システムプロンプト・MCPツール定義・スキル・メモリは残る</li>
+<li>ユーザーとのやり取り（質問・回答・ツール実行結果）は全て消える</li>
+<li>セッション開始直後と同じ状態になる</li>
+<li><strong>使いどころ</strong>: 長時間作業後にコンテキストが汚れた時、全く別の話題に切り替える時</li>
+</ul>
+<h3><a id="compact"></a><code>/compact</code></h3>
+<p>古い会話を<strong>要約して圧縮</strong>する（手動実行版）。</p>
+<ul>
+<li>オートコンパクションと同じ処理を手動でトリガー</li>
+<li>要約が残るので文脈は保持される</li>
+<li><code>/clear</code> との違い: <strong>文脈を残すか捨てるか</strong></li>
+</ul>
+<h3><a id="reset"></a><code>/reset</code></h3>
+<p>セッションを初期状態に戻す。</p>
+<ul>
+<li><code>/clear</code> より強力: 設定の変更も元に戻す場合がある</li>
+<li>基本的には <code>/clear</code> で十分なことが多い</li>
+</ul>
+<h3><a id="exit"></a><code>/exit</code></h3>
+<p>Claude Codeを終了する。<code>Ctrl+C</code> でも終了可能。</p>
+<hr />
+<h2>情報確認</h2>
+<h3><a id="context"></a><code>/context</code></h3>
+<p>現在の<strong>コンテキスト使用量</strong>を表示する。</p>
+<ul>
+<li>トークン消費の内訳（システム・MCP・メモリ・メッセージ等）が見える</li>
+<li>各MCPサーバーのツール数とトークン消費が分かる</li>
+<li><strong>注意</strong>: 1回の実行で約4kトークンを消費する。多用に注意</li>
+</ul>
+<p>出力例:</p>
+<pre><code>Context Usage
+  Claude
+  58.3k/200k tokens (29%)
+  MCP tools: 21.4k tokens (10.7%)
+  Free space: 108.7k (54.3%)
+</code></pre>
+<h3><a id="help"></a><code>/help</code></h3>
+<p>ヘルプメッセージを表示。利用可能なコマンド一覧が見える。</p>
+<h3><a id="model"></a><code>/model</code></h3>
+<p>現在のモデルを表示・切り替え。</p>
+<ul>
+<li>引数なし: 現在のモデルを表示</li>
+<li>モデル名指定: そのモデルに切り替え（例: <code>/model sonnet</code>）</li>
+<li>デフォルトモデルが自動選択</li>
+</ul>
+<h3><a id="cost"></a><code>/cost</code></h3>
+<p>セッションのコスト概算を表示。API利用料の目安。</p>
+<hr />
+<h2>設定</h2>
+<h3><a id="config"></a><code>/config</code></h3>
+<p>設定メニューを開く。モデル・テーマ・権限等の設定を対話的に変更。</p>
+<h3><a id="permissions"></a><code>/permissions</code></h3>
+<p>権限設定を管理。ツール実行時の許可・拒否ルールを設定。</p>
+<ul>
+<li><code>allow</code>: 自動許可（プロンプトを出さない）</li>
+<li><code>deny</code>: 自動拒否</li>
+<li>未設定: 毎回ユーザーに確認</li>
+</ul>
+<h3><a id="mcp"></a><code>/mcp</code></h3>
+<p>MCPサーバーの状態を表示。各サーバーの接続状態・ツール数が確認できる。</p>
+<hr />
+<h2>機能</h2>
+<h3><a id="fast"></a><code>/fast</code></h3>
+<p>高速モードの切替。</p>
+<ul>
+<li>Opus使用時に高速出力（モデル自体の変更なし）</li>
+<li><code>Ctrl+Shift+P</code> → &quot;Claude: Toggle Fast Mode&quot; でも切替可能</li>
+</ul>
+<h3><a id="review"></a><code>/review</code></h3>
+<p>コードレビューを実行。</p>
+<ul>
+<li>変更されたコードを対象にレビュー</li>
+<li>セキュリティ・品質・ベストプラクティスをチェック</li>
+</ul>
+<h3><a id="init"></a><code>/init</code></h3>
+<p>プロジェクトに <code>CLAUDE.md</code> を作成。</p>
+<ul>
+<li>コードベースを分析して自動生成</li>
+<li>プロジェクト固有のルール・構造を記述</li>
+</ul>
+<h3><a id="memory"></a><code>/memory</code></h3>
+<p>メモリを管理。記憶の確認・追加・削除。</p>
+<h3><a id="agents"></a><code>/agents</code></h3>
+<p>カスタムエージェントを管理。一覧表示・作成・編集。</p>
+<h3><a id="skills"></a><code>/skills</code></h3>
+<p>スキル一覧を表示。インストール済みのスキルとその説明。</p>
+<h3><a id="plan-mode"></a>Plan Mode（<code>EnterPlanMode</code>）</h3>
+<p>コマンドではないが、重要な機能モード。</p>
+<ul>
+<li>Claude Codeが「計画を立ててから実装する」モードに入る</li>
+<li>実際のコード変更は行わず、設計だけを提示</li>
+<li>ユーザーが承認（<code>ExitPlanMode</code>）してから実装開始</li>
+<li><strong>使いどころ</strong>: 新機能追加・大規模リファクタリング等</li>
+</ul>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="01-basics.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🏗️ 基礎概念</span>
+            </a>
+            
+            
+            <a href="03-skills.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">🎯 スキルシステム</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

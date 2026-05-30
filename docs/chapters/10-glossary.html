@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用語集 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 用語集の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="用語集 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 用語集の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/10-glossary.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="09-integration.html" class="nav-prev">← 統合</a>
+            
+            
+            <a href="11-tips.html" class="nav-next">現場の知見 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>10 用語集 — Claude Code 関連の全用語</h1>
+<div class="callout callout-info"><p><strong>プログラミング全般の用語</strong>（TDD, DDD, SOLID, Pydantic等）は <a href="#">用語集</a> を参照。
+このページはClaude Code固有の用語のみを扱います。</p></div>
+<h2>A</h2>
+<h3>Agent（エージェント）</h3>
+<p>Claude Codeの機能の一つ。サブエージェント（別のAIインスタンス）を起動して、独立したコンテキストでタスクを実行させる。→ <a href="07-agents.html">07_エージェント</a></p>
+<h3>Auto Memory（自動メモリ）</h3>
+<p>Claude Codeが自動的に保存・読み込みするプロジェクト単位の記憶。ユーザーの好み、フィードバック、プロジェクトの状況などを記録。→ <a href="06-memory.html">06_メモリ</a></p>
+<h3>Autocompact（自動コンパクション）</h3>
+<p>コンテキストが上限に近づいたとき、古い会話を自動的に要約して圧縮する機能。バッファとして33kトークンが確保されている。→ <a href="01-basics.html#autocompact">01_基礎概念</a></p>
+<hr />
+<h2>B</h2>
+<h3>Bash</h3>
+<p>Claude Codeの基本ツールの一つ。シェルコマンドを実行する。</p>
+<hr />
+<h2>C</h2>
+<h3>CLAUDE.md</h3>
+<p>Claude Codeに読み込ませる指示書（Markdown形式）。3層構造: グローバル、プロジェクト、ディレクトリ。→ <a href="08-config.html">08_設定ファイル</a></p>
+<h3>CLI（Command Line Interface）</h3>
+<p>ターミナル上で動作するClaude Codeの形態。最も高機能。→ <a href="01-basics.html">01_基礎概念</a></p>
+<h3>Compact（コンパクション）</h3>
+<p>会話を要約して圧縮する処理。<code>/compact</code>で手動実行、または自動（Autocompact）で実行される。→ <a href="02-commands.html#compact">02_コマンド一覧</a></p>
+<h3>Context（コンテキスト）</h3>
+<p>Claude Codeが一度に処理できる情報の総量。システムプロンプト、ツール定義、メモリ、会話履歴等で構成される。最大200kトークン。→ <a href="01-basics.html">01_基礎概念</a></p>
+<h3>Context Window（コンテキストウィンドウ）</h3>
+<p>一度に処理できるテキストの最大量。Claude Codeでは200kトークン。</p>
+<hr />
+<h2>D</h2>
+<h3>Desktop App</h3>
+<p>Windows/Mac用のスタンドアロンアプリケーション。CLIより機能は限定。→ <a href="09-integration.html">09_統合</a></p>
+<hr />
+<h2>E</h2>
+<h3>Edit</h3>
+<p>Claude Codeの基本ツール。ファイルの文字列置換を行う。</p>
+<hr />
+<h2>F</h2>
+<h3>Fast Mode（高速モード）</h3>
+<p>Opusモデルで高速出力を行うモード。モデル自体の変更なし。<code>/fast</code>で切替。</p>
+<h3>Feedback Memory（フィードバックメモリ）</h3>
+<p>Auto Memoryのタイプの一つ。ユーザーからの指導（「こうして」「これはやめて」）を記録。→ <a href="06-memory.html">06_メモリ</a></p>
+<h3>Foreground（フォアグラウンド）</h3>
+<p>サブエージェントの実行モード。結果を待ってから次に進む。→ <a href="07-agents.html">07_エージェント</a></p>
+<hr />
+<h2>H</h2>
+<h3>Hook（フック）</h3>
+<p>特定のイベント発生時に自動実行されるシェルスクリプト。SessionStart, PreToolUse, PostToolUse, SessionEndの4種類。→ <a href="05-hooks.html">05_フック</a></p>
+<hr />
+<h2>I</h2>
+<h3>IDE Integration（IDE連携）</h3>
+<p>VS CodeやJetBrains等のIDEとClaude Codeを連携させる機能。→ <a href="09-integration.html">09_統合</a></p>
+<hr />
+<h2>L</h2>
+<h3>LLM（Large Language Model）</h3>
+<p>大規模言語モデル。Claude等。</p>
+<h3>LLM Routing（LLMルーティング）</h3>
+<p>タスクに応じて最適なLLMを選択する仕組み。モデルは /model コマンドで切替可能。</p>
+<hr />
+<h2>M</h2>
+<h3>Matcher（マッチャー）</h3>
+<p>フック設定で、どのツールに対してフックを適用するかを指定するフィルタ。→ <a href="05-hooks.html">05_フック</a></p>
+<h3>MCP（Model Context Protocol）</h3>
+<p>外部ツールをClaude Codeから利用するためのプロトコル。サーバー単位でツール群を追加。→ <a href="04-mcp.html">04_MCPサーバー</a></p>
+<h3>MEMORY.md</h3>
+<p>Auto Memoryの目次ファイル。各メモリファイルへのポインタを格納。→ <a href="06-memory.html#memory-md">06_メモリ</a></p>
+<hr />
+<h2>O</h2>
+<h3>Opus</h3>
+<p>Claude最上位モデル。複雑な推論・高品質な出力。Anthropic APIまたは代替プロバイダー経由で利用可能。</p>
+<hr />
+<h2>P</h2>
+<h3>Plan Mode（プランモード）</h3>
+<p>Claude Codeがコードを書かずに計画だけを立てるモード。ユーザー承認後に実装開始。→ <a href="02-commands.html#plan-mode">02_コマンド一覧</a></p>
+<h3>Plugin（プラグイン）</h3>
+<p>Claude Codeにスキルやエージェントを追加する拡張パッケージ。superpowers, pr-review-toolkit等。</p>
+<h3>PreToolUse（プリツールユース）</h3>
+<p>ツール実行前に発火するフック。セキュリティチェック等に使用。→ <a href="05-hooks.html#pretooluse">05_フック</a></p>
+<h3>Project Memory（プロジェクトメモリ）</h3>
+<p>各リポジトリのCLAUDE.mdに記述されたルール。そのプロジェクト内でのみ有効。→ <a href="06-memory.html#project-memory">06_メモリ</a></p>
+<hr />
+<h2>R</h2>
+<h3>Read</h3>
+<p>Claude Codeの基本ツール。ファイルの内容を読み込む。</p>
+<hr />
+<h2>S</h2>
+<h3>SessionStart（セッションスタート）</h3>
+<p>セッション開始時に発火するフック。環境変数の読み込み等に使用。→ <a href="05-hooks.html#sessionstart">05_フック</a></p>
+<h3>settings.json</h3>
+<p>Claude Codeのメイン設定ファイル。MCP・権限・フック・環境変数を定義。→ <a href="08-config.html#settings-json">08_設定ファイル</a></p>
+<h3>Skill（スキル）</h3>
+<p>プロンプトテンプレートのライブラリ。<code>/コマンド名</code>で呼び出す。ビルトイン、プラグイン、カスタムの3種類。→ <a href="03-skills.html">03_スキルシステム</a></p>
+<h3>Sonnet</h3>
+<p>Claude中位モデル。バランス型。Anthropic APIまたは代替プロバイダー経由で利用可能。</p>
+<h3>SSOT（Single Source of Truth）</h3>
+<p>単一の信頼できる情報源。単一リポジトリで一元管理する構成がこれに該当。</p>
+<hr />
+<h2>T</h2>
+<h3>Token（トークン）</h3>
+<p>テキストの最小単位。日本語1文字 ≒ 1〜2トークン。コンテキストやコストの計算単位。→ <a href="01-basics.html">01_基礎概念</a></p>
+<h3>Tool（ツール）</h3>
+<p>Claude Codeが実行できる操作。Read, Edit, Bash, Agent, MCP等。</p>
+<hr />
+<h2>U</h2>
+<h3>User Memory（ユーザーメモリ）</h3>
+<p><code>~/.claude/CLAUDE.md</code>に記述された全プロジェクト共通のルール。→ <a href="06-memory.html#user-memory">06_メモリ</a></p>
+<hr />
+<h2>W</h2>
+<h3>Worktree（ワークツリー）</h3>
+<p>Git Worktreeを使った独立した作業環境。メインブランチを汚さずに開発可能。→ <a href="09-integration.html#worktree">09_統合</a></p>
+<h3>Write</h3>
+<p>Claude Codeの基本ツール。ファイルに内容を書き込む（新規作成・完全上書き）。</p>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="09-integration.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔗 統合</span>
+            </a>
+            
+            
+            <a href="11-tips.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">💡 現場の知見</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

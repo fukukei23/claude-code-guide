@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>統合 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 統合の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="統合 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 統合の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/09-integration.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="08-config.html" class="nav-prev">← 設定ファイル</a>
+            
+            
+            <a href="10-glossary.html" class="nav-next">用語集 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>09 統合 — IDE・リモート・CI/CD・Worktree</h1>
+<h2><a id="ide"></a>IDE連携</h2>
+<p>Claude Codeは主要IDEと連携できる。</p>
+<h3>VS Code拡張</h3>
+<ul>
+<li><strong>機能</strong>: サイドバーパネル、ターミナル統合、ネイティブdiff表示</li>
+<li><strong>インストール</strong>: VS Code Marketplace から「Claude Code」を検索</li>
+<li><strong>特徴</strong>: CLIと同じ機能がIDE内で利用可能</li>
+</ul>
+<h3>JetBrains拡張</h3>
+<ul>
+<li><strong>対応</strong>: IntelliJ, PyCharm, WebStorm等</li>
+<li><strong>機能</strong>: VS Codeと同等の統合機能</li>
+</ul>
+<h3>IDE連携のメリット</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>メリット</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>diff表示</td>
+<td>コード変更がネイティブのdiffビューアで確認できる</td>
+</tr>
+<tr>
+<td>コンテキスト共有</td>
+<td>開いているファイルが自動的にコンテキストに含まれる</td>
+</tr>
+<tr>
+<td>ターミナル不要</td>
+<td>IDEパネルから直接操作</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2><a id="remote"></a>リモートモード</h2>
+<p>Claude Codeを<strong>ヘッドレス（非対話）モード</strong>で実行できる。</p>
+<h3>使い方</h3>
+<pre><code class="language-bash"># ヘッドレス実行（結果をファイルに出力）
+claude -p &quot;テストを実行して結果を報告して&quot; --output result.md
+
+# CI/CDでの利用
+claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&quot;
+</code></pre>
+<h3>CI/CD統合</h3>
+<p>GitHub Actions等のCI/CDパイプラインでClaude Codeを利用可能。</p>
+<pre><code class="language-yaml"># GitHub Actionsの例
+- name: Claude Code Review
+  run: claude -p &quot;コードレビューをして&quot; --output review.md
+</code></pre>
+<h3>自動化の例</h3>
+<ul>
+<li>PRの自動レビュー</li>
+<li>テストの自動実行・修正</li>
+<li>ドキュメントの自動生成</li>
+<li>セキュリティスキャン</li>
+</ul>
+<hr />
+<h2><a id="worktree"></a>Git Worktreeとの連携</h2>
+<p>Git Worktreeを使うと、<strong>メインブランチを汚さずに</strong>独立した作業環境を作れる。</p>
+<h3>Worktreeの作成</h3>
+<pre><code>EnterWorktree → 新しいworktreeを作成
+  │
+  ├─ .claude/worktrees/ に新しいディレクトリが作成される
+  ├─ 新しいブランチが自動作成される
+  └─ セッションの作業ディレクトリが切り替わる
+</code></pre>
+<h3>Worktreeの利点</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>利点</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>隔離</td>
+<td>メインブランチに影響しない</td>
+</tr>
+<tr>
+<td>並列作業</td>
+<td>複数のworktreeで別々のタスクを同時進行</td>
+</tr>
+<tr>
+<td>メモリ分離</td>
+<td>worktreeごとに独立したメモリ</td>
+</tr>
+<tr>
+<td>安全な破棄</td>
+<td>変更を破棄して元のディレクトリに戻れる</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Worktreeの終了</h3>
+<ul>
+<li><code>keep</code>: worktreeとブランチを残す（後で戻れる）</li>
+<li><code>remove</code>: worktreeとブランチを削除（完全に破棄）</li>
+</ul>
+<h3>エージェントとの連携</h3>
+<p>サブエージェントを <code>isolation: &quot;worktree&quot;</code> で起動すると、エージェントが独立したworktreeで作業する。メインセッションのコードに影響なし。</p>
+<hr />
+<div class="mermaid-wrapper"><div class="mermaid">
+graph TD
+    A["📋 タスク受付"] --> B{"Opus<br/>デフォルト"}
+    B -->|"成功"| C["✅ 結果返却"]
+    B -->|"失敗"| D{"Haiku<br/>フォールバック"}
+    D -->|"成功"| C
+    B -->|"大量処理"| E["軽量モデルに委譲"]
+    E --> C
+    B -->|"高品質必要"| F{"👤 ユーザー確認"}
+    F -->|"許可"| G["上位モデルで処理"]
+    G --> C
+    F -->|"拒否"| B
+</div></div><h2><a id="model-switch"></a>モデル切替</h2>
+<p>Claude Codeは複数のモデルを切り替えて使用できる。</p>
+<h3>利用可能なモデル</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>モデル</th>
+<th>特徴</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Opus 4.7</td>
+<td>最高品質・複雑タスク</td>
+<td>API経由で利用可能</td>
+</tr>
+<tr>
+<td>Claude Sonnet 4.6</td>
+<td>バランス型</td>
+<td>API経由で利用可能</td>
+</tr>
+<tr>
+<td>Claude Haiku 4.5</td>
+<td>高速・低コスト</td>
+<td>API経由で利用可能</td>
+</tr>
+</tbody>
+</table></div>
+<h3>切替方法</h3>
+<ul>
+<li><code>/model</code> コマンド</li>
+<li><code>/fast</code> で高速モード切替（Opusの高速出力）</li>
+<li><code>model</code> パラメータでサブエージェントのモデル指定</li>
+</ul>
+<h2>Claude Desktop Appとの違い</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>CLI</th>
+<th>Desktop App</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>実行環境</td>
+<td>ターミナル</td>
+<td>スタンドアロンアプリ</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>設定可能</td>
+<td>限定</td>
+</tr>
+<tr>
+<td>フック</td>
+<td>設定可能</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>スキル</td>
+<td>全て利用可能</td>
+<td>限定</td>
+</tr>
+<tr>
+<td>CLAUDE.md</td>
+<td>3層構造</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>サブエージェント</td>
+<td>利用可能</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>Worktree</td>
+<td>利用可能</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>CI/CD統合</td>
+<td>可能</td>
+<td>不可</td>
+</tr>
+</tbody>
+</table></div>
+<p>CLIの方が圧倒的に高機能。Desktop Appは手軽さがメリット。</p>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="08-config.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">⚙️ 設定ファイル</span>
+            </a>
+            
+            
+            <a href="10-glossary.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

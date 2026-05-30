@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エージェント — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI エージェントの解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="エージェント — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI エージェントの解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/07-agents.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="06-memory.html" class="nav-prev">← メモリ</a>
+            
+            
+            <a href="08-config.html" class="nav-next">設定ファイル →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>07 エージェント — サブエージェントと並列実行</h1>
+<h2>エージェントとは</h2>
+<p>Claude Codeは <strong>Agent ツール</strong>を使って、サブエージェント（別のAIインスタンス）を起動できる。サブエージェントは独立したコンテキストで動作し、結果をメインセッションに返す。</p>
+<pre><code>メインセッション（あなたとの会話）
+  │
+  ├─ Agent ツールでサブエージェント起動
+  │    │
+  │    ├─ サブエージェントA（コード探索）
+  │    ├─ サブエージェントB（レビュー）
+  │    └─ サブエージェントC（テスト実行）
+  │         │
+  │         ▼
+  │    結果をメインセッションに返す
+  │
+  ▼
+メインセッションで結果を統合・表示
+</code></pre>
+<hr />
+<h2>エージェントの種類</h2>
+<h3>汎用エージェント（general-purpose）</h3>
+<p>指定なしで呼び出すと、汎用のサブエージェントが起動。</p>
+<pre><code>Agent({
+  description: &quot;コードの調査&quot;,
+  prompt: &quot;NexusCoreのテストカバレッジを確認して報告して&quot;
+})
+</code></pre>
+<h3><a id="specialized-agents"></a>特殊エージェント（subagent_type指定）</h3>
+<p><code>subagent_type</code> を指定すると、専門化されたエージェントが起動。</p>
+<h4><a id="pr-review"></a>pr-review-toolkit系（6種）</h4>
+<p>PRレビューに特化したエージェント群。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>エージェント</th>
+<th>用途</th>
+<th>トークン</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pr-review-toolkit:code-reviewer</code></td>
+<td>スタイル・ベストプラクティスの確認</td>
+<td>451</td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:code-simplifier</code></td>
+<td>コードの簡素化・整理</td>
+<td>463</td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:comment-analyzer</code></td>
+<td>コメントの正確性・保守性の分析</td>
+<td>421</td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:pr-test-analyzer</code></td>
+<td>テストカバレッジの品質分析</td>
+<td>360</td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:silent-failure-hunter</code></td>
+<td>エラー処理の穴の発見</td>
+<td>323</td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:type-design-analyzer</code></td>
+<td>型設計の品質分析</td>
+<td>315</td>
+</tr>
+</tbody>
+</table></div>
+<h4><a id="superpowers"></a>superpowers系</h4>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>エージェント</th>
+<th>用途</th>
+<th>トークン</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>superpowers:code-reviewer</code></td>
+<td>実装が計画・基準に合致しているかのレビュー</td>
+<td>243</td>
+</tr>
+</tbody>
+</table></div>
+<h4><a id="feature-dev"></a>feature-dev系（3種）</h4>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>エージェント</th>
+<th>用途</th>
+<th>トークン</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feature-dev:code-architect</code></td>
+<td>機能設計のブループリント作成</td>
+<td>47</td>
+</tr>
+<tr>
+<td><code>feature-dev:code-explorer</code></td>
+<td>コードベースの深い分析</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>feature-dev:code-reviewer</code></td>
+<td>バグ・セキュリティ・品質のレビュー</td>
+<td>46</td>
+</tr>
+</tbody>
+</table></div>
+<h4>その他</h4>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>エージェント</th>
+<th>用途</th>
+<th>トークン</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code-simplifier:code-simplifier</code></td>
+<td>コード簡素化</td>
+<td>43</td>
+</tr>
+<tr>
+<td><code>agent-sdk-dev:agent-sdk-verifier-py</code></td>
+<td>Python Agent SDK検証</td>
+<td>63</td>
+</tr>
+<tr>
+<td><code>agent-sdk-dev:agent-sdk-verifier-ts</code></td>
+<td>TypeScript Agent SDK検証</td>
+<td>62</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>エージェントの使い方</h2>
+<h3>フォアグラウンド（デフォルト）</h3>
+<p>結果を待ってから次に進む。調査・分析など、結果が必要な場合に使う。</p>
+<pre><code>Agent({
+  description: &quot;調査&quot;,
+  prompt: &quot;...&quot;,
+  subagent_type: &quot;feature-dev:code-explorer&quot;
+})
+</code></pre>
+<h3>バックグラウンド（run_in_background: true）</h3>
+<p>結果を待たずに次に進む。独立した作業を並列で進めたい場合に使う。</p>
+<pre><code>Agent({
+  description: &quot;並列調査A&quot;,
+  prompt: &quot;...&quot;,
+  run_in_background: true
+})
+</code></pre>
+<h3>Worktree分離（isolation: &quot;worktree&quot;**</h3>
+<p>別のGit worktreeで作業する。コードの変更がメインブランチに影響しない。</p>
+<pre><code>Agent({
+  description: &quot;機能実装&quot;,
+  prompt: &quot;...&quot;,
+  isolation: &quot;worktree&quot;
+})
+</code></pre>
+<hr />
+<div class="mermaid-wrapper"><div class="mermaid">
+graph TD
+    MAIN["🖥️ メインセッション"] --> A1["🔍 エージェントA<br/>コード探索"]
+    MAIN --> A2["📝 エージェントB<br/>レビュー"]
+    MAIN --> A3["🧪 エージェントC<br/>テスト実行"]
+    A1 --> |"結果"| MAIN
+    A2 --> |"結果"| MAIN
+    A3 --> |"結果"| MAIN
+    MAIN --> |"統合表示"| USER["👤 ユーザー"]
+</div></div><h2>並列実行の例</h2>
+<p>複数の独立したタスクは並列で実行できる:</p>
+<pre><code>// レビューとテスト分析を同時に実行
+Agent({ description: &quot;レビュー&quot;, prompt: &quot;...&quot;, subagent_type: &quot;pr-review-toolkit:code-reviewer&quot; })
+Agent({ description: &quot;テスト分析&quot;, prompt: &quot;...&quot; subagent_type: &quot;pr-review-toolkit:pr-test-analyzer&quot; })
+</code></pre>
+<ul>
+<li>2つのAgent呼び出しを<strong>同じメッセージで</strong>送信すると並列実行される</li>
+<li>順番に実行したい場合は<strong>別のメッセージ</strong>で送信する</li>
+</ul>
+<hr />
+<h2>エージェントとコンテキスト</h2>
+<ul>
+<li>サブエージェントは<strong>独立したコンテキスト</strong>で動作する</li>
+<li>メインセッションのコンテキストを消費しない</li>
+<li>ただし、結果を受け取るとメインセッションのコンテキストを消費する</li>
+<li>カスタムエージェントの定義自体もコンテキストを消費（合計2.9kトークン）</li>
+</ul>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="06-memory.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🧠 メモリ</span>
+            </a>
+            
+            
+            <a href="08-config.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">⚙️ 設定ファイル</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

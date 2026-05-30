@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dev-cycle — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI dev-cycleの解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="dev-cycle — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI dev-cycleの解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/12-dev-cycle.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="11-tips.html" class="nav-prev">← 現場の知見</a>
+            
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>dev-cycle — コード品質改善サイクル</h1>
+<p>Claude Code で<strong>コード品質を継続的に改善するための5フェーズサイクル</strong>。
+スキル <code>/dev-cycle</code> として呼び出す。</p>
+<hr />
+<h2>全体フロー</h2>
+<pre><code>【0. 判断】プロジェクト規模で開始フェーズを決める
+  小規模（変更ファイル少）→ フェーズ2から
+  大規模（50件超の改善）  → フェーズ1から
+        ↓
+【1. 任意】品質スイープ
+        ↓
+【2. 推奨】コードレビュー v3
+        ↓
+【3. 必須】Issue化
+        ↓
+【4. 必須】自律実装ループ
+        ↓
+【5. 自動】完了通知
+</code></pre>
+<hr />
+<h2>フェーズ1: 品質スイープ</h2>
+<p>全ファイルを機械的に走査し <strong>High/Medium/Low</strong> リストを生成する（読み取り専用・変更なし）。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>実行方法</td>
+<td>CronCreate（20分間隔）または手動</td>
+</tr>
+<tr>
+<td>チェック内容</td>
+<td>セキュリティ問題・巨大関数（50行超）・重複ロジック・未使用import</td>
+</tr>
+<tr>
+<td>出力先</td>
+<td><code>01_DECISIONS/&lt;project&gt;/YYYY-MM-DD_リファクタリング調査_&lt;area&gt;.md</code></td>
+</tr>
+<tr>
+<td>いつ使う</td>
+<td>50件超の大規模改善前、定期健全性確認</td>
+</tr>
+</tbody>
+</table></div>
+<p>CronCreate 設定例:</p>
+<pre><code>CronCreate:
+  schedule: &quot;*/20 * * * *&quot;
+  durable: true
+  prompt: |
+    &lt;project&gt; のコード品質スイープ。
+    未完了エリアを1つ選び全ファイルを読んでHigh/Medium/Lowに分類。
+    結果をSSOTに保存。コード変更は一切しない。
+</code></pre>
+<hr />
+<h2>フェーズ2: コードレビュー v3</h2>
+<p>重要ファイルを深く読み、<strong>★スコア + P1/P2 改善提案</strong>を出力する。</p>
+<h3>実行手順</h3>
+<pre><code class="language-bash"># Step 0: ファイルの重要度スコアリング
+python score-files.py &lt;project_path&gt; --top 20 --json
+
+# Step 1: 行数実測（スコアと照合）
+wc -l &lt;file1&gt; &lt;file2&gt; ...
+
+# Step 2: Read ツールで実際に読む → LLM で評価
+</code></pre>
+<div class="callout callout-warn"><p><strong>注意</strong>: LLMに読ませずに評価させると行数捏造が発生する（v2での教訓）。
+Step 2 の「実際に読む」が最重要。</p></div>
+<h3>評価カード形式</h3>
+<pre><code>file: routes/products.py
+loc: 342
+star: ★★★☆☆
+strengths: Blueprint分離が明確、エラーハンドリング統一
+weaknesses: 関数が50行超×3件、except Exceptionが2箇所
+priority: P1（except限定化）、P2（関数分割）
+</code></pre>
+<hr />
+<h2>フェーズ3: Issue化</h2>
+<p>P1/P2 リストを GitHub Issues に一括登録する。</p>
+<h3>タイトル形式</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ラベル</th>
+<th>優先度</th>
+<th>目安工数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[A]</code></td>
+<td>priority:low</td>
+<td>1h以下</td>
+</tr>
+<tr>
+<td><code>[B][C]</code></td>
+<td>priority:medium</td>
+<td>2〜3h</td>
+</tr>
+<tr>
+<td><code>[D]</code></td>
+<td>priority:high</td>
+<td>4h以上</td>
+</tr>
+</tbody>
+</table></div>
+<p>タイトル例:</p>
+<pre><code>test: [A] test_xxx.py に scope=&quot;function&quot; を明示
+fix:  [B] except Exception を具体的な例外型に限定
+refactor: [D] test_routes_coverage.py を6ファイルに分割
+</code></pre>
+<h3>GitHub API 一括作成</h3>
+<pre><code class="language-python">import json, urllib.request
+
+TOKEN = &quot;your_github_token&quot;
+REPO = &quot;your_username/your_repo&quot;
+
+issues = [
+    {
+        &quot;title&quot;: &quot;test: [A] xxx&quot;,
+        &quot;body&quot;: &quot;## 概要\n...\n\n## 完了条件\n- pytest 全件パス\n\n## 推定工数: 1h&quot;,
+        &quot;labels&quot;: [&quot;type:test&quot;, &quot;priority:low&quot;]
+    },
+]
+
+for issue in issues:
+    req = urllib.request.Request(
+        f&quot;https://api.github.com/repos/{REPO}/issues&quot;,
+        data=json.dumps(issue).encode(),
+        headers={
+            &quot;Authorization&quot;: f&quot;token {TOKEN}&quot;,
+            &quot;Content-Type&quot;: &quot;application/json&quot;
+        }
+    )
+    res = json.load(urllib.request.urlopen(req))
+    print(f&quot;Created #{res['number']}: {res['title']}&quot;)
+</code></pre>
+<hr />
+<h2>フェーズ4: 自律実装ループ</h2>
+<p>GitHub Issues を <strong>高→中→低の順に自動実装</strong>する Stop Hook 連鎖方式。</p>
+<h3>アーキテクチャ</h3>
+<pre><code>start.sh --auto &lt;repo&gt;
+    │
+    ▼
+state.json: active=true / pending=[76,77,78]
+    │
+    ▼
+claude --print &quot;Issue #76 を実装して...&quot;
+    │ セッション終了
+    ▼
+[Stop Hook 発火] → next-issue.py
+    │ completed=[76] / pending=[77,78]
+    ▼
+claude --print &quot;Issue #77 を実装して...&quot;
+    │ ... 繰り返す ...
+    ▼
+pending=[] → active=false → 完了通知
+</code></pre>
+<h3>state.json 構造</h3>
+<pre><code class="language-json">{
+  &quot;project&quot;: &quot;my-project&quot;,
+  &quot;repo_path&quot;: &quot;/path/to/repo&quot;,
+  &quot;active&quot;: true,
+  &quot;pending&quot;: [76, 77, 78],
+  &quot;current&quot;: 76,
+  &quot;completed&quot;: []
+}
+</code></pre>
+<h3>起動コマンド</h3>
+<pre><code class="language-bash"># Issue番号を指定して実行
+bash ~/.claude/scripts/auto-dev/start.sh 76 77 78
+
+# GitHub から priority 順に自動取得
+bash ~/.claude/scripts/auto-dev/start.sh --auto my-repo
+</code></pre>
+<h3>夜間・放置実行（CronCreate 方式）</h3>
+<pre><code>CronCreate:
+  schedule: &quot;7 * * * *&quot;   # 毎時:07
+  durable: true
+  prompt: |
+    GitHub のオープン Issue を priority:high → medium → low の順で1件実装。
+    pytest 全件パス確認 → commit → push → Issue close。
+    1セッション1Issue のみ。失敗は最大3回リトライ。
+</code></pre>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>使い分け</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stop Hook（start.sh）</td>
+<td>今すぐ連続実行したい</td>
+</tr>
+<tr>
+<td>CronCreate</td>
+<td>夜間・放置・数日かけて処理</td>
+</tr>
+</tbody>
+</table></div>
+<h3>1 Issue あたりの自動処理</h3>
+<pre><code>実装（LLM でコード生成）
+    ↓
+pytest 全件パス確認
+    ↓
+git commit &amp;&amp; git push
+    ↓
+CI 確認
+    ↓
+Issue close（GitHub API）
+    ↓
+次の Issue へ（Stop Hook 連鎖）
+</code></pre>
+<h3>緊急停止</h3>
+<pre><code class="language-bash">python3 -c &quot;
+import json
+state_path = '/path/to/state.json'
+s = json.load(open(state_path))
+s['active'] = False
+json.dump(s, open(state_path, 'w'), indent=2)
+print('停止:', s)
+&quot;
+</code></pre>
+<hr />
+<h2>フェーズ5: 完了通知（自動）</h2>
+<p><code>pending=[]</code> を検知したら自動実行:</p>
+<ul>
+<li>ターミナルベル音</li>
+<li>OS通知（macOS: <code>osascript</code> / Windows: PowerShell toast）</li>
+</ul>
+<pre><code class="language-python"># macOS 例
+import subprocess
+subprocess.run([&quot;osascript&quot;, &quot;-e&quot;,
+    'display notification &quot;全 Issue 完了&quot; with title &quot;dev-cycle&quot;'])
+
+# Windows (WSL2) 例
+subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
+    '$n=New-Object System.Windows.Forms.NotifyIcon; ...'])
+</code></pre>
+<hr />
+<h2>LLM 割り当て</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>フェーズ</th>
+<th>推奨LLM</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>品質スイープ</td>
+<td>高速・安価なモデル</td>
+<td>パターン検出・列挙</td>
+</tr>
+<tr>
+<td>コードレビュー v3</td>
+<td>高精度モデル</td>
+<td>深い読解・主観評価</td>
+</tr>
+<tr>
+<td>Issue 化</td>
+<td>任意</td>
+<td>テンプレート変換</td>
+</tr>
+<tr>
+<td>コード生成（実装）</td>
+<td>大量処理向けモデル</td>
+<td>繰り返し生成</td>
+</tr>
+<tr>
+<td>テスト・CI 確認</td>
+<td>Claude 直接</td>
+<td>ツール呼び出し</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>トラブルシューティング</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stop 後に次が起動しない</td>
+<td><code>active: false</code></td>
+<td><code>start.sh</code> を再実行</td>
+</tr>
+<tr>
+<td>Issue が自動取得されない</td>
+<td>ラベルなし</td>
+<td><code>priority:high/medium/low</code> ラベルを付与</td>
+</tr>
+<tr>
+<td>CI 失敗で詰まる</td>
+<td>テストエラー</td>
+<td>ログ確認 → 手動対応 → 再起動</td>
+</tr>
+<tr>
+<td>完了通知が来ない</td>
+<td>OS 通知の設定</td>
+<td><code>notify-done.sh</code> をデバッグ</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>実績（参考）</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>プロジェクト</th>
+<th>実施内容</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flask 物販管理システム</td>
+<td>Issue #75〜#77 を自律実装</td>
+<td>3件全自動完了・テスト全件パス</td>
+</tr>
+<tr>
+<td>自律型AIフレームワーク</td>
+<td>テストカバレッジ 83.81% 達成</td>
+<td>4,602 テスト通過・0 失敗</td>
+</tr>
+</tbody>
+</table></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="11-tips.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">💡 現場の知見</span>
+            </a>
+            
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>早見表 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 早見表の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="早見表 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 早見表の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/00-cheatsheet.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            
+            <a href="01-basics.html" class="nav-next">基礎概念 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>00 早見表 — Claude Code 全機能チートシート</h1>
+<div class="callout callout-info"><p>各項目の「→」リンク先で詳解を読めます。</p></div>
+<hr />
+<h2>1. ビルトインコマンド</h2>
+<h3>セッション管理</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>コマンド</th>
+<th>説明</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/clear</code></td>
+<td>会話履歴を完全リセット</td>
+<td><a href="02-commands.html#clear">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/compact</code></td>
+<td>古い会話を要約して圧縮（手動実行）</td>
+<td><a href="02-commands.html#compact">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/reset</code></td>
+<td>セッションを初期状態に戻す</td>
+<td><a href="02-commands.html#reset">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/exit</code></td>
+<td>Claude Codeを終了</td>
+<td><a href="02-commands.html#exit">02_コマンド</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3>情報確認</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>コマンド</th>
+<th>説明</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/context</code></td>
+<td>コンテキスト使用量を表示（トークン消費の内訳）</td>
+<td><a href="02-commands.html#context">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/help</code></td>
+<td>ヘルプを表示</td>
+<td><a href="02-commands.html#help">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/model</code></td>
+<td>現在のモデルを表示・切替</td>
+<td><a href="02-commands.html#model">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/cost</code></td>
+<td>セッションのコスト概算を表示</td>
+<td><a href="02-commands.html#cost">02_コマンド</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3>設定</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>コマンド</th>
+<th>説明</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/config</code></td>
+<td>設定メニューを開く</td>
+<td><a href="02-commands.html#config">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/permissions</code></td>
+<td>権限設定を管理</td>
+<td><a href="02-commands.html#permissions">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/mcp</code></td>
+<td>MCPサーバーの状態を表示</td>
+<td><a href="02-commands.html#mcp">02_コマンド</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3>機能</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>コマンド</th>
+<th>説明</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/fast</code></td>
+<td>高速モード切替（Opus高速出力）</td>
+<td><a href="02-commands.html#fast">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/review</code></td>
+<td>コードレビューを実行</td>
+<td><a href="02-commands.html#review">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/init</code></td>
+<td>プロジェクトにCLAUDE.mdを作成</td>
+<td><a href="02-commands.html#init">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/memory</code></td>
+<td>メモリを管理</td>
+<td><a href="02-commands.html#memory">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/agents</code></td>
+<td>カスタムエージェントを管理</td>
+<td><a href="02-commands.html#agents">02_コマンド</a></td>
+</tr>
+<tr>
+<td><code>/skills</code></td>
+<td>スキル一覧を表示</td>
+<td><a href="02-commands.html#skills">02_コマンド</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. スキル（Plugins + Built-in）</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>スキル</th>
+<th>来源</th>
+<th>用途</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>superpowers:brainstorming</code></td>
+<td>Plugin</td>
+<td>創造的作業前の要件整理</td>
+<td><a href="03-skills.html#brainstorming">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>superpowers:writing-plans</code></td>
+<td>Plugin</td>
+<td>実装計画の作成</td>
+<td><a href="03-skills.html#writing-plans">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>superpowers:executing-plans</code></td>
+<td>Plugin</td>
+<td>計画の実行</td>
+<td><a href="03-skills.html#executing-plans">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>superpowers:systematic-debugging</code></td>
+<td>Plugin</td>
+<td>バグ・テスト失敗の体系的調査</td>
+<td><a href="03-skills.html#systematic-debugging">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>superpowers:test-driven-development</code></td>
+<td>Plugin</td>
+<td>TDD実践</td>
+<td><a href="03-skills.html#tdd">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>superpowers:verification-before-completion</code></td>
+<td>Plugin</td>
+<td>完了宣言前の検証</td>
+<td><a href="03-skills.html#verification">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>superpowers:using-git-worktrees</code></td>
+<td>Plugin</td>
+<td>Worktreeの作成・管理</td>
+<td><a href="03-skills.html#worktrees">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>code-review:code-review</code></td>
+<td>Plugin</td>
+<td>コードレビュー</td>
+<td><a href="03-skills.html#code-review">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:review-pr</code></td>
+<td>Plugin</td>
+<td>PR包括レビュー</td>
+<td><a href="03-skills.html#pr-review">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>feature-dev:feature-dev</code></td>
+<td>Plugin</td>
+<td>機能開発ガイド</td>
+<td><a href="03-skills.html#feature-dev">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>claude-api</code></td>
+<td>Built-in</td>
+<td>Anthropic SDK関連作業</td>
+<td><a href="03-skills.html#claude-api">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>update-config</code></td>
+<td>Built-in</td>
+<td>settings.jsonの変更</td>
+<td><a href="03-skills.html#update-config">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>simplify</code></td>
+<td>Built-in</td>
+<td>コード簡素化</td>
+<td><a href="03-skills.html#simplify">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>init</code></td>
+<td>Built-in</td>
+<td>プロジェクト初期化</td>
+<td><a href="03-skills.html#init">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>review</code></td>
+<td>Built-in</td>
+<td>レビュー</td>
+<td><a href="03-skills.html#review">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>security-review</code></td>
+<td>Built-in</td>
+<td>セキュリティレビュー</td>
+<td><a href="03-skills.html#security-review">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>loop</code></td>
+<td>Built-in</td>
+<td>定期実行タスク</td>
+<td><a href="03-skills.html#loop">03_スキル</a></td>
+</tr>
+<tr>
+<td><code>fewer-permission-prompts</code></td>
+<td>Built-in</td>
+<td>権限プロンプト削減</td>
+<td><a href="03-skills.html#fewer-permission">03_スキル</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>3. MCPサーバー（現在6サーバー・83ツール）</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>サーバー</th>
+<th>ツール数</th>
+<th>トークン</th>
+<th>用途</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>brave-search</td>
+<td>6</td>
+<td>~5.5k</td>
+<td>Web検索（画像・動画・ニュース・ローカル・サマライザー）</td>
+<td><a href="04-mcp.html#brave-search">04_MCP</a></td>
+</tr>
+<tr>
+<td>github</td>
+<td>41</td>
+<td>~9.6k</td>
+<td>GitHub操作（PR・Issue・ファイル・コード検索）</td>
+<td><a href="04-mcp.html#github">04_MCP</a></td>
+</tr>
+<tr>
+<td>playwright</td>
+<td>25</td>
+<td>~4.7k</td>
+<td>ブラウザ自動操作（ナビ・クリック・スクショ・フォーム）</td>
+<td><a href="04-mcp.html#playwright">04_MCP</a></td>
+</tr>
+<tr>
+<td>context7</td>
+<td>2</td>
+<td>~1.2k</td>
+<td>ライブラリ公式ドキュメント検索</td>
+<td><a href="04-mcp.html#context7">04_MCP</a></td>
+</tr>
+<tr>
+<td>discord</td>
+<td>5</td>
+<td>~0.6k</td>
+<td>Discord連携（メッセージ送受信・添付・リアクション）</td>
+<td><a href="04-mcp.html#discord">04_MCP</a></td>
+</tr>
+<tr>
+<td>mermaid</td>
+<td>4</td>
+<td>~0.4k</td>
+<td>図表生成（フローチャート・シーケンス・クラス図等）</td>
+<td><a href="04-mcp.html#mermaid">04_MCP</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>合計</strong>: 83ツール / 21.4kトークン（コンテキストの10.7%）</p>
+<hr />
+<h2>4. フック（Hooks）</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>イベント</th>
+<th>タイミング</th>
+<th>代表用途</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SessionStart</code></td>
+<td>セッション開始時</td>
+<td>環境変数読み込み・初期化</td>
+<td><a href="05-hooks.html#sessionstart">05_フック</a></td>
+</tr>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>ツール実行前</td>
+<td>セキュリティチェック・ブロック</td>
+<td><a href="05-hooks.html#pretooluse">05_フック</a></td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>ツール実行後</td>
+<td>ログ記録・後処理</td>
+<td><a href="05-hooks.html#posttooluse">05_フック</a></td>
+</tr>
+<tr>
+<td><code>SessionEnd</code></td>
+<td>セッション終了時</td>
+<td>クリーンアップ・記録保存</td>
+<td><a href="05-hooks.html#sessionend">05_フック</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. 設定ファイル</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>場所</th>
+<th>役割</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLAUDE.md</code> (グローバル)</td>
+<td><code>~/.claude/CLAUDE.md</code></td>
+<td>全プロジェクト共通ルール</td>
+<td><a href="08-config.html#claude-md-global">08_設定</a></td>
+</tr>
+<tr>
+<td><code>CLAUDE.md</code> (プロジェクト)</td>
+<td><code>&lt;repo&gt;/CLAUDE.md</code></td>
+<td>プロジェクト固有ルール</td>
+<td><a href="08-config.html#claude-md-project">08_設定</a></td>
+</tr>
+<tr>
+<td><code>settings.json</code></td>
+<td><code>~/.claude/settings.json</code></td>
+<td>MCP・権限・フック設定</td>
+<td><a href="08-config.html#settings-json">08_設定</a></td>
+</tr>
+<tr>
+<td><code>settings.local.json</code></td>
+<td><code>&lt;repo&gt;/.claude/settings.json</code></td>
+<td>プロジェクト固有設定</td>
+<td><a href="08-config.html#settings-local">08_設定</a></td>
+</tr>
+<tr>
+<td><code>.claude.json</code></td>
+<td><code>~/.claude.json</code></td>
+<td>追加設定（settings.jsonと統合）</td>
+<td><a href="08-config.html#claude-json">08_設定</a></td>
+</tr>
+<tr>
+<td><code>~/.secrets.env</code></td>
+<td>ホームディレクトリ</td>
+<td>APIキー一元管理</td>
+<td><a href="08-config.html#secrets">08_設定</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. メモリシステム</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>場所</th>
+<th>自動保存</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Auto Memory</td>
+<td><code>~/.claude/projects/&lt;path&gt;/memory/</code></td>
+<td>Yes</td>
+<td><a href="06-memory.html#auto-memory">06_メモリ</a></td>
+</tr>
+<tr>
+<td>User Memory</td>
+<td><code>~/.claude/CLAUDE.md</code> 内</td>
+<td>手動</td>
+<td><a href="06-memory.html#user-memory">06_メモリ</a></td>
+</tr>
+<tr>
+<td>Project Memory</td>
+<td><code>&lt;repo&gt;/CLAUDE.md</code> 内</td>
+<td>手動</td>
+<td><a href="06-memory.html#project-memory">06_メモリ</a></td>
+</tr>
+<tr>
+<td>MEMORY.md</td>
+<td><code>memory/MEMORY.md</code></td>
+<td>自動（インデックス）</td>
+<td><a href="06-memory.html#memory-md">06_メモリ</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. カスタムエージェント</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>エージェント</th>
+<th>来源</th>
+<th>用途</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pr-review-toolkit:code-reviewer</code></td>
+<td>Plugin</td>
+<td>コードレビュー</td>
+<td><a href="07-agents.html#pr-review">07_エージェント</a></td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:code-simplifier</code></td>
+<td>Plugin</td>
+<td>コード簡素化</td>
+<td><a href="07-agents.html#pr-review">07_エージェント</a></td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:comment-analyzer</code></td>
+<td>Plugin</td>
+<td>コメント分析</td>
+<td><a href="07-agents.html#pr-review">07_エージェント</a></td>
+</tr>
+<tr>
+<td><code>pr-review-toolkit:silent-failure-hunter</code></td>
+<td>Plugin</td>
+<td>エラー処理の穴発見</td>
+<td><a href="07-agents.html#pr-review">07_エージェント</a></td>
+</tr>
+<tr>
+<td><code>superpowers:code-reviewer</code></td>
+<td>Plugin</td>
+<td>実装レビュー</td>
+<td><a href="07-agents.html#superpowers">07_エージェント</a></td>
+</tr>
+<tr>
+<td><code>feature-dev:code-architect</code></td>
+<td>Plugin</td>
+<td>機能設計</td>
+<td><a href="07-agents.html#feature-dev">07_エージェント</a></td>
+</tr>
+<tr>
+<td><code>feature-dev:code-explorer</code></td>
+<td>Plugin</td>
+<td>コード探索</td>
+<td><a href="07-agents.html#feature-dev">07_エージェント</a></td>
+</tr>
+<tr>
+<td><code>feature-dev:code-reviewer</code></td>
+<td>Plugin</td>
+<td>コードレビュー</td>
+<td><a href="07-agents.html#feature-dev">07_エージェント</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. その他の機能</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>説明</th>
+<th>→ 詳解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Git Worktree</td>
+<td>コードの隔離作業環境</td>
+<td><a href="09-integration.html#worktree">09_統合</a></td>
+</tr>
+<tr>
+<td>IDE連携</td>
+<td>VS Code・JetBrains拡張</td>
+<td><a href="09-integration.html#ide">09_統合</a></td>
+</tr>
+<tr>
+<td>リモートモード</td>
+<td>ヘッドレス・CI/CD実行</td>
+<td><a href="09-integration.html#remote">09_統合</a></td>
+</tr>
+<tr>
+<td>モデル切替</td>
+<td>Opus / Sonnet / Haiku</td>
+<td><a href="09-integration.html#model-switch">09_統合</a></td>
+</tr>
+<tr>
+<td>自動コンパクション</td>
+<td>コンテキスト上限時の自動要約</td>
+<td><a href="01-basics.html#autocompact">01_基礎概念</a></td>
+</tr>
+<tr>
+<td>Plan Mode</td>
+<td>実装前の計画モード</td>
+<td><a href="02-commands.html#plan-mode">02_コマンド</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>9. 現場の知見（Tips &amp; Gotchas）</h2>
+<div class="callout callout-tip"><p>使ってみないとわからない実践知。→ <a href="11-tips.html">11_現場の知見</a> で詳解</p></div>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>知見</th>
+<th>一言で</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>入力:出力 = 13:1 は正常</td>
+<td>毎ターン全文再送のため。ChatGPTとは逆</td>
+</tr>
+<tr>
+<td>MCP定義だけで~21K/ターン消費</td>
+<td>呼び出し有無に関係なく固定消費</td>
+</tr>
+<tr>
+<td><code>/context</code> 1回で~4K消費</td>
+<td>確認自体がトークンを食う皮肉</td>
+</tr>
+<tr>
+<td>200Kの実質使える量は~160K</td>
+<td>システム・MCP・メモリで40K固定消費</td>
+</tr>
+<tr>
+<td>設定ファイルが2つ存在</td>
+<td><code>~/.claude.json</code> + <code>~/.claude/settings.json</code> がマージされる</td>
+</tr>
+<tr>
+<td>フックがツールをブロック</td>
+<td>PreToolUseのスクリプトエラー = ツール実行キャンセル</td>
+</tr>
+<tr>
+<td><code>/clear</code>してもMCP・メモリは残る</td>
+<td>リセットされるのは会話履歴のみ</td>
+</tr>
+<tr>
+<td>長いセッションは高コスト</td>
+<td>会話蓄積で1ターンあたりの入力が雪だるま式増加</td>
+</tr>
+</tbody>
+</table></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            
+            <a href="01-basics.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">🏗️ 基礎概念</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
