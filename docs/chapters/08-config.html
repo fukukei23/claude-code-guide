@@ -306,6 +306,25 @@ settings.json
 <li>フィルタなしの <code>env</code>（全環境変数表示）</li>
 </ul>
 <hr />
+<h2><a id="scripts-symlink"></a>scripts/ の管理 — シンボリックリンク方式（2026-05-30〜）</h2>
+<p>スクリプトの管理場所は <strong>1箇所だけ</strong>にすることでドリフト（実環境とGitHubの乖離）を根本解決している。</p>
+<pre><code class="language-bash"># ~/.claude/scripts はシンボリックリンク（実体はclaude-config）
+~/.claude/scripts  →  ~/projects/claude-config/scripts
+
+# スクリプトを編集したら
+git -C ~/projects/claude-config add scripts/
+git -C ~/projects/claude-config commit -m "feat: ..."
+git -C ~/projects/claude-config push
+</code></pre>
+<div class="table-wrapper"><table>
+<thead><tr><th>方式</th><th>ドリフトリスク</th><th>運用コスト</th></tr></thead>
+<tbody>
+<tr><td>コピー運用（旧）</td><td>高い（数週間で乖離）</td><td>高い（手動コピーが必要）</td></tr>
+<tr><td>シンボリックリンク（現在）</td><td><strong>ゼロ</strong>（物理的に不可能）</td><td>低い（git操作のみ）</td></tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p><strong>SessionStart チェック</strong>: <code>check-claude-config-sync.sh</code> が起動時に未コミット変更・未pushを検知して警告する。push し忘れても次回セッション開始時に気づける。</p></div>
+<hr />
 <h2>設定変更の方法</h2>
 <div class="table-wrapper"><table>
 <thead>
