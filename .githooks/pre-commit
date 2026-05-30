@@ -3,8 +3,8 @@
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 
-# source/*.md の変更を検出
-if git diff --cached --name-only | grep -q '^source/.*\.md$'; then
+# source/*.md の変更を検出（日本語ファイル名対応: -z で NUL区切り出力）
+if git diff --cached --name-only -z | tr '\0' '\n' | grep -q '^source/.*\.md$'; then
     echo '📝 source/*.md の変更を検出 → convert.py を実行中...'
     cd "$REPO_ROOT"
     python3 convert.py
