@@ -1,0 +1,20 @@
+#!/bin/bash
+# pre-commit hook: source/*.md が変更されていたら convert.py を自動実行
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+# source/*.md の変更を検出
+if git diff --cached --name-only | grep -q '^source/.*\.md$'; then
+    echo '📝 source/*.md の変更を検出 → convert.py を実行中...'
+    cd "$REPO_ROOT"
+    python3 convert.py
+    if [ $? -ne 0 ]; then
+        echo '❌ convert.py が失敗しました。コミットを中止します。'
+        exit 1
+    fi
+    # 生成されたHTMLをステージングに追加
+    git add -f docs/index.html docs/chapters/*.html
+    echo '✅ HTML生成完了・ステージング済み'
+fi
+
+exit 0

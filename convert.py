@@ -2,6 +2,7 @@
 """Claude Code Guide: Markdown → モバイル最適化HTML変換スクリプト."""
 
 import re
+import unicodedata
 from pathlib import Path
 
 from jinja2 import Template
@@ -12,6 +13,8 @@ from markdown_it import MarkdownIt
 SOURCE_DIR = Path(__file__).parent / "source"
 OUTPUT_DIR = Path(__file__).parent / "docs"
 
+# 既存章の手動定義（タイトル・アイコン・説明をカスタマイズしたい場合に記載）
+# ここに書かれていないファイルは source/ を自動スキャンして追加される
 CHAPTER_MAP = {
     "00_早見表.md": {"slug": "00-cheatsheet", "title": "早見表", "icon": "📋", "desc": "全機能チートシート"},
     "01_基礎概念.md": {"slug": "01-basics", "title": "基礎概念", "icon": "🏗️", "desc": "Claude Codeの3つの形態とコンテキストの仕組み"},
@@ -26,7 +29,96 @@ CHAPTER_MAP = {
     "10_用語集.md": {"slug": "10-glossary", "title": "用語集", "icon": "📖", "desc": "A〜Zの用語解説"},
     "11_現場の知見.md": {"slug": "11-tips", "title": "現場の知見", "icon": "💡", "desc": "実践テクニックと落とし穴"},
     "12_dev-cycle.md": {"slug": "12-dev-cycle", "title": "dev-cycle", "icon": "🔄", "desc": "コード品質改善サイクル — スイープ→レビュー→Issue化→自律実装"},
+    "13_glm-rate-proxy.md": {"slug": "13-glm-rate-proxy", "title": "GLM Rate Proxy", "icon": "⚡", "desc": "ZAI/GLMで動かす低コスト運用 — モデルルーティング・Thinking制御"},
 }
+
+
+# --- 自動スキャン ---
+
+def _filename_to_slug(filename: str) -> str:
+    """ファイル名からslugを生成: '13_glm-rate-proxy.md' → '13-glm-rate-proxy'"""
+    stem = Path(filename).stem  # 拡張子除去
+    # 先頭の数字+区切り文字を抽出: "13_foo" → "13-foo", "00_早見表" → "00-cheatsheet相当"
+    # アンダースコアをハイフンに、日本語はASCIIに変換できないのでそのまま残す
+    slug = stem.replace("_", "-", 1)  # 最初の _ のみハイフン化
+    # 残りの _ もハイフン化
+    slug = slug.replace("_", "-")
+    # ASCII以外の文字を除去してslugを作る
+    ascii_slug = ""
+    for ch in slug:
+        if ch.isascii():
+            ascii_slug += ch.lower()
+        elif ch == "-":
+            ascii_slug += "-"
+    # 連続ハイフン・末尾ハイフンを整理
+    ascii_slug = re.sub(r"-+", "-", ascii_slug).strip("-")
+    return ascii_slug or slug
+
+
+def _extract_frontmatter(text: str) -> tuple[dict, str]:
+    """YAMLフロントマターを抽出。なければ空dictとテキストをそのまま返す。"""
+    if not text.startswith("---"):
+        return {}, text
+    end = text.find("\n---", 3)
+    if end == -1:
+        return {}, text
+    fm_text = text[3:end].strip()
+    body = text[end + 4:].lstrip("\n")
+    meta = {}
+    for line in fm_text.splitlines():
+        if ":" in line:
+            k, _, v = line.partition(":")
+            meta[k.strip()] = v.strip()
+    return meta, body
+
+
+def _extract_title_from_h1(text: str) -> str:
+    """H1ヘッダーからタイトルを抽出。'# 13 GLM Rate Proxy — ...' → 'GLM Rate Proxy'"""
+    for line in text.splitlines():
+        if line.startswith("# "):
+            title = line[2:].strip()
+            # 番号プレフィックスを除去: "13 GLM Rate Proxy" → "GLM Rate Proxy"
+            title = re.sub(r"^\d+\s+", "", title)
+            # ダッシュ以降の説明を除去: "GLM Rate Proxy — 説明" → "GLM Rate Proxy"
+            title = re.split(r"\s+[—–-]\s+", title)[0].strip()
+            return title
+    return ""
+
+
+def _extract_desc_from_h1(text: str) -> str:
+    """H1ヘッダーのダッシュ以降を説明として抽出。"""
+    for line in text.splitlines():
+        if line.startswith("# "):
+            parts = re.split(r"\s+[—–-]\s+", line[2:].strip(), maxsplit=1)
+            if len(parts) > 1:
+                return parts[1].strip()
+    return ""
+
+
+def build_chapter_map() -> dict:
+    """source/ をスキャンして完全なCHAPTER_MAPを構築。
+    CHAPTER_MAPに未登録のファイルは自動検出して追加する。"""
+    result = dict(CHAPTER_MAP)
+
+    for md_file in sorted(SOURCE_DIR.glob("*.md")):
+        filename = md_file.name
+        if filename.startswith("_"):
+            continue  # _README.md等は除外
+        if filename in result:
+            continue  # 既登録はスキップ
+
+        text = md_file.read_text(encoding="utf-8")
+        meta, body = _extract_frontmatter(text)
+
+        title = meta.get("title") or _extract_title_from_h1(text) or Path(filename).stem
+        desc = meta.get("card_desc") or meta.get("desc") or _extract_desc_from_h1(text) or title
+        icon = meta.get("icon", "📄")
+        slug = meta.get("slug") or _filename_to_slug(filename)
+
+        result[filename] = {"slug": slug, "title": title, "icon": icon, "desc": desc}
+        print(f"AUTO: {filename} → {slug} ({title})")
+
+    return result
 
 REMOVE_SECTIONS = [
     "## 関連",
@@ -452,11 +544,13 @@ def inject_mermaid(html: str, filename: str) -> str:
     return html
 
 
-def rewrite_links(html: str) -> str:
+def rewrite_links(html: str, chapter_map: dict | None = None) -> str:
     """内部リンクをHTML URLに書き換え."""
     from urllib.parse import quote, unquote
 
-    for filename, info in CHAPTER_MAP.items():
+    cmap = chapter_map or CHAPTER_MAP
+
+    for filename, info in cmap.items():
         # [テキスト](XX_YY.md) → XX-yy.html
         html = html.replace(f'href="{filename}', f'href="{info["slug"]}.html')
         # [テキスト](XX_YY.md#anchor) → XX-yy.html#anchor
@@ -479,8 +573,7 @@ def rewrite_links(html: str) -> str:
     # 未変換の.mdリンクをすべて処理
     def replace_md_link(match):
         href = match.group(1)
-        for filename, info in CHAPTER_MAP.items():
-            # hrefの中にファイル名が含まれているか
+        for filename, info in cmap.items():
             decoded = unquote(href)
             if filename in decoded or filename in href:
                 anchor = ""
@@ -535,9 +628,10 @@ def main():
     chapters_dir.mkdir(parents=True, exist_ok=True)
     assets_dir.mkdir(parents=True, exist_ok=True)
 
-    # 章リストを構築
+    # 章リストを構築（自動スキャン込み）
+    effective_map = build_chapter_map()
     chapters = []
-    for filename, info in sorted(CHAPTER_MAP.items()):
+    for filename, info in sorted(effective_map.items()):
         chapters.append({
             "number": info["slug"][:2],
             "slug": info["slug"],
@@ -558,7 +652,7 @@ def main():
         md_text = filter_sections(md_text)
         html_body = convert_md_to_html(md_text)
         html_body = inject_mermaid(html_body, ch["filename"])
-        html_body = rewrite_links(html_body)
+        html_body = rewrite_links(html_body, effective_map)
         html_body = enhance_html(html_body)
 
         prev_ch = chapters[i - 1] if i > 0 else None
