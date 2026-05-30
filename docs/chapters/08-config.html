@@ -423,7 +423,14 @@ settings.json
 </tr>
 </tbody>
 </table></div>
-<p>Windows Desktopアプリは、同一のMCP構成でもCLIより<strong>6倍以上</strong>のトークンを消費する。2026年5月時点では、6回の異なる設定変更（MCP server削除・profiles無効化・plugin cache削除・marketplace削除・plugin個別無効化・Extensions削除）で検証済み。Desktop Extensionsの削除のみ-10.6kの効果があったが、残り213kはアプリ内部で固定。</p>
+<p>2026年5月初旬時点では、同一のMCP構成でもCLIより<strong>6倍以上</strong>のトークンを消費していた。6回の異なる設定変更（MCP server削除・profiles無効化・plugin cache削除・marketplace削除・plugin個別無効化・Extensions削除）を検証したが、残り213kはアプリ内部で固定だった。</p>
+<p><strong>2026年5月末時点での改善状況：</strong> MCP toolsの<strong>遅延ロード（deferred）化</strong>により大幅削減に成功。87ツール・23.9kまで圧縮済み。ToolSearchで必要な時だけスキーマをロードする設計に変更したことが主因。</p>
+<pre><code># Desktop版 コンテキスト内訳（2026-05-30実測）
+MCP tools (即時ロード):  1.2k  ( 0.6%)
+MCP tools (deferred):   22.7k (11.3%)  ← 87ツール
+System tools (deferred): 10.2k ( 5.1%)
+Free space:             115.3k (57.7%)
+</code></pre>
 <h3>Desktop Extensions</h3>
 <p>Desktopアプリ専用の拡張機能。Windows Storeアプリパッケージ内に配置される。</p>
 <pre><code>Claude Extensions/
@@ -459,12 +466,12 @@ settings.json
 </tr>
 <tr>
 <td>Desktopアプリ</td>
-<td>軽作業のみ</td>
-<td>213k消費で会話制限に抵触する可能性</td>
+<td>軽作業〜通常作業</td>
+<td>MCP deferred化で23.9k（87ツール）まで削減済み</td>
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-tip"><p><strong>現場の知見</strong>: Desktopアプリのコンテキスト過多はAnthropicのアップデート待ち。当面はWSL CLI版をメインで使用する。→ <a href="11-tips.html">11_現場の知見</a></p></div>
+<div class="callout callout-tip"><p><strong>現場の知見</strong>: DesktopアプリのMCPコンテキスト肥大はAnthropicのアップデート待ちではなく、<strong>ToolSearchによるdeferred化</strong>で自力解決済み（2026-05-30）。87ツールを23.9kに圧縮。WSL CLI版をメインにしつつ、Desktop版も通常作業に使用可能な水準になった。→ <a href="11-tips.html">11_現場の知見</a></p></div>
 <hr />
 
         </article>
