@@ -243,7 +243,7 @@ sequenceDiagram
 </tr>
 </tbody>
 </table></div>
-<h3><a id="sessionend"></a>SessionEnd</h3>
+<h3><a id="stop"></a>Stop</h3>
 <p><strong>セッション終了時</strong>に実行。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -290,6 +290,28 @@ sequenceDiagram
           {
             &quot;type&quot;: &quot;command&quot;,
             &quot;command&quot;: &quot;source ~/.secrets.env&quot;
+          }
+        ]
+      }
+    ],
+    &quot;Stop&quot;: [
+      {
+        &quot;matcher&quot;: &quot;&quot;,
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;~/.claude/scripts/session/save-session-log.sh&quot;,
+            &quot;timeout&quot;: 5000
+          },
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;~/.claude/scripts/session/generate-handoff.sh&quot;,
+            &quot;timeout&quot;: 3000
+          },
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;~/.claude/scripts/session/queue-guide-updates.sh&quot;,
+            &quot;timeout&quot;: 5000
           }
         ]
       }

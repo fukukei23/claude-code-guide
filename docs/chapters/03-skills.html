@@ -313,6 +313,19 @@ Claude Code がその指示に従って動作
 <h3><a id="fewer-permission"></a><code>fewer-permission-prompts</code>（Built-in）</h3>
 <p><strong>権限プロンプト削減</strong>。よく使うツール呼び出しを自動許可に設定。</p>
 <hr />
+<h3><a id="update-guide"></a><code>update-guide</code>（カスタムスキル）</h3>
+<p><strong>claude-code-guideの更新キューを処理</strong>。変更されたスクリプト・設定に合わせてガイドのHTMLを最新化する。</p>
+<ul>
+<li><strong>呼び出し</strong>: <code>/update-guide</code></li>
+<li><strong>オプション</strong>:
+<ul>
+<li><code>--dry-run</code> — 適用せずに差分確認のみ</li>
+<li><code>--apply</code> — 確認なしで即適用</li>
+</ul>
+</li>
+<li><strong>種別</strong>: カスタムスキル（自作、<code>~/.claude/skills/update-guide/</code>）</li>
+</ul>
+<hr />
 <h2>スキルの自作方法</h2>
 <ol>
 <li><code>/skill-creator</code> スキルを実行</li>
