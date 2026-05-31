@@ -195,6 +195,14 @@ Claude Code がその指示に従って動作
 <td><code>keybindings-help</code></td>
 <td>キーバインドのカスタマイズ</td>
 </tr>
+<tr>
+<td><code>verify</code></td>
+<td>コード変更が実際に動作するか確認</td>
+</tr>
+<tr>
+<td><code>run</code></td>
+<td>アプリを起動して動作確認</td>
+</tr>
 </tbody>
 </table></div>
 <h3>2. プラグインスキル（Plugin経由で追加）</h3>
@@ -252,6 +260,11 @@ Claude Code がその指示に従って動作
 <td><strong>discord</strong></td>
 <td><code>configure</code>, <code>access</code></td>
 <td>Discord設定</td>
+</tr>
+<tr>
+<td><strong>anthropic-skills</strong></td>
+<td><code>consolidate-memory</code>, <code>setup-cowork</code>, <code>skill-creator</code>, <code>docx</code>, <code>pdf</code>, <code>pptx</code>, <code>xlsx</code></td>
+<td>メモリ整理・Coworkセットアップ・ドキュメント変換</td>
 </tr>
 </tbody>
 </table></div>
@@ -324,6 +337,56 @@ Claude Code がその指示に従って動作
 <p><strong>定期実行タスク</strong>。指定間隔でコマンドを自動実行。</p>
 <h3><a id="fewer-permission"></a><code>fewer-permission-prompts</code>（Built-in）</h3>
 <p><strong>権限プロンプト削減</strong>。よく使うツール呼び出しを自動許可に設定。</p>
+<hr />
+<h3><a id="dev-cycle"></a><code>dev-cycle</code>（カスタムスキル）</h3>
+<p><strong>コード品質改善の全サイクルを自律実行</strong>。品質スイープ→コードレビュー→Issue化→実装ループ→完了通知の5フェーズを自動で回す。</p>
+<ul>
+<li><strong>呼び出し</strong>: <code>/dev-cycle</code>、「dev-cycle」、「品質改善」、「自律ループ」</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/dev-cycle/</code>）</li>
+</ul>
+<hr />
+<h3><a id="gas-autopilot"></a><code>gas-autopilot</code>（カスタムスキル）</h3>
+<p><strong>Google Apps Script（GAS）の自律開発</strong>。コード作成・デプロイ・テスト・修正をセルフドライブで実行。clasp でコード管理、Web App + gas-run.sh で自動デプロイ。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「GAS」「Apps Script」「スプレッドシート自動化」「clasp」</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/gas-autopilot/</code>）</li>
+</ul>
+<hr />
+<h3><a id="guide-builder"></a><code>guide-builder</code>（カスタムスキル）</h3>
+<p><strong>MarkdownソースからGitHub Pagesガイドサイトを構築・更新</strong>。新規リポジトリ立ち上げ（newモード）と既存サイトへの章追加（addモード）の2モード。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「ガイド作って」「ガイドサイト立ち上げて」「章追加して」<code>/guide-builder</code></li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/guide-builder/</code>）</li>
+</ul>
+<hr />
+<h3><a id="html-guide"></a><code>html-guide</code>（カスタムスキル）</h3>
+<p><strong>claude-code-guide用のインタラクティブHTMLページを作成</strong>。このガイドサイト専用のページ生成スキル。</p>
+<ul>
+<li><strong>呼び出し</strong>: <code>/html-guide</code></li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/html-guide/</code>）</li>
+</ul>
+<hr />
+<h3><a id="record-ssot"></a><code>record-ssot</code>（カスタムスキル）</h3>
+<p><strong>SSOTへの記録・振り分けを自動化</strong>。内容をLLMで分析して最適な振り分け先（01_DECISIONS / 10_DAILY等）を判定し、フォーマット生成・リンク付与・ガイド転記まで一気に実行。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「記録して」「書き留めて」「SSOTに入れて」<code>/record-ssot</code></li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/record-ssot/</code>）</li>
+</ul>
+<hr />
+<h3><a id="record-new-feature"></a><code>record-new-feature</code>（カスタムスキル）</h3>
+<p><strong>Claude Codeの新バージョン機能をSSOTとガイドに自動追記</strong>。SessionStart hookで新バージョンを検知した後に発動。</p>
+<ul>
+<li><strong>呼び出し</strong>: SessionStart hookから自動発動</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/record-new-feature/</code>）</li>
+</ul>
+<hr />
+<h3><a id="ssot-search"></a><code>ssot-search</code>（カスタムスキル）</h3>
+<p><strong>個人ナレッジベース（knowledge-base）をRAG検索</strong>。ripgrep全文検索 + sentence-transformers によるリランクで、1,900件超のMarkdownから関連ドキュメントを5件表示。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「SSOTから探して: &lt;キーワード&gt;」<code>/ssot-search</code></li>
+<li><strong>詳細</strong>: <a href="14-ssot-search.html">14_SSOTから探して</a></li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-search/</code>）</li>
+</ul>
 <hr />
 <h3><a id="new-session"></a><code>new-session</code>（カスタムスキル）</h3>
 <p><strong>コンテキスト圧縮・セッション引き継ぎ</strong>。コンテキストが溜まってきたときに新セッションへの引き継ぎプロンプトを自動生成する。</p>
