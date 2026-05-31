@@ -1,6 +1,6 @@
 # Claude Code Guide
 
-Claude Code CLI の使い方を基礎から応用まで完全解説するモバイル対応HTMLガイド。
+Claude Code の使い方を基礎から応用まで完全解説するモバイル対応HTMLガイド。
 
 ## URL
 
