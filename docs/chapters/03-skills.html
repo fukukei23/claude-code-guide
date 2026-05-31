@@ -358,6 +358,50 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（自作、<code>~/.claude/skills/update-guide/</code>）</li>
 </ul>
 <hr />
+<h3><a id="skill-test"></a><code>skill-test</code>（カスタムスキル）</h3>
+<p><strong>スキル定義（SKILL.md）を静的点検・ドライランで検証する</strong>。<code>/debug</code>（コードファイル向け）とは対象が異なる専用スキル。</p>
+<ul>
+<li><strong>呼び出し</strong>: <code>/skill-test</code> または「スキルを点検して」「スキルのバグ確認」</li>
+<li><strong>フェーズ構成</strong>:
+<ol>
+<li><strong>スキル特定</strong> — 会話コンテキスト優先 → 引数指定 → 一覧から選択</li>
+<li><strong>静的点検</strong> — フェーズ設計の矛盾・条件分岐の抜け・パスの環境依存・LLM名汎用化などを検査</li>
+<li><strong>ドライラン</strong> — 架空インプット2〜3パターンで各フェーズをトレース（実際の書き込みなし）</li>
+<li><strong>レポート出力</strong> — 🔴重大 / 🟡中程度 / 🔵軽微 の重大度別に列挙</li>
+<li><strong>修正適用</strong> — 全件 / 重大のみ / 個別選択 から選んで SKILL.md を編集</li>
+</ol>
+</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/skill-test/</code>）</li>
+</ul>
+<h4><code>/debug</code> との使い分け</h4>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th><code>/debug</code></th>
+<th><code>/skill-test</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対象</td>
+<td>コードファイル（.py, .ts 等）</td>
+<td>スキル定義（SKILL.md）</td>
+</tr>
+<tr>
+<td>手法</td>
+<td>実行 → エラー検出 → 修正ループ</td>
+<td>静的点検 + ドライラン</td>
+</tr>
+<tr>
+<td>完了条件</td>
+<td>テスト/ビルドが通る</td>
+<td>仕様通りに動くことを確認</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p><strong>注意</strong>: <code>/debug</code> と入力するとClaude Codeの組み込みデバッグログコマンドが起動する。スキル点検には必ず <code>/skill-test</code> を使うこと。</p></div>
+<hr />
 <h2>スキルの自作方法</h2>
 <ol>
 <li><code>/skill-creator</code> スキルを実行</li>
