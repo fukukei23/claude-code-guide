@@ -7,10 +7,12 @@
 ```
 Claude Code
   │
+  ├─ glm MCP ───────────→ GLM-5.1 API ──→ LLM呼び出し（メイン）
+  ├─ minimax MCP ───────→ MiniMax API ──→ LLM呼び出し（フォールバック）
   ├─ brave-search MCP ──→ Brave検索API ──→ Web検索結果
   ├─ github MCP ────────→ GitHub API ────→ PR・Issue・ファイル
   ├─ playwright MCP ────→ Chromium ──────→ ブラウザ操作
-  ├─ context7 MCP ──────→ Docs API ─────→ ライブラリ文档
+  ├─ context7 MCP ──────→ Docs API ─────→ ライブラリドキュメント
   ├─ discord MCP ───────→ Discord API ──→ メッセージ送受信
   └─ mermaid MCP ───────→ Mermaid API ──→ 図表生成
 ```
@@ -19,7 +21,66 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ---
 
-## 現在の構成（6サーバー・83ツール）
+## 現在の構成（8サーバー・119ツール）
+
+### <a id="glm"></a>glm（19ツール）
+
+**Claude CodeのメインLLM**。glm-rate-proxy（localhost:8787）経由でZAI API（GLM-5.1等）を呼び出す。LLMルーティングポリシーに従い、Sonnet直接回答の代わりにこのMCPを使う。
+
+| ツール | 用途 |
+|---|---|
+| `glm_ask` | 汎用LLM呼び出し（最も頻繁に使う） |
+| `glm_generate_code` | コード生成 |
+| `glm_review_code` | コードレビュー |
+| `glm_explain_code` | コード説明 |
+| `glm_refactor_suggest` | リファクタリング提案 |
+| `glm_debug_error` | エラーデバッグ |
+| `glm_generate_tests` | テスト生成 |
+| `glm_security_audit` | セキュリティ監査 |
+| `glm_analyze_file` | ファイル分析 |
+| `glm_generate_docs` | ドキュメント生成 |
+| `glm_write_readme` | README生成 |
+| `glm_write_document` | 汎用ドキュメント作成 |
+| `glm_write_dockerfile` | Dockerfile生成 |
+| `glm_design_api` | API設計 |
+| `glm_optimize_sql` | SQL最適化 |
+| `glm_generate_regex` | 正規表現生成 |
+| `glm_generate_changelog` | CHANGELOG生成 |
+| `glm_git_commit_message` | コミットメッセージ生成 |
+| `glm_translate` | 翻訳 |
+
+**使いどころ**: Sonnet直接回答の代替（LLMルーティングポリシー参照）。コード生成・レビュー・説明など開発全般。  
+**注意**: glm-rate-proxy が起動していないと接続不可。`curl http://127.0.0.1:8787/proxy/status` で確認。→ [13_glm-rate-proxy](13_glm-rate-proxy.md)
+
+---
+
+### <a id="minimax"></a>minimax（17ツール）
+
+**GLMのフォールバックLLM兼大量処理専用**。GLM失敗時・ピーク時間帯（15〜19時）・大量処理タスクに自動委譲される。`python3 -m minimax_mcp` で起動するPythonパッケージ。
+
+| ツール | 用途 |
+|---|---|
+| `minimax_ask` | 汎用LLM呼び出し |
+| `minimax_summarize_file` | ファイル要約 |
+| `minimax_summarize_url` | URL要約 |
+| `minimax_translate_file` | ファイル翻訳 |
+| `minimax_extract_keywords` | キーワード抽出 |
+| `minimax_convert_format` | フォーマット変換 |
+| `minimax_clean_data` | データクリーニング |
+| `minimax_generate_test_data` | テストデータ生成 |
+| `minimax_generate_schema` | スキーマ生成 |
+| `minimax_write_email` | メール文面生成 |
+| `minimax_log_analysis` | ログ分析 |
+| `minimax_error_group` | エラーグルーピング |
+| `minimax_diff_summary` | diff要約 |
+| `minimax_diff_releases` | リリース差分比較 |
+| `minimax_batch_process` | バッチ処理 |
+| `minimax_env_check` | 環境チェック |
+| `minimax_cron_helper` | cron設定補助 |
+
+**使いどころ**: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。GLM失敗時のフォールバック。
+
+---
 
 ### <a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）
 
@@ -109,18 +170,21 @@ Discordとの連携。
 
 ## コンテキスト消費のトレードオフ
 
-| サーバー | ツール数 | トークン | コンテキスト比 |
-|---|---|---|---|
-| github | 41 | 9.6k | 4.8% |
-| brave-search | 6 | 5.5k | 2.8% |
-| playwright | 25 | 4.7k | 2.4% |
-| context7 | 2 | 1.2k | 0.6% |
-| discord | 5 | 0.6k | 0.3% |
-| mermaid | 4 | 0.4k | 0.2% |
-| **合計** | **83** | **21.4k** | **10.7%** |
+| サーバー | ツール数 | 備考 |
+|---|---|---|
+| glm | 19 | メインLLM（glm-rate-proxy経由） |
+| minimax | 17 | フォールバックLLM・大量処理 |
+| github | 41 | 最もツール数が多い |
+| brave-search | 6 | ~5.5kトークン |
+| playwright | 25 | ~4.7kトークン |
+| context7 | 2 | ~1.2kトークン |
+| discord | 5 | ~0.6kトークン |
+| mermaid | 4 | ~0.4kトークン |
+| **合計** | **119** | |
 
-- **GitHub**が最も重い（41ツール = 全MCPの半分）
-- 以前は9サーバー（~35kトークン）だったが、使用頻度分析で6サーバーに最適化済み
+- **GitHub**が最も重い（41ツール = 全MCPの3分の1強）
+- GLM/MiniMaxはLLM委譲用の特殊サーバー（他のMCPとは性質が異なる）
+- 以前は9サーバー（~35kトークン）だったが、使用頻度分析で最適化済み
 
 > **現場の知見**: MCPツールは呼び出した時だけコストが発生するわけではない。**ツール定義だけで毎ターン消費**される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ [11_現場の知見](11_現場の知見.md#a-コンテキスト経済学)
 

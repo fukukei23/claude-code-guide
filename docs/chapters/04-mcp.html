@@ -140,16 +140,191 @@
 <p><strong>MCP（Model Context Protocol）</strong> は、Claude Codeから外部ツールを利用するための仕組み。</p>
 <pre><code>Claude Code
   │
+  ├─ glm MCP ───────────→ Claude API ──→ LLM呼び出し（メイン）
+  ├─ フォールバック先 MCP ───────→ 代替プロバイダー API ──→ LLM呼び出し（フォールバック）
   ├─ brave-search MCP ──→ Brave検索API ──→ Web検索結果
   ├─ github MCP ────────→ GitHub API ────→ PR・Issue・ファイル
   ├─ playwright MCP ────→ Chromium ──────→ ブラウザ操作
-  ├─ context7 MCP ──────→ Docs API ─────→ ライブラリ文档
+  ├─ context7 MCP ──────→ Docs API ─────→ ライブラリドキュメント
   ├─ discord MCP ───────→ Discord API ──→ メッセージ送受信
   └─ mermaid MCP ───────→ Mermaid API ──→ 図表生成
 </code></pre>
 <p>MCPサーバーを追加すると、Claude Codeが<strong>そのサーバーのツール</strong>を使えるようになる。各ツールはコンテキストを消費するため、必要なものだけを維持する。</p>
 <hr />
-<h2>現在の構成（6サーバー・83ツール）</h2>
+<h2>現在の構成（8サーバー・119ツール）</h2>
+<h3><a id="glm"></a>glm（19ツール）</h3>
+<p><strong>Claude CodeのメインLLM</strong>。glm-rate-proxy（localhost:8787）経由でZAI API（Claude等）を呼び出す。LLMルーティングポリシーに従い、Sonnet直接回答の代わりにこのMCPを使う。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>glm_ask</code></td>
+<td>汎用LLM呼び出し（最も頻繁に使う）</td>
+</tr>
+<tr>
+<td><code>glm_generate_code</code></td>
+<td>コード生成</td>
+</tr>
+<tr>
+<td><code>glm_review_code</code></td>
+<td>コードレビュー</td>
+</tr>
+<tr>
+<td><code>glm_explain_code</code></td>
+<td>コード説明</td>
+</tr>
+<tr>
+<td><code>glm_refactor_suggest</code></td>
+<td>リファクタリング提案</td>
+</tr>
+<tr>
+<td><code>glm_debug_error</code></td>
+<td>エラーデバッグ</td>
+</tr>
+<tr>
+<td><code>glm_generate_tests</code></td>
+<td>テスト生成</td>
+</tr>
+<tr>
+<td><code>glm_security_audit</code></td>
+<td>セキュリティ監査</td>
+</tr>
+<tr>
+<td><code>glm_analyze_file</code></td>
+<td>ファイル分析</td>
+</tr>
+<tr>
+<td><code>glm_generate_docs</code></td>
+<td>ドキュメント生成</td>
+</tr>
+<tr>
+<td><code>glm_write_readme</code></td>
+<td>README生成</td>
+</tr>
+<tr>
+<td><code>glm_write_document</code></td>
+<td>汎用ドキュメント作成</td>
+</tr>
+<tr>
+<td><code>glm_write_dockerfile</code></td>
+<td>Dockerfile生成</td>
+</tr>
+<tr>
+<td><code>glm_design_api</code></td>
+<td>API設計</td>
+</tr>
+<tr>
+<td><code>glm_optimize_sql</code></td>
+<td>SQL最適化</td>
+</tr>
+<tr>
+<td><code>glm_generate_regex</code></td>
+<td>正規表現生成</td>
+</tr>
+<tr>
+<td><code>glm_generate_changelog</code></td>
+<td>CHANGELOG生成</td>
+</tr>
+<tr>
+<td><code>glm_git_commit_message</code></td>
+<td>コミットメッセージ生成</td>
+</tr>
+<tr>
+<td><code>glm_translate</code></td>
+<td>翻訳</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: Sonnet直接回答の代替（LLMルーティングポリシー参照）。コード生成・レビュー・説明など開発全般。<br />
+<strong>注意</strong>: glm-rate-proxy が起動していないと接続不可。<code>curl http://127.0.0.1:8787/proxy/status</code> で確認。→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
+<hr />
+<h3><a id="フォールバック先"></a>フォールバック先（17ツール）</h3>
+<p><strong>GLMのフォールバックLLM兼大量処理専用</strong>。GLM失敗時・ピーク時間帯（15〜19時）・大量処理タスクに自動委譲される。<code>python3 -m フォールバック先_mcp</code> で起動するPythonパッケージ。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>フォールバック先_ask</code></td>
+<td>汎用LLM呼び出し</td>
+</tr>
+<tr>
+<td><code>フォールバック先_summarize_file</code></td>
+<td>ファイル要約</td>
+</tr>
+<tr>
+<td><code>フォールバック先_summarize_url</code></td>
+<td>URL要約</td>
+</tr>
+<tr>
+<td><code>フォールバック先_translate_file</code></td>
+<td>ファイル翻訳</td>
+</tr>
+<tr>
+<td><code>フォールバック先_extract_keywords</code></td>
+<td>キーワード抽出</td>
+</tr>
+<tr>
+<td><code>フォールバック先_convert_format</code></td>
+<td>フォーマット変換</td>
+</tr>
+<tr>
+<td><code>フォールバック先_clean_data</code></td>
+<td>データクリーニング</td>
+</tr>
+<tr>
+<td><code>フォールバック先_generate_test_data</code></td>
+<td>テストデータ生成</td>
+</tr>
+<tr>
+<td><code>フォールバック先_generate_schema</code></td>
+<td>スキーマ生成</td>
+</tr>
+<tr>
+<td><code>フォールバック先_write_email</code></td>
+<td>メール文面生成</td>
+</tr>
+<tr>
+<td><code>フォールバック先_log_analysis</code></td>
+<td>ログ分析</td>
+</tr>
+<tr>
+<td><code>フォールバック先_error_group</code></td>
+<td>エラーグルーピング</td>
+</tr>
+<tr>
+<td><code>フォールバック先_diff_summary</code></td>
+<td>diff要約</td>
+</tr>
+<tr>
+<td><code>フォールバック先_diff_releases</code></td>
+<td>リリース差分比較</td>
+</tr>
+<tr>
+<td><code>フォールバック先_batch_process</code></td>
+<td>バッチ処理</td>
+</tr>
+<tr>
+<td><code>フォールバック先_env_check</code></td>
+<td>環境チェック</td>
+</tr>
+<tr>
+<td><code>フォールバック先_cron_helper</code></td>
+<td>cron設定補助</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。GLM失敗時のフォールバック。</p>
+<hr />
 <h3><a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）</h3>
 <p>Web検索に関する各種機能。</p>
 <div class="table-wrapper"><table>
@@ -355,58 +530,61 @@
 <tr>
 <th>サーバー</th>
 <th>ツール数</th>
-<th>トークン</th>
-<th>コンテキスト比</th>
+<th>備考</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>glm</td>
+<td>19</td>
+<td>メインLLM（glm-rate-proxy経由）</td>
+</tr>
+<tr>
+<td>フォールバック先</td>
+<td>17</td>
+<td>フォールバックLLM・大量処理</td>
+</tr>
+<tr>
 <td>github</td>
 <td>41</td>
-<td>9.6k</td>
-<td>4.8%</td>
+<td>最もツール数が多い</td>
 </tr>
 <tr>
 <td>brave-search</td>
 <td>6</td>
-<td>5.5k</td>
-<td>2.8%</td>
+<td>~5.5kトークン</td>
 </tr>
 <tr>
 <td>playwright</td>
 <td>25</td>
-<td>4.7k</td>
-<td>2.4%</td>
+<td>~4.7kトークン</td>
 </tr>
 <tr>
 <td>context7</td>
 <td>2</td>
-<td>1.2k</td>
-<td>0.6%</td>
+<td>~1.2kトークン</td>
 </tr>
 <tr>
 <td>discord</td>
 <td>5</td>
-<td>0.6k</td>
-<td>0.3%</td>
+<td>~0.6kトークン</td>
 </tr>
 <tr>
 <td>mermaid</td>
 <td>4</td>
-<td>0.4k</td>
-<td>0.2%</td>
+<td>~0.4kトークン</td>
 </tr>
 <tr>
 <td><strong>合計</strong></td>
-<td><strong>83</strong></td>
-<td><strong>21.4k</strong></td>
-<td><strong>10.7%</strong></td>
+<td><strong>119</strong></td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
 <ul>
-<li><strong>GitHub</strong>が最も重い（41ツール = 全MCPの半分）</li>
-<li>以前は9サーバー（~35kトークン）だったが、使用頻度分析で6サーバーに最適化済み</li>
+<li><strong>GitHub</strong>が最も重い（41ツール = 全MCPの3分の1強）</li>
+<li>GLM/代替プロバイダーはLLM委譲用の特殊サーバー（他のMCPとは性質が異なる）</li>
+<li>以前は9サーバー（~35kトークン）だったが、使用頻度分析で最適化済み</li>
 </ul>
 <div class="callout callout-tip"><p><strong>現場の知見</strong>: MCPツールは呼び出した時だけコストが発生するわけではない。<strong>ツール定義だけで毎ターン消費</strong>される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ <a href="11-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
 <hr />
