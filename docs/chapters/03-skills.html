@@ -336,7 +336,7 @@ Claude Code がその指示に従って動作
 <li>画面に出力 + SSOT に永続保存</li>
 </ol>
 </li>
-<li><strong>保存先</strong>: <code>~/projects/obsidian-ssot/00_SYSTEM/handoff/YYYY-MM-DD_HHMM.md</code>
+<li><strong>保存先</strong>: <code>~/projects/claude-code/handoff/YYYY-MM-DD_HHMM.md</code>
 <ul>
 <li>日時付きで蓄積されるので、過去の引き継ぎも <code>ls</code> で参照可能</li>
 <li>旧: <code>/tmp/new-session-prompt.md</code>（再起動で消える） → 2026-05-31 に変更</li>
@@ -356,32 +356,6 @@ Claude Code がその指示に従って動作
 </ul>
 </li>
 <li><strong>種別</strong>: カスタムスキル（自作、<code>~/.claude/skills/update-guide/</code>）</li>
-</ul>
-<hr />
-<h3><a id="delegate-to-minimax"></a><code>delegate-to-minimax</code>（カスタムスキル）</h3>
-<p><strong>大量テキスト処理タスクをMiniMaxに委譲</strong>。GLMレートリミットを節約するためのルーティングスキル。</p>
-<ul>
-<li><strong>委譲対象</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出・データクリーニング・ボイラープレート生成</li>
-<li><strong>委譲しない</strong>: 翻訳（中国語混入リスク）・既存コードへの変更・アーキテクチャ設計・デバッグ・コードレビュー</li>
-<li><strong>ルーティングテーブル</strong>: 特定タスク→専用MCPツール（<code>minimax_summarize_file</code>、<code>minimax_convert_format</code> 等）を選択</li>
-<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/delegate-to-minimax.md</code>）</li>
-</ul>
-<hr />
-<h3><a id="dev-cycle"></a><code>dev-cycle</code>（カスタムスキル）</h3>
-<p><strong>コード品質改善の全サイクルを実行</strong>。品質スイープ → コードレビュー → Issue化 → 自律実装ループ → 完了通知の5フェーズ。</p>
-<ul>
-<li><strong>呼び出し</strong>: <code>/dev-cycle</code>（または「開発サイクル」「品質改善」「自律ループ」）</li>
-<li><strong>フェーズ</strong>:
-<ol>
-<li>品質スイープ 🟡[GLM] — 全ファイル走査・問題列挙（読み取り専用）</li>
-<li>コードレビュー v3 🟡[GLM] — 重要ファイルを深く評価・★スコア</li>
-<li>Issue化 — P1/P2リストをGitHub Issueに登録</li>
-<li>自律実装ループ — Stop Hook連鎖方式で順次自動実装</li>
-<li>完了通知（自動）— 全Issue完了時にOS通知</li>
-</ol>
-</li>
-<li><strong>詳細</strong>: <a href="12-dev-cycle.html">12章 dev-cycle</a></li>
-<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/dev-cycle/</code>）</li>
 </ul>
 <hr />
 <h2>スキルの自作方法</h2>

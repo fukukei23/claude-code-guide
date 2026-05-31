@@ -392,28 +392,28 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <tbody>
 <tr>
 <td>品質スイープ</td>
-<td>🟡[GLM]</td>
-<td>パターン検出・列挙（レートリミット節約のためGLM推奨）</td>
+<td>高速・安価なモデル</td>
+<td>パターン検出・列挙</td>
 </tr>
 <tr>
 <td>コードレビュー v3</td>
-<td>🟡[GLM] / 🔵[Sonnet]（許可時）</td>
-<td>深い読解・主観評価が必要なためMiniMax不可</td>
+<td>高精度モデル</td>
+<td>深い読解・主観評価</td>
 </tr>
 <tr>
 <td>Issue 化</td>
-<td>🟠[MiniMax]</td>
-<td>テンプレート変換・一括生成に委譲可</td>
+<td>任意</td>
+<td>テンプレート変換</td>
 </tr>
 <tr>
 <td>コード生成（実装）</td>
-<td>🟡[GLM] / 🟠[MiniMax]</td>
-<td>繰り返し生成はMiniMax委譲でレート節約</td>
+<td>大量処理向けモデル</td>
+<td>繰り返し生成</td>
 </tr>
 <tr>
 <td>テスト・CI 確認</td>
-<td>🔵[Sonnet] 直接</td>
-<td>ツール呼び出しが必要なためClaude直接</td>
+<td>Claude 直接</td>
+<td>ツール呼び出し</td>
 </tr>
 </tbody>
 </table></div>

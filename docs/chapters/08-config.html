@@ -175,7 +175,11 @@ Layer 1: グローバル（全プロジェクト共通）
 <li>セキュリティルール（APIキー非表示等）</li>
 <li>コーディング原則</li>
 <li>SSOT（共通知識ベース）の参照</li>
+<li>セッションタイトルの日本語生成ルール</li>
 </ul>
+<div class="callout callout-info"><p><strong>補足: デスクトップアプリのUI言語について</strong><br />
+Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できない（アプリ側の仕様）。<br />
+制御できるのはAIが生成するテキスト（セッションタイトル・返答など）のみ。</p></div>
 <h3><a id="claude-md-project"></a>Layer 2: プロジェクトCLAUDE.md</h3>
 <p><strong>プロジェクト固有のルール</strong>を記述。</p>
 <ul>
@@ -229,24 +233,24 @@ Layer 1: グローバル（全プロジェクト共通）
 </thead>
 <tbody>
 <tr>
-<td>PreToolUse</td>
+<td></td>
 <td>ツール実行前</td>
-<td>危険コマンドのブロック・安全確認（<code>check-command-safety.py</code>）</td>
+<td>危険コマンドのブロック・安全確認</td>
 </tr>
 <tr>
-<td>PostToolUse</td>
+<td></td>
 <td>ツール実行後</td>
-<td>git commit検出→SSOT自動記録トリガー（<code>detect-commit-for-ssot.sh</code>）</td>
+<td>実行結果のログ記録・後処理</td>
 </tr>
 <tr>
-<td>SessionStart</td>
+<td></td>
 <td>セッション開始時</td>
-<td>APIキー注入（<code>~/.secrets.env</code>）・MCP設定チェック・スタートアップバナー表示</td>
+<td>環境変数の注入（）・初期化</td>
 </tr>
 <tr>
-<td>Stop</td>
+<td></td>
 <td>セッション終了時</td>
-<td>セッションログの保存・ガイド更新キューの記録・WSLスキルのWindows同期（<code>sync-skills-windows.sh</code>）・クリーンアップ</td>
+<td>セッションログの保存・ガイド更新キューの記録・クリーンアップ</td>
 </tr>
 </tbody>
 </table></div>
