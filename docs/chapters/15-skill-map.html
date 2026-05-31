@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スキルマップ — Claude Code Guide</title>
+    <meta name="description" content="開発ライフサイクルに沿ったスキル選択ガイド — いつどのスキルを使うか一目で分かるインタラクティブマップ">
+    <meta property="og:title" content="スキルマップ — Claude Code Guide">
+    <meta property="og:description" content="開発フローに沿ってスキルを選べるインタラクティブマップ">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/15-skill-map.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <style>
+        /* ── スキルマップ専用スタイル ── */
+        .skillmap-intro {
+            background: var(--callout-bg, #f0f7ff);
+            border-left: 4px solid var(--accent, #4f8ef7);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        .phase-section {
+            margin-bottom: 2.5rem;
+        }
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            cursor: default;
+        }
+        .phase-header.start   { background: #e8f5e9; color: #2e7d32; }
+        .phase-header.impl    { background: #e3f2fd; color: #1565c0; }
+        .phase-header.quality { background: #fff3e0; color: #e65100; }
+        .phase-header.record  { background: #f3e5f5; color: #6a1b9a; }
+        .phase-header.session { background: #fce4ec; color: #880e4f; }
+        [data-theme="dark"] .phase-header.start   { background: #1b3d1e; color: #a5d6a7; }
+        [data-theme="dark"] .phase-header.impl    { background: #0d2744; color: #90caf9; }
+        [data-theme="dark"] .phase-header.quality { background: #3e2000; color: #ffcc80; }
+        [data-theme="dark"] .phase-header.record  { background: #2d1540; color: #ce93d8; }
+        [data-theme="dark"] .phase-header.session { background: #3b0a1e; color: #f48fb1; }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 0.7rem;
+        }
+        .skill-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+            padding: 0.75rem 0.9rem;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: var(--card-bg, #fff);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            width: 100%;
+        }
+        .skill-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+        }
+        .skill-btn.active {
+            border-color: var(--accent, #4f8ef7);
+            box-shadow: 0 0 0 3px rgba(79,142,247,0.2);
+        }
+        .skill-btn .skill-cmd {
+            font-family: var(--font-mono, monospace);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent, #4f8ef7);
+        }
+        .skill-btn .skill-label {
+            font-size: 0.78rem;
+            color: var(--text-muted, #666);
+            line-height: 1.3;
+        }
+
+        /* ── 詳細パネル ── */
+        .detail-panel {
+            position: sticky;
+            top: 4.5rem;
+            background: var(--card-bg, #fff);
+            border: 2px solid var(--accent, #4f8ef7);
+            border-radius: 14px;
+            padding: 1.4rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            min-height: 200px;
+            transition: opacity 0.2s ease;
+        }
+        .detail-panel.empty {
+            border-color: var(--border, #e0e0e0);
+            opacity: 0.5;
+        }
+        .detail-panel h3 {
+            margin: 0 0 0.8rem;
+            font-size: 1.2rem;
+            color: var(--accent, #4f8ef7);
+        }
+        .detail-panel .detail-cmd {
+            display: inline-block;
+            font-family: var(--font-mono, monospace);
+            background: var(--code-bg, #f5f5f5);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .detail-section {
+            margin-bottom: 0.9rem;
+        }
+        .detail-section h4 {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted, #888);
+            margin: 0 0 0.3rem;
+        }
+        .detail-section p, .detail-section ul {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .detail-section ul {
+            padding-left: 1.2rem;
+        }
+        .detail-section code {
+            font-size: 0.85rem;
+            background: var(--code-bg, #f5f5f5);
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+        }
+        .detail-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            color: var(--text-muted, #aaa);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* ── レイアウト ── */
+        .map-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 2rem;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .map-layout { grid-template-columns: 1fr; }
+            .detail-panel { position: static; }
+            .skill-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+        }
+
+        /* ── 典型フロー ── */
+        .flow-example {
+            background: var(--callout-bg, #f8f9fa);
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            margin-top: 2rem;
+        }
+        .flow-example h3 {
+            margin: 0 0 0.8rem;
+            font-size: 1rem;
+        }
+        .flow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            align-items: center;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .flow-step .step-btn {
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            border: none;
+            background: var(--accent, #4f8ef7);
+            color: #fff;
+            font-size: 0.82rem;
+            font-family: var(--font-mono, monospace);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .flow-step .step-btn:hover { transform: scale(1.05); }
+        .flow-arrow {
+            color: var(--text-muted, #aaa);
+            font-size: 1rem;
+        }
+        .flow-step .step-note {
+            font-size: 0.75rem;
+            color: var(--text-muted, #888);
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        <a href="00-cheatsheet.html" class="sidebar-link"><span class="sidebar-icon">📋</span>早見表</a>
+        <a href="01-basics.html" class="sidebar-link"><span class="sidebar-icon">🏗️</span>基礎概念</a>
+        <a href="02-commands.html" class="sidebar-link"><span class="sidebar-icon">⌨️</span>コマンド一覧</a>
+        <a href="03-skills.html" class="sidebar-link"><span class="sidebar-icon">🎯</span>スキルシステム</a>
+        <a href="04-mcp.html" class="sidebar-link"><span class="sidebar-icon">🔌</span>MCPサーバー</a>
+        <a href="05-hooks.html" class="sidebar-link"><span class="sidebar-icon">🪝</span>フック</a>
+        <a href="06-memory.html" class="sidebar-link"><span class="sidebar-icon">🧠</span>メモリ</a>
+        <a href="07-agents.html" class="sidebar-link"><span class="sidebar-icon">🤖</span>エージェント</a>
+        <a href="08-config.html" class="sidebar-link"><span class="sidebar-icon">⚙️</span>設定ファイル</a>
+        <a href="09-integration.html" class="sidebar-link"><span class="sidebar-icon">🔗</span>統合</a>
+        <a href="10-glossary.html" class="sidebar-link"><span class="sidebar-icon">📖</span>用語集</a>
+        <a href="11-tips.html" class="sidebar-link"><span class="sidebar-icon">💡</span>現場の知見</a>
+        <a href="12-dev-cycle.html" class="sidebar-link"><span class="sidebar-icon">🔄</span>dev-cycle</a>
+        <a href="13-glm-rate-proxy.html" class="sidebar-link"><span class="sidebar-icon">⚡</span>GLM Rate Proxy</a>
+        <a href="14-ssot-search.html" class="sidebar-link"><span class="sidebar-icon">🔍</span>SSOTから探して</a>
+        <a href="15-skill-map.html" class="sidebar-link active"><span class="sidebar-icon">🗺️</span>スキルマップ</a>
+    </nav>
+
+    <main class="content">
+        <article>
+            <h1>🗺️ スキルマップ — いつ何を使うか</h1>
+            <p class="chapter-subtitle">開発のフェーズに合わせてスキルを選ぶ、インタラクティブ早見表。スキルをクリックすると詳細が表示されます。</p>
+
+            <div class="skillmap-intro">
+                💡 <strong>使い方：</strong>各フェーズのスキルカードをクリックすると、右パネル（PC）または下部（スマホ）に詳細説明・使いどころ・コマンド例が表示されます。
+            </div>
+
+            <div class="map-layout">
+                <!-- 左: フェーズ別スキル一覧 -->
+                <div class="phases-column">
+
+                    <!-- フェーズ1: プロジェクト開始 -->
+                    <div class="phase-section">
+                        <div class="phase-header start">🚀 フェーズ1：プロジェクト開始</div>
+                        <div class="skill-grid">
+                            <button class="skill-btn" data-skill="init">
+                                <span class="skill-cmd">/init</span>
+                                <span class="skill-label">CLAUDE.md 自動生成</span>
+                            </button>
+                            <button class="skill-btn" data-skill="update-config">
+                                <span class="skill-cmd">/update-config</span>
+                                <span class="skill-label">設定・hooks を整備</span>
+                            </button>
+                            <button class="skill-btn" data-skill="keybindings">
+                                <span class="skill-cmd">/keybindings-help</span>
+                                <span class="skill-label">ショートカット設定</span>
+                            </button>
+                            <button class="skill-btn" data-skill="ssot-search">
+                                <span class="skill-cmd">/ssot-search</span>
+                                <span class="skill-label">過去の判断を検索</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- フェーズ2: 実装 -->
+                    <div class="phase-section">
+                        <div class="phase-header impl">🔨 フェーズ2：実装</div>
+                        <div class="skill-grid">
+                            <button class="skill-btn" data-skill="feature-dev">
+                                <span class="skill-cmd">/feature-dev</span>
+                                <span class="skill-label">機能設計〜実装を伴走</span>
+                            </button>
+                            <button class="skill-btn" data-skill="claude-api">
+                                <span class="skill-cmd">/claude-api</span>
+                                <span class="skill-label">Anthropic SDK 開発</span>
+                            </button>
+                            <button class="skill-btn" data-skill="gas-autopilot">
+                                <span class="skill-cmd">/gas-autopilot</span>
+                                <span class="skill-label">GAS 自律開発ループ</span>
+                            </button>
+                            <button class="skill-btn" data-skill="minimax">
+                                <span class="skill-cmd">delegate-to-minimax</span>
+                                <span class="skill-label">大量処理を自動委譲</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- フェーズ3: 品質チェック -->
+                    <div class="phase-section">
+                        <div class="phase-header quality">✅ フェーズ3：品質チェック</div>
+                        <div class="skill-grid">
+                            <button class="skill-btn" data-skill="code-review">
+                                <span class="skill-cmd">/code-review</span>
+                                <span class="skill-label">バグ・ロジック確認</span>
+                            </button>
+                            <button class="skill-btn" data-skill="security-review">
+                                <span class="skill-cmd">/security-review</span>
+                                <span class="skill-label">セキュリティ特化</span>
+                            </button>
+                            <button class="skill-btn" data-skill="simplify">
+                                <span class="skill-cmd">/simplify</span>
+                                <span class="skill-label">リファクタ・冗長除去</span>
+                            </button>
+                            <button class="skill-btn" data-skill="run">
+                                <span class="skill-cmd">/run</span>
+                                <span class="skill-label">アプリを起動確認</span>
+                            </button>
+                            <button class="skill-btn" data-skill="verify">
+                                <span class="skill-cmd">/verify</span>
+                                <span class="skill-label">変更が意図通りか検証</span>
+                            </button>
+                            <button class="skill-btn" data-skill="review">
+                                <span class="skill-cmd">/review</span>
+                                <span class="skill-label">PR 全体レビュー</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- フェーズ4: 品質改善ループ -->
+                    <div class="phase-section">
+                        <div class="phase-header quality">🔁 フェーズ4：自律品質改善</div>
+                        <div class="skill-grid">
+                            <button class="skill-btn" data-skill="dev-cycle">
+                                <span class="skill-cmd">/dev-cycle</span>
+                                <span class="skill-label">自律ループで品質改善</span>
+                            </button>
+                            <button class="skill-btn" data-skill="loop">
+                                <span class="skill-cmd">/loop</span>
+                                <span class="skill-label">定期繰り返し実行</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- フェーズ5: 記録 -->
+                    <div class="phase-section">
+                        <div class="phase-header record">📝 フェーズ5：記録・ナレッジ管理</div>
+                        <div class="skill-grid">
+                            <button class="skill-btn" data-skill="record-decision">
+                                <span class="skill-cmd">/record-decision</span>
+                                <span class="skill-label">SSOT + 日記に記録</span>
+                            </button>
+                            <button class="skill-btn" data-skill="record-new-feature">
+                                <span class="skill-cmd">/record-new-feature</span>
+                                <span class="skill-label">新バージョン情報を記録</span>
+                            </button>
+                            <button class="skill-btn" data-skill="update-guide">
+                                <span class="skill-cmd">/update-guide</span>
+                                <span class="skill-label">ガイドサイトを更新</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- フェーズ6: セッション管理 -->
+                    <div class="phase-section">
+                        <div class="phase-header session">🔧 セッション管理（いつでも）</div>
+                        <div class="skill-grid">
+                            <button class="skill-btn" data-skill="new-session">
+                                <span class="skill-cmd">/new-session</span>
+                                <span class="skill-label">コンテキスト引き継ぎ</span>
+                            </button>
+                            <button class="skill-btn" data-skill="fewer-prompts">
+                                <span class="skill-cmd">/fewer-permission-prompts</span>
+                                <span class="skill-label">許可確認を減らす</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 典型フロー例 -->
+                    <div class="flow-example">
+                        <h3>📌 典型的な1開発サイクルの例</h3>
+                        <div class="flow-steps">
+                            <div class="flow-step">
+                                <button class="step-btn" data-skill="ssot-search">/ssot-search</button>
+                                <span class="step-note">過去の判断を確認</span>
+                            </div>
+                            <span class="flow-arrow">→</span>
+                            <div class="flow-step">
+                                <button class="step-btn" data-skill="feature-dev">/feature-dev</button>
+                                <span class="step-note">実装</span>
+                            </div>
+                            <span class="flow-arrow">→</span>
+                            <div class="flow-step">
+                                <button class="step-btn" data-skill="code-review">/code-review</button>
+                                <span class="step-note">レビュー</span>
+                            </div>
+                            <span class="flow-arrow">→</span>
+                            <div class="flow-step">
+                                <button class="step-btn" data-skill="simplify">/simplify</button>
+                                <span class="step-note">整理</span>
+                            </div>
+                            <span class="flow-arrow">→</span>
+                            <div class="flow-step">
+                                <button class="step-btn" data-skill="verify">/verify</button>
+                                <span class="step-note">動作確認</span>
+                            </div>
+                            <span class="flow-arrow">→</span>
+                            <div class="flow-step">
+                                <button class="step-btn" data-skill="record-decision">/record-decision</button>
+                                <span class="step-note">SSOT記録</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 右: 詳細パネル -->
+                <div class="detail-panel empty" id="detailPanel">
+                    <div class="detail-placeholder" id="detailPlaceholder">
+                        👆 スキルをクリックして<br>詳細を表示
+                    </div>
+                    <div id="detailContent" style="display:none;"></div>
+                </div>
+            </div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            <a href="14-ssot-search.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔍 SSOTから探して</span>
+            </a>
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script>
+    // ── スキル詳細データ ──
+    const SKILLS = {
+        "init": {
+            name: "init",
+            cmd: "/init",
+            emoji: "📄",
+            when: "新しいリポジトリを作った直後・既存リポジトリにCLAUDE.mdがない時",
+            what: "コードベースを自動スキャンして、プロジェクト固有のCLAUDE.mdを生成します。言語・フレームワーク・ディレクトリ構造を読み取り、Claudeが次回から即座にコンテキストを把握できる状態にします。",
+            example: "/init",
+            scenario: "新規Pythonプロジェクト作成後、構成を把握させるためにまず実行する。",
+            tips: ["生成後は必ず内容を確認・加筆する", "プロジェクト固有ルール（ブランチ戦略等）は手動追記する"]
+        },
+        "update-config": {
+            name: "update-config",
+            cmd: "/update-config",
+            emoji: "⚙️",
+            when: "「○○のたびに自動でXXしてほしい」という自動化を設定したい時・settings.jsonを変更したい時",
+            what: "Claude Codeのsettings.jsonとhooksを管理するスキル。「git commit後に自動でSSOTに記録する」のような自動化はメモリではなくhooksが必要です。このスキルがsettings.jsonを正しく更新します。",
+            example: "/update-config\n→「git commitのたびにSSOT記録を走らせたい」",
+            scenario: "PostToolUse hookでSSSOT-RECORD-TRIGGERを検出したい時に使う。",
+            tips: ["「〜のたびに」「毎回〜」という自動化は必ずこのスキルで設定する", "メモリに書いても自動化は動かない"]
+        },
+        "keybindings": {
+            name: "keybindings-help",
+            cmd: "/keybindings-help",
+            emoji: "⌨️",
+            when: "キーボードショートカットをカスタマイズしたい時・よく使う操作を1キーに割り当てたい時",
+            what: "~/.claude/keybindings.jsonを編集して、Claude Codeのキーバインドをカスタマイズします。コードショートカットやチョードバインディングも設定可能。",
+            example: "/keybindings-help\n→「Ctrl+Sで/record-decisionを実行したい」",
+            scenario: "セッション開始時の定型作業をワンキーで済ませたい場面。",
+            tips: []
+        },
+        "ssot-search": {
+            name: "ssot-search",
+            cmd: "/ssot-search",
+            emoji: "🔍",
+            when: "「前にどう実装したっけ？」「この設計判断の経緯は？」と思った時・過去の知見を探したい時",
+            what: "obsidian-ssot（個人ナレッジベース、約2,000ファイル）をripgrep全文検索 + sentence-transformers意味的rerankで横断検索する軽量RAGスキル。キーワード検索と意味的検索を組み合わせて精度高く過去の判断を引き出します。",
+            example: "SSOTから探して: glm-rate-proxy の設定方針\nSSOTから探して: MiniMax フォールバック",
+            scenario: "atelier-kyo-managerに新機能を追加する前に、過去の設計判断を確認する。",
+            tips: ["スペース区切りでキーワードを並べると精度が上がる", "日本語でもそのまま検索できる（助詞で自動分割）"]
+        },
+        "feature-dev": {
+            name: "feature-dev",
+            cmd: "/feature-dev",
+            emoji: "🔨",
+            when: "新機能を追加したい時・既存コードへの影響が読めない複雑な変更をしたい時",
+            what: "コードベースを深く理解してから実装するスキル。コード探索→アーキテクチャ設計→実装→レビューの流れを伴走します。「実装前に考える」原則を自動で守らせます。",
+            example: "/feature-dev\n→「検索機能をAPIエンドポイントに追加したい」",
+            scenario: "atelier-kyo-managerのルーティングを変更する際、影響範囲を事前に把握してから実装。",
+            tips: ["複雑な機能ほど先にアーキテクチャ設計のフェーズをじっくりやること", "既存パターンの踏襲を確認させる"]
+        },
+        "claude-api": {
+            name: "claude-api",
+            cmd: "/claude-api",
+            emoji: "🤖",
+            when: "Anthropic SDK / Claude APIを使ったコードを書く・修正する時",
+            what: "プロンプトキャッシュ込みでClaude APIアプリを実装するスキル。APIバージョン移行（4.5→4.6→4.7）のマイグレーション対応も含みます。",
+            example: "/claude-api\n→「バッチ処理をプロンプトキャッシュ対応にしたい」",
+            scenario: "glm-rate-proxyのUpstreamClientにClaude API対応を追加する時。",
+            tips: ["anthropicモジュールをimportしているファイルを触るときは自動トリガーを意識する"]
+        },
+        "gas-autopilot": {
+            name: "gas-autopilot",
+            cmd: "/gas-autopilot",
+            emoji: "📊",
+            when: "Google Apps Script（GAS）を開発・デプロイしたい時",
+            what: "clasp + Web App自動デプロイ + gws（スプレッドシート操作）を組み合わせた自律開発ループ。コード→デプロイ→テスト→修正を自動で回します。",
+            example: "/gas-autopilot\n→「スプレッドシートの在庫管理を自動化したい」",
+            scenario: "atelier-kyo-managerの在庫データをGASで自動集計する時。",
+            tips: []
+        },
+        "minimax": {
+            name: "delegate-to-minimax",
+            cmd: "（自動発動）",
+            emoji: "🔀",
+            when: "要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理をする時",
+            what: "GLMではなくMiniMaxに自動委譲するスキル。Claude（Sonnet）のAPIトークンを節約しながら大量処理をこなします。「○○を100件分生成して」のような処理で自動発動。",
+            example: "（明示的に呼ぶ必要なし。大量処理タスクで自動委譲される）",
+            scenario: "テストデータを50件生成する際にMiniMaxが自動的に処理する。",
+            tips: ["手動で「MiniMaxに委譲して」と指示することもできる"]
+        },
+        "code-review": {
+            name: "code-review",
+            cmd: "/code-review",
+            emoji: "🔎",
+            when: "実装が終わってコミット前・PRを出す前・バグが疑わしい時",
+            what: "バグ・ロジックエラー・セキュリティ脆弱性・コード品質を確認します。effort levelの指定で深度を調整できます（low/medium/high/max）。--fixで自動修正も可能。",
+            example: "/code-review\n/code-review --fix  （自動修正）\n/code-review --comment  （PR inline comment）",
+            scenario: "atelier-kyo-managerのPR作成前に/code-reviewを実行し、Noneポインタ参照バグを事前検出。",
+            tips: ["日常的にはlow/medium、リリース前はhighにする", "--fixは信頼できる変更のみ使う"]
+        },
+        "security-review": {
+            name: "security-review",
+            cmd: "/security-review",
+            emoji: "🔐",
+            when: "APIエンドポイントを追加した時・認証周りを変更した時・外部入力を扱うコードを書いた時",
+            what: "セキュリティに特化したレビュー。インジェクション・認証バイパス・シークレット漏洩・依存パッケージの脆弱性などを確認します。",
+            example: "/security-review",
+            scenario: "LINE予約システムのWebhook受信コードをレビューする時。",
+            tips: ["新しいAPIエンドポイントを作ったら必ず実行する習慣を"]
+        },
+        "simplify": {
+            name: "simplify",
+            cmd: "/simplify",
+            emoji: "✨",
+            when: "実装後にコードが複雑になった時・同じようなコードが増えてきた時",
+            what: "コードの再利用・簡略化・効率化・レベル感の統一を行います。バグ探しではなく品質向上に特化しています（バグは/code-reviewへ）。",
+            example: "/simplify",
+            scenario: "5つの関数に同じバリデーションロジックが散らばっていたので/simplifyで共通化した。",
+            tips: ["実装→/code-review→/simplifyの順で使うと効果的"]
+        },
+        "run": {
+            name: "run",
+            cmd: "/run",
+            emoji: "▶️",
+            when: "実装した変更を実際に動かして画面で確認したい時",
+            what: "プロジェクトタイプ（CLI/サーバー/Electron/ブラウザ）を判別してアプリを起動します。変更が視覚的に意図通り動いているかを素早く確認できます。",
+            example: "/run",
+            scenario: "Webアプリに新しいフォームを追加した後、ブラウザで動作確認する。",
+            tips: []
+        },
+        "verify": {
+            name: "verify",
+            cmd: "/verify",
+            emoji: "✅",
+            when: "「この修正は本当に直ってるか？」を確認したい時・PR前の最終チェック",
+            what: "コード変更が意図通りに動作するかを実際に動かして検証します。/runが「起動確認」なら、/verifyは「動作の正しさ確認」です。",
+            example: "/verify",
+            scenario: "バグ修正PRを出す前に「修正前のケースで再現しないこと」を確認する。",
+            tips: []
+        },
+        "review": {
+            name: "review",
+            cmd: "/review",
+            emoji: "📝",
+            when: "PR全体を総合レビューしたい時・マージ前の最終確認",
+            what: "コードの正しさ・テストカバレッジ・型設計・コメントの正確性などをまとめてチェックします。複数の専門エージェントが分担してレビューします。",
+            example: "/review",
+            scenario: "大きめのfeature PRをマージする前の最終チェックに使う。",
+            tips: []
+        },
+        "dev-cycle": {
+            name: "dev-cycle",
+            cmd: "/dev-cycle",
+            emoji: "🔄",
+            when: "テストカバレッジを上げたい時・品質を自律的に一括改善したい時・Issueが溜まってきた時",
+            what: "品質スイープ→Issueリスト化→自律実装ループ→完了通知の5フェーズを全自動で実行します。人間がコーヒーを飲んでいる間にIssueを解決し続けます。",
+            example: "/dev-cycle",
+            scenario: "atelier-kyo-managerのテストカバレッジを19%→70%に改善した際に使用。",
+            tips: ["Issue数が0になったらcronを自動削除するルールを忘れずに", "「active: false」で停止させる"]
+        },
+        "loop": {
+            name: "loop",
+            cmd: "/loop",
+            emoji: "🔁",
+            when: "「5分ごとにデプロイ状態を確認したい」など定期的に同じことを繰り返したい時",
+            what: "指定したインターバルでコマンドやスキルを繰り返し実行します。ポーリング・定期チェック・バッチ処理の待機に使います。",
+            example: "/loop 5m /verify  （5分ごとに検証）\n/loop 10m       （デフォルト10分）",
+            scenario: "CI/CDのデプロイ完了を5分ごとに確認して結果を通知させる。",
+            tips: []
+        },
+        "record-decision": {
+            name: "record-decision",
+            cmd: "/record-decision",
+            emoji: "📋",
+            when: "技術判断・設計決定・トラブル解決が終わった時・「記録して」「ありがとう」と言う時",
+            what: "今セッションの判断内容をSSOT（obsidian-ssot）の決定ファイルと日記に自動記録します。「なぜそう決めたか」の変遷を永続保存します。",
+            example: "（自動発動）git commit後に[SSOT-RECORD-TRIGGER]を検出すると自動実行\n（手動）「記録して」と言うと実行",
+            scenario: "glm-rate-proxyの設定を変更した後、判断理由をSSOTに記録する。",
+            tips: ["「後で書く」はしない。作業完了直後に記録する", "リンク付きサマリーを日記に残す"]
+        },
+        "record-new-feature": {
+            name: "record-new-feature",
+            cmd: "/record-new-feature",
+            emoji: "🆕",
+            when: "Claude Codeの新バージョンが検出された時（SessionStart hookが自動発動）",
+            what: "リリースノートを調査して、新機能をSSOTとclaude-code-guideに追記します。バージョンアップで使えるようになった機能を見逃さないようにします。",
+            example: "（SessionStart hookで自動発動）",
+            scenario: "Claude Code 1.x.0がリリースされた際に、新しいhook機能を自動記録。",
+            tips: []
+        },
+        "update-guide": {
+            name: "update-guide",
+            cmd: "/update-guide",
+            emoji: "📚",
+            when: "スクリプトや設定ファイルを変更した後・ガイドサイトの内容が古くなった時",
+            what: "更新キューに溜まった変更内容をclaude-code-guideのHTMLに反映します。convert.pyを実行してGitHub Pagesを最新化します。",
+            example: "/update-guide",
+            scenario: "glm-rate-proxyの設定を変更した後、第13章の説明を最新化する。",
+            tips: []
+        },
+        "new-session": {
+            name: "new-session",
+            cmd: "/new-session",
+            emoji: "🔄",
+            when: "コンテキスト使用量が85%を超えた時・長時間セッションで複数トピックが混在した時",
+            what: "現在のセッション状態を要約し、次のセッションへの引き継ぎプロンプトを生成します。SSOTのhandoffディレクトリに永続保存します。",
+            example: "/new-session",
+            scenario: "3時間の開発セッション後、コンテキストが溜まりすぎたので引き継ぎを作成。",
+            tips: ["生成されたプロンプトをコピーして新セッションの最初のメッセージに貼る"]
+        },
+        "fewer-prompts": {
+            name: "fewer-permission-prompts",
+            cmd: "/fewer-permission-prompts",
+            emoji: "🚫",
+            when: "同じツールの許可確認が毎回出てきてうっとうしい時",
+            what: "直近のトランスクリプトを解析して、よく使う読み取り専用コマンドを自動でallowlistに追加します。",
+            example: "/fewer-permission-prompts",
+            scenario: "git statusやls系のコマンドで毎回許可を求められる状態を解消する。",
+            tips: []
+        }
+    };
+
+    // ── クリックハンドラ ──
+    function showDetail(skillId) {
+        const skill = SKILLS[skillId];
+        if (!skill) return;
+
+        const panel = document.getElementById('detailPanel');
+        const placeholder = document.getElementById('detailPlaceholder');
+        const content = document.getElementById('detailContent');
+
+        // アクティブ状態の更新
+        document.querySelectorAll('.skill-btn, .step-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll(`[data-skill="${skillId}"]`).forEach(b => b.classList.add('active'));
+
+        panel.classList.remove('empty');
+        placeholder.style.display = 'none';
+        content.style.display = 'block';
+
+        const tipsHtml = skill.tips && skill.tips.length > 0
+            ? `<div class="detail-section">
+                <h4>💡 コツ・注意点</h4>
+                <ul>${skill.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+               </div>`
+            : '';
+
+        content.innerHTML = `
+            <h3>${skill.emoji} ${skill.name}</h3>
+            <div class="detail-cmd">${skill.cmd}</div>
+            <div class="detail-section">
+                <h4>📌 使うタイミング</h4>
+                <p>${skill.when}</p>
+            </div>
+            <div class="detail-section">
+                <h4>🔧 できること</h4>
+                <p>${skill.what}</p>
+            </div>
+            <div class="detail-section">
+                <h4>💬 コマンド例</h4>
+                <p><code>${skill.example.replace(/\n/g, '</code><br><code>')}</code></p>
+            </div>
+            <div class="detail-section">
+                <h4>🏷️ 実際のシナリオ</h4>
+                <p>${skill.scenario}</p>
+            </div>
+            ${tipsHtml}
+        `;
+
+        // スマホ: パネルまでスクロール
+        if (window.innerWidth <= 900) {
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+
+    document.querySelectorAll('[data-skill]').forEach(btn => {
+        btn.addEventListener('click', () => showDetail(btn.dataset.skill));
+    });
+    </script>
+</body>
+</html>
