@@ -137,35 +137,48 @@ Claude Code ────→ api.anthropic.com (Sonnet/Opus)
 
 プロキシ経由:
 Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (Claude)
-                                                 └──→ api.minimax.io (MiniMax, フォールバック)
+                                                 └──→ api.fallback-provider.example (代替プロバイダー, フォールバック)
 </code></pre>
 <h3>コスト比較</h3>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th></th>
-<th>Claude Max $200/月（サブスク）</th>
-<th>ZAI GLM（従量）</th>
+<th>Claude Pro $19/月</th>
+<th>Claude Max $200/月</th>
+<th>ZAI Lite $18/月</th>
+<th>ZAI Pro $72/月</th>
+<th>ZAI Max $160/月</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>月間トークン上限</td>
-<td>約3,000〜3,200万トークン</td>
-<td>制限なし（従量課金）</td>
+<td>Claude Pro比の利用量</td>
+<td>1x（基準）</td>
+<td>20x</td>
+<td>3x</td>
+<td>15x</td>
+<td>60x</td>
 </tr>
 <tr>
-<td>実質換算</td>
-<td>$200 → 約3,700万トークン相当</td>
-<td>$200で数十億トークン規模</td>
+<td>月額（USD）</td>
+<td>$19</td>
+<td>$200</td>
+<td>$18</td>
+<td>$72</td>
+<td>$160</td>
 </tr>
 <tr>
-<td>体感差</td>
-<td>ベースライン</td>
-<td><strong>約77〜190倍</strong>のコスパ</td>
+<td>コスパ（1xあたり）</td>
+<td>$19</td>
+<td>$10</td>
+<td>$6</td>
+<td>$4.8</td>
+<td>$2.7</td>
 </tr>
 </tbody>
 </table></div>
+<div class="callout callout-info"><p><strong>ポイント</strong>: ZAI Max（$160/月）でClaude Max（$200/月）の<strong>約3倍</strong>の利用量を使える。ZAIは月額サブスク制で、5時間・週単位のローリング制限あり（従量課金ではない）。</p></div>
 <hr />
 <h2><a id="architecture"></a>アーキテクチャ</h2>
 <pre><code>settings.json
@@ -180,13 +193,13 @@ Claude Code（CLI）
 │  1. モデル名を書き換え（claude → Claude） │
 │  2. thinking制御を注入                  │
 │  3. 使用量に応じてモデルをダウングレード   │
-│  4. ピーク時間帯はMiniMaxに強制切替       │
-│  5. 429/502エラー時はMiniMaxにフォールバック│
+│  4. ピーク時間帯は代替プロバイダーに強制切替       │
+│  5. 429/502エラー時は代替プロバイダーにフォールバック│
 └─────────────────────────────────────────┘
   │                        │
   ▼                        ▼
-api.z.ai              api.minimax.io
-(Claude)             (MiniMax-M2.7)
+api.z.ai              api.fallback-provider.example
+(Claude)             (代替軽量モデル)
 </code></pre>
 <h3>ファイル構成</h3>
 <pre><code>~/.claude/scripts/glm-rate-proxy/
@@ -194,7 +207,7 @@ api.z.ai              api.minimax.io
 │   ├── proxy.py          # メインプロキシ処理・thinking制御
 │   ├── config.py         # 設定読み込み（DEFAULTS + config.json）
 │   ├── model_router.py   # モデル選択ロジック（使用量・ピーク判定）
-│   ├── upstream.py       # ZAI/MiniMaxへのHTTP通信
+│   ├── upstream.py       # ZAI/代替プロバイダーへのHTTP通信
 │   └── usage_tracker.py  # 使用量トラッキング
 ├── config/
 │   └── config.json       # ユーザー設定（DEFAULTSを上書き）
@@ -235,15 +248,15 @@ api.z.ai              api.minimax.io
 <tr>
 <td><code>peak_block</code></td>
 <td>JST 15:00〜19:00</td>
-<td>MiniMax-M2.7</td>
-<td>MiniMax</td>
+<td>代替軽量モデル</td>
+<td>代替プロバイダー</td>
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p><strong>ピーク時間帯の理由</strong>: ZAI公式ドキュメントによるとClaudeはピーク時に<strong>3倍の消費レート</strong>で計算される。MiniMaxに逃がすことでZAIクォータを温存する。</p></div>
+<div class="callout callout-info"><p><strong>ピーク時間帯の理由</strong>: ZAI公式ドキュメントによるとClaudeはピーク時に<strong>3倍の消費レート</strong>で計算される。代替プロバイダーに逃がすことでZAIクォータを温存する。</p></div>
 <h3>フォールバックチェーン</h3>
-<pre><code>ZAI 429 → Claude-Flash（emergency）→ MiniMax → 503エラー
-ZAI 5xx → MiniMax → 503エラー
+<pre><code>ZAI 429 → Claude-Flash（emergency）→ 代替プロバイダー → 503エラー
+ZAI 5xx → 代替プロバイダー → 503エラー
 </code></pre>
 <hr />
 <h2><a id="thinking"></a>Thinking（思考）モードの動的制御</h2>
@@ -397,9 +410,9 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d
 <ul>
 <li><code>usage_pct</code> が80%超 → <code>economy</code>モードに自動切替済みのはず</li>
 <li>95%超 → <code>emergency</code>モード（Claude-Flash）に切替済みのはず</li>
-<li>429が続く場合 → MiniMaxへのフォールバックが機能しているか <code>last_actual_model</code> を確認</li>
+<li>429が続く場合 → 代替プロバイダーへのフォールバックが機能しているか <code>last_actual_model</code> を確認</li>
 </ul>
-<p><strong>手動でMiniMaxに切り替え:</strong></p>
+<p><strong>手動で代替プロバイダーに切り替え:</strong></p>
 <p><code>config/config.json</code> に追加：</p>
 <pre><code class="language-json">{
   &quot;peak_hours&quot;: {
@@ -409,7 +422,7 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d
   }
 }
 </code></pre>
-<p>（24時間ピーク扱いにして強制MiniMax）</p>
+<p>（24時間ピーク扱いにして強制代替プロバイダー）</p>
 <hr />
 <h3>❌ <code>No module named glm_rate_proxy</code> エラー</h3>
 <p>プロキシの作業ディレクトリかPYTHONPATHが正しくない。</p>
@@ -426,7 +439,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 <p><code>config/config.json</code> の全項目：</p>
 <pre><code class="language-json">{
   &quot;zai_base_url&quot;: &quot;https://api.z.ai/api/anthropic&quot;,
-  &quot;minimax_base_url&quot;: &quot;https://api.minimax.io/anthropic/v1&quot;,
+  &quot;フォールバック先_base_url&quot;: &quot;https://api.fallback-provider.example/anthropic/v1&quot;,
   &quot;listen_host&quot;: &quot;127.0.0.1&quot;,
   &quot;listen_port&quot;: 8787,
   &quot;upstream_timeout&quot;: 1200,
@@ -438,8 +451,8 @@ PYTHONPATH=src python3 -m glm_rate_proxy
     &quot;emergency&quot;: {&quot;max_pct&quot;: 100, &quot;model&quot;: &quot;Claude-Flash&quot;}
   },
   &quot;fallback&quot;: {
-    &quot;provider&quot;: &quot;minimax&quot;,
-    &quot;model&quot;: &quot;MiniMax-M2.7&quot;
+    &quot;provider&quot;: &quot;フォールバック先&quot;,
+    &quot;model&quot;: &quot;代替軽量モデル&quot;
   },
   &quot;peak_hours&quot;: {
     &quot;enabled&quot;: true,
