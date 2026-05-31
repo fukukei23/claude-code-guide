@@ -319,6 +319,26 @@ Claude Code がその指示に従って動作
 <h3><a id="fewer-permission"></a><code>fewer-permission-prompts</code>（Built-in）</h3>
 <p><strong>権限プロンプト削減</strong>。よく使うツール呼び出しを自動許可に設定。</p>
 <hr />
+<h3><a id="new-session"></a><code>new-session</code>（カスタムスキル）</h3>
+<p><strong>コンテキスト圧縮・セッション引き継ぎ</strong>。コンテキストが溜まってきたときに新セッションへの引き継ぎプロンプトを自動生成する。</p>
+<ul>
+<li><strong>呼び出し</strong>: <code>/new-session</code>（または「新セッション」「引き継ぎ」と言う）</li>
+<li><strong>動作フロー</strong>:
+<ol>
+<li>今日の日記・直近DECISIONS・git状態を収集</li>
+<li>GLMで引き継ぎプロンプトを生成</li>
+<li>画面に出力 + SSOT に永続保存</li>
+</ol>
+</li>
+<li><strong>保存先</strong>: <code>~/projects/obsidian-ssot/00_SYSTEM/handoff/YYYY-MM-DD_HHMM.md</code>
+<ul>
+<li>日時付きで蓄積されるので、過去の引き継ぎも <code>ls</code> で参照可能</li>
+<li>旧: <code>/tmp/new-session-prompt.md</code>（再起動で消える） → 2026-05-31 に変更</li>
+</ul>
+</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/new-session/</code>）</li>
+</ul>
+<hr />
 <h3><a id="update-guide"></a><code>update-guide</code>（カスタムスキル）</h3>
 <p><strong>claude-code-guideの更新キューを処理</strong>。変更されたスクリプト・設定に合わせてガイドのHTMLを最新化する。</p>
 <ul>
