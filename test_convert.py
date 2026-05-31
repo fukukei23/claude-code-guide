@@ -24,8 +24,6 @@ PERSONAL_PATTERNS = [
     "GLM-5.1",
     "GLM-4.7",
     "GLM-4.5-Air",
-    "MiniMax",
-    "obsidian-ssot",
     "00_SYSTEM/",
     "glm_ask",
     "minimax_ask",
