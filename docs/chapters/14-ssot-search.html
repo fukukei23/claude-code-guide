@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSOTから探して — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI SSOTから探しての解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="SSOTから探して — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI SSOTから探しての解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/14-ssot-search.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="13-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="14-ssot-search.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="13-glm-rate-proxy.html" class="nav-prev">← GLM Rate Proxy</a>
+            
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>14 SSOTから探して — 個人ナレッジベースへのRAG検索</h1>
+<div class="callout callout-info"><p>Claude Codeから knowledge-base（個人ナレッジベース）を横断検索するスキル。ripgrep + sentence-transformers のハイブリッドRAG構成。</p></div>
+<hr />
+<h2><a id="overview"></a>概要：これは何か</h2>
+<p>「SSOTから探して: glm-rate-proxy」と話しかけると、1,900件超のMarkdownファイルを横断検索して関連ドキュメントを5件表示するスキルです。</p>
+<pre><code>あなた: SSOTから探して: 代替プロバイダーのフォールバック設定
+
+Claude: 🔍 SSOT検索: 「代替プロバイダー フォールバック 設定」— 5件ヒット
+  1. 📋 DECISIONS  01_DECISIONS/claude-code/2026-05-11_...
+  2. 📅 DAILY      10_DAILY/2026-05-11.md
+  ...
+</code></pre>
+<h3>RAGとは</h3>
+<p><strong>R</strong>etrieval-<strong>A</strong>ugmented <strong>G</strong>eneration（検索拡張生成）の略。LLMに回答させる前に関連文書を検索してプロンプトに渡す仕組みです。専用のベクトルDBなしで、ファイルシステム上で軽量に実現しています。</p>
+<hr />
+<h2><a id="architecture"></a>アーキテクチャ</h2>
+<pre><code>ユーザーの質問
+    │
+    ▼
+① ripgrep 全文検索（~0.5秒）
+   ├─ フェーズ1: フレーズ完全一致
+   └─ フェーズ2: ヒット不足 → トークンOR検索（日本語対応）
+    │
+    ▼
+② sentence-transformers rerank（~1秒）
+   all-MiniLM-L6-v2 でコサイン類似度を計算
+    │
+    ▼
+③ 上位5件を層別表示
+   📋 DECISIONS / 📅 DAILY / 🔧 SYSTEM / 💼 CAREER ...
+</code></pre>
+<h3>キーワード検索と意味的検索の違い</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>キーワード検索のみ</th>
+<th>ハイブリッド（本構成）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「glm-rate-proxy」</td>
+<td>◎ ヒット</td>
+<td>◎ ヒット</td>
+</tr>
+<tr>
+<td>「プロキシ レートリミット」</td>
+<td>◯ 部分ヒット</td>
+<td>◎ ヒット</td>
+</tr>
+<tr>
+<td>「429エラーの対処」→「glm-rate-proxy」</td>
+<td>✗ ミス</td>
+<td>◎ ヒット</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2><a id="setup"></a>セットアップ</h2>
+<h3>1. ripgrep インストール</h3>
+<pre><code class="language-bash">sudo apt-get install -y ripgrep
+</code></pre>
+<h3>2. Python venv 作成</h3>
+<pre><code class="language-bash">sudo apt-get install -y python3.12-venv
+python3 -m venv ~/.claude/venv/ssot-search
+~/.claude/venv/ssot-search/bin/pip install sentence-transformers
+</code></pre>
+<div class="callout callout-warn"><p><strong>注意</strong>: Python 3.12以降はシステムへの直接 <code>pip install</code> がブロックされます（PEP 668）。必ずvenvを使うこと。</p></div>
+<h3>3. スクリプト配置</h3>
+<p><code>~/projects/claude-config/scripts/ssot/search.py</code> が<br />
+<code>~/.claude/scripts/ssot/search.py</code> にシンボリックリンクされていることを確認:</p>
+<pre><code class="language-bash">ls -la ~/.claude/scripts/ssot/
+</code></pre>
+<h3>4. スキル定義確認</h3>
+<pre><code class="language-bash">cat ~/.claude/skills/ssot-search/SKILL.md
+</code></pre>
+<hr />
+<h2><a id="usage"></a>使い方</h2>
+<h3>基本</h3>
+<pre><code>SSOTから探して: &lt;キーワード&gt;
+SSOT検索: &lt;キーワード&gt;
+/ssot-search &lt;キーワード&gt;
+</code></pre>
+<h3>例</h3>
+<pre><code>SSOTから探して: glm-rate-proxy の設定
+SSOTから探して: openclaw-stack 設計方針
+SSOTから探して: Zenn記事 LLMルーティング
+SSOTから探して: 代替プロバイダー フォールバック
+</code></pre>
+<h3>件数を増やす</h3>
+<p>ClaudeにBashコマンドを直接実行させる場合:</p>
+<pre><code class="language-bash">~/.claude/venv/ssot-search/bin/python3 ~/.claude/scripts/ssot/search.py &quot;クエリ&quot; --top 10
+</code></pre>
+<hr />
+<h2><a id="japanese"></a>日本語クエリのコツ</h2>
+<p>スペース区切りでキーワードを並べると精度が上がります:</p>
+<pre><code># よりよい
+SSOTから探して: 代替プロバイダー フォールバック 設定
+
+# 動くが精度が落ちる場合も
+SSOTから探して: 代替プロバイダーのフォールバック設定方法
+</code></pre>
+<p>スペースなしでも内部でトークン分割（助詞・英数字境界で分割）するため多くの場合動作します。</p>
+<hr />
+<h2><a id="internals"></a>内部動作の詳細</h2>
+<h3>search.py の処理フロー</h3>
+<pre><code class="language-python"># 1. ripgrep でフレーズ検索
+hits = rg_search(query, ssot_dir, max_files=80)
+
+# 2. 不足時はトークンOR検索で補完
+if len(hits) &lt; 80:
+    tokens = _tokenize(query)  # 助詞・英数字境界で分割
+    hits += rg_search(&quot;|&quot;.join(tokens), ...)
+
+# 3. sentence-transformers でrerank
+results = rerank(query, hits, top_n=5)
+</code></pre>
+<h3>日本語トークナイザ</h3>
+<pre><code class="language-python">DELIMITERS = r&quot;[\s　のをがはにでもとからまでよりへ、。・]+&quot;
+# さらに英数字↔日本語境界でも分割
+# 例: &quot;代替プロバイダーのAPI&quot; → [&quot;代替プロバイダー&quot;, &quot;API&quot;]
+</code></pre>
+<h3>使用モデル</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>モデル</td>
+<td><code>all-MiniLM-L6-v2</code></td>
+</tr>
+<tr>
+<td>サイズ</td>
+<td>~80MB（初回実行時に自動DL）</td>
+</tr>
+<tr>
+<td>速度</td>
+<td>rerank ~1秒（CPU）</td>
+</tr>
+<tr>
+<td>依存</td>
+<td>PyTorch 2.12.0 込み</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2><a id="troubleshoot"></a>トラブルシューティング</h2>
+<h3><code>ModuleNotFoundError: No module named 'sentence_transformers'</code></h3>
+<p>venvが使われていません:</p>
+<pre><code class="language-bash"># 正しい実行方法
+~/.claude/venv/ssot-search/bin/python3 ~/.claude/scripts/ssot/search.py &quot;クエリ&quot;
+</code></pre>
+<h3><code>rg: command not found</code></h3>
+<pre><code class="language-bash">sudo apt-get install -y ripgrep
+</code></pre>
+<h3>検索結果が0件</h3>
+<p>クエリが長すぎてripgrepが完全一致できない場合。スペース区切りで短いキーワードに分割してください。</p>
+<h3><code>apt-get install</code> が数十分ハング</h3>
+<p>バックグラウンドでのsudoコマンドはaptロック競合で止まることがあります。WSLターミナルで直接実行してください。</p>
+<hr />
+<h2><a id="files"></a>関連ファイル</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/.claude/scripts/ssot/search.py</code></td>
+<td>検索スクリプト本体</td>
+</tr>
+<tr>
+<td><code>~/.claude/skills/ssot-search/SKILL.md</code></td>
+<td>スキル定義（トリガーワード等）</td>
+</tr>
+<tr>
+<td><code>~/.claude/venv/ssot-search/</code></td>
+<td>Python仮想環境</td>
+</tr>
+<tr>
+<td><code>~/projects/claude-config/scripts/ssot/</code></td>
+<td>スクリプトのソース（シンボリックリンク元）</td>
+</tr>
+<tr>
+<td><code>~/projects/claude-config/skills/ssot-search/</code></td>
+<td>スキルのソース</td>
+</tr>
+</tbody>
+</table></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="13-glm-rate-proxy.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">⚡ GLM Rate Proxy</span>
+            </a>
+            
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
