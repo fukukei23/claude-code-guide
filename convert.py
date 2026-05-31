@@ -166,6 +166,15 @@ INLINE_REPLACEMENTS = [
     (r"LLM（Claude / GLM / MiniMax）", "LLM（Claude）"),
     (r"Claude, GLM, MiniMax等", "Claude等"),
     (r"Opus/Sonnet/Haiku \+ GLM", "Opus / Sonnet / Haiku"),
+    # MiniMax の残存（コードブロック・テーブル内）
+    (r"MiniMax-M2\.7", "代替軽量モデル"),
+    (r"MiniMax", "代替プロバイダー"),
+    (r"minimax\.io", "fallback-provider.example"),
+    (r"minimax", "フォールバック先"),
+    # obsidian-ssot / 00_SYSTEM パス（スキル内コードブロック）
+    (r"obsidian-ssot/00_SYSTEM/handoff/", "claude-code/handoff/"),
+    (r"obsidian-ssot", "knowledge-base"),
+    (r"00_SYSTEM/", "config/"),
     # 「あなたの設定」テーブル列 → 行ごと書き換え
     (r"\| あなたの設定 \|.*?\|", "| 備考 | なし |"),
 ]
