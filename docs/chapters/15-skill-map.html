@@ -16,8 +16,9 @@
     <style>
         /* ── スキルマップ専用スタイル ── */
         .skillmap-intro {
-            background: var(--callout-bg, #f0f7ff);
-            border-left: 4px solid var(--accent, #4f8ef7);
+            background: var(--accent-bg, #eef2ff);
+            color: var(--text, #1e293b);
+            border-left: 4px solid var(--accent, #6366f1);
             border-radius: 8px;
             padding: 1rem 1.2rem;
             margin-bottom: 2rem;
@@ -175,7 +176,8 @@
 
         /* ── 典型フロー ── */
         .flow-example {
-            background: var(--callout-bg, #f8f9fa);
+            background: var(--bg-secondary, #e8edf5);
+            color: var(--text, #1e293b);
             border-radius: 12px;
             padding: 1.2rem 1.4rem;
             margin-top: 2rem;
@@ -183,6 +185,10 @@
         .flow-example h3 {
             margin: 0 0 0.8rem;
             font-size: 1rem;
+            color: var(--text, #1e293b);
+        }
+        .flow-step .step-note {
+            color: var(--text-secondary, #64748b);
         }
         .flow-steps {
             display: flex;
@@ -213,7 +219,7 @@
         }
         .flow-step .step-note {
             font-size: 0.75rem;
-            color: var(--text-muted, #888);
+            color: var(--text-secondary, #64748b);
         }
     </style>
 </head>
