@@ -137,39 +137,47 @@
         <article class="chapter-body">
             <h1>01 基礎概念 — Claude Code とは</h1>
 <h2>Claude Code の3つの形態</h2>
-<p>Claude Code は Anthropic が提供する AI コーディングアシスタント。3つの形態で利用できる。</p>
+<p>Claude Code は Anthropic が提供する AI コーディングアシスタント。3つの利用形態がある。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>形態</th>
 <th>説明</th>
 <th>使い方</th>
+<th>LLM</th>
+<th>MCP対応</th>
+<th>カスタマイズ性</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>CLI</strong></td>
-<td>ターミナル上で動作。Linuxターミナル環境</td>
+<td><strong>CLI版</strong></td>
+<td>ターミナル上で動作</td>
 <td><code>claude</code> コマンドで起動</td>
+<td>外部LLMに変更可</td>
+<td>✅ 完全対応</td>
+<td>极高</td>
 </tr>
 <tr>
 <td><strong>Desktop App</strong></td>
 <td>Windows/Mac用のデスクトップアプリ</td>
 <td>スタンドアロンで起動</td>
-</tr>
-<tr>
-<td><strong>IDE拡張</strong></td>
-<td>VS Code・JetBrains用プラグイン</td>
-<td>IDE内のパネルで操作</td>
+<td>Anthropic公式固定</td>
+<td>✅ 完全対応</td>
+<td>高</td>
 </tr>
 <tr>
 <td><strong>Web App</strong></td>
 <td>claude.ai/code でブラウザから利用</td>
 <td>ブラウザでアクセス</td>
+<td><strong>LLM固定</strong></td>
+<td><strong>❌ 非対応</strong></td>
+<td>极低</td>
 </tr>
 </tbody>
 </table></div>
-<p>このガイドは主に <strong>CLI（WSL2環境）</strong> を前提に書かれている。</p>
+<div class="callout callout-warn"><p><strong>注意:</strong> ウェブ版（claude.ai/code）はLLM変更・自作MCPツール追加ができません。外出先からのクイック確認用途向きです。</p></div>
+<p>このガイドは主に <strong>CLI版（WSL2環境）</strong> を前提に書かれています。</p>
 <hr />
 <div class="mermaid-wrapper"><div class="mermaid">
 graph TD
