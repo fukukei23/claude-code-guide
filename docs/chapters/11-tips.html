@@ -302,6 +302,66 @@ cat ~/.claude/settings.json | jq '.mcpServers | keys'
 <h3>「コンパクション（compact）= 要約品質が高い」</h3>
 <p><strong>注意が必要</strong>。自動コンパクションは古い会話を要約して捨てるが、<strong>詳細が失われる</strong>。重要な文脈は compact 前にメモリに保存するか、自分で要約を控えておく。</p>
 <hr />
+<h2>G. コード行数の正確な計測</h2>
+<p>ポートフォリオや経歴書に「コード行数」を記載する際、<strong>自動生成ファイルを除外しないと数字が大きく狂う</strong>。</p>
+<h3>必ず除外すべきディレクトリ</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ディレクトリ</th>
+<th>正体</th>
+<th>実例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mutants/</code></td>
+<td>ミューテーションテストの自動生成コピー</td>
+<td>NexusCoreで5.5万行が混入</td>
+</tr>
+<tr>
+<td><code>evaluation/</code></td>
+<td>外部評価フレームワーク（evalplus等）</td>
+<td>実コードとは別物</td>
+</tr>
+<tr>
+<td><code>archive/</code></td>
+<td>廃止・旧版コード</td>
+<td>現行プロダクトではない</td>
+</tr>
+<tr>
+<td><code>.venv/</code> <code>venv/</code></td>
+<td>Python仮想環境</td>
+<td>サードパーティライブラリ</td>
+</tr>
+<tr>
+<td><code>node_modules/</code> <code>dist/</code></td>
+<td>JS依存・ビルド成果物</td>
+<td>自分が書いたコードではない</td>
+</tr>
+<tr>
+<td><code>__pycache__/</code> <code>.git/</code> 等</td>
+<td>システム生成物</td>
+<td>全て除外</td>
+</tr>
+</tbody>
+</table></div>
+<h3>異常値の見つけ方</h3>
+<p>計測後に以下を確認する：</p>
+<ul>
+<li><strong>ファイルが10,000行超</strong> → 生成物の可能性が高い。冒頭20行を確認する</li>
+<li><strong>ディレクトリ平均が300行超</strong> → そのディレクトリの中身をlsして確認</li>
+<li><strong>バイト数÷行数が10未満または500超</strong> → バイナリ混入 or minified JS</li>
+</ul>
+<h3>「本当に読んで計測した」3層証明</h3>
+<p>数字の信頼性を担保するために：</p>
+<ol>
+<li><strong>ランダムサンプル</strong> — 計測ファイルから3件抽出して冒頭5行を表示</li>
+<li><strong>バイト整合性</strong> — 最大ファイルの「バイト数÷行数」が10〜500の範囲か確認</li>
+<li><strong>git log</strong> — 各リポジトリの最終コミット日時・総コミット数を表示</li>
+</ol>
+<p>→ <code>/code-metrics</code> スキルがこれらを自動実行する。</p>
+<hr />
 
         </article>
 
