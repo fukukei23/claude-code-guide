@@ -264,6 +264,50 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -c "import json,sys; d=json
 
 ---
 
+### ❌ MiniMax APIキー変更後に400エラーが出る
+
+**原因**
+
+ピークブロック（JST 15:00–19:00）が有効な状態では全リクエストがMiniMaxに強制ルーティングされる。この時間帯にMiniMaxのAPIキーをリセット・変更すると、プロキシが古いキーを保持したまま稼働し続け、全リクエストが400エラーになってClaude Codeが停止する。
+
+**確認手順**
+
+```bash
+# ピークブロック中かどうか確認
+curl -s http://127.0.0.1:8787/proxy/status | python3 -c "import json,sys; d=json.load(sys.stdin); print('peak_block:', d['peak_block'], '/ provider:', d['provider'])"
+
+# ログで400エラーを確認
+tail -30 /tmp/glm-proxy.log
+```
+
+**⚠️ APIキー変更時の手順（必須）**
+
+- [ ] `~/.secrets.env` の `MINIMAX_API_KEY` を新しい値に更新
+- [ ] プロキシを再起動して新しいキーを読み込ませる
+
+```bash
+# 1. ~/.secrets.env を編集（値はAPIキー管理ポリシーに従い直接記載）
+# 2. プロキシ再起動
+source ~/.secrets.env
+pkill -f glm_rate_proxy
+cd ~/.claude/scripts/glm-rate-proxy
+PYTHONPATH=src nohup python3 -m glm_rate_proxy > /tmp/glm-proxy.log 2>&1 &
+sleep 2
+curl http://127.0.0.1:8787/proxy/status
+```
+
+**ピークブロック中に緊急回避する場合**
+
+```bash
+# ピークブロックを無効化してGLM（ZAI）直結に戻す
+pkill -f glm_rate_proxy
+source ~/.secrets.env
+cd ~/.claude/scripts/glm-rate-proxy
+GLM_PEAK_BLOCK=false PYTHONPATH=src nohup python3 -m glm_rate_proxy > /tmp/glm-proxy.log 2>&1 &
+```
+
+---
+
 ### ❌ `No module named glm_rate_proxy` エラー
 
 プロキシの作業ディレクトリかPYTHONPATHが正しくない。

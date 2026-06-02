@@ -306,6 +306,18 @@ GITHUB_TOKEN=ghp_xxx...
 </tr>
 </tbody>
 </table></div>
+<h3>settings.jsonとの関係</h3>
+<p>SessionStartフック <code>sync-secrets-to-settings.sh</code> が起動のたびに <code>~/.secrets.env</code> の値を <code>settings.json</code> へ自動注入する。</p>
+<ul>
+<li><strong>目的</strong>: MCPサーバーへ環境変数を渡すため（<code>mcpServers.xxx.env</code> セクション）</li>
+<li><strong>Claude Code本体</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> 等）はシェル環境変数でも動作するが、同フックで注入する設計に統一</li>
+<li><strong>Git管理</strong>: <code>settings.json</code> は <code>claude-config/.gitignore</code> で除外済み — GitHubには上がらない</li>
+</ul>
+<pre><code># バックアップ運用
+settings.example.json  ← 値マスク済み。SSOTへのバックアップはこちらのみ
+settings.json          ← 実体。バックアップ・出力・表示は禁止
+</code></pre>
+<div class="callout callout-warn"><p>⚠️ settings.json / .secrets.env の値を会話・ファイルに出力することは禁止。</p></div>
 <h3>危険コマンドのブロック</h3>
 <p>PreToolUseフック（<code>check-command-safety.py</code>）が以下を自動ブロック:</p>
 <ul>

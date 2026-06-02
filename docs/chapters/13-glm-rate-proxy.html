@@ -432,6 +432,38 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d
 </code></pre>
 <p>（24時間ピーク扱いにして強制代替プロバイダー）</p>
 <hr />
+<h3>❌ 代替プロバイダー APIキー変更後に400エラーが出る</h3>
+<p><strong>原因</strong></p>
+<p>ピークブロック（JST 15:00–19:00）が有効な状態では全リクエストが代替プロバイダーに強制ルーティングされる。この時間帯に代替プロバイダーのAPIキーをリセット・変更すると、プロキシが古いキーを保持したまま稼働し続け、全リクエストが400エラーになってClaude Codeが停止する。</p>
+<p><strong>確認手順</strong></p>
+<pre><code class="language-bash"># ピークブロック中かどうか確認
+curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d=json.load(sys.stdin); print('peak_block:', d['peak_block'], '/ provider:', d['provider'])&quot;
+
+# ログで400エラーを確認
+tail -30 /tmp/glm-proxy.log
+</code></pre>
+<p><strong>⚠️ APIキー変更時の手順（必須）</strong></p>
+<ul>
+<li>[ ] <code>~/.secrets.env</code> の <code>MINIMAX_API_KEY</code> を新しい値に更新</li>
+<li>[ ] プロキシを再起動して新しいキーを読み込ませる</li>
+</ul>
+<pre><code class="language-bash"># 1. ~/.secrets.env を編集（値はAPIキー管理ポリシーに従い直接記載）
+# 2. プロキシ再起動
+source ~/.secrets.env
+pkill -f glm_rate_proxy
+cd ~/.claude/scripts/glm-rate-proxy
+PYTHONPATH=src nohup python3 -m glm_rate_proxy &gt; /tmp/glm-proxy.log 2&gt;&amp;1 &amp;
+sleep 2
+curl http://127.0.0.1:8787/proxy/status
+</code></pre>
+<p><strong>ピークブロック中に緊急回避する場合</strong></p>
+<pre><code class="language-bash"># ピークブロックを無効化してGLM（ZAI）直結に戻す
+pkill -f glm_rate_proxy
+source ~/.secrets.env
+cd ~/.claude/scripts/glm-rate-proxy
+GLM_PEAK_BLOCK=false PYTHONPATH=src nohup python3 -m glm_rate_proxy &gt; /tmp/glm-proxy.log 2&gt;&amp;1 &amp;
+</code></pre>
+<hr />
 <h3>❌ <code>No module named glm_rate_proxy</code> エラー</h3>
 <p>プロキシの作業ディレクトリかPYTHONPATHが正しくない。</p>
 <pre><code class="language-bash"># 正しい起動方法
