@@ -206,7 +206,7 @@ Claude Code CLI（ターミナル）
   ├─ メモリを読み込み（MEMORY.md等）
   │
   ▼
-LLM（Claude / GLM / MiniMax）
+LLM（Claude）
   │
   ├─ ツール実行要求（Read, Edit, Bash, Agent等）
   │    ├─ ローカルファイル操作
@@ -271,15 +271,6 @@ graph LR
 <li><strong>入力トークン</strong>: ユーザー→LLMへの送信（コンテキストに含まれる全て）</li>
 <li><strong>出力トークン</strong>: LLM→ユーザーへの返信</li>
 <li>コストは入力 + 出力のトークン数で計算される</li>
-</ul>
-<hr />
-<h2>あなたの環境の特記事項</h2>
-<ul>
-<li><strong>LLMルーティング</strong>: GLM-5.1（メイン）→ MiniMax（フォールバック）→ Sonnet（要許可）</li>
-<li><strong>バッジ表示</strong>: 毎レスポンスの冒頭と末尾に使用LLMを表示（🟡[GLM] / 🟠[MiniMax] / 🔵[Sonnet]）</li>
-<li><strong>コンテキスト最適化済み</strong>: 以前9サーバー→6サーバーに削減（~35kトークン節約）</li>
-<li><strong>セキュリティフック</strong>: PreToolUseで危険コマンドを自動ブロック</li>
-<li><strong>実行環境</strong>: Windows + WSL2の2層構造。Cron等の自動実行は <code>wsl bash -c</code> 経由必須</li>
 </ul>
 <hr />
 
