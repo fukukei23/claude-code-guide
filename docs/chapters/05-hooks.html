@@ -347,6 +347,12 @@ sequenceDiagram
 <li><strong>一時的に無効化</strong> — settings.json で該当フックをコメントアウト</li>
 </ol>
 <hr />
+<h2>トラブルシューティング</h2>
+<h3>Windows + WSL環境でPreToolUseフックがエラーになる</h3>
+<p><strong>症状</strong>:</p>
+<p><strong>原因</strong>: Windows側のPythonが  というUnixパスをWindowsパスとして解釈しようとする。</p>
+<p><strong>解決策</strong>: WSL側にラッパースクリプトを作成し、settings.jsonのコマンドをそちらに変更する。</p>
+<p>経由で呼ぶことで、Windows側のシェルがパスを解釈する前にWSL側に渡される。</p>
 
         </article>
 

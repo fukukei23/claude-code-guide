@@ -168,12 +168,46 @@ Discordとの連携。
 
 ---
 
+## 環境別の対応（WSL CLI / Windows Desktop）
+
+一部のMCPサーバーは実行環境によって役割・有無が異なる：
+
+| サーバー | WSL CLI版 | Windows Desktop版 | 備考 |
+|---|---|---|---|
+| glm | ❌ 不要 | ✅ あり | WSL CLI版は自分自身がGLMで動作。Windows版はSonnet→GLM委譲用 |
+| minimax | ✅ あり | ✅ あり | コスト削減で明示的に呼び出し（要約・翻訳・データ処理等） |
+| brave-search | ✅ | ✅ | 共通 |
+| github | ✅ | ✅ | 共通 |
+| playwright | ✅ | ✅ | 共通 |
+| context7 | ✅ | ✅ | 共通 |
+| discord | ✅ | ✅ | 共通 |
+| mermaid | ✅ | ✅ | 共通 |
+
+> **注意**: WSL CLI版はGLM経由のプロキシで動作するため、glm MCPは不要。MiniMaxはコスト削減目的で明示的に `minimax_ask` 等を呼び出す際に使用する（自動フォールバックではない）。
+
+---
+
+## セキュリティ: APIキーの管理
+
+全MCPサーバーは `~/.secrets.env` からAPIキーを読み込むラッパースクリプト経由で起動する。**settings.jsonにAPIキーを直接記載しない。**
+
+```
+settings.json
+  └ command: "bash ~/.claude/scripts/mcp/start-<name>.sh"
+       │
+start-<name>.sh
+  └ source ~/.secrets.env   ← APIキーはここから読み込む
+  └ exec <本体スクリプト>
+```
+
+---
+
 ## コンテキスト消費のトレードオフ
 
 | サーバー | ツール数 | 備考 |
 |---|---|---|
-| glm | 19 | メインLLM（glm-rate-proxy経由） |
-| minimax | 17 | フォールバックLLM・大量処理 |
+| glm | 19 | メインLLM（glm-rate-proxy経由）・Windows Desktopのみ |
+| minimax | 17 | コスト削減用LLM・両環境 |
 | github | 41 | 最もツール数が多い |
 | brave-search | 6 | ~5.5kトークン |
 | playwright | 25 | ~4.7kトークン |

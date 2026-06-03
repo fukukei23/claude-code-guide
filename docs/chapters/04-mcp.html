@@ -524,6 +524,80 @@
 </table></div>
 <p><strong>使いどころ</strong>: フローチャート、シーケンス図、クラス図の生成</p>
 <hr />
+<h2>環境別の対応（WSL CLI / Windows Desktop）</h2>
+<p>一部のMCPサーバーは実行環境によって役割・有無が異なる：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>サーバー</th>
+<th>WSL CLI版</th>
+<th>Windows Desktop版</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>glm</td>
+<td>❌ 不要</td>
+<td>✅ あり</td>
+<td>WSL CLI版は自分自身がGLMで動作。Windows版はSonnet→GLM委譲用</td>
+</tr>
+<tr>
+<td>フォールバック先</td>
+<td>✅ あり</td>
+<td>✅ あり</td>
+<td>コスト削減で明示的に呼び出し（要約・翻訳・データ処理等）</td>
+</tr>
+<tr>
+<td>brave-search</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>github</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>playwright</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>context7</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>discord</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>mermaid</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p><strong>注意</strong>: WSL CLI版はGLM経由のプロキシで動作するため、glm MCPは不要。代替プロバイダーはコスト削減目的で明示的に <code>フォールバック先_ask</code> 等を呼び出す際に使用する（自動フォールバックではない）。</p></div>
+<hr />
+<h2>セキュリティ: APIキーの管理</h2>
+<p>全MCPサーバーは <code>~/.secrets.env</code> からAPIキーを読み込むラッパースクリプト経由で起動する。<strong>settings.jsonにAPIキーを直接記載しない。</strong></p>
+<pre><code>settings.json
+  └ command: &quot;bash ~/.claude/scripts/mcp/start-&lt;name&gt;.sh&quot;
+       │
+start-&lt;name&gt;.sh
+  └ source ~/.secrets.env   ← APIキーはここから読み込む
+  └ exec &lt;本体スクリプト&gt;
+</code></pre>
+<hr />
 <h2>コンテキスト消費のトレードオフ</h2>
 <div class="table-wrapper"><table>
 <thead>
@@ -537,12 +611,12 @@
 <tr>
 <td>glm</td>
 <td>19</td>
-<td>メインLLM（glm-rate-proxy経由）</td>
+<td>メインLLM（glm-rate-proxy経由）・Windows Desktopのみ</td>
 </tr>
 <tr>
 <td>フォールバック先</td>
 <td>17</td>
-<td>フォールバックLLM・大量処理</td>
+<td>コスト削減用LLM・両環境</td>
 </tr>
 <tr>
 <td>github</td>
