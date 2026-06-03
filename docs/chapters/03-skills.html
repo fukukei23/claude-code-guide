@@ -370,7 +370,8 @@ Claude Code がその指示に従って動作
 <p><strong>SSOTへの記録・振り分けを自動化</strong>。内容をLLMで分析して最適な振り分け先（01_DECISIONS / 10_DAILY等）を判定し、フォーマット生成・リンク付与・ガイド転記まで一気に実行。<code>record-decision</code> の上位互換。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「記録して」「書き留めて」「保存して」「メモして」「残しておいて」「SSOTに入れて」「ガイドに追加して」<code>/ssot-record</code></li>
-<li><strong>動作フロー</strong>: 分類判定（GLM）→ 確認表示 → SSOT記録 → ガイド転記（承認時）</li>
+<li><strong>動作フロー</strong>: 分類判定 → 確認表示 → SSOT記録 → ガイド転記（承認時）</li>
+<li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM不要）、Windows Desktop版は外部LLM呼び出し可</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-record/</code>）</li>
 </ul>
 <hr />
