@@ -372,6 +372,7 @@ Claude Code がその指示に従って動作
 <li><strong>呼び出し</strong>: 「記録して」「書き留めて」「保存して」「メモして」「残しておいて」「SSOTに入れて」「ガイドに追加して」<code>/ssot-record</code></li>
 <li><strong>動作フロー</strong>: 分類判定 → 確認表示 → SSOT記録 → ガイド転記（承認時）</li>
 <li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM不要）、Windows Desktop版は外部LLM呼び出し可</li>
+<li><strong>CCガイド自動同期</strong>: 記録内容がClaude Code機能（スキル/MCP/フック/settings）に関連する場合、対応するガイドページ（03/04/05/08等）への追記を自動判定・実行。SSOT内CCガイドマスターから claude-code-guide（派生物）へ同期</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-record/</code>）</li>
 </ul>
 <hr />

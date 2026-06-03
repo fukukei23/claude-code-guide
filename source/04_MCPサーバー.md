@@ -97,6 +97,8 @@ Web検索に関する各種機能。
 
 **使いどころ**: 最新情報の調査、エラーの検索、技術記事の検索
 
+> **起動方法**: `~/.claude/scripts/mcp/start-brave-search.sh` — `.secrets.env` から `BRAVE_API_KEY` を読み込んで `brave-search-mcp-server` を起動。
+
 ### <a id="github"></a>github（41ツール / ~9.6kトークン）
 
 最もツール数が多いサーバー。GitHub上のあらゆる操作が可能。
@@ -112,6 +114,8 @@ Web検索に関する各種機能。
 | その他 | `create_branch`, `create_repository`, `fork_repository`, `run_secret_scanning` |
 
 **使いどころ**: PR作成、Issue管理、コード検索、リポジトリ操作
+
+> **起動方法**: `~/.claude/scripts/mcp/start-github.sh` — `.secrets.env` から `GITHUB_TOKEN` 等を読み込んで `github-mcp-server` を起動。
 
 ### <a id="playwright"></a>playwright（25ツール / ~4.7kトークン）
 
