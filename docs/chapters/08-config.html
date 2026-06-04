@@ -295,7 +295,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 <tr>
 <td><code>statusLine</code></td>
-<td>ターミナルのステータスバーに表示する内容（コマンド実行結果を表示）</td>
+<td>ターミナルのステータスバーに表示する内容（コマンド実行結果を表示）。以下に詳細説明あり</td>
 </tr>
 <tr>
 <td><code>autoDream</code></td>
@@ -315,6 +315,40 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 </tbody>
 </table></div>
+<h5>statusLine の詳細</h5>
+<p>画面下部にモデル名・コンテキスト使用率・レート制限を表示する。</p>
+<ul>
+<li><strong>設定</strong>: <code>{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;bash ~/.claude/scripts/llm/llm-status.sh&quot;}</code></li>
+<li><strong>スクリプト</strong>: <code>~/.claude/scripts/llm/llm-status.sh</code></li>
+<li><strong>表示例</strong>: <code>Claude | ctx: 45% | 5h: 23% (2h15m) | 7d: 12%</code></li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>表示項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>モデル名</td>
+<td>現在のLLM（Claude等）</td>
+</tr>
+<tr>
+<td><code>ctx: XX%</code></td>
+<td>コンテキストウィンドウ使用率（データなし時は <code>---</code>）</td>
+</tr>
+<tr>
+<td><code>5h: XX%</code></td>
+<td>5時間レート制限の使用率</td>
+</tr>
+<tr>
+<td><code>7d: XX%</code></td>
+<td>7日レート制限の使用率</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p><strong>注意</strong>: コンテキスト使用率が高くなったら早めに <code>/compact</code> すること。100%に達すると <code>/compact</code> 自体も失敗し、新セッションが必要になる。</p></div>
 <hr />
 <h3><a id="settings-local"></a>プロジェクト設定: <code>&lt;repo&gt;/.claude/settings.json</code></h3>
 <p>プロジェクト固有の設定。</p>
