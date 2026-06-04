@@ -313,6 +313,14 @@ GITHUB_TOKEN=ghp_xxx...
 <li><strong>Claude Code本体</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> 等）はシェル環境変数でも動作するが、同フックで注入する設計に統一</li>
 <li><strong>Git管理</strong>: <code>settings.json</code> は <code>claude-config/.gitignore</code> で除外済み — GitHubには上がらない</li>
 </ul>
+<h3>settings.example.json の自動同期</h3>
+<p>SessionStartフック <code>sync-settings-to-example.sh</code> が <code>settings.json</code> からシークレット値をマスクして <code>settings.example.json</code> を生成する。</p>
+<ul>
+<li><strong>jq優先</strong>: <code>jq</code> で env 内のキー名に <code>KEY|TOKEN|SECRET|PASSWORD|AUTH</code>（大文字小文字区別なし）を含む値を <code>&quot;&quot;</code> に置換</li>
+<li><strong>python3フォールバック</strong>: <code>jq</code> が利用不可の場合、python3 で同等のマスク処理を実行</li>
+<li><strong>TOKENマスク</strong>: <code>permissions.allow</code> 内の <code>TOKEN=&lt;値&gt;</code> 形式の項目（Discord Bot Token等）も汎用文字列に置換</li>
+<li><strong>mcpServers</strong>: 全MCPサーバーの <code>env</code> 値を <code>&quot;&quot;</code> にマスク</li>
+</ul>
 <pre><code># バックアップ運用
 settings.example.json  ← 値マスク済み。SSOTへのバックアップはこちらのみ
 settings.json          ← 実体。バックアップ・出力・表示は禁止
