@@ -207,8 +207,10 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
   &quot;hooks&quot;: {
     &quot;PreToolUse&quot;: [...],
     &quot;PostToolUse&quot;: [...],
+    &quot;PostToolUseFailure&quot;: [...],
     &quot;SessionStart&quot;: [...],
-    &quot;Stop&quot;: [...]
+    &quot;Stop&quot;: [...],
+    &quot;Notification&quot;: [...]
   },
   &quot;mcpServers&quot;: {
     &quot;brave-search&quot;: { ... },
@@ -220,7 +222,12 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
   },
   &quot;env&quot;: {
     &quot;ANTHROPIC_API_KEY&quot;: &quot;（直接書かない — ~/.secrets.envから注入）&quot;
-  }
+  },
+  &quot;model&quot;: &quot;opus&quot;,
+  &quot;effortLevel&quot;: &quot;medium&quot;,
+  &quot;worktree&quot;: { &quot;baseRef&quot;: &quot;fresh&quot; },
+  &quot;statusLine&quot;: { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;...&quot; },
+  &quot;autoDream&quot;: { &quot;enabled&quot;: true, &quot;intervalHours&quot;: 24 }
 }
 </code></pre>
 <h4>フックの種類と用途</h4>
@@ -241,17 +248,70 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td>PostToolUse</td>
 <td>ツール実行後</td>
-<td>実行結果のログ記録・後処理</td>
+<td>実行結果のログ記録・SSOT記録トリガー・設定ファイル同期</td>
+</tr>
+<tr>
+<td>PostToolUseFailure</td>
+<td>ツール実行失敗時</td>
+<td>失敗時のログ記録（atuin連携等）</td>
 </tr>
 <tr>
 <td>SessionStart</td>
 <td>セッション開始時</td>
-<td>環境変数の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示</td>
+<td>環境変数の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示・設定ファイル同期・INDEX自動更新</td>
 </tr>
 <tr>
 <td>Stop</td>
 <td>セッション終了時</td>
-<td>セッションログの保存・ガイド更新キューの記録・クリーンアップ</td>
+<td>セッションログの保存・ハンドオフ生成・ガイド更新キューの記録・スキル同期・クリーンアップ</td>
+</tr>
+<tr>
+<td>Notification</td>
+<td>通知時</td>
+<td>エラー・ブロック時のDiscord通知</td>
+</tr>
+</tbody>
+</table></div>
+<h4>その他の設定項目</h4>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>デフォルトモデル（<code>opus</code>, <code>sonnet</code>, <code>haiku</code>）</td>
+</tr>
+<tr>
+<td><code>effortLevel</code></td>
+<td>推論の深さ（<code>low</code>, <code>medium</code>, <code>high</code>）。<code>/effort</code> で変更可能</td>
+</tr>
+<tr>
+<td><code>worktree.baseRef</code></td>
+<td>worktreeのベース参照（<code>fresh</code> = 最新のorigin/default, <code>head</code> = 現在のHEAD）</td>
+</tr>
+<tr>
+<td><code>statusLine</code></td>
+<td>ターミナルのステータスバーに表示する内容（コマンド実行結果を表示）</td>
+</tr>
+<tr>
+<td><code>autoDream</code></td>
+<td>自律思考モード（定期的にバックグラウンドで推論を実行）</td>
+</tr>
+<tr>
+<td><code>enabledPlugins</code></td>
+<td>有効なプラグインの一覧</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>出力言語（<code>japanese</code> 等）</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td>テーマ（<code>dark</code>, <code>light</code>）</td>
 </tr>
 </tbody>
 </table></div>
