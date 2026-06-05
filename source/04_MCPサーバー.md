@@ -52,11 +52,14 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 **使いどころ**: Sonnet直接回答の代替（LLMルーティングポリシー参照）。コード生成・レビュー・説明など開発全般。  
 **注意**: glm-rate-proxy が起動していないと接続不可。`curl http://127.0.0.1:8787/proxy/status` で確認。→ [13_glm-rate-proxy](13_glm-rate-proxy.md)
 
+> **実装**: `~/.claude/scripts/mcp/glm-mcp-server.py` — 外部パッケージではなく自作のPythonスクリプト。起動は `start-glm-mcp.sh` 経由で `.secrets.env` からAPIキーを読み込む。
+> **環境別の扱い**: Windows Desktop版では `claude_desktop_config.json` から自動起動。WSL CLI版には登録されているが、CLI自体がglm-rate-proxy経由でGLMで動作しているため実際には不要（二重呼び出しになる）。将来LLMプロバイダーが変わった場合は要否を再評価すること。
+
 ---
 
 ### <a id="minimax"></a>minimax（17ツール）
 
-**GLMのフォールバックLLM兼大量処理専用**。GLM失敗時・ピーク時間帯（15〜19時）・大量処理タスクに自動委譲される。`python3 -m minimax_mcp` で起動するPythonパッケージ。
+**GLMのフォールバックLLM兼大量処理専用**。GLM失敗時・ピーク時間帯（15〜19時）・大量処理タスクに自動委譲される。自作Pythonスクリプトとして実装。
 
 | ツール | 用途 |
 |---|---|
@@ -79,6 +82,8 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 | `minimax_cron_helper` | cron設定補助 |
 
 **使いどころ**: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。GLM失敗時のフォールバック。
+
+> **実装**: `~/.claude/scripts/mcp/minimax-mcp-server.py` — 自作のPythonスクリプト。Windows Desktop版・WSL CLI版の両環境で実用。起動は `start-minimax-mcp.sh` 経由。
 
 ---
 

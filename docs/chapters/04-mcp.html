@@ -242,9 +242,11 @@
 </table></div>
 <p><strong>使いどころ</strong>: Sonnet直接回答の代替（LLMルーティングポリシー参照）。コード生成・レビュー・説明など開発全般。<br />
 <strong>注意</strong>: glm-rate-proxy が起動していないと接続不可。<code>curl http://127.0.0.1:8787/proxy/status</code> で確認。→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/glm-mcp-server.py</code> — 外部パッケージではなく自作のPythonスクリプト。起動は <code>start-glm-mcp.sh</code> 経由で <code>.secrets.env</code> からAPIキーを読み込む。
+<strong>環境別の扱い</strong>: Windows Desktop版では <code>claude_desktop_config.json</code> から自動起動。WSL CLI版には登録されているが、CLI自体がglm-rate-proxy経由でGLMで動作しているため実際には不要（二重呼び出しになる）。将来LLMプロバイダーが変わった場合は要否を再評価すること。</p></div>
 <hr />
 <h3><a id="フォールバック先"></a>フォールバック先（17ツール）</h3>
-<p><strong>GLMのフォールバックLLM兼大量処理専用</strong>。GLM失敗時・ピーク時間帯（15〜19時）・大量処理タスクに自動委譲される。<code>python3 -m フォールバック先_mcp</code> で起動するPythonパッケージ。</p>
+<p><strong>GLMのフォールバックLLM兼大量処理専用</strong>。GLM失敗時・ピーク時間帯（15〜19時）・大量処理タスクに自動委譲される。自作Pythonスクリプトとして実装。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -324,6 +326,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。GLM失敗時のフォールバック。</p>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/フォールバック先-mcp-server.py</code> — 自作のPythonスクリプト。Windows Desktop版・WSL CLI版の両環境で実用。起動は <code>start-フォールバック先-mcp.sh</code> 経由。</p></div>
 <hr />
 <h3><a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）</h3>
 <p>Web検索に関する各種機能。</p>
