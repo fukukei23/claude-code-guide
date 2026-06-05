@@ -469,6 +469,16 @@ Claude Code がその指示に従って動作
 </table></div>
 <div class="callout callout-warn"><p><strong>注意</strong>: <code>/debug</code> と入力するとClaude Codeの組み込みデバッグログコマンドが起動する。スキル点検には必ず <code>/skill-test</code> を使うこと。</p></div>
 <hr />
+<h3><a id="send-email"></a><code>send-email</code>（カスタムスキル）</h3>
+<p><strong>Gmail SMTP経由でメールを送信</strong>。宛先・件名・本文を会話の文脈から自動収集し、Pythonスクリプトで送信。添付ファイルにも対応。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「メールで送って」「email送信」「メール送信」<code>/send-email</code></li>
+<li><strong>認証</strong>: <code>~/.secrets.env</code> の <code>GMAIL_SMTP_USER</code> / <code>GMAIL_SMTP_PASSWORD</code> を使用</li>
+<li><strong>フェーズ構成</strong>: 送信内容特定 → メール送信 → 完了報告</li>
+<li><strong>制約</strong>: 添付ファイルは25MB以下（Gmail制限）</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/send-email/</code>）</li>
+</ul>
+<hr />
 <h2>スキルの自作方法</h2>
 <ol>
 <li><code>/skill-creator</code> スキルを実行</li>
