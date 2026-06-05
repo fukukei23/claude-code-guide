@@ -25,8 +25,7 @@ PERSONAL_PATTERNS = [
     "GLM-4.7",
     "GLM-4.5-Air",
     "00_SYSTEM/",
-    "glm_ask",
-    "minimax_ask",
+    # glm_ask / minimax_ask はガイドに公開掲載するツール名のため除外
 ]
 
 
