@@ -91,6 +91,17 @@ ZAI 429 → GLM-4.7-Flash（emergency）→ MiniMax → 503エラー
 ZAI 5xx → MiniMax → 503エラー
 ```
 
+> **⚠️ 重要な制限: コンテキスト上限到達時はフォールバックが発動しない**
+>
+> Claude Codeのコンテキストウィンドウが上限に達した場合、**APIリクエストを送る前にClaude Code本体が判定してエラーを返す**。そのためglm-rate-proxyにリクエストが届かず、MiniMaxへのフォールバックも発動しない。
+>
+> ```
+> 通常時: Claude Code → glm-rate-proxy → GLM（→ エラー時MiniMax）
+> 上限時: Claude Code → （本体がAPIリクエストを送らずエラー）← プロキシに届かない
+> ```
+>
+> **対策**: コンテキストが溜まってきたら早めに `/compact` または `/new-session` で切り替える。80%を超えたら `/new-session` 推奨。
+
 ---
 
 ## <a id="thinking"></a>Thinking（思考）モードの動的制御

@@ -266,6 +266,12 @@ api.z.ai              api.fallback-provider.example
 <pre><code>ZAI 429 → Claude-Flash（emergency）→ 代替プロバイダー → 503エラー
 ZAI 5xx → 代替プロバイダー → 503エラー
 </code></pre>
+<div class="callout callout-warn"><p><strong>⚠️ 重要な制限: コンテキスト上限到達時はフォールバックが発動しない</strong></p>
+<p>Claude Codeのコンテキストウィンドウが上限に達した場合、<strong>APIリクエストを送る前にClaude Code本体が判定してエラーを返す</strong>。そのためglm-rate-proxyにリクエストが届かず、代替プロバイダーへのフォールバックも発動しない。</p>
+<pre><code>通常時: Claude Code → glm-rate-proxy → GLM（→ エラー時代替プロバイダー）
+上限時: Claude Code → （本体がAPIリクエストを送らずエラー）← プロキシに届かない
+</code></pre>
+<p><strong>対策</strong>: コンテキストが溜まってきたら早めに <code>/compact</code> または <code>/new-session</code> で切り替える。80%を超えたら <code>/new-session</code> 推奨。</p></div>
 <hr />
 <h2><a id="thinking"></a>Thinking（思考）モードの動的制御</h2>
 <p>Claudeはデフォルトで「思考モード」が有効で、内部推論トークンを大量消費する。</p>

@@ -153,7 +153,25 @@
 <hr />
 <h2>現在の構成（8サーバー・119ツール）</h2>
 <h3><a id="glm"></a>glm（19ツール）</h3>
-<p><strong>Claude CodeのメインLLM</strong>。glm-rate-proxy（localhost:8787）経由でZAI API（Claude等）を呼び出す。LLMルーティングポリシーに従い、Sonnet直接回答の代わりにこのMCPを使う。</p>
+<p><strong>LLM委譲用MCPサーバー（自作）</strong>。環境によって役割が異なる。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>環境</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Windows Desktop版</strong></td>
+<td>SonnetがMCP経由でGLMに処理を委譲。Sonnetがエンドポイントを変更できないため、会話ごとにglm MCPを呼び出してGLMに回答生成を依頼し、Sonnetが最終回答する</td>
+</tr>
+<tr>
+<td><strong>WSL CLI版</strong></td>
+<td>Claude Code自体がglm-rate-proxy経由でGLMで動作しているため、このMCPを呼び出すと二重になり<strong>実質不要</strong></td>
+</tr>
+</tbody>
+</table></div>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -240,13 +258,31 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>使いどころ</strong>: Sonnet直接回答の代替（LLMルーティングポリシー参照）。コード生成・レビュー・説明など開発全般。<br />
-<strong>注意</strong>: glm-rate-proxy が起動していないと接続不可。<code>curl http://127.0.0.1:8787/proxy/status</code> で確認。→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/glm-mcp-server.py</code> — 外部パッケージではなく自作のPythonスクリプト。起動は <code>start-glm-mcp.sh</code> 経由で <code>.secrets.env</code> からAPIキーを読み込む。
-<strong>環境別の扱い</strong>: Windows Desktop版では <code>claude_desktop_config.json</code> から自動起動。WSL CLI版には登録されているが、CLI自体がglm-rate-proxy経由でGLMで動作しているため実際には不要（二重呼び出しになる）。将来LLMプロバイダーが変わった場合は要否を再評価すること。</p></div>
+<p><strong>使いどころ</strong>: Windows Desktop版でコード生成・レビュー・説明など開発全般の処理をGLMに委譲したい場合。<br />
+<strong>注意（Windows Desktop版）</strong>: ZAI APIキーが設定されていないと接続不可。<br />
+<strong>注意（WSL CLI版）</strong>: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/glm-mcp-server.py</code> — 自作Pythonスクリプト。glm-rate-proxyとは<strong>別ファイル</strong>。glm-rate-proxyはWSL CLI版のエンドポイント制御担当、glm MCPサーバーはMCPプロトコル経由の呼び出し担当。</p></div>
 <hr />
 <h3><a id="フォールバック先"></a>フォールバック先（17ツール）</h3>
-<p><strong>GLMのフォールバックLLM兼大量処理専用</strong>。GLM失敗時・ピーク時間帯（15〜19時）・大量処理タスクに自動委譲される。自作Pythonスクリプトとして実装。</p>
+<p><strong>LLM委譲用MCPサーバー（自作）。環境によって役割が異なる。</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>環境</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Windows Desktop版</strong></td>
+<td>SonnetがMCP経由で代替プロバイダーに処理を委譲。glm MCPと同様の位置づけで、GLMと代替プロバイダーを用途で使い分ける</td>
+</tr>
+<tr>
+<td><strong>WSL CLI版</strong></td>
+<td>① glm-rate-proxyのフォールバック先（GLMがレート制限・エラー時に<strong>自動</strong>切替） ② 明示的にMCPツールとして呼び出すことも可能</td>
+</tr>
+</tbody>
+</table></div>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -325,8 +361,8 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。GLM失敗時のフォールバック。</p>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/フォールバック先-mcp-server.py</code> — 自作のPythonスクリプト。Windows Desktop版・WSL CLI版の両環境で実用。起動は <code>start-フォールバック先-mcp.sh</code> 経由。</p></div>
+<p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。</p>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/フォールバック先-mcp-server.py</code> — 自作Pythonスクリプト。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバックとMCPによる明示的呼び出しは独立した仕組み。</p></div>
 <hr />
 <h3><a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）</h3>
 <p>Web検索に関する各種機能。</p>
