@@ -540,9 +540,9 @@
 <tbody>
 <tr>
 <td>glm</td>
-<td>❌ 不要</td>
+<td>✅ あり（登録済み）</td>
 <td>✅ あり</td>
-<td>WSL CLI版は自分自身がGLMで動作。Windows版はSonnet→GLM委譲用</td>
+<td>両環境に登録済み。CLI版はセッション自体がGLMのため実質不要だが設定は存在する</td>
 </tr>
 <tr>
 <td>フォールバック先</td>
@@ -588,7 +588,7 @@
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-warn"><p><strong>注意</strong>: WSL CLI版はGLM経由のプロキシで動作するため、glm MCPは不要。代替プロバイダーはコスト削減目的で明示的に <code>フォールバック先_ask</code> 等を呼び出す際に使用する（自動フォールバックではない）。</p></div>
+<div class="callout callout-info"><p><strong>補足</strong>: glm/フォールバック先は自作Pythonサーバー（glm-mcp-server.py等）を起動するMCP。両環境に登録済みだが、WSL CLI版はセッション自体がGLMで動作するためglm MCPを実際に呼び出すことはほぼない。Windows Desktop版ではclaude_desktop_config.json経由で自動起動される。</p></div>
 <hr />
 <h2>セキュリティ: APIキーの管理</h2>
 <p>全MCPサーバーは <code>~/.secrets.env</code> からAPIキーを読み込むラッパースクリプト経由で起動する。<strong>settings.jsonにAPIキーを直接記載しない。</strong></p>
@@ -613,7 +613,7 @@ start-&lt;name&gt;.sh
 <tr>
 <td>glm</td>
 <td>19</td>
-<td>メインLLM（glm-rate-proxy経由）・Windows Desktopのみ</td>
+<td>メインLLM委譲用・両環境に登録済み（CLI版は実質不要）</td>
 </tr>
 <tr>
 <td>フォールバック先</td>

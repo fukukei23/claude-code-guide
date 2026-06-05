@@ -178,7 +178,7 @@ Discordとの連携。
 
 | サーバー | WSL CLI版 | Windows Desktop版 | 備考 |
 |---|---|---|---|
-| glm | ❌ 不要 | ✅ あり | WSL CLI版は自分自身がGLMで動作。Windows版はSonnet→GLM委譲用 |
+| glm | ✅ あり（登録済み） | ✅ あり | 両環境に登録済み。CLI版はセッション自体がGLMのため実質不要だが設定は存在する |
 | minimax | ✅ あり | ✅ あり | コスト削減で明示的に呼び出し（要約・翻訳・データ処理等） |
 | brave-search | ✅ | ✅ | 共通 |
 | github | ✅ | ✅ | 共通 |
@@ -187,7 +187,7 @@ Discordとの連携。
 | discord | ✅ | ✅ | 共通 |
 | mermaid | ✅ | ✅ | 共通 |
 
-> **注意**: WSL CLI版はGLM経由のプロキシで動作するため、glm MCPは不要。MiniMaxはコスト削減目的で明示的に `minimax_ask` 等を呼び出す際に使用する（自動フォールバックではない）。
+> **補足**: glm/minimaxは自作Pythonサーバー（glm-mcp-server.py等）を起動するMCP。両環境に登録済みだが、WSL CLI版はセッション自体がGLMで動作するためglm MCPを実際に呼び出すことはほぼない。Windows Desktop版ではclaude_desktop_config.json経由で自動起動される。
 
 ---
 
@@ -210,7 +210,7 @@ start-<name>.sh
 
 | サーバー | ツール数 | 備考 |
 |---|---|---|
-| glm | 19 | メインLLM（glm-rate-proxy経由）・Windows Desktopのみ |
+| glm | 19 | メインLLM委譲用・両環境に登録済み（CLI版は実質不要） |
 | minimax | 17 | コスト削減用LLM・両環境 |
 | github | 41 | 最もツール数が多い |
 | brave-search | 6 | ~5.5kトークン |
