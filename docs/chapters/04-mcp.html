@@ -540,9 +540,9 @@
 <tbody>
 <tr>
 <td>glm</td>
-<td>✅ あり（登録済み）</td>
+<td>❌ 不要</td>
 <td>✅ あり</td>
-<td>両環境に登録済み。CLI版はセッション自体がGLMのため実質不要だが設定は存在する</td>
+<td>WSL CLI版はClaude Code自体がGLM経由で動作するため、さらにglm MCPを呼ぶ必要がない</td>
 </tr>
 <tr>
 <td>フォールバック先</td>
@@ -588,7 +588,7 @@
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p><strong>補足</strong>: glm/フォールバック先は自作Pythonサーバー（glm-mcp-server.py等）を起動するMCP。両環境に登録済みだが、WSL CLI版はセッション自体がGLMで動作するためglm MCPを実際に呼び出すことはほぼない。Windows Desktop版ではclaude_desktop_config.json経由で自動起動される。</p></div>
+<div class="callout callout-info"><p><strong>補足</strong>: WSL CLI版はClaude Code自体のエンドポイントがglm-rate-proxy経由でGLMを指しているため、セッション全体がすでにGLMで動作している。その中でglm MCPをさらに呼ぶのは二重になるため不要。Windows Desktop版はSonnetで動作するため、GLMに委譲する手段としてglm MCPが有効。</p></div>
 <hr />
 <h2>セキュリティ: APIキーの管理</h2>
 <p>全MCPサーバーは <code>~/.secrets.env</code> からAPIキーを読み込むラッパースクリプト経由で起動する。<strong>settings.jsonにAPIキーを直接記載しない。</strong></p>
@@ -613,7 +613,7 @@ start-&lt;name&gt;.sh
 <tr>
 <td>glm</td>
 <td>19</td>
-<td>メインLLM委譲用・両環境に登録済み（CLI版は実質不要）</td>
+<td>メインLLM委譲用・Windows Desktopのみ実用（CLI版は不要）</td>
 </tr>
 <tr>
 <td>フォールバック先</td>
