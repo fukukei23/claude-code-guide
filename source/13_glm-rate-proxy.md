@@ -1,6 +1,9 @@
 # 13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用
 
-> Claude CodeのバックエンドをAnthropicからZAI（GLM-5.1）に切り替えるローカルプロキシの仕組みと運用ガイド。
+> **⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。**
+> Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は [04_MCPサーバー](04-mcp.html#glm) のglm/minimax MCPを参照してください。
+
+Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.1）に切り替えるローカルプロキシの仕組みと運用ガイド。
 
 ---
 

@@ -136,7 +136,9 @@
 
         <article class="chapter-body">
             <h1>13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用</h1>
-<div class="callout callout-info"><p>Claude CodeのバックエンドをAnthropicからZAI（Claude）に切り替えるローカルプロキシの仕組みと運用ガイド。</p></div>
+<div class="callout callout-warn"><p><strong>⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。</strong>
+Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/代替プロバイダーを使う場合は <a href="04-mcp.html#glm">04_MCPサーバー</a> のglm/フォールバック先 MCPを参照してください。</p></div>
+<p>Claude Code CLIのバックエンドをAnthropicからZAI（Claude）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
 <hr />
 <h2><a id="overview"></a>概要：なぜプロキシが必要か</h2>
 <p>Claude Codeは通常、Anthropic APIに直接接続する。しかし <code>ANTHROPIC_BASE_URL</code> を差し替えることで、<strong>Anthropic互換APIを持つ別プロバイダ</strong>に向けられる。</p>
