@@ -123,11 +123,16 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 pip install minimax-mcp --break-system-packages
 
 # 2. 起動スクリプトを作成
-# ~/.claude/scripts/mcp/start-minimax-official-mcp.sh
+# /home/yn4416/.claude/scripts/mcp/start-minimax-official-mcp.sh
 # → source ~/.secrets.env してから minimax-mcp を起動
 
-# 3. claude_desktop_config.json に追加
-# "minimax-official": { "command": "wsl", "args": ["-d", "Ubuntu", "--", "bash", "<スクリプトパス>"] }
+# 3. settings.json に追加
+# C:\Users\yn441\.claude\settings.json の mcpServers に以下を追加:
+# "minimax-official": {
+#   "command": "wsl",
+#   "args": ["bash", "/home/yn4416/.claude/scripts/mcp/start-minimax-official-mcp.sh"],
+#   "type": "stdio"
+# }
 ```
 
 **必須環境変数**:

@@ -423,11 +423,16 @@
 pip install フォールバック先-mcp --break-system-packages
 
 # 2. 起動スクリプトを作成
-# ~/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh
+# /home/&lt;USER&gt;/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh
 # → source ~/.secrets.env してから フォールバック先-mcp を起動
 
-# 3. claude_desktop_config.json に追加
-# &quot;フォールバック先-official&quot;: { &quot;command&quot;: &quot;wsl&quot;, &quot;args&quot;: [&quot;-d&quot;, &quot;Ubuntu&quot;, &quot;--&quot;, &quot;bash&quot;, &quot;&lt;スクリプトパス&gt;&quot;] }
+# 3. settings.json に追加
+# C:\Users\yn441\.claude\settings.json の mcpServers に以下を追加:
+# &quot;フォールバック先-official&quot;: {
+#   &quot;command&quot;: &quot;wsl&quot;,
+#   &quot;args&quot;: [&quot;bash&quot;, &quot;/home/&lt;USER&gt;/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh&quot;],
+#   &quot;type&quot;: &quot;stdio&quot;
+# }
 </code></pre>
 <p><strong>必須環境変数</strong>:</p>
 <div class="table-wrapper"><table>

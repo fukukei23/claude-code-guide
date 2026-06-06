@@ -370,8 +370,9 @@ Claude Code がその指示に従って動作
 <p><strong>SSOTへの記録・振り分けを自動化</strong>。内容をLLMで分析して最適な振り分け先（01_DECISIONS / 10_DAILY等）を判定し、フォーマット生成・リンク付与・ガイド転記まで一気に実行。<code>record-decision</code> の上位互換。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「記録して」「書き留めて」「保存して」「メモして」「残しておいて」「SSOTに入れて」「ガイドに追加して」<code>/ssot-record</code></li>
-<li><strong>動作フロー</strong>: 情報収集 → 分類判定 → 確認表示 → SSOT記録 → CCガイド自動追記 → ガイド転記 → git commit &amp; push</li>
-<li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM不要）、Windows Desktop版は外部LLM呼び出し可</li>
+<li><strong>動作フロー</strong>: 情報収集 → 関連ファイル自動検出（フェーズ0.5） → 分類判定 → 確認表示 → SSOT記録 → CCガイド自動追記 → 関連ドキュメント同時更新 → ガイド転記 → git commit &amp; push</li>
+<li><strong>フェーズ0.5（関連ファイル自動検出）</strong>: タグマッピング設定（<code>knowledge-base/config/タグマッピング.md</code>）に基づき、プロジェクト側の更新対象ドキュメントを自動検出。SSOT記録と同時に該当ファイルへ内容を反映</li>
+<li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM呼び出し不要・不可）、Windows Desktop版はMCP経由で外部LLM呼び出し可</li>
 <li><strong>CCガイド自動同期</strong>: 記録内容がClaude Code機能（スキル/MCP/フック/settings）に関連する場合、対応するガイドページ（03/04/05/08等）への追記を自動判定・実行。SSOT内CCガイドマスターから claude-code-guide（派生物）へ同期</li>
 <li><strong>自動化タグ連動</strong>: tagsに「自動化」が含まれる場合、<code>自動化.md</code> も自動更新</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-record/</code>）</li>
