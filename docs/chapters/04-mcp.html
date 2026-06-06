@@ -364,6 +364,96 @@
 <p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。</p>
 <div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/フォールバック先-mcp-server.py</code> — 自作Pythonスクリプト（<strong>代替プロバイダー-M3</strong>使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p></div>
 <hr />
+<h3><a id="フォールバック先-official"></a>フォールバック先-official（10ツール）</h3>
+<p><strong>代替プロバイダー公式MCPサーバー</strong>。動画・画像・音声などのメディア生成機能を提供する。カスタム版 <code>フォールバック先</code>（テキスト処理特化）とは別サーバー。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>generate_video</code></td>
+<td>テキストプロンプト or 画像から動画を生成（<code>代替プロバイダー-Hailuo-02</code>等のモデルを使用）</td>
+</tr>
+<tr>
+<td><code>query_video_generation</code></td>
+<td>非同期動画生成タスクのステータス確認</td>
+</tr>
+<tr>
+<td><code>text_to_image</code></td>
+<td>テキストから画像を生成</td>
+</tr>
+<tr>
+<td><code>text_to_audio</code></td>
+<td>テキストを音声に変換（TTS）</td>
+</tr>
+<tr>
+<td><code>music_generation</code></td>
+<td>テキストプロンプトから音楽を生成</td>
+</tr>
+<tr>
+<td><code>voice_clone</code></td>
+<td>音声ファイルからカスタムボイスを作成</td>
+</tr>
+<tr>
+<td><code>voice_design</code></td>
+<td>テキスト説明からボイスを生成</td>
+</tr>
+<tr>
+<td><code>list_voices</code></td>
+<td>使用可能なボイス一覧を表示</td>
+</tr>
+<tr>
+<td><code>play_audio</code></td>
+<td>生成した音声ファイルを再生</td>
+</tr>
+<tr>
+<td><code>image_to_video</code></td>
+<td>画像を動画に変換（JS/TS実装のみ）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: 「〇〇の動画を生成して」「画像を作って」「BGMを生成して」など、メディア生成タスク全般。<br />
+<strong>出力先</strong>: <code>~/フォールバック先-output/</code>（WSL内）に自動保存される。</p>
+<p><strong>セットアップ手順</strong>:</p>
+<pre><code class="language-bash"># 1. 公式パッケージをインストール（WSL内）
+pip install フォールバック先-mcp --break-system-packages
+
+# 2. 起動スクリプトを作成
+# ~/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh
+# → source ~/.secrets.env してから フォールバック先-mcp を起動
+
+# 3. claude_desktop_config.json に追加
+# &quot;フォールバック先-official&quot;: { &quot;command&quot;: &quot;wsl&quot;, &quot;args&quot;: [&quot;-d&quot;, &quot;Ubuntu&quot;, &quot;--&quot;, &quot;bash&quot;, &quot;&lt;スクリプトパス&gt;&quot;] }
+</code></pre>
+<p><strong>必須環境変数</strong>:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>変数名</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MINIMAX_API_KEY</code></td>
+<td>代替プロバイダー APIキー（platform.fallback-provider.example で取得）</td>
+</tr>
+<tr>
+<td><code>MINIMAX_API_HOST</code></td>
+<td><code>https://api.fallback-provider.example</code></td>
+</tr>
+<tr>
+<td><code>MINIMAX_MCP_BASE_PATH</code></td>
+<td>出力先ディレクトリ（例: <code>~/フォールバック先-output</code>）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p><strong>実装</strong>: 公式パッケージ <code>フォールバック先-mcp</code>（PyPI）。<code>~/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh</code> で起動。2026-06-06 追加。</p></div>
+<hr />
 <h3><a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）</h3>
 <p>Web検索に関する各種機能。</p>
 <div class="table-wrapper"><table>

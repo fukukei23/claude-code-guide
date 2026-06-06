@@ -97,6 +97,50 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ---
 
+### <a id="minimax-official"></a>minimax-official（10ツール）
+
+**MiniMax公式MCPサーバー**。動画・画像・音声などのメディア生成機能を提供する。カスタム版 `minimax`（テキスト処理特化）とは別サーバー。
+
+| ツール | 用途 |
+|---|---|
+| `generate_video` | テキストプロンプト or 画像から動画を生成（`MiniMax-Hailuo-02`等のモデルを使用） |
+| `query_video_generation` | 非同期動画生成タスクのステータス確認 |
+| `text_to_image` | テキストから画像を生成 |
+| `text_to_audio` | テキストを音声に変換（TTS） |
+| `music_generation` | テキストプロンプトから音楽を生成 |
+| `voice_clone` | 音声ファイルからカスタムボイスを作成 |
+| `voice_design` | テキスト説明からボイスを生成 |
+| `list_voices` | 使用可能なボイス一覧を表示 |
+| `play_audio` | 生成した音声ファイルを再生 |
+| `image_to_video` | 画像を動画に変換（JS/TS実装のみ） |
+
+**使いどころ**: 「〇〇の動画を生成して」「画像を作って」「BGMを生成して」など、メディア生成タスク全般。  
+**出力先**: `~/minimax-output/`（WSL内）に自動保存される。
+
+**セットアップ手順**:
+```bash
+# 1. 公式パッケージをインストール（WSL内）
+pip install minimax-mcp --break-system-packages
+
+# 2. 起動スクリプトを作成
+# ~/.claude/scripts/mcp/start-minimax-official-mcp.sh
+# → source ~/.secrets.env してから minimax-mcp を起動
+
+# 3. claude_desktop_config.json に追加
+# "minimax-official": { "command": "wsl", "args": ["-d", "Ubuntu", "--", "bash", "<スクリプトパス>"] }
+```
+
+**必須環境変数**:
+| 変数名 | 値 |
+|---|---|
+| `MINIMAX_API_KEY` | MiniMax APIキー（platform.minimax.io で取得） |
+| `MINIMAX_API_HOST` | `https://api.minimax.io` |
+| `MINIMAX_MCP_BASE_PATH` | 出力先ディレクトリ（例: `~/minimax-output`） |
+
+> **実装**: 公式パッケージ `minimax-mcp`（PyPI）。`~/.claude/scripts/mcp/start-minimax-official-mcp.sh` で起動。2026-06-06 追加。
+
+---
+
 ### <a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）
 
 Web検索に関する各種機能。
