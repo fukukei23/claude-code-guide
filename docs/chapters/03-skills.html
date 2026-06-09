@@ -480,6 +480,25 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/send-email/</code>）</li>
 </ul>
 <hr />
+<h3><a id="zenn-article-pipeline"></a><code>zenn-article-pipeline</code>（カスタムスキル）</h3>
+<p><strong>Zenn記事の作成から公開前チェックまでを6ステップで実行するパイプライン</strong>。ドラフト作成→セキュリティスキャン→品質チェック→Mermaid図追加→相互リンク→タグ最適化の順で仕上げる。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「記事を書いて」「Zenn記事」「記事の品質チェック」</li>
+<li><strong>6ステップ</strong>: ドラフト作成 → セキュリティスキャン → 品質チェック → Mermaid図追加 → 相互リンク → タグ最適化</li>
+<li><strong>完了後</strong>: <code>published: true</code> で公開した場合は <code>x-post-draft</code> スキルへ自動誘導</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/zenn-article-pipeline/</code>）</li>
+</ul>
+<hr />
+<h3><a id="x-post-draft"></a><code>x-post-draft</code>（カスタムスキル）</h3>
+<p><strong>Zenn記事公開時にX（旧Twitter）投稿用の文案を複数パターン生成する</strong>。X API課金（URL付き投稿0.20ドル/件）を回避しつつ投稿の質を上げる。文案作成のみ行い、投稿はユーザーが手動で行う。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「X投稿文作って」「ポスト文案」または <code>zenn-article-pipeline</code> 完了後の誘導</li>
+<li><strong>生成パターン</strong>: 学び・気づき型 / 問題提起型 / 結論ファースト型 / 裏話・体験談型（最低3案）</li>
+<li><strong>投稿タイミング提案</strong>: 日本のXアクティブ時間帯（平日7〜9時・20〜22時、週末14〜17時）を案内</li>
+<li><strong>マンネリ化防止</strong>: 過去の切り口ログを <code>01_DECISIONS/claude-code/Xポスト文案ログ.md</code> に蓄積し、直近2回で使った型は優先度を下げる</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/x-post-draft/</code>）</li>
+</ul>
+<hr />
 <h2>スキルの自作方法</h2>
 <ol>
 <li><code>/skill-creator</code> スキルを実行</li>
