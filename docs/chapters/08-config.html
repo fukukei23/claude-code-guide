@@ -355,6 +355,30 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tbody>
 </table></div>
 <div class="callout callout-warn"><p><strong>注意</strong>: コンテキスト使用率が高くなったら早めに <code>/compact</code> すること。100%に達すると <code>/compact</code> 自体も失敗し、新セッションが必要になる。</p></div>
+<h3><a id="env-settings"></a>env（環境変数の注入）</h3>
+<p><code>env</code> セクションで Claude Code プロセスに環境変数を追加できる。APIキーは <code>~/.secrets.env</code> で管理するため、ここには非機密の制御変数のみ記載する。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>変数名</th>
+<th>値例</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>API_TIMEOUT_MS</code></td>
+<td><code>1200000</code></td>
+<td>Claude API呼び出しタイムアウト（20分）</td>
+</tr>
+<tr>
+<td><code>MCP_TOOL_TIMEOUT</code></td>
+<td><code>300000</code></td>
+<td>MCPツール実行タイムアウト（既定60秒→5分に延長）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p><strong>MCP_TOOL_TIMEOUT を設定する理由</strong>: Claude等の思考型モデルは長い生成に60秒以上かかることがある。未設定だと <code>MCP error -32001 (Request timed out)</code> が連続発生する。glm-mcp-server.py は直列処理なので1件目のタイムアウトが2件目を巻き込む連鎖に注意。値はミリ秒単位（300000 = 5分）。</p></div>
 <hr />
 <h3><a id="settings-local"></a>プロジェクト設定: <code>&lt;repo&gt;/.claude/settings.json</code></h3>
 <p>プロジェクト固有の設定。</p>
