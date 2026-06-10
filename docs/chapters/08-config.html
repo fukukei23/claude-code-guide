@@ -121,6 +121,12 @@
             SSOTから探して
         </a>
         
+        <a href="15.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            コスト最適化構成
+        </a>
+        
     </nav>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -357,14 +363,6 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <li><strong>内容</strong>: そのプロジェクトでのみ有効な権限・MCP・フック</li>
 <li><strong>用途</strong>: チーム共有可能な設定（<code>.gitignore</code>に含めない場合）</li>
 </ul>
-<h3><a id="settings-local-json"></a>ローカル上書き: <code>~/.claude/settings.local.json</code></h3>
-<p>グローバル設定のローカル上書き専用ファイル。<code>settings.json</code> と同じ形式で記述し、マージされてロードされる。</p>
-<ul>
-<li><strong>場所</strong>: <code>~/.claude/settings.local.json</code></li>
-<li><strong>用途</strong>: 環境固有の権限追加（VPS SSH・clasp・Discord Bot Token等）をメインの <code>settings.json</code> と分離して管理</li>
-<li><strong>バックアップ</strong>: <code>~/projects/claude-config/settings.local.example.json</code> にシークレット値をマスクした版を保存</li>
-</ul>
-<div class="callout callout-tip"><p><strong>使い分け</strong>: 全環境共通の設定は <code>settings.json</code>、マシン固有・プロジェクト固有の権限は <code>settings.local.json</code> に書くとバックアップ管理が楽になる。</p></div>
 <h3><a id="claude-json"></a><code>~/.claude.json</code>（追加設定ファイル）</h3>
 <p><strong>2ファイル問題</strong>: <code>~/.claude.json</code> と <code>~/.claude/settings.json</code> の両方が存在し、マージされてロードされる。</p>
 <ul>

@@ -121,6 +121,12 @@
             SSOTから探して
         </a>
         
+        <a href="15.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            コスト最適化構成
+        </a>
+        
     </nav>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -147,12 +153,11 @@
   ├─ playwright MCP ────→ Chromium ──────→ ブラウザ操作
   ├─ context7 MCP ──────→ Docs API ─────→ ライブラリドキュメント
   ├─ discord MCP ───────→ Discord API ──→ メッセージ送受信
-  ├─ mermaid MCP ───────→ Mermaid API ──→ 図表生成
-  └─ zai-video MCP ─────→ Z.AI API ─────→ 動画生成（CogVideoX-3）
+  └─ mermaid MCP ───────→ Mermaid API ──→ 図表生成
 </code></pre>
 <p>MCPサーバーを追加すると、Claude Codeが<strong>そのサーバーのツール</strong>を使えるようになる。各ツールはコンテキストを消費するため、必要なものだけを維持する。</p>
 <hr />
-<h2>現在の構成（10サーバー・131ツール）</h2>
+<h2>現在の構成（8サーバー・119ツール）</h2>
 <h3><a id="glm"></a>glm（19ツール）</h3>
 <p><strong>LLM委譲用MCPサーバー（自作）</strong>。環境によって役割が異なる。</p>
 <div class="table-wrapper"><table>
@@ -660,30 +665,6 @@ pip install フォールバック先-mcp --break-system-packages
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: フローチャート、シーケンス図、クラス図の生成</p>
-<h3><a id="zai-video"></a>zai-video（2ツール）</h3>
-<p><strong>Z.AI公式CogVideoX-3モデルによる動画生成MCPサーバー（自作）</strong>。テキストプロンプトから短い動画を非同期で生成する。npmパッケージを使わず公式REST APIをurllibで直接呼び出すシンプルな実装。</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>ツール</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>zai_generate_video</code></td>
-<td>テキストプロンプトから動画生成タスクを送信。非同期でtask_idを返す</td>
-</tr>
-<tr>
-<td><code>zai_query_video</code></td>
-<td>task_idで生成状況を確認し、完了時にダウンロードURLを取得</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>使いどころ</strong>: 「〇〇の動画を作って」「CogVideoXで動画生成して」などの明示的依頼。コストが発生するためユーザーの明示的指示が必須。<br />
-<strong>モデル</strong>: <code>cogvideox-3</code>（Z.AI / api.z.ai）<br />
-<strong>APIキー</strong>: <code>GLM_API_KEY</code>（Z.AI APIキーと共用）</p>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/zai-video-mcp-server.py</code> — 自作Pythonスクリプト。<code>~/.claude/scripts/mcp/start-zai-video-mcp.sh</code> で起動。2026-06-08 追加。</p></div>
 <hr />
 <h2>環境別の対応（WSL CLI / Windows Desktop）</h2>
 <p>一部のMCPサーバーは実行環境によって役割・有無が異なる：</p>
@@ -744,12 +725,6 @@ pip install フォールバック先-mcp --break-system-packages
 <td>✅</td>
 <td>✅</td>
 <td>共通</td>
-</tr>
-<tr>
-<td>zai-video</td>
-<td>✅</td>
-<td>✅</td>
-<td>動画生成（明示的依頼時のみ使用）</td>
 </tr>
 </tbody>
 </table></div>
@@ -817,13 +792,8 @@ start-&lt;name&gt;.sh
 <td>~0.4kトークン</td>
 </tr>
 <tr>
-<td>zai-video</td>
-<td>2</td>
-<td>動画生成（明示的依頼時のみ）</td>
-</tr>
-<tr>
 <td><strong>合計</strong></td>
-<td><strong>131</strong></td>
+<td><strong>119</strong></td>
 <td></td>
 </tr>
 </tbody>

@@ -121,6 +121,12 @@
             SSOTから探して
         </a>
         
+        <a href="15.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            コスト最適化構成
+        </a>
+        
     </nav>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -136,48 +142,159 @@
 
         <article class="chapter-body">
             <h1>01 基礎概念 — Claude Code とは</h1>
-<h2>Claude Code の3つの形態</h2>
-<p>Claude Code は Anthropic が提供する AI コーディングアシスタント。3つの利用形態がある。</p>
+<h2>Claude Code の4つの形態</h2>
+<p>Claude Code は Anthropic が提供する AI コーディングアシスタント。4つの形態で利用できる。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>形態</th>
 <th>説明</th>
 <th>使い方</th>
-<th>LLM</th>
-<th>MCP対応</th>
-<th>カスタマイズ性</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>CLI版</strong></td>
-<td>ターミナル上で動作</td>
+<td><strong>CLI</strong></td>
+<td>ターミナル上で動作。你的のメイン環境（WSL2）</td>
 <td><code>claude</code> コマンドで起動</td>
-<td>外部LLMに変更可</td>
-<td>✅ 完全対応</td>
-<td>极高</td>
 </tr>
 <tr>
 <td><strong>Desktop App</strong></td>
 <td>Windows/Mac用のデスクトップアプリ</td>
 <td>スタンドアロンで起動</td>
-<td>Anthropic公式固定</td>
-<td>✅ 完全対応</td>
-<td>高</td>
+</tr>
+<tr>
+<td><strong>IDE拡張</strong></td>
+<td>VS Code・JetBrains用プラグイン</td>
+<td>IDE内のパネルで操作</td>
 </tr>
 <tr>
 <td><strong>Web App</strong></td>
 <td>claude.ai/code でブラウザから利用</td>
 <td>ブラウザでアクセス</td>
-<td><strong>LLM固定</strong></td>
-<td><strong>❌ 非対応</strong></td>
-<td>极低</td>
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-warn"><p><strong>注意:</strong> ウェブ版（claude.ai/code）はLLM変更・自作MCPツール追加ができません。外出先からのクイック確認用途向きです。</p></div>
-<p>このガイドは主に <strong>CLI版（WSL2環境）</strong> を前提に書かれています。</p>
+<p>このガイドは主に <strong>CLI（WSL2環境）</strong> を前提に書かれている。</p>
+<hr />
+<h2>Desktop App と CLI の違い</h2>
+<div class="callout callout-warn"><p>⚠️ <strong>公式の仕様</strong> を比較しています。個人のコスト最適化構成（GLM/代替プロバイダールーティング等）は <a href="15.html">15_コスト最適化構成</a> を参照。</p></div>
+<h3>比較表</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>Desktop App</th>
+<th>CLI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>起動方法</strong></td>
+<td>アプリをダブルクリック</td>
+<td>ターミナルで <code>claude</code> コマンド</td>
+</tr>
+<tr>
+<td><strong>画面</strong></td>
+<td>GUI（タブ・サイドバー・ビジュアルdiff）</td>
+<td>ターミナル（テキストのみ）</td>
+</tr>
+<tr>
+<td><strong>並行セッション</strong></td>
+<td>タブで視覚的に管理</td>
+<td>バックグラウンドエージェント</td>
+</tr>
+<tr>
+<td><strong>変更差分</strong></td>
+<td>横並びビジュアル表示</td>
+<td>テキストdiff（色付き）</td>
+</tr>
+<tr>
+<td><strong>コンテキスト上限</strong></td>
+<td>200k（Code タブ）</td>
+<td>最大1M（プランによる）</td>
+</tr>
+<tr>
+<td><strong>スクリプト連携</strong></td>
+<td>不可</td>
+<td>可（パイプ・cron・hook）</td>
+</tr>
+<tr>
+<td><strong>対応OS</strong></td>
+<td>Windows / macOS のみ</td>
+<td>全OS（Linux/WSL2/Mac/Windows）</td>
+</tr>
+<tr>
+<td><strong>設定ファイル</strong></td>
+<td><code>claude_desktop_config.json</code></td>
+<td><code>settings.json</code></td>
+</tr>
+<tr>
+<td><strong>Hook / Skill</strong></td>
+<td>✅ 対応</td>
+<td>✅ 対応</td>
+</tr>
+<tr>
+<td><strong>MCPサーバー</strong></td>
+<td>✅ 対応</td>
+<td>✅ 対応</td>
+</tr>
+</tbody>
+</table></div>
+<h3>設定ファイルの場所</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>Desktop App</th>
+<th>CLI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>メイン設定</td>
+<td><code>AppData\Local\Packages\&lt;pkg&gt;\claude_desktop_config.json</code></td>
+<td><code>~/.claude/settings.json</code></td>
+</tr>
+<tr>
+<td>MCP起動コマンド</td>
+<td><code>wsl -d Ubuntu -- bash ...</code>（WSL経由）</td>
+<td><code>bash ...</code>（直接）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>どちらを選ぶか</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>場面</th>
+<th>おすすめ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>視覚的な差分確認が欲しい</td>
+<td>Desktop App</td>
+</tr>
+<tr>
+<td>ターミナル作業はCLIの方が慣れている</td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Linux / WSL2 で使いたい</td>
+<td>CLI のみ</td>
+</tr>
+<tr>
+<td>スクリプトやcronで自動化したい</td>
+<td>CLI のみ</td>
+</tr>
+<tr>
+<td>複数プロジェクトを並行管理</td>
+<td>Desktop App（タブ）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p>詳細: <a href="#">自作MCPサーバー構造メモ</a></p></div>
 <hr />
 <div class="mermaid-wrapper"><div class="mermaid">
 graph TD
@@ -206,7 +323,7 @@ Claude Code CLI（ターミナル）
   ├─ メモリを読み込み（MEMORY.md等）
   │
   ▼
-LLM（Claude）
+LLM（Claude Sonnet / Opus / Haiku）
   │
   ├─ ツール実行要求（Read, Edit, Bash, Agent等）
   │    ├─ ローカルファイル操作
