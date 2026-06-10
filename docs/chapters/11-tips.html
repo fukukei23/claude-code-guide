@@ -368,6 +368,42 @@ cat ~/.claude/settings.json | jq '.mcpServers | keys'
 </ol>
 <p>→ <code>/code-metrics</code> スキルがこれらを自動実行する。</p>
 <hr />
+<h2>E. Cron管理の注意点</h2>
+<h3>Cron は7日で自動失効する</h3>
+<p>Claude Code の <code>CronCreate</code> で登録したCronジョブは、<strong><code>durable=false</code> の場合は7日後に自動削除される</strong>。<code>durable=true</code> も実質7日が上限とされている（2026年6月時点）。</p>
+<p>→ <strong>放置するとCronが静かに消える。</strong></p>
+<h3>自己更新プロンプトは膨張バグを引き起こす</h3>
+<p>「このプロンプト全文をそのままコピーして再登録せよ」というプロンプトをCronに埋め込むと、再登録のたびにプロンプトが重複コピーされ続け、最終的に8倍以上の長さになる。</p>
+<pre><code>初回: &quot;このプロンプト全文を...&quot;（100文字）
+1回目実行後: &quot;このプロンプト全文を...このプロンプト全文を...&quot;（200文字）
+N回目実行後: N倍の長さに膨張
+</code></pre>
+<h3>推奨: スクリプト方式で永続化する</h3>
+<p>Cron定義を外部スクリプトに書き出し、更新専用Cronがそれを読んで再登録する方式が安全。</p>
+<p><strong>構成例:</strong></p>
+<pre><code class="language-bash"># ~/bin/renew-crons.sh
+# このファイルは実行ではなく、Claudeがcatして読むための定義ファイル
+#
+# 1. Knowledge Lint
+#    schedule: &quot;3 3 * * 0,2,4&quot;
+#    prompt:   &quot;bash ~/.claude/scripts/knowledge-lint/run-lint.sh &amp;&amp; ...&quot;
+#
+# 2. Cron更新タスク（このスクリプト自身）
+#    schedule: &quot;0 3 */6 * *&quot;
+#    prompt:   &quot;bash ~/bin/renew-crons.sh を cat して全Cronを再登録せよ&quot;
+</code></pre>
+<p><strong>更新Cronのプロンプト（短く固定）:</strong></p>
+<pre><code>bash ~/bin/renew-crons.sh を cat して、記載された全Cronを
+CronCreate(durable=true, recurring=true) で再登録せよ。
+既存の同名Cronは削除してから登録すること。
+</code></pre>
+<p><strong>ポイント:</strong></p>
+<ul>
+<li>プロンプト本文にCron定義を書かない（スクリプトに委譲する）</li>
+<li>スクリプト内容を変更してもプロンプトは変わらないため膨張しない</li>
+<li>更新スケジュールは <code>0 3 */6 * *</code>（6日ごと）で7日失効の前に再登録</li>
+</ul>
+<hr />
 
         </article>
 
