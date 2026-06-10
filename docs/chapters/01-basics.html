@@ -312,7 +312,7 @@ graph TD
     LLM --> Resp["💬 レスポンス"]
     Resp --> User
 </div></div><h2>アーキテクチャ</h2>
-<pre><code>ユーザー（あなた）
+<pre><code>ユーザー
   │
   ▼
 Claude Code CLI（ターミナル）
@@ -388,6 +388,13 @@ graph LR
 <li><strong>入力トークン</strong>: ユーザー→LLMへの送信（コンテキストに含まれる全て）</li>
 <li><strong>出力トークン</strong>: LLM→ユーザーへの返信</li>
 <li>コストは入力 + 出力のトークン数で計算される</li>
+</ul>
+<hr />
+<h2>環境の特記事項</h2>
+<ul>
+<li><strong>コスト最適化</strong>: 公式のSonnet/Opus/Haikuではなく、Claudeと代替プロバイダーにルーティングする独自構成 → <a href="15.html">15_コスト最適化構成</a></li>
+<li><strong>コンテキスト最適化済み</strong>: 以前9サーバー→11サーバーに最適化</li>
+<li><strong>セキュリティフック</strong>: PreToolUseで危険コマンドを自動ブロック</li>
 </ul>
 <hr />
 

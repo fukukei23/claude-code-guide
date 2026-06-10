@@ -140,7 +140,7 @@
 
         <article class="chapter-body">
             <h1>15 コスト最適化構成 — Claude Code を安く使う裏技</h1>
-<div class="callout callout-warn"><p>⚠️ <strong>この章は <strong>あなたの独自カスタマイズ</strong> です。</strong></p>
+<div class="callout callout-warn"><p>⚠️ <strong>この章は <strong>個人の独自カスタマイズ</strong> です。</strong></p>
 <p>公式の Claude Code は Anthropic API（Sonnet/Opus/Haiku）をそのまま使います。
 以下は「Anthropic 課金を抑えて GLM/代替プロバイダー にルーティングする」個人のコストカット手法の記録です。</p>
 <p><strong>📖 先に読む</strong>: 公式の Desktop App vs CLI の違い → <a href="01-basics.html">01_基礎概念</a></p></div>
@@ -257,7 +257,7 @@
 <tr>
 <th>項目</th>
 <th>公式</th>
-<th>あなたの構成</th>
+<th>個人の構成</th>
 </tr>
 </thead>
 <tbody>
@@ -280,6 +280,35 @@
 <td>コスト</td>
 <td>有料（Anthropic 課金属）</td>
 <td>基本無料（GLM/代替プロバイダー の無料枠）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>バッジ表示ルール</h2>
+<p>コスト最適化構成では、使用したモデルに応じてレスポンスの冒頭と末尾にバッジを表示：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>バッジ</th>
+<th>モデル</th>
+<th>表示タイミング</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🟡[GLM]</td>
+<td>Claude / Claude</td>
+<td>通常時</td>
+</tr>
+<tr>
+<td>🟠[代替プロバイダー]</td>
+<td>代替プロバイダー M2.7</td>
+<td>fallback 時・明示的呼び出し時</td>
+</tr>
+<tr>
+<td>🔵[Sonnet]</td>
+<td>Claude Sonnet</td>
+<td>事前許可取得後のみ</td>
 </tr>
 </tbody>
 </table></div>
