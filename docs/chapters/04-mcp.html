@@ -665,6 +665,50 @@ pip install フォールバック先-mcp --break-system-packages
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: フローチャート、シーケンス図、クラス図の生成</p>
+<h3><a id="zernio"></a>zernio（280+ツール / ホストMCP）</h3>
+<p>SNS自動投稿MCP。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>カテゴリ</th>
+<th>ツール例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>投稿</td>
+<td><code>posts_publish_now</code>, <code>posts_create</code>, <code>posts_cross_post</code></td>
+</tr>
+<tr>
+<td>スケジュール</td>
+<td><code>posts_create</code>（日時指定）, <code>posts_list</code></td>
+</tr>
+<tr>
+<td>分析</td>
+<td><code>get_analytics</code>, <code>get_best_time_to_post</code></td>
+</tr>
+<tr>
+<td>DM・コメント</td>
+<td><code>send_inbox_message</code>, <code>reply_to_inbox_post</code></td>
+</tr>
+<tr>
+<td>広告</td>
+<td><code>create_standalone_ad</code>, <code>boost_post</code>, <code>get_ad_analytics</code></td>
+</tr>
+<tr>
+<td>メディア</td>
+<td><code>media_generate_upload_link</code>, <code>media_check_upload_status</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: TikTok/Instagram等への自動投稿、SNS分析、投稿スケジュール管理</p>
+<p><strong>料金</strong>: 最初2アカウント無料 → 3つ目以降 $6/月</p>
+<p><strong>セットアップ</strong>: 公式プラグイン方式で導入</p>
+<pre><code class="language-bash">/plugin marketplace add zernio-dev/zernio-claude-plugin
+/plugin install zernio@zernio
+# APIキー入力 → システムキーチェーンに保存
+</code></pre>
+<p><strong>投稿テスト結果</strong>（2026-06-13）: 4プラットフォーム（Discord / Instagram / TikTok / YouTube）の下書き投稿・クロス投稿・一覧取得・削除まで全て正常動作を確認。即時投稿（<code>publish_now=True</code>）も利用可能。</p>
 <hr />
 <h2>環境別の対応（WSL CLI / Windows Desktop）</h2>
 <p>一部のMCPサーバーは実行環境によって役割・有無が異なる：</p>
@@ -725,6 +769,12 @@ pip install フォールバック先-mcp --break-system-packages
 <td>✅</td>
 <td>✅</td>
 <td>共通</td>
+</tr>
+<tr>
+<td>zernio</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通（ホストMCP・APIキー必要）</td>
 </tr>
 </tbody>
 </table></div>
@@ -792,8 +842,13 @@ start-&lt;name&gt;.sh
 <td>~0.4kトークン</td>
 </tr>
 <tr>
+<td>zernio</td>
+<td>280+</td>
+<td>~6k（ホストMCP）</td>
+</tr>
+<tr>
 <td><strong>合計</strong></td>
-<td><strong>119</strong></td>
+<td><strong>399+</strong></td>
 <td></td>
 </tr>
 </tbody>

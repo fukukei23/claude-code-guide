@@ -234,6 +234,33 @@ Discordとの連携。
 
 **使いどころ**: フローチャート、シーケンス図、クラス図の生成
 
+### <a id="zernio"></a>zernio（280+ツール / ホストMCP）
+
+SNS自動投稿MCP。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。
+
+| カテゴリ | ツール例 |
+|---|---|
+| 投稿 | `posts_publish_now`, `posts_create`, `posts_cross_post` |
+| スケジュール | `posts_create`（日時指定）, `posts_list` |
+| 分析 | `get_analytics`, `get_best_time_to_post` |
+| DM・コメント | `send_inbox_message`, `reply_to_inbox_post` |
+| 広告 | `create_standalone_ad`, `boost_post`, `get_ad_analytics` |
+| メディア | `media_generate_upload_link`, `media_check_upload_status` |
+
+**使いどころ**: TikTok/Instagram等への自動投稿、SNS分析、投稿スケジュール管理
+
+**料金**: 最初2アカウント無料 → 3つ目以降 $6/月
+
+**セットアップ**: 公式プラグイン方式で導入
+
+```bash
+/plugin marketplace add zernio-dev/zernio-claude-plugin
+/plugin install zernio@zernio
+# APIキー入力 → システムキーチェーンに保存
+```
+
+**投稿テスト結果**（2026-06-13）: 4プラットフォーム（Discord / Instagram / TikTok / YouTube）の下書き投稿・クロス投稿・一覧取得・削除まで全て正常動作を確認。即時投稿（`publish_now=True`）も利用可能。
+
 ---
 
 ## 環境別の対応（WSL CLI / Windows Desktop）
@@ -250,6 +277,7 @@ Discordとの連携。
 | context7 | ✅ | ✅ | 共通 |
 | discord | ✅ | ✅ | 共通 |
 | mermaid | ✅ | ✅ | 共通 |
+| zernio | ✅ | ✅ | 共通（ホストMCP・APIキー必要） |
 
 > **補足**: WSL CLI版はClaude Code自体のエンドポイントがglm-rate-proxy経由でGLMを指しているため、セッション全体がすでにGLMで動作している。その中でglm MCPをさらに呼ぶのは二重になるため不要。Windows Desktop版はSonnetで動作するため、GLMに委譲する手段としてglm MCPが有効。
 >
@@ -284,7 +312,8 @@ start-<name>.sh
 | context7 | 2 | ~1.2kトークン |
 | discord | 5 | ~0.6kトークン |
 | mermaid | 4 | ~0.4kトークン |
-| **合計** | **119** | |
+| zernio | 280+ | ~6k（ホストMCP） |
+| **合計** | **399+** | |
 
 - **GitHub**が最も重い（41ツール = 全MCPの3分の1強）
 - GLM/MiniMaxはLLM委譲用の特殊サーバー（他のMCPとは性質が異なる）
