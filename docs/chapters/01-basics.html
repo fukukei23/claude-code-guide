@@ -155,7 +155,7 @@
 <tbody>
 <tr>
 <td><strong>CLI</strong></td>
-<td>ターミナル上で動作。你的のメイン環境（WSL2）</td>
+<td>ターミナル上で動作。あなたのメイン環境（WSL2）</td>
 <td><code>claude</code> コマンドで起動</td>
 </tr>
 <tr>
@@ -319,7 +319,7 @@ Claude Code CLI（ターミナル）
   │
   ├─ システムプロンプトを読み込み（CLAUDE.md等）
   ├─ MCPツール定義を読み込み（83ツール）
-  ├─ スキル定義を読み込み（30+スキル）
+  ├─ スキル定義を読み込み（50+スキル）
   ├─ メモリを読み込み（MEMORY.md等）
   │
   ▼
@@ -393,7 +393,7 @@ graph LR
 <h2>環境の特記事項</h2>
 <ul>
 <li><strong>コスト最適化</strong>: 公式のSonnet/Opus/Haikuではなく、Claudeと代替プロバイダーにルーティングする独自構成 → <a href="15.html">15_コスト最適化構成</a></li>
-<li><strong>コンテキスト最適化済み</strong>: 以前9サーバー→11サーバーに最適化</li>
+<li><strong>コンテキスト最適化済み</strong>: MCPサーバー5基に最適化（brave-search / minimax / github / glm / minimax-official）</li>
 <li><strong>セキュリティフック</strong>: PreToolUseで危険コマンドを自動ブロック</li>
 </ul>
 <hr />
