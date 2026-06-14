@@ -282,6 +282,13 @@ Claude Code がその指示に従って動作
 </table></div>
 <h3>3. カスタムスキル（ユーザーが自作）</h3>
 <p><code>skill-creator</code> スキルや手動で作成可能。<code>.claude/skills/</code> ディレクトリに配置。</p>
+<div class="callout callout-info"><p><strong>自作スキルの例（楽曲+映像制作ウィザード）</strong></p>
+<ul>
+<li><code>sangoku-song</code> — 三国志武将のHIPHOP楽曲を、武将選択から曲+歌詞+画像+動画まで質問ドリブンで制作。7フェーズ・<code>AskUserQuestion</code> 選択式・人間判断ポイント5箇所。トリガー: 「武将で曲作って」「/sangoku-song」</li>
+<li><code>cyber-wa-song</code> — サイバー和モダン3作品（原点廻帰/電子参拝/百鬼夜行）の楽曲+映像を、作品選択から曲+歌詞+画像+動画まで質問ドリブンで制作。<code>sangoku-song</code> の構造を複製し世界観を差し替え。Phase 5 動画をタイムライン分析で強化。トリガー: 「サイバー和モダン」「原点廻帰」「/cyber-wa-song」</li>
+</ul>
+<p>どちらも <code>references/</code>（知識層）＋ <code>scripts/</code>（janome漢字→ひらがな変換等）の構成。<code>brainstorming → writing-plans → executing-plans</code> のスーパーパワーフローで設計・実装。</p>
+</div>
 <hr />
 <h2>スキル呼び出しの仕組み</h2>
 <ol>
