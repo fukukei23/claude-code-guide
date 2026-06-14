@@ -471,6 +471,60 @@ pip install フォールバック先-mcp --break-system-packages
 </table></div>
 <div class="callout callout-info"><p><strong>実装</strong>: 公式パッケージ <code>フォールバック先-mcp</code>（PyPI）。<code>~/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh</code> で起動。2026-06-06 追加。</p></div>
 <hr />
+<h3><a id="フォールバック先-video"></a>フォールバック先-video（動画生成専用・従量課金）</h3>
+<p><strong>フォールバック先公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）</strong>。<code>フォールバック先-official</code> と<strong>同じバイナリ</strong>（公式パッケージ <code>フォールバック先-mcp</code>）だが、<strong>APIキー（従量課金アカウント）と出力先を分離</strong>した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>フォールバック先-official</th>
+<th>フォールバック先-video</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アカウント</td>
+<td>無料枠</td>
+<td><strong>従量 Cash$</strong></td>
+</tr>
+<tr>
+<td>APIキー</td>
+<td><code>MINIMAX_API_KEY</code></td>
+<td><code>MINIMAX_API_KEY_VIDEO</code>（起動スクリプト内で <code>MINIMAX_API_KEY</code> にマップ）</td>
+</tr>
+<tr>
+<td>出力先</td>
+<td><code>~/フォールバック先-output/</code></td>
+<td><code>~/フォールバック先-output-video/</code></td>
+</tr>
+<tr>
+<td>ツールセット</td>
+<td>全メディア生成（10ツール）</td>
+<td><strong>同じ（10ツール）</strong>・動画生成用途で呼び出し</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: 動画生成を大量に行いたい場合。official の無料枠とは課金体系が独立しているため、動画専用に従量アカウントを分けて運用する。</p>
+<p><strong>セットアップ手順</strong>:</p>
+<pre><code class="language-bash"># 1. ~/.secrets.env に動画用キーを追加
+#    MINIMAX_API_KEY_VIDEO=sk-xxx...
+
+# 2. 起動スクリプトを作成（VIDEO キーを MINIMAX_API_KEY にマップして起動）
+#    /home/&lt;USER&gt;/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh
+#    → source ~/.secrets.env 後:
+#      export MINIMAX_API_KEY="${MINIMAX_API_KEY_VIDEO}"
+#      export MINIMAX_API_HOST='https://api.fallback-provider.example'
+#      export MINIMAX_MCP_BASE_PATH='/home/&lt;USER&gt;/フォールバック先-output-video'
+
+# 3. settings.json の mcpServers に追加
+# &quot;フォールバック先-video&quot;: {
+#   &quot;command&quot;: &quot;wsl&quot;,
+#   &quot;args&quot;: [&quot;bash&quot;, &quot;/home/&lt;USER&gt;/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh&quot;],
+#   &quot;type&quot;: &quot;stdio&quot;
+# }
+</code></pre>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh</code> — 公式パッケージ <code>フォールバック先-mcp</code> を VIDEO キーで起動。<code>フォールバック先-official</code> と同じバイナリ・別アカウント・別出力先。2026-06-14 追加。</p></div>
+<hr />
 <h3><a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）</h3>
 <p>Web検索に関する各種機能。</p>
 <div class="table-wrapper"><table>
