@@ -146,6 +146,36 @@ pip install minimax-mcp --break-system-packages
 
 ---
 
+### <a id="minimax-video"></a>minimax-video（動画生成専用・従量課金）
+
+**MiniMax公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）**。`minimax-official` と**同じバイナリ**（公式パッケージ `minimax-mcp`）だが、**APIキー（従量課金アカウント）と出力先を分離**した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。
+
+| 項目 | minimax-official | minimax-video |
+|---|---|---|
+| バイナリ | 公式 `minimax-mcp` | **同じ**（公式 `minimax-mcp`） |
+| APIキー | 無料枠アカウント（`MINIMAX_API_KEY`） | **従量 Cash$**（別アカウント） |
+| 出力先 | `~/minimax-output/` | 別ディレクトリ |
+| 用途 | メディア生成全般 | 動画生成の大量利用 |
+
+**使いどころ**: 動画生成を大量に行いたい場合。official の無料枠とは課金体系が独立しているため、動画専用に従量アカウントを分けて運用する。
+
+**セットアップ手順**:
+```bash
+# 1. 起動スクリプトを作成（official と同じバイナリ・VIDEOキーで起動）
+# /home/yn4416/.claude/scripts/mcp/start-minimax-video-mcp.sh
+
+# 2. settings.json に追加
+# "minimax-video": {
+#   "command": "bash",
+#   "args": ["/home/yn4416/.claude/scripts/mcp/start-minimax-video-mcp.sh"],
+#   "type": "stdio"
+# }
+```
+
+> **実装**: `~/.claude/scripts/mcp/start-minimax-video-mcp.sh` — 公式パッケージ `minimax-mcp` を VIDEO キーで起動。`minimax-official` と同じバイナリ・別アカウント・別出力先。2026-06-14 追加。
+
+---
+
 ### <a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）
 
 Web検索に関する各種機能。

@@ -127,12 +127,6 @@
             コスト最適化構成
         </a>
         
-        <a href="16-skill-map.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">🗺️</span>
-            スキルマップ
-        </a>
-        
     </nav>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -274,9 +268,9 @@ Claude Code がその指示に従って動作
 <td>Discord設定</td>
 </tr>
 <tr>
-<td><strong>code-simplifier</strong></td>
-<td><code>code-simplifier</code></td>
-<td>コードの簡素化（PRレビュー後のクリーンアップ）</td>
+<td><strong>anthropic-skills</strong></td>
+<td><code>consolidate-memory</code>, <code>setup-cowork</code>, <code>skill-creator</code>, <code>docx</code>, <code>pdf</code>, <code>pptx</code>, <code>xlsx</code></td>
+<td>メモリ整理・Coworkセットアップ・ドキュメント変換</td>
 </tr>
 </tbody>
 </table></div>
@@ -287,8 +281,7 @@ Claude Code がその指示に従って動作
 <li><code>sangoku-song</code> — 三国志武将のHIPHOP楽曲を、武将選択から曲+歌詞+画像+動画まで質問ドリブンで制作。7フェーズ・<code>AskUserQuestion</code> 選択式・人間判断ポイント5箇所。トリガー: 「武将で曲作って」「/sangoku-song」</li>
 <li><code>cyber-wa-song</code> — サイバー和モダン3作品（原点廻帰/電子参拝/百鬼夜行）の楽曲+映像を、作品選択から曲+歌詞+画像+動画まで質問ドリブンで制作。<code>sangoku-song</code> の構造を複製し世界観を差し替え。Phase 5 動画をタイムライン分析で強化。トリガー: 「サイバー和モダン」「原点廻帰」「/cyber-wa-song」</li>
 </ul>
-<p>どちらも <code>references/</code>（知識層）＋ <code>scripts/</code>（janome漢字→ひらがな変換等）の構成。<code>brainstorming → writing-plans → executing-plans</code> のスーパーパワーフローで設計・実装。</p>
-</div>
+<p>どちらも <code>references/</code>（知識層）＋ <code>scripts/</code>（janome漢字→ひらがな変換等）の構成。<code>brainstorming → writing-plans → executing-plans</code> のスーパーパワーフローで設計・実装。</p></div>
 <hr />
 <h2>スキル呼び出しの仕組み</h2>
 <ol>

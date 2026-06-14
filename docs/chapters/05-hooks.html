@@ -127,12 +127,6 @@
             コスト最適化構成
         </a>
         
-        <a href="16-skill-map.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">🗺️</span>
-            スキルマップ
-        </a>
-        
     </nav>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -199,11 +193,11 @@ sequenceDiagram
 </tr>
 <tr>
 <td>用途</td>
-<td>環境変数の読み込み（<code>~/.secrets.env</code>）、SSOT日記・バックログの読込、設定の検証</td>
+<td>環境変数の読み込み、初期化処理、設定の検証</td>
 </tr>
 <tr>
 <td>備考</td>
-<td>最後に <code>startup-banner.sh</code> が全フックのステータス＋スキルトリガーマップを集約してバナー表示</td>
+<td>なし</td>
 </tr>
 </tbody>
 </table></div>
@@ -361,9 +355,10 @@ sequenceDiagram
 <hr />
 <h2>トラブルシューティング</h2>
 <h3>Windows + WSL環境でPreToolUseフックがエラーになる</h3>
-<p><strong>症状</strong>: PreToolUseフック（<code>check-command-safety.py</code> 等）が Windows 側で実行され、<code>python3: command not found</code> 等のエラーになる。</p>
-<p><strong>原因</strong>: Windows側のシェルが <code>~/.claude/scripts/...</code> というUnixパスをWindowsパスとして解釈しようとする。フックスクリプトで <code>python3</code> を直接呼ぶと、Windows Git Bash環境では動作しない。</p>
-<p><strong>解決策</strong>: <code>run-security-check.sh</code> のようなラッパースクリプト（<code>python3</code> / <code>python</code> / <code>wsl</code> を自動検出）経由で呼ぶ。Cron等の自動実行でも <code>wsl bash -c "..."</code> 経由で呼ぶことで、Windows側のシェルがパスを解釈する前にWSL側に処理が渡される。</p>
+<p><strong>症状</strong>:</p>
+<p><strong>原因</strong>: Windows側のPythonが  というUnixパスをWindowsパスとして解釈しようとする。</p>
+<p><strong>解決策</strong>: WSL側にラッパースクリプトを作成し、settings.jsonのコマンドをそちらに変更する。</p>
+<p>経由で呼ぶことで、Windows側のシェルがパスを解釈する前にWSL側に渡される。</p>
 
         </article>
 

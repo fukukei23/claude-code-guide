@@ -127,12 +127,6 @@
             コスト最適化構成
         </a>
         
-        <a href="16-skill-map.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">🗺️</span>
-            スキルマップ
-        </a>
-        
     </nav>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -182,12 +176,11 @@ Layer 1: グローバル（全プロジェクト共通）
 <ul>
 <li>日本語回答ルール</li>
 <li>モデルルーティング（上位モデル → バランス型 → 軽量型）</li>
-<li>使用モデル表示ルール（バッジ: 毎レスポンスの冒頭・末尾に 🟡GLM / 🟠MiniMax / 🔵Sonnet を表示）</li>
+<li>使用モデル表示ルール</li>
 <li>タスク切り替え時の記録ルール</li>
 <li>セキュリティルール（APIキー非表示等）</li>
 <li>コーディング原則</li>
 <li>SSOT（共通知識ベース）の参照</li>
-<li>セッション開始バナーの必須実行（<code>startup-banner.sh</code> — スキルトリガーマップ含む）</li>
 <li>セッションタイトルの日本語生成ルール</li>
 <li>実行環境の注意（Windows + WSL2の2層構造 — Cron等は <code>wsl bash -c</code> 経由必須）</li>
 </ul>
@@ -334,7 +327,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <li><strong>設定</strong>: <code>{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;bash ~/.claude/scripts/llm/llm-status.sh&quot;}</code></li>
 <li><strong>スクリプト</strong>: <code>~/.claude/scripts/llm/llm-status.sh</code></li>
 <li><strong>表示例（通常）</strong>: <code>🟡[GLM] GLM-5.2 | $0.12 | +100 -50 | Ctx 45% (90k/200k) | Req 8.5MB/32</code></li>
-<li><strong>表示例（peak帯フォールバック）</strong>: <code>🟠[peak→minimax] GLM-5.2→MiniMax-M3 | ...</code></li>
+<li><strong>表示例（peak帯フォールバック）</strong>: <code>🟠[peak→フォールバック先] GLM-5.2→代替プロバイダー-M3 | ...</code></li>
 </ul>
 <div class="table-wrapper"><table>
 <thead>
@@ -346,7 +339,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tbody>
 <tr>
 <td>LLMバッジ + モデル名</td>
-<td><code>🟡[GLM]</code>（通常）/ <code>🟠[peak→minimax]</code>（peak帯フォールバック中）+ モデル名。glm-rate-proxy の <code>/proxy/status</code> から実状態を取得</td>
+<td><code>🟡[GLM]</code>（通常）/ <code>🟠[peak→フォールバック先]</code>（peak帯フォールバック中）+ モデル名。glm-rate-proxy の <code>/proxy/status</code> から実状態を取得</td>
 </tr>
 <tr>
 <td><code>$X.XX</code></td>
