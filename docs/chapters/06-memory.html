@@ -276,6 +276,55 @@ graph TD
 <li><strong>メモリは無料ではない</strong> — MEMORY.md + 各ファイルが毎ターン読み込まれ、トークンを消費。増えすぎると数千トークン/ターンの固定消費になる → <a href="11-tips.html#d-%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E8%AA%A4%E8%A7%A3">11_現場の知見</a></li>
 </ul>
 <hr />
+<h2>CLAUDE.mdの3層構造（Instruction Memory）</h2>
+<p>CLAUDE.md（User/Project Memory）は<strong>3層構造</strong>で運用すると、肥大化と「読むか怪しい間接リンク」のジレンマを解決できる（Z.AIベストプラクティス準拠）。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>場所</th>
+<th>読み込み</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>層1</strong> 常時展開</td>
+<td><code>CLAUDE.md</code> + <code>rules/_shared/</code></td>
+<td>セッション起動時に全プロジェクトで自動</td>
+<td>核心ルール・共通ルール原本</td>
+</tr>
+<tr>
+<td><strong>層2</strong> パススコープ</td>
+<td><code>rules/*.md</code>（frontmatter <code>globs</code>）</td>
+<td>該当ファイル操作時に自動</td>
+<td>言語/作業別ルール</td>
+</tr>
+<tr>
+<td><strong>層3</strong> スキル/参照</td>
+<td><code>skills/</code> + 参照資料</td>
+<td>トリガー/強指示</td>
+<td>スキル・詳細参照</td>
+</tr>
+</tbody>
+</table></div>
+<h3>層1の一元管理（@import）</h3>
+<p>共通ルール（セキュリティ・コーディング原則・記録・LLMルーティング）は <code>rules/_shared/</code> に1箇所まとめ、グローバルCLAUDE.mdから <code>@import</code> で取り込む。</p>
+<ul>
+<li><strong>共通ルールの変更が1箇所で済む</strong>（DRY）</li>
+<li><strong>各プロジェクトのCLAUDE.mdは固有内容だけ</strong>（重複ゼロ）</li>
+<li><strong>グローバルで1回importすれば全プロジェクトに自動で届く</strong></li>
+</ul>
+<h3>層2のパススコープ（globs）</h3>
+<p><code>rules/*.md</code> のfrontmatterに <code>globs: [&quot;**/*.py&quot;]</code> のように指定すると、該当拡張子のファイル操作時にだけ読み込まれる。Python・Dart・TypeScript等、言語別ルールを必要な時だけ自動ロードできる。</p>
+<h3>設計原則</h3>
+<ol>
+<li><strong>200行以下</strong> — メインCLAUDE.mdは核心のみ（展開後も維持）</li>
+<li><strong>具体命令化</strong> — 「詳細: 〇〇.md参照」より <code>@import</code>常時展開が確実</li>
+<li><strong>パス指定ロード</strong> — 言語別ルールは層2（必要時だけ）</li>
+<li><strong>Instruction vs Learning分離</strong> — CLAUDE.md（人間が書く）と <code>memory/</code>（AI蓄積）を混在させない</li>
+</ol>
+<hr />
 
         </article>
 

@@ -375,6 +375,7 @@ graph LR
 <li>オートコンパクションは<strong>要約して圧縮</strong>（文脈は保持）</li>
 <li>バッファとして33kトークンが確保されている</li>
 </ul>
+<div class="callout callout-info"><p>用語定義: <a href="10-glossary.html#context-saturation">コンテキスト飽和</a>・<a href="10-glossary.html#payload-bloat">ペイロード肥大化</a>（10_用語集）</p></div>
 <hr />
 <h2>入力と出力の非対称性</h2>
 <div class="callout callout-tip"><p>詳解: <a href="11-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
@@ -392,7 +393,7 @@ graph LR
 <hr />
 <h2>環境の特記事項</h2>
 <ul>
-<li><strong>コスト最適化</strong>: 公式のSonnet/Opus/Haikuではなく、Claudeと代替プロバイダーにルーティングする独自構成 → <a href="15.html">15_コスト最適化構成</a></li>
+<li><strong>コスト最適化</strong>: 公式のSonnet/Opus/Haikuではなく、GLM-5.2と代替プロバイダーにルーティングする独自構成 → <a href="15.html">15_コスト最適化構成</a></li>
 <li><strong>コンテキスト最適化済み</strong>: 以前9サーバー→11サーバーに最適化</li>
 <li><strong>セキュリティフック</strong>: PreToolUseで危険コマンドを自動ブロック</li>
 </ul>
