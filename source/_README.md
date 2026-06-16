@@ -1,6 +1,6 @@
 # Claude Code 完全ガイド
 
-> 最終更新: 2026-06-10 | 対象バージョン: Claude Code CLI (WSL2)
+> 最終更新: 2026-06-16 | 対象バージョン: Claude Code CLI (WSL2)
 
 ## このガイドの使い方
 
@@ -24,7 +24,11 @@
 | 統合 | [09_統合.md](09_統合.md) | IDE連携・リモート・CI/CD | 3〜4p |
 | 用語集 | [10_用語集.md](10_用語集.md) | 全用語のA〜Z | 2〜3p |
 | 現場の知見 | [11_現場の知見.md](11_現場の知見.md) | Tips・落とし穴・効率テクニック | 3〜4p |
+| dev-cycle | [12_dev-cycle.md](12_dev-cycle.md) | コード品質改善の自律サイクル | 2〜3p |
+| GLM Rate Proxy | [13_glm-rate-proxy.md](13_glm-rate-proxy.md) | GLM/MiniMaxルーティングプロキシ | 2〜3p |
+| SSOTから探して | [14_ssot-search.md](14_ssot-search.md) | 個人ナレッジベースのRAG検索 | 2〜3p |
 | コスト最適化 | [15_コスト最適化構成.md](15_コスト最適化構成.md) | GLM/MiniMaxルーティング（独自構成） | 3〜4p |
+| スキルマップ | （HTML専用・[公開ページ](https://fukukei23.github.io/claude-code-guide/chapters/16-skill-map.html)） | フェーズ別スキル選択のインタラクティブ早見表 | — |
 
 ## 関連ドキュメント
 
