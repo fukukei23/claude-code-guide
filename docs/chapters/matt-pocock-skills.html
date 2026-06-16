@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matt Pocock スキル教科書 — Claude Code Guide</title>
+    <meta name="description" content="Matt Pocock の29スキル(mattpocock/skills)を思想→一覧→深掘り→取り込み判断で読み解く教科書">
+    <meta property="og:title" content="Matt Pocock スキル教科書 — Claude Code Guide">
+    <meta property="og:description" content="Matt Pocock の29スキルを思想→一覧→深掘り→取り込み判断で読む">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/matt-pocock-skills.html">
+    <meta name="twitter:card" content="summary">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    <style>
+        /* 教科書専用アコーディオン（既存style.cssに追加・インライン） */
+        .textbook { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+        .concept-box {
+            background: linear-gradient(135deg, var(--accent-bg, rgba(124,58,237,.08)), rgba(124,58,237,.02));
+            border: 1px solid var(--accent, #7c3aed);
+            border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1.5rem;
+        }
+        .concept-box h2 { margin-top: 0; color: var(--accent, #7c3aed); }
+        .acc-item {
+            border: 1px solid var(--border, rgba(0,0,0,.1)); border-radius: 10px;
+            margin-bottom: .8rem; overflow: hidden; background: var(--bg-raised, #fff);
+        }
+        .acc-item.open > .acc-content { display: block; }
+        .acc-content { display: none; padding: 1.2rem 1.4rem; border-top: 1px solid var(--border, rgba(0,0,0,.08)); }
+        .acc-header {
+            width: 100%; text-align: left; border: none; background: transparent;
+            padding: 1rem 1.4rem; font-size: 1.15rem; font-weight: 700; cursor: pointer;
+            color: var(--fg, #2d2d3f); display: flex; justify-content: space-between; align-items: center;
+        }
+        .acc-header:hover { background: rgba(124,58,237,.05); }
+        .acc-header .caret { transition: transform .2s; font-size: .9rem; opacity: .6; }
+        .acc-item.open > .acc-header .caret { transform: rotate(180deg); }
+        /* ネスト: スキルカード */
+        .skill-card {
+            border: 1px solid var(--border, rgba(0,0,0,.1)); border-radius: 8px;
+            margin-bottom: .6rem; overflow: hidden; background: var(--bg, #f8f9fa);
+        }
+        .skill-card-head {
+            width: 100%; text-align: left; border: none; background: transparent;
+            padding: .8rem 1.1rem; cursor: pointer; font-weight: 600; color: var(--fg, #2d2d3f);
+            display: flex; gap: .6rem; align-items: center; flex-wrap: wrap;
+        }
+        .skill-card-head:hover { background: rgba(124,58,237,.05); }
+        .skill-card.open > .skill-card-body { display: block; }
+        .skill-card-body { display: none; padding: .9rem 1.1rem 1.1rem; border-top: 1px solid var(--border, rgba(0,0,0,.08)); }
+        .skill-card-body h4 { margin: .8rem 0 .3rem; color: var(--accent, #7c3aed); font-size: .92rem; }
+        .skill-card-body h4:first-child { margin-top: 0; }
+        .skill-card-body p, .skill-card-body li { font-size: .92rem; line-height: 1.65; }
+        .cat-tag { font-size: .72rem; padding: .1rem .5rem; border-radius: 4px; background: rgba(124,58,237,.12); color: var(--accent, #7c3aed); font-weight: 600; }
+        .src-link { font-size: .78rem; color: var(--accent, #7c3aed); text-decoration: none; }
+        .src-link:hover { text-decoration: underline; }
+        .pill { display:inline-block; font-size:.72rem; padding:.12rem .55rem; border-radius:99px; font-weight:700; }
+        .pill-high { background: rgba(34,197,94,.15); color: #16a34a; }
+        .pill-mid { background: rgba(245,158,11,.15); color: #d97706; }
+        .pill-low { background: rgba(107,114,128,.15); color: #6b7280; }
+        .pill-yes { background: rgba(34,197,94,.18); color: #16a34a; }
+        .pill-watch { background: rgba(245,158,11,.18); color: #d97706; }
+        .pill-no { background: rgba(239,68,68,.15); color: #dc2626; }
+        .acc-content table, .skill-card-body table { width: 100%; border-collapse: collapse; margin: .5rem 0; }
+        .acc-content th, .skill-card-body th { background: rgba(124,58,237,.1); padding: .5rem; text-align: left; font-size: .82rem; border: 1px solid var(--border, rgba(0,0,0,.1)); }
+        .acc-content td, .skill-card-body td { padding: .5rem; font-size: .85rem; border: 1px solid var(--border, rgba(0,0,0,.1)); vertical-align: top; }
+        .acc-content td a, .skill-card-body td a { color: var(--accent, #7c3aed); }
+        .sect-h3 { margin: 1.4rem 0 .5rem; font-size: 1.05rem; }
+        [data-theme="dark"] .skill-card { background: #1a1a2a; }
+        .top-links { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1.2rem; font-size:.85rem; }
+        .top-links a { color: var(--accent, #7c3aed); }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle"><span></span><span></span><span></span></button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替"><span class="icon-light">☀️</span><span class="icon-dark">🌙</span></button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header"><a href="../index.html">🏠 ホーム</a></div>
+        <a href="03-skills.html" class="sidebar-link"><span class="sidebar-icon">🎯</span> スキルシステム</a>
+        <a href="skill-catalog.html" class="sidebar-link"><span class="sidebar-icon">📦</span> スキルカタログ</a>
+        <a href="16-skill-map.html" class="sidebar-link"><span class="sidebar-icon">🗺️</span> スキルマップ</a>
+        <a href="matt-pocock-skills.html" class="sidebar-link active"><span class="sidebar-icon">📚</span> Matt Pocock 教科書</a>
+        <a href="00-cheatsheet.html" class="sidebar-link"><span class="sidebar-icon">📋</span> 早見表</a>
+        <a href="10-glossary.html" class="sidebar-link"><span class="sidebar-icon">📖</span> 用語集</a>
+    </nav>
+
+    <div class="textbook">
+        <div class="top-links">
+            <a href="../index.html">🏠 ホーム</a> /
+            <a href="03-skills.html">🎯 スキルシステム</a> /
+            <span>📚 Matt Pocock 教科書</span>
+        </div>
+
+        <h1>📚 Matt Pocock スキル教科書</h1>
+
+        <div class="concept-box">
+            <h2>Real Engineers の29スキルを読み解く</h2>
+            <p>「Skills for Real Engineers. Straight from my .claude directory.」 — Total TypeScript 著者 <strong>Matt Pocock</strong> が毎日実際に使っている作業手順をそのまま公開したリポジトリ <a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a>（★2万強・スター急増中）。</p>
+            <p>この教科書は、29個のスキルを <strong>①思想 → ②一覧 → ③深掘り → ④自分環境への取り込み判断</strong> の順で読み解き、<strong>「自分のClaude Codeに取り込むべきか」</strong> を1冊で判断できるようにしたものです。</p>
+            <p style="margin-bottom:0"><strong>読み方:</strong> 各部はクリックで開閉します（開閉状態は記憶されます）。スマホ対応。Mattの原典 <code>SKILL.md</code> へのリンクを各所に置いています。</p>
+        </div>
+
+        <!-- 第1部 -->
+        <div class="acc-item" data-key="mp-part1">
+            <button class="acc-header" onclick="toggle(this)">第1部　Matt Pocock のスキル思想・運用作法 <span class="caret">▼</span></button>
+            <div class="acc-content">
+                <h3 class="sect-h3">Mattは誰・なぜ作ったか</h3>
+                <p>Matt Pocock は TypeScript 界隈の著名エンジニア（<a href="https://www.totaltypescript.com/" target="_blank" rel="noopener">Total TypeScript</a> 著者・X約12.8万フォロワー）。彼が Claude Code・Codex 等のコーディングエージェントを毎日使う中で、<strong>「よくある失敗モード」</strong> を直すために作ったのがこのスキル群です。</p>
+
+                <h3 class="sect-h3">3つの失敗モードと、それを直すスキル</h3>
+                <table>
+                    <tr><th>失敗モード</th><th>問題</th><th>Mattの解決策</th></tr>
+                    <tr><td><strong>#1 エージェントが意図を理解しない</strong></td><td>「こんなはずじゃなかった」のズレ</td><td><code>grill-me</code> / <code>grill-with-docs</code> — 作業前に執拗に質問して設計を詰める</td></tr>
+                    <tr><td><strong>#2 エージェントが冗長すぎる</strong></td><td>1語で済む所を20語使う・専門用語が噛み合わない</td><td><code>CONTEXT.md</code>（後述）で共有語彙を定義</td></tr>
+                    <tr><td><strong>#3 プロセスに制御を奪われる</strong></td><td>GSD・BMAD・Spec-Kit等が「プロセス全体を独占」してバグ修正が困難に</td><td><strong>小さく・適応しやすい・composable</strong> な設計（対極の思想）</td></tr>
+                </table>
+
+                <h3 class="sect-h3">設計3原則: small / adaptable / composable</h3>
+                <div class="callout callout-info">
+                    <p>「These skills are designed to be small, easy to adapt, and composable. They work with any model. Hack around with them. Make them your own.」<br>— 小さく・改造しやすく・組み合わせ可能。どのモデルでも動く。ハックして自分のものにせよ。</p>
+                </div>
+                <p>これは <strong>「プロセスを独占しない」</strong> という強い意思表示です。GSD/BMAD/Spec-Kitが「開発プロセス全体を握る」のに対し、Mattのスキルは<strong>個別の小さな道具</strong>で、必要な時だけ呼び出し・自由に組み合わせる・自由に書き換えることを前提にしています。</p>
+
+                <h3 class="sect-h3">ディレクトリ運用作法（公開管理）</h3>
+                <p>Mattは <code>skills/</code> 配下をバケットフォルダに分け、<strong>どのスキルを公開するかを厳格に管理</strong>しています。</p>
+                <table>
+                    <tr><th>バケット</th><th>意味</th><th>plugin.json/README掲載</th></tr>
+                    <tr><td><code>engineering/</code></td><td>毎日のコード作業</td><td>✅ 掲載</td></tr>
+                    <tr><td><code>productivity/</code></td><td>毎日の非コード作業</td><td>✅ 掲載</td></tr>
+                    <tr><td><code>misc/</code></td><td>手元に置いているが滅多に使わない</td><td>✅ 掲載</td></tr>
+                    <tr><td><code>personal/</code></td><td>自分の環境に依存（外部非推奨）</td><td>❌ 非掲載</td></tr>
+                    <tr><td><code>in-progress/</code></td><td>出荷前のドラフト</td><td>❌ 非掲載</td></tr>
+                    <tr><td><code>deprecated/</code></td><td>もう使わない</td><td>❌ 非掲載</td></tr>
+                </table>
+                <p>ルール: <code>engineering/productivity/misc</code> の各スキルは、トップの <code>README.md</code> と <code>.claude-plugin/plugin.json</code> の<strong>両方</strong>にエントリを持つ必須。それ以外は両方に出してはいけない。<strong>READMEと実体（plugin.json）の乖離を許さない運用</strong>です。</p>
+
+                <h3 class="sect-h3">CONTEXT.md（ubiquitous language）の仕組み</h3>
+                <div class="callout callout-tip">
+                    <p>失敗モード#2の解決策。プロジェクト固有の<strong>専門用語辞書</strong>を <code>CONTEXT.md</code> に書き、エージェントが用語を正しく使えるようにする。DDD（ドメイン駆動設計）の「ユビキタス言語」のエージェント版。</p>
+                </div>
+                <p>Mattの <a href="https://github.com/mattpocock/skills/blob/main/CONTEXT.md" target="_blank" rel="noopener">CONTEXT.md</a> では「Issue tracker」「Issue」「Triage role」等の用語を<strong>正名・使ってはいけない同義語</strong>付きで定義しています。例:</p>
+                <ul>
+                    <li><strong>Issue tracker</strong>: リポジトリのissueをホストするツール（GitHub Issues/Linear/ローカルmarkdown等）<br><em>避ける:</em> backlog manager, ticket host</li>
+                    <li><strong>Issue</strong>: 1つの作業単位（バグ/タスク/PRD）<br><em>避ける:</em> ticket（外部システム引用時のみ可）</li>
+                </ul>
+                <p>重要な制約: <strong>CONTEXT.md は用語辞書であって仕様書ではない</strong>。実装詳細を書かない。<code>grill-with-docs</code> 等のスキルが、会話中に用語が確定したら<strong>その場でインライン更新</strong>します（バッチしない）。</p>
+
+                <div class="callout callout-warn">
+                    <p><strong>自分環境との比較:</strong> この CONTEXT.md は、筆者の <strong>SSOT（obsidian-ssot）の「全体マップ_MOC」「用語集」「00_SYSTEM」</strong>と<strong>同じ思想</strong>です。Matt流の「用語の正名とNG同義語を明示」は、筆者のSSOT運用にも取り入れられる示唆。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第2部 -->
+        <div class="acc-item" data-key="mp-part2">
+            <button class="acc-header" onclick="toggle(this)">第2部　全29スキル鳥瞰一覧表 <span class="caret">▼</span></button>
+            <div class="acc-content">
+                <p>分類 × 一言目的 × トリガー × 筆者環境の類似スキル。詳細は第3部（核心16個）と第4部（評価表）で。</p>
+
+                <h3 class="sect-h3">engineering（10）— 毎日のコード作業</h3>
+                <table>
+                    <tr><th>スキル</th><th>一言目的</th><th>トリガー</th><th>筆者環境の類似</th></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/zoom-out/SKILL.md" target="_blank" rel="noopener">zoom-out</a></td><td>コードの上位レイヤーの地図</td><td>知らない領域・「zoom out」</td><td>Explore エージェント</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnose/SKILL.md" target="_blank" rel="noopener">diagnose</a></td><td>バグの規律ある診断ループ</td><td>バグ報告・「diagnose this」</td><td>systematic-debugging</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/grill-with-docs/SKILL.md" target="_blank" rel="noopener">grill-with-docs</a></td><td>計画をグリリング+CONTEXT.md更新</td><td>設計ストレステスト</td><td>brainstorming + SSOT</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md" target="_blank" rel="noopener">improve-codebase-architecture</a></td><td>アーキテクチャの深深化機会を発見</td><td>リファクタ候補探索</td><td>（該当なし・新規）</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md" target="_blank" rel="noopener">prototype</a></td><td>使い捨てプロトタイプで設計検証</td><td>「prototype」「試しに」</td><td>（該当なし）</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/setup-matt-pocock-skills/SKILL.md" target="_blank" rel="noopener">setup-matt-pocock-skills</a></td><td>Mattスキル群自体のper-repo設定</td><td>初回導入時</td><td>（不要・別体系）</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/tdd/SKILL.md" target="_blank" rel="noopener">tdd</a></td><td>TDD・縦断スライス(tracer bullet)</td><td>機能/バグをTDDで</td><td>test-driven-development</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/to-issues/SKILL.md" target="_blank" rel="noopener">to-issues</a></td><td>プランを縦断スライスissue化</td><td>プラン→タスク分解</td><td>dev-cycle / feature-dev</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/to-prd/SKILL.md" target="_blank" rel="noopener">to-prd</a></td><td>会話文脈からPRD生成</td><td>PRD作成</td><td>feature-dev / brainstorming</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/triage/SKILL.md" target="_blank" rel="noopener">triage</a></td><td>issue状態マシン運用(5状態)</td><td>issueトリアージ</td><td>（バックログ.md運用・合わない）</td></tr>
+                </table>
+
+                <h3 class="sect-h3">productivity（5）— 毎日の非コード作業</h3>
+                <table>
+                    <tr><th>スキル</th><th>一言目的</th><th>トリガー</th><th>筆者環境の類似</th></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/productivity/caveman/SKILL.md" target="_blank" rel="noopener">caveman</a></td><td>超圧縮通信でトークン約75%削減</td><td>「caveman mode」「be brief」</td><td>（該当なし・新規）</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md" target="_blank" rel="noopener">grill-me</a></td><td>計画を執拗にインタビュー</td><td>「grill me」</td><td>brainstorming / teian</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/productivity/handoff/SKILL.md" target="_blank" rel="noopener">handoff</a></td><td>会話をハンドオフdocに圧縮</td><td>セッション引き継ぎ</td><td>new-session</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/productivity/teach/SKILL.md" target="_blank" rel="noopener">teach</a></td><td>学習ワークスペース(MISSION/lessons)</td><td>「teach me」</td><td>（該当なし・新規）</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/productivity/write-a-skill/SKILL.md" target="_blank" rel="noopener">write-a-skill</a></td><td>新規スキル作成</td><td>「skill作って」</td><td>skill-creator / skill-test</td></tr>
+                </table>
+
+                <h3 class="sect-h3">misc（4）— 手元にあるが滅多に使わない</h3>
+                <table>
+                    <tr><th>スキル</th><th>一言目的</th><th>備考</th></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/misc/git-guardrails-claude-code/SKILL.md" target="_blank" rel="noopener">git-guardrails-claude-code</a></td><td>危険gitコマンド(push/reset --hard等)をブロックするhook</td><td>実用性高・筆者は既存セキュリティガードhook相当あり</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/misc/setup-pre-commit/SKILL.md" target="_blank" rel="noopener">setup-pre-commit</a></td><td>Husky pre-commit(lint-staged/Prettier/型检查/test)</td><td>プロジェクト次第</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/misc/migrate-to-shoehorn/SKILL.md" target="_blank" rel="noopener">migrate-to-shoehorn</a></td><td>TSの <code>as</code> 型アサーションを shoehorn に移行</td><td>TypeScript特化・筆者不使用</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/misc/scaffold-exercises/SKILL.md" target="_blank" rel="noopener">scaffold-exercises</a></td><td>演習ディレクトリ(問題/解答/解説)をscaffold</td><td>教材作成向け</td></tr>
+                </table>
+
+                <h3 class="sect-h3">personal（2）・in-progress（4）・deprecated（4）</h3>
+                <table>
+                    <tr><th>スキル</th><th>分類</th><th>一言目的</th></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/personal/edit-article/SKILL.md" target="_blank" rel="noopener">edit-article</a></td><td>personal</td><td>記事を章構成改善・文章練り上げ</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/personal/obsidian-vault/SKILL.md" target="_blank" rel="noopener">obsidian-vault</a></td><td>personal</td><td>Obsidianノート検索・作成・管理</td></tr>
+                    <tr><td><a href="https://github.com/mattpocock/skills/blob/main/skills/in-progress/review/SKILL.md" target="_blank" rel="noopener">review</a></td><td>in-progress</td><td>変更をStandards/Spec 2軸でレビュー(並列サブエージェント)</td></tr>
+                    <tr><td>writing-beats / writing-fragments / writing-shape</td><td>in-progress</td><td>記事執筆系(ビート構成/フラグメント採掘/成型)</td></tr>
+                    <tr><td>design-an-interface / qa / request-refactor-plan / ubiquitous-language</td><td>deprecated</td><td>廃止済(インターフェース設計/QA/リファクタ計画/用語辞書生成)</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 第3部 -->
+        <div class="acc-item" data-key="mp-part3">
+            <button class="acc-header" onclick="toggle(this)">第3部　核心16スキル 深掘り <span class="caret">▼</span></button>
+            <div class="acc-content">
+                <p>engineering(10) + productivity(5) + obsidian-vault の核心16個を深掘りします。各カードをクリックで展開。<span class="pill pill-high">高</span><span class="pill pill-mid">中</span><span class="pill pill-low">低</span>＝適合度、<span class="pill pill-yes">○</span><span class="pill pill-watch">△</span><span class="pill pill-no">✕</span>＝取り込み推奨（第4部の詳細評価と同じ）。</p>
+
+                <!-- engineering -->
+                <h3 class="sect-h3">🔧 engineering</h3>
+
+                <div class="skill-card" data-key="mp-zoomout">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🔍 <span class="cat-tag">engineering</span> zoom-out <span class="pill pill-mid">中</span> <span class="pill pill-watch">△</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>知らないコード領域に入った時、上位レイヤーの抽象度に上がって「関連する全モジュールと呼び出し元の地図」を、プロジェクトのドメイン用語で出させます。たった7行の最小スキル。</p>
+                        <h4>いつ使うか</h4><p>「この辺りのコード、全体像が分からない」「zoom out」と言った時。<code>disable-model-invocation: true</code> なので明示呼び出し専用。</p>
+                        <h4>使い方の流れ</h4><p>1発言 → エージェントが抽象度を1つ上げてモジュール・caller一覧を提示。詳細実装には踏み込まず「地図」だけ。</p>
+                        <h4>Mattの意図</h4><p>深掘りする前にまず「地図」を持つ。全体構造が見えないまま部分を読む無駄を防ぐ。</p>
+                        <h4>具体例（筆者環境）</h4><p>NexusCore の特定ファイルを読む前に「zoom out」→ 関連モジュールの関係図を先に把握。ただし筆者は <strong>Explore エージェント</strong>で同等ことができるため取り込み優先度は△。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/zoom-out/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-diagnose">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🐛 <span class="cat-tag">engineering</span> diagnose <span class="pill pill-mid">中</span> <span class="pill pill-watch">△</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>手強いバグの規律ある診断ループ。Phase 1〜6: <strong>フィードバックループ構築 → 再現 → 仮説3-5個 → 計測 → 修正+回帰テスト → クリーンアップ+ポストモーテム</strong>。各Phaseは明示的に正当化しない限りスキップ禁止。</p>
+                        <h4>いつ使うか</h4><p>「diagnose this」「debug this」・バグ報告・性能低下の報告。</p>
+                        <h4>使い方の流れ</h4><p>Phase1が核心: 失敗テスト/curlスクリプト/CLI/ヘッドレスブラウザ/trace再現等<strong>10種のループ構築法</strong>を順に試し、高速で決定的なpass/fail信号を作る。「ループさえあればバグは90%直る」。</p>
+                        <h4>Mattの意図</h4><p>コードを睨むより<strong>再現ループを構築すること</strong>が本質。ループ無しに仮説検証に入らない。「30秒のflakyループは無いよりマシ程度・2秒の決定的ループはデバッグの超能力」。</p>
+                        <h4>具体例（筆者環境）</h4><p>ヨツバの不具合・glm-rate-proxy の400エラー等の調査に適用可能。ただし筆者は <strong>superpowers:systematic-debugging</strong> で同等の規律があるため重複度高（△）。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnose/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-grillwithdocs">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🔥 <span class="cat-tag">engineering</span> grill-with-docs <span class="pill pill-mid">中</span> <span class="pill pill-watch">△</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p><code>grill-me</code> の強化版。計画を執拗にインタビューしつつ、<strong>CONTEXT.md（用語辞書）とADR（アーキテクチャ決定記録）を会話中にインライン更新</strong>。用語の矛盾を即指摘。</p>
+                        <h4>いつ使うか</h4><p>計画・設計を、プロジェクトの既存ドメインモデルと言語に対してストレステストしたい時。</p>
+                        <h4>使い方の流れ</h4><p>1問ずつ・推奨答え付き・コード探索優先。用語矛盾があれば「あなたのglossaryではXだが、Yと言ってる−どちら？」と即指摘。用語が確定したらその場でCONTEXT.md更新。ADRは「変更困難・文脈無しで驚き・真のトレードオフ」の3つ全て満たす時だけ控えめに提案。</p>
+                        <h4>Mattの意図</h4><p>失敗モード#1（意図のズレ）+#2（用語のズレ）の同時対策。設計を詰めながら<strong>共有語彙を維持</strong>する。</p>
+                        <h4>具体例（筆者環境）</h4><p>新スキル設計時に「SSOTの用語と整合するか」を詰める用途。ただし筆者は <strong>brainstorming + SSOT（全体マップ_MOC・用語集）</strong>で同等の役割を担っているため△。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/grill-with-docs/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-improvearch">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🏛️ <span class="cat-tag">engineering</span> improve-codebase-architecture <span class="pill pill-high">高</span> <span class="pill pill-yes">○</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>コードベースの「<strong>deepening機会</strong>（浅いモジュールを深いモジュールにする候補）」を発見し、<strong>自己完結のHTMLレポート</strong>（Tailwind+Mermaid・各候補にbefore/after図）を出力。</p>
+                        <h4>いつ使うか</h4><p>アーキテクチャ改善・テスト容易性向上・密結合モジュール統合・AIが巡回しやすいコードベース化。</p>
+                        <h4>使い方の流れ</h4><p>① Explore サブエージェントで摩擦を探す（削除テスト: そのモジュールを消したら複雑度が消えるか、それともN個所に再現するか）→ ② 候補をHTMLレポート出力・開く → ③ ユーザーが候補を選んだらグリリングで深掘り。</p>
+                        <h4>Mattの意図</h4><p>「深いモジュール＝小さなinterfaceの裏に大きな振る舞い」(<a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/LANGUAGE.md" target="_blank" rel="noopener">John Ousterhout</a>流)。浅いモジュール（interface ≒ 実装）を深くして、テスト容易性とAI巡回性を両立。</p>
+                        <h4>具体例（筆者環境）</h4><p>NexusCore 等、ある程度規模のある自分プロジェクトの構造改善に有用。<strong>筆者環境に相当スキルなし</strong>・学習価値も高いので○。ただし現在の個人開発規模だと適用機会は限定的。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-prototype">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🧪 <span class="cat-tag">engineering</span> prototype <span class="pill pill-mid">中</span> <span class="pill pill-watch">△</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p><strong>使い捨てプロトタイプ</strong>で設計を検証。「答える質問」で2分岐: ロジック/状態モデル検証なら<strong>対話的端末アプリ</strong>、UI検証なら<strong>1ルートで切替可能な複数のラディカルに異なるUI</strong>。</p>
+                        <h4>いつ使うか</h4><p>「prototype this」「試しに遊んでみたい」「データモデルを健全性チェック」「いくつかデザイン試して」。</p>
+                        <h4>使い方の流れ</h4><p>質問判定 → 1コマンドで実行できるthrowaway実装（永続化なし・テストなし・仕上げなし）→ 全状態を表示 → 答えが得られたら削除 or 本体に取り込み。</p>
+                        <h4>Mattの意図</h4><p>「プロトタイプは<strong>質問に答える使い捨てコード</strong>」。「学ぶために速く作って消す」が目的。prodのコード規範を当てない。</p>
+                        <h4>具体例（筆者環境）</h4><p>新しい楽曲スキルのUI案・HTMLガイドのレイアウト案出しに使える。筆者環境に相当なし・便利だが、現在の作業パターン（スキルで十分）を考えると△。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-setupmatt">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">⚙️ <span class="cat-tag">engineering</span> setup-matt-pocock-skills <span class="pill pill-low">低</span> <span class="pill pill-no">✕</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>Mattスキル群<strong>自体</strong>のper-repoセットアップ。issue tracker（GitHub/GitLab/ローカルmarkdown）・triageラベル語彙・ドメインdoc配置を <code>docs/agents/</code> に書き出し、<code>CLAUDE.md/AGENTS.md</code> に Agent skills ブロックを追加。</p>
+                        <h4>いつ使うか</h4><p>Mattのengineeringスキル（triage/to-issues/to-prd/diagnose等）を<strong>初めて使う前</strong>、あるいは「スキルがissue trackerの文脈を持っていない」時。</p>
+                        <h4>使い方の流れ</h4><p>探索 → 3決定を1つずつ（A:issue tracker / B:5つのtriageラベル文字列 / C:ドメインdoc単一or複数コンテキスト）→ ドラフト確認 → 書き込み。</p>
+                        <h4>Mattの意図</h4><p>triage/to-issues等が<strong>前提とする設定</strong>（どのissue trackerか・ラベル文字列は何か）を生成するメタスキル。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者は<strong>独自スキル体系+SSOT+バックログ.md運用</strong>で、Mattのengineeringスキル群をそのまま採用しない予定。よって✕。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/setup-matt-pocock-skills/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-tdd">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🚦 <span class="cat-tag">engineering</span> tdd <span class="pill pill-low">低</span> <span class="pill pill-no">✕</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>TDD（red-green-refactor）。最大の特徴: <strong>水平スライス禁止・縦断スライス(tracer bullet)強制</strong>。「全テスト書いてから全実装」は<strong>クソテストを生む</strong>と断じる。</p>
+                        <h4>いつ使うか</h4><p>「red-green-refactor」・統合テスト希望・テストファースト。</p>
+                        <h4>使い方の流れ</h4><p>計画 → tracer bullet（1テスト→1実装で経路全体を証明）→ 残り各振る舞いを RED→GREEN ループ → GREEN維持でrefactor。</p>
+                        <h4>Mattの意図</h4><p>良いテストは「公開interface越しに振る舞いを検証」し、リファクタで壊れない。内部詳細に結合したテストは悪。「水平に全部テスト書く」のは想像上の振る舞いをテストしてしまい実振る舞いに鈍感になる。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者は <strong>superpowers:test-driven-development</strong> で同等を保持。重複のため✕。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/tdd/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-toissues">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🎫 <span class="cat-tag">engineering</span> to-issues <span class="pill pill-mid">中</span> <span class="pill pill-watch">△</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>プラン/PRDを <strong>tracer-bullet縦断スライス</strong>でissue化。各スライスは「全統合層を端から端まで貫く薄い完全パス」。HITL（人介入要）かAFK（無人可）かを付与。AFK優先。</p>
+                        <h4>いつ使うか</h4><p>プラン→実装issue分解・作業分割。</p>
+                        <h4>使い方の流れ</h4><p>コンテキスト収集 → コード探索 → 縦断スライス案（タイトル/HITL or AFK/blocked by/ユーザーストーリー）を提示 → ユーザー承認まで反復 → 依存順にissue公開。</p>
+                        <h4>Mattの意図</h4><p>層別（水平: schema全部→API全部→UI全部）ではなく、<strong>垂直に全層を貫く薄いスライス</strong>で独立して掴める・単体で検証可能。ファイルパス・コード断片は書かない（陳腐化防止）。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者の <strong>dev-cycle（Issue化フェーズ）/ feature-dev</strong> で同等の分解を行う。HITL/AFK・縦断スライスの思想は参考になるが△。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/to-issues/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-toprd">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">📋 <span class="cat-tag">engineering</span> to-prd <span class="pill pill-mid">中</span> <span class="pill pill-watch">△</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>会話の文脈とコード理解から <strong>PRD（製品要件定義）を合成</strong>してissue trackerへ公開。<strong>ユーザーにインタビューしない</strong>・既知情報を合成するだけ。</p>
+                        <h4>いつ使うか</h4><p>「PRD作って」・現在の文脈から要件定義を出したい時。</p>
+                        <h4>使い方の流れ</h4><p>コード探索 → テストseams（既存優先・最高位）を確認 → PRDテンプレ（問題/解決/ユーザーストーリー長大リスト/実装決定/テスト決定/スコープ外）で作成 → <code>ready-for-agent</code> ラベルで公開。</p>
+                        <h4>Mattの意図</h4><p>インタビューは grill 側で済ませる前提。PRDは合成専門。ファイルパス・コード断片は書かない（prototype由来の決定エンコード部分だけ例外）。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者の <strong>feature-dev / brainstorming</strong> で要件定義を行う。テンプレ構造（問題文/ユーザーストーリー/スコープ外明記）は参考になるが△。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/to-prd/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-triage">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🏷️ <span class="cat-tag">engineering</span> triage <span class="pill pill-low">低</span> <span class="pill pill-no">✕</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>issueを<strong>5状態のステートマシン</strong>で運用: <code>needs-triage</code>（要評価）/ <code>needs-info</code>（報告者待ち）/ <code>ready-for-agent</code>（AFK実装可）/ <code>ready-for-human</code>（人実装）/ <code>wontfix</code>。+ bug/enhancement の2カテゴリ。</p>
+                        <h4>いつ使うか</h4><p>「要注意を見せて」・特定issueのトリアージ・受信バグ/要望レビュー。</p>
+                        <h4>使い方の流れ</h4><p>3バケツ（未ラベル/needs-triage/報告者活動ありneeds-info）を最古順提示 → 個別に文脈収集→推奨→（バグなら）再現→（必要なら）grill → 状態適用。<strong>AIトリアージコメントには必ず「This was generated by AI during triage.」免責</strong>。</p>
+                        <h4>Mattの意図</h4><p>カノニカル状態名でissue流通を整理。<code>.out-of-scope/</code> 知識ベースで過去の却下を記憶し再提案を防ぐ。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者は <strong>obsidian-ssot のバックログ.md ベース運用</strong>でGitHub issue重型ではなく、ワークフローが合わない。✕。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/engineering/triage/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <!-- productivity -->
+                <h3 class="sect-h3">⚡ productivity</h3>
+
+                <div class="skill-card" data-key="mp-caveman">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🦴 <span class="cat-tag">productivity</span> caveman <span class="pill pill-high">高</span> <span class="pill pill-yes">○</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p><strong>超圧縮通信モード</strong>。冠詞(a/an/the)・冗長語・定型句・ hedge を削り、トークン使用量を<strong>約75%削減</strong>。技術的正確性・コード・エラーは完全維持。</p>
+                        <h4>いつ使うか</h4><p>「caveman mode」「talk like caveman」「less tokens」「be brief」。</p>
+                        <h4>使い方の流れ</h4><p>1トリガーで<strong>以降全レスポンスで常時ON</strong>（戻さない・filler drift防止）。「<code>[thing] [action] [reason]. [next step].</code>」パターン。危険操作確認・多段順序の時だけ一時解除して解除後に復帰。</p>
+                        <h4>Mattの意図</h4><p>トークン節約。ただし<strong>技術用語は正確・コードブロック不改変・エラー正確引用</strong>。「security warning・破壊的操作確認」では自動的に通常語に戻す安全装置付き。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者環境は <strong>GLM-5.2（1M窓）</strong>だが、長時間作業・大量処理でトークン節約の価値は大きい。<strong>筆者環境に相当スキルなし</strong>・○。例: 「Bug in auth middleware. Token expiry check use <code>&lt;</code> not <code>&lt;=</code>. Fix:」</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/productivity/caveman/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-grillme">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🔥 <span class="cat-tag">productivity</span> grill-me <span class="pill pill-mid">中</span> <span class="pill pill-watch">△</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>計画・設計について<strong>容赦なくインタビュー</strong>し、合意に達するまで決定木の各分岐を1つずつ解決。各問に<strong>推奨答えを付ける</strong>。</p>
+                        <h4>いつ使うか</h4><p>「grill me」・計画をストレステストしたい時・設計を練りたい時。非コード用途（コードは grill-with-docs）。</p>
+                        <h4>使い方の流れ</h4><p>質問は<strong>1度に1つ</strong>。各問に推奨答え提示。コード探索で答えられるものは探索する。</p>
+                        <h4>Mattの意図</h4><p>失敗モード#1（意図のズレ）の対策。<strong>作業を始める前に</strong>合意形成する。Mattの<strong>最も人気のスキル</strong>。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者の <strong>brainstorming / teian</strong> と重複。ただし grill-me は「relentlessly・1問ずつ・推奨答え付き」でより轻量・即効。既存で足りるため△（差し替え候補としては有力）。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-handoff">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">📦 <span class="cat-tag">productivity</span> handoff <span class="pill pill-low">低</span> <span class="pill pill-no">✕</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>現在の会話を<strong>ハンドオフ文書</strong>に圧縮し、新しいエージェントが作業を継続できるようにする。OS一時dirに保存（workspace外）。「suggested skills」セクション付き。</p>
+                        <h4>いつ使うか</h4><p>セッション引き継ぎ・コンテキストが肥大化した時。</p>
+                        <h4>使い方の流れ</h4><p>会話要約 → 一時dir保存 → <strong>既存アーティファクト（PRD/plan/ADR/issue/commit/diff）の重複書きをせず参照</strong> → 機密情報（API鍵等）マスキング。</p>
+                        <h4>Mattの意図</h4><p>セッション間引き継ぎ。「重複書きせず参照」で情報の陳腐化を防ぐ。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者の <strong>new-session スキル</strong>が全く同じ役割（引き継ぎプロンプト生成）。完全重複のため✕。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/productivity/handoff/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-teach">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🎓 <span class="cat-tag">productivity</span> teach <span class="pill pill-high">高</span> <span class="pill pill-yes">○</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p><strong>学習ワークスペース</strong>を構築し、ユーザーにスキル/概念を教える。状態を複数ファイルで管理: <code>MISSION.md</code>（学習の理由）・<code>reference/*.html</code>（チートシート）・<code>learning-records/*.md</code>（学習記録=ADR相当）・<code>lessons/*.html</code>（1完結lesson）。<strong>最近接発達帯</strong>で教える。</p>
+                        <h4>いつ使うか</h4><p>「teach me」・学習開始。<code>argument-hint: "What would you like to learn about?"</code></p>
+                        <h4>使い方の流れ</h4><p>MISSION把握 → 高品質リソース収集(<code>RESOURCES.md</code>)・<strong>パラメトリック知識を信じない</strong> → lesson HTML生成（短く・1つの勝利・タイムリー）→ 参照doc生成（用語集）→ コミュニティ提案（知恵）。</p>
+                        <h4>Mattの意図</h4><p>深い学習に必要な3要素: <strong>知識</strong>（高品質リソース）・<strong>スキル</strong>（インタラクティブlesson）・<strong>知恵</strong>（コミュニティ）。検索練習・間隔反復・インターリービングで長期定着（fluencyでなくstorage strength）。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者の<strong>キャリア評価で最優先課題「Python基礎学習（コード読解力）」</strong>に直結。<strong>筆者環境に相当なし</strong>・○。学習の単位（MISSION/lesson/learning-record）設計はSSOTの記録思想と通底。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/productivity/teach/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <div class="skill-card" data-key="mp-writeaskill">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">✍️ <span class="cat-tag">productivity</span> write-a-skill <span class="pill pill-low">低</span> <span class="pill pill-no">✕</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>新しいエージェントスキルを作成。適切な構造・progressive disclosure・バンドルリソース。</p>
+                        <h4>いつ使うか</h4><p>「skill作って」・「build a new skill」。</p>
+                        <h4>使い方の流れ</h4><p>要件ヒアリング（タスク/ユースケース/スクリプト要否/参照資料）→ ドラフト（SKILL.md+必要に応じてreference/scripts）→ レビュー。</p>
+                        <h4>Mattの意図</h4><p><strong>descriptionはエージェントがスキル選択時に見る唯一の情報</strong>。「何をするか＋Use when [トリガー]」を1024字以内で。SKILL.mdは100行以下・時間依存情報なし・参照は1階層まで。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者の <strong>skill-creator / skill-test / 標準 superpowers:writing-skills</strong> で同等以上。description要件の指針は参考になるが✕。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/productivity/write-a-skill/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+
+                <!-- personal -->
+                <h3 class="sect-h3">📒 personal</h3>
+
+                <div class="skill-card" data-key="mp-obsidianvault">
+                    <button class="skill-card-head" onclick="toggleSkill(this)">🗂️ <span class="cat-tag">personal</span> obsidian-vault <span class="pill pill-mid">中</span> <span class="pill pill-watch">△</span></button>
+                    <div class="skill-card-body">
+                        <h4>何をするか</h4><p>Obsidian vault内のノートを検索・作成・管理。<strong>wikilink（<code>[[ ]]</code>）とindexノード</strong>で編成。Mattのvaultはルートほぼフラット。</p>
+                        <h4>いつ使うか</h4><p>Obsidianノートの検索・作成・整理。</p>
+                        <h4>使い方の流れ</h4><p>vault場所・命名（Title Case）・wikilink・index探索（<code>find -name "*Index*"</code>）。バックリンク検索は <code>grep -rl "\[\[Note\]\]"</code>。</p>
+                        <h4>Mattの意図</h4><p><strong>フォルダ階層ではなくリンクとindexノードで編成</strong>する思想。ノートは学習の1単位。関連ノートを末尾にリンク。</p>
+                        <h4>具体例（筆者環境）</h4><p>筆者の <strong>obsidian-ssot</strong> と同じObsidian運用だが、<strong>アプローチが異なる</strong>: Matt=フラット+リンク/index、筆者=フォルダ階層（00_SYSTEM/01_DECISIONS等）+MOC。両思想の比較は示唆に富むが、機能は <strong>ssot-record / ssot-search / 全体マップ_MOC</strong> で充足・△。</p>
+                        <p><a class="src-link" href="https://github.com/mattpocock/skills/blob/main/skills/personal/obsidian-vault/SKILL.md" target="_blank" rel="noopener">📄 原典 SKILL.md</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第4部 -->
+        <div class="acc-item" data-key="mp-part4">
+            <button class="acc-header" onclick="toggle(this)">第4部　自分環境へのマッピング評価表（取り込み判断） <span class="caret">▼</span></button>
+            <div class="acc-content">
+                <p>全29スキルを、筆者の既存スキル（自作26 + superpowers 14 + 標準）と比較し採点。<strong>適合度</strong>は既存スキルとの重複度で決定。</p>
+                <div class="callout callout-info">
+                    <p><strong>判定基準:</strong> <span class="pill pill-high">高</span>＝既存に相当なし・筆者ワークフローに直接効く ／ <span class="pill pill-mid">中</span>＝既存と似ているがアプローチ違い ／ <span class="pill pill-low">低</span>＝既存でほぼ同等。<strong>推奨:</strong> <span class="pill pill-yes">○</span>入れる ／ <span class="pill pill-watch">△</span>様子見 ／ <span class="pill pill-no">✕</span>既存で十分。</p>
+                </div>
+
+                <h3 class="sect-h3">取り込み推奨 ○（高・入れる価値あり）</h3>
+                <table>
+                    <tr><th>スキル</th><th>適合</th><th>推奨</th><th>理由</th></tr>
+                    <tr><td><strong>teach</strong></td><td><span class="pill pill-high">高</span></td><td><span class="pill pill-yes">○</span></td><td>学習ワークスペース（MISSION/lesson/learning-record）。既存に相当なし。<strong>Python基礎学習（キャリア最優先課題）に直結</strong>。</td></tr>
+                    <tr><td><strong>caveman</strong></td><td><span class="pill pill-high">高</span></td><td><span class="pill pill-yes">○</span></td><td>トークン約75%削減の圧縮通信。既存なし。GLM-5.2(1M窓)環境で長時間作業・大量処理の省トークンに実用。安全装置付き。</td></tr>
+                </table>
+
+                <h3 class="sect-h3">取り込み検討 △（中・思想参考・差し替え候補）</h3>
+                <table>
+                    <tr><th>スキル</th><th>適合</th><th>推奨</th><th>理由</th></tr>
+                    <tr><td><strong>improve-codebase-architecture</strong></td><td><span class="pill pill-high">高</span></td><td><span class="pill pill-watch">△</span></td><td>学習価値大・既存なし。ただし現在の個人開発規模だと適用機会限定的。規模が大きくなったら○。</td></tr>
+                    <tr><td><strong>grill-me</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>brainstorming/teianと重複。ただし「relentlessly・1問ずつ・推奨答え付き」で轻量即効。<strong>teianの差し替え候補</strong>。</td></tr>
+                    <tr><td><strong>grill-with-docs</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>brainstorming+SSOTで同等。CONTEXT.mdインライン更新の規律は参考。</td></tr>
+                    <tr><td><strong>diagnose</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>systematic-debuggingと重複。「フィードバックループ構築10法」は参考。</td></tr>
+                    <tr><td><strong>to-issues</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>dev-cycle/feature-devと重複。縦断スライス・HITL/AFK思想は参考。</td></tr>
+                    <tr><td><strong>to-prd</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>feature-dev/brainstormingと重複。PRDテンプレ構造（スコープ外明記）は参考。</td></tr>
+                    <tr><td><strong>prototype</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>既存なし・便利。ただし現在の作業パターン（スキルで十分）を考慮。</td></tr>
+                    <tr><td><strong>zoom-out</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>Exploreエージェントで代替可。7行の軽さは魅力的。</td></tr>
+                    <tr><td><strong>obsidian-vault</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>ssot-record/ssot-searchで充足。Mattの「フラット+リンク」vs筆者「フォルダ階層+MOC」思想比較で示唆。</td></tr>
+                    <tr><td><strong>edit-article</strong></td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>zenn-article-pipelineと重複。「DAGで章依存を整理」は参考。</td></tr>
+                    <tr><td><strong>git-guardrails</strong> (misc)</td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>既存セキュリティガードhook相当あり。hook設計の参考。</td></tr>
+                    <tr><td><strong>review</strong> (in-progress)</td><td><span class="pill pill-mid">中</span></td><td><span class="pill pill-watch">△</span></td><td>code-review/標準reviewと重複。Standards/Spec 2軸並列は参考。</td></tr>
+                    <tr><td>writing-* (in-progress)</td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-watch">△</span></td><td>執筆系ドラフト。zenn-article-pipelineの参考程度。</td></tr>
+                </table>
+
+                <h3 class="sect-h3">取り込み不要 ✕（低・既存で十分）</h3>
+                <table>
+                    <tr><th>スキル</th><th>適合</th><th>推奨</th><th>理由</th></tr>
+                    <tr><td><strong>handoff</strong></td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>new-sessionスキルと完全重複。</td></tr>
+                    <tr><td><strong>tdd</strong></td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>superpowers:test-driven-developmentと重複。</td></tr>
+                    <tr><td><strong>write-a-skill</strong></td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>skill-creator/skill-test/writing-skillsと重複。</td></tr>
+                    <tr><td><strong>setup-matt-pocock-skills</strong></td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>独自体系+SSOT運用のため不要。</td></tr>
+                    <tr><td><strong>triage</strong></td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>バックログ.md運用でワークフローが合わない。</td></tr>
+                    <tr><td>setup-pre-commit (misc)</td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>プロジェクト次第・現在不要。</td></tr>
+                    <tr><td>migrate-to-shoehorn (misc)</td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>TypeScript特化・不使用。</td></tr>
+                    <tr><td>scaffold-exercises (misc)</td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>教材作成向け・現在不要。</td></tr>
+                    <tr><td>deprecated 4件</td><td><span class="pill pill-low">低</span></td><td><span class="pill pill-no">✕</span></td><td>廃止済（ubiquitous-language等はCONTEXT.mdに統合）。</td></tr>
+                </table>
+
+                <div class="callout callout-tip">
+                    <p><strong>結論サマリー:</strong> 筆者環境に取り込む推奨は <strong>teach と caveman の2つ（○）</strong>。どちらも既存に相当しない新規領域（学習フレームワーク・トークン圧縮）。grill-me は teian の差し替え候補。残り大半は既存スキル/superpowers/標準で充足され、丸ごとプラグイン導入は不要。<strong>「 Matt の思想（small/adaptable/composable・CONTEXT.md・grilling）」</strong>を既存のSSOT運用・スキル設計に取り入れる方が、個別スキル移植より価値が大きい。</p>
+                </div>
+            </div>
+        </div>
+
+        <footer style="margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--border, rgba(0,0,0,.1)); font-size:.82rem; color:var(--fg-muted, #666);">
+            <p>📚 Matt Pocock スキル教科書 — 原典: <a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a>（MIT License）</p>
+            <p><a href="../index.html">🏠 ホーム</a> ／ <a href="03-skills.html">🎯 スキルシステム</a> ／ <a href="skill-catalog.html">📦 自作スキルカタログ</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function toggle(h){const i=h.closest(".acc-item"),o=i.classList.contains("open");i.classList.toggle("open",!o);const k=i.dataset.key;if(k)localStorage.setItem("acc_"+k,(!o).toString());}
+        function toggleSkill(h){const i=h.closest(".skill-card"),o=i.classList.contains("open");i.classList.toggle("open",!o);const k=i.dataset.key;if(k)localStorage.setItem("sk_"+k,(!o).toString());}
+        document.querySelectorAll(".acc-item[data-key]").forEach(i=>{const k=i.dataset.key;if(localStorage.getItem("acc_"+k)==="true")i.classList.add("open");});
+        document.querySelectorAll(".skill-card[data-key]").forEach(i=>{const k=i.dataset.key;if(localStorage.getItem("sk_"+k)==="true")i.classList.add("open");});
+        // テーマ・サイドバー（既存ガイドと共通）
+        (function(){const t=localStorage.getItem('theme')||'light';document.documentElement.dataset.theme=t;
+            const b=document.getElementById('themeToggle');if(b)b.addEventListener('click',()=>{const n=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=n;localStorage.setItem('theme',n);});
+            const m=document.getElementById('menuToggle'),s=document.getElementById('sidebar');if(m&&s)m.addEventListener('click',()=>s.classList.toggle('open'));})();
+    </script>
+</body>
+</html>
