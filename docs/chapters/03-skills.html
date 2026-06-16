@@ -493,6 +493,21 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/send-email/</code>）</li>
 </ul>
 <hr />
+<h3><a id="proxy-doctor"></a><code>proxy-doctor</code>（カスタムスキル）</h3>
+<p><strong>glm-rate-proxy（localhost:8787）の診断・修復</strong>。Claude Code CLI が GLM/代替プロバイダー へ接続するためのローカルプロキシが止まる・エラーが出る・フォールバックが失敗する等の問題を素早く診断し、対処コマンドを案内する。診断＋案内のみでソースコードの自動書き換えは行わない。</p>
+<ul>
+<li><strong>呼び出し</strong>: <code>/proxy-doctor</code>、「プロキシが壊れた」「GLMが使えない」「代替プロバイダーに切り替わらない」「フォールバックが失敗した」「400エラー」「401エラー」「429が頻発」「proxy止まってる」</li>
+<li><strong>フェーズ構成</strong>:
+<ol>
+<li><strong>情報収集</strong> — プロセス・接続先・ステータス・ログの4点を必ず取得</li>
+<li><strong>症状分類</strong> — パターン A〜J（停止 / 400 tool-id / 429 / peak_block / タイムアウト / emergency固定 / settings書き換え / 未使用 / 401 / 正常）に振り分け</li>
+<li><strong>診断レポート</strong> — 検出問題・原因・推奨対処を提示し、ユーザー承認後に実行</li>
+</ol>
+</li>
+<li><strong>重要</strong>: プロキシが止まっても Claude Code は自動で ZAI 直結に切り替わる（<code>.bashrc</code> の <code>claude()</code> 関数）。プロキシ停止＝詰む、ではない</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/proxy-doctor/</code>）</li>
+</ul>
+<hr />
 <h2>スキルの自作方法</h2>
 <ol>
 <li><code>/skill-creator</code> スキルを実行</li>

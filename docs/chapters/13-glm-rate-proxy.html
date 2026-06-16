@@ -525,6 +525,42 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 }
 </code></pre>
 <hr />
+<h2><a id="proxy-doctor"></a>proxy-doctor スキル — 診断を自動化する</h2>
+<p>プロキシが壊れた時の原因調査を自動化する Claude Code スキル。</p>
+<h3>できること</h3>
+<ul>
+<li>プロセス・ステータス・ログを自動収集して原因を分類</li>
+<li>10パターン（停止・400/401/429・タイムアウト・99%固定・設定書き換えなど）を診断</li>
+<li>各パターンへの具体的な対処コマンドを提示（実行はユーザー確認後）</li>
+<li>複数プロセス起動・32MB上限接近・ZAI直結化などエッジケースも検出</li>
+</ul>
+<h3>いつ使うか</h3>
+<p>「なんか遅い・エラーが出る・フォールバックしない」と思ったら、原因を自分で追わずこのスキルを最初に使う。</p>
+<h3>使い方</h3>
+<p>CLIセッション内で以下のいずれかを言うとトリガーされる：</p>
+<pre><code>/proxy-doctor
+プロキシ直して
+GLMが使えない
+400エラーが出る
+プロキシを診断して
+</code></pre>
+<h3>出力例</h3>
+<pre><code>## proxy-doctor 診断結果
+
+プロセス      : 起動中 (PID: 354224)
+BASE_URL      : http://127.0.0.1:8787（プロキシ経由）
+モード        : peak_block
+プロバイダ    : フォールバック先
+ZAI使用率     : 0.0%
+直近リクエスト: 2.1MB
+ピークブロック: true
+
+【検出された問題】 パターン J: 正常
+【原因】 -
+
+【推奨対処】 なし（正常動作中）
+</code></pre>
+<hr />
 <h2><a id="related"></a>関連リンク</h2>
 <ul>
 <li><a href="https://docs.z.ai/guides/capabilities/thinking">ZAI公式ドキュメント - Deep Thinking</a></li>
