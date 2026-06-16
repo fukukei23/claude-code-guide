@@ -156,27 +156,7 @@ PreToolUse フックが発火 ──→ チェックOK → ツール実行
 PostToolUse フックが発火 ──→ ログ記録・後処理
 </code></pre>
 <hr />
-<div class="mermaid-wrapper"><div class="mermaid">
-sequenceDiagram
-    participant U as ユーザー
-    participant CC as Claude Code
-    participant Pre as PreToolUse
-    participant Tool as ツール
-    participant Post as PostToolUse
-
-    Note over CC: 🔄 SessionStart Hook発火
-    U->>CC: リクエスト送信
-    CC->>Pre: ツール実行前チェック
-    alt チェックOK
-        Pre->>Tool: ✅ ツール実行
-        Tool->>Post: 実行完了
-        Post->>CC: ログ記録
-    else チェックNG
-        Pre-->>CC: 🚫 ブロック
-    end
-    CC->>U: レスポンス
-    Note over CC: 🔄 Stop Hook発火
-</div></div><h2>4種のフック</h2>
+<h2>主要4種のフック</h2>
 <h3><a id="sessionstart"></a>SessionStart</h3>
 <p><strong>セッション開始時</strong>に実行。</p>
 <div class="table-wrapper"><table>
@@ -193,7 +173,7 @@ sequenceDiagram
 </tr>
 <tr>
 <td>用途</td>
-<td>環境変数の読み込み、初期化処理、設定の検証</td>
+<td>環境変数の読み込み、初期化処理、設定の検証、ハンドオフ読込</td>
 </tr>
 <tr>
 <td>備考</td>
@@ -230,6 +210,7 @@ sequenceDiagram
 </tbody>
 </table></div>
 <div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="11-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
+<div class="callout callout-info"><p><strong>クロスプラットフォーム対応</strong>: フックスクリプトで <code>python3</code> を直接呼ぶとWindows Git Bashで動作しない。<code>run-security-check.sh</code> ラッパーが python3 / python / wsl を自動検出する。Bashフックは純bash（grep/sed）でJSON解析しpython3に依存しない。</p></div>
 <p>ブロックされるコマンドの例:</p>
 <ul>
 <li><code>bash -x</code>（デバッグ出力でシークレット露出の恐れ）</li>
@@ -253,7 +234,7 @@ sequenceDiagram
 </tr>
 <tr>
 <td>用途</td>
-<td>ログ記録、実行結果の後処理、通知</td>
+<td>ログ記録、実行結果の後処理、設定の自動同期、通知</td>
 </tr>
 <tr>
 <td>備考</td>
@@ -285,6 +266,8 @@ sequenceDiagram
 </tr>
 </tbody>
 </table></div>
+<h3>Notification / PostToolUseFailure</h3>
+<p>エラー・ブロック時（Notification）、ツール失敗時（PostToolUseFailure）に実行。Discord通知等の異常系ハンドリングに使用。</p>
 <hr />
 <h2>設定方法</h2>
 <p>フックは <code>settings.json</code> の <code>hooks</code> セクションに定義する。</p>
@@ -344,6 +327,260 @@ sequenceDiagram
 <li>複数のフックを設定可能（配列で定義）</li>
 </ul>
 <hr />
+<h2>現在のフック構成（実態）</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>フック</th>
+<th>スクリプト</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SessionStart</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-cwd.sh</code></td>
+<td>作業ディレクトリチェック</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-version.sh</code></td>
+<td>バージョン確認・新機能検知</td>
+</tr>
+<tr>
+<td></td>
+<td><code>load-handoff.sh</code></td>
+<td>前回ハンドオフ読み込み</td>
+</tr>
+<tr>
+<td></td>
+<td><code>load-obsidian-log.sh</code></td>
+<td>SSOT日記読み込み（今日・昨日のセッションログ＋バックログ＋7日以上経過タスクの自動確認プロンプト・セッション数カウント付きサマリー）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>start-clipboard-watcher.sh</code></td>
+<td>クリップボード監視起動</td>
+</tr>
+<tr>
+<td></td>
+<td><code>load-secrets.sh</code></td>
+<td>APIキー注入</td>
+</tr>
+<tr>
+<td></td>
+<td><code>sync-secrets-to-settings.sh</code></td>
+<td>シークレットをsettings.jsonに同期</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-secrets-leak.sh</code></td>
+<td>シークレット漏洩チェック</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-decision-indexes.sh</code></td>
+<td>_INDEX.md同期チェック</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-submodule-sync.sh</code></td>
+<td>サブモジュール同期チェック</td>
+</tr>
+<tr>
+<td></td>
+<td><code>auto-update-indexes.sh</code></td>
+<td>_INDEX.md自動更新</td>
+</tr>
+<tr>
+<td></td>
+<td><code>auto-fix-links.sh</code></td>
+<td>Markdownリンク自動修正</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-mcp-guide-sync.sh</code></td>
+<td>MCPガイドとの差分検知</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-knowledge-lint.sh</code></td>
+<td>Knowledge Lint cron設定確認</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-claude-config-sync.sh</code></td>
+<td>claude-configリポジトリ同期チェック</td>
+</tr>
+<tr>
+<td></td>
+<td><code>sync-settings-to-example.sh</code></td>
+<td>settings.jsonのサンプル同期</td>
+</tr>
+<tr>
+<td></td>
+<td><code>skill-guard.sh</code></td>
+<td>スキル定義の整合性ガード</td>
+</tr>
+<tr>
+<td><strong>PreToolUse</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-command-safety.py</code></td>
+<td>危険コマンドのブロック（APIキー漏洩防止等）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>guard-destructive-commands.sh</code></td>
+<td>破壊的コマンドのガード（python3不要・純bash動作）</td>
+</tr>
+<tr>
+<td><strong>PostToolUse</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>track-tool-usage.sh</code></td>
+<td>ツール使用ログ記録</td>
+</tr>
+<tr>
+<td></td>
+<td><code>detect-commit-for-ssot.sh</code></td>
+<td>git commitでSSOT記録トリガー検知</td>
+</tr>
+<tr>
+<td></td>
+<td><code>post-tool-settings-sync.sh</code></td>
+<td>settings.json変更後のSSOT設定ファイルへの同期</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mirror-to-custom.sh</code></td>
+<td>スキル変更をskills-customへmirror</td>
+</tr>
+<tr>
+<td><strong>PostToolUseFailure</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>(atuin)</td>
+<td>シェル履歴統合</td>
+</tr>
+<tr>
+<td><strong>Stop</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>save-session-log.sh</code></td>
+<td>SSOT日記にセッション終了タイムスタンプ記録</td>
+</tr>
+<tr>
+<td></td>
+<td><code>generate-handoff.sh</code></td>
+<td>ハンドオフ情報の書き出し</td>
+</tr>
+<tr>
+<td></td>
+<td><code>queue-guide-updates.sh</code></td>
+<td>claude-code-guideの更新キュー記録</td>
+</tr>
+<tr>
+<td></td>
+<td><code>sync-skills-windows.sh</code></td>
+<td>Windows側のskillsをWSL側に同期</td>
+</tr>
+<tr>
+<td></td>
+<td><code>notify-done.sh</code></td>
+<td>完了通知（Discord）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>next-issue.py</code></td>
+<td>自律開発ループの継続判定</td>
+</tr>
+<tr>
+<td></td>
+<td><code>claude-config-sync.sh</code></td>
+<td><code>~/.claude/</code> → knowledge-base + claude-config へ自動同期</td>
+</tr>
+<tr>
+<td><strong>Notification</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>notify-discord-on-error.sh</code></td>
+<td>エラー・ブロック時にDiscord通知</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p>SessionStartは18コマンド構成。初期化・セキュリティ・SSOT同期・設定チェックの4カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
+<hr />
+<h2>自律タスクループ（Stop Hook 応用）</h2>
+<h3>概要</h3>
+<p>GitHub Issue を順番に自動実装するイベント駆動ループ。<br />
+CronCreate が時間トリガーのみなのに対し、Stop Hook を使うことで「前のタスク完了後に次を起動」が実現できる。</p>
+<h3>ファイル構成</h3>
+<pre><code>~/.claude/scripts/auto-dev/
+├── state.json       # キュー状態（永続）
+├── start.sh         # 手動起動エントリポイント
+├── next-issue.py    # Stop Hook 本体
+└── loop.log         # 実行ログ（自動生成）
+</code></pre>
+<h3>使い方</h3>
+<pre><code class="language-bash"># WSL で実行（Issue #76 → #75 の順で自律実行）
+bash ~/.claude/scripts/auto-dev/start.sh 76 75
+
+# 状態確認
+cat ~/.claude/scripts/auto-dev/state.json
+
+# ログ確認
+tail -f ~/.claude/scripts/auto-dev/loop.log
+</code></pre>
+<h3>緊急停止</h3>
+<pre><code class="language-bash">python3 -c &quot;
+import json
+p='/home/&lt;USER&gt;/.claude/scripts/auto-dev/state.json'
+s=json.load(open(p))
+s['active']=False
+json.dump(s,open(p,'w'),indent=2)
+print('停止しました')
+&quot;
+</code></pre>
+<h3>誤爆防止</h3>
+<ul>
+<li><code>state.active == false</code> の時は <code>next-issue.py</code> が即 <code>exit(0)</code> — 通常の会話終了では何も起きない</li>
+<li><code>except</code> 節で必ず <code>exit(0)</code> — Stop Hook がセッション終了をブロックすることはない</li>
+</ul>
+<h3>動作フロー</h3>
+<pre><code>start.sh 76 75
+  → state.json: active=true / pending=[76,75]
+  → claude --print &quot;Issue #76 を実装して...&quot;
+  → [セッション終了]
+  → Stop Hook → next-issue.py
+      → completed=[76] / pending=[75]
+      → claude --print &quot;Issue #75 を実装して...&quot;
+      → [セッション終了]
+  → Stop Hook → next-issue.py
+      → completed=[76,75] / pending=[] → active=false → 完了
+</code></pre>
+<div class="callout callout-info"><p>詳細: [[../../01_DECISIONS/claude-code/2026-05-30_自律タスクループ実装.md]]</p></div>
+<hr />
 <h2>デバッグ方法</h2>
 <p>フックが期待通りに動かない場合:</p>
 <ol>
@@ -353,12 +590,6 @@ sequenceDiagram
 <li><strong>一時的に無効化</strong> — settings.json で該当フックをコメントアウト</li>
 </ol>
 <hr />
-<h2>トラブルシューティング</h2>
-<h3>Windows + WSL環境でPreToolUseフックがエラーになる</h3>
-<p><strong>症状</strong>:</p>
-<p><strong>原因</strong>: Windows側のPythonが  というUnixパスをWindowsパスとして解釈しようとする。</p>
-<p><strong>解決策</strong>: WSL側にラッパースクリプトを作成し、settings.jsonのコマンドをそちらに変更する。</p>
-<p>経由で呼ぶことで、Windows側のシェルがパスを解釈する前にWSL側に渡される。</p>
 
         </article>
 

@@ -146,131 +146,24 @@
 <p><strong>MCP（Model Context Protocol）</strong> は、Claude Codeから外部ツールを利用するための仕組み。</p>
 <pre><code>Claude Code
   │
-  ├─ glm MCP ───────────→ Claude API ──→ LLM呼び出し（メイン）
-  ├─ フォールバック先 MCP ───────→ 代替プロバイダー API ──→ LLM呼び出し（フォールバック）
   ├─ brave-search MCP ──→ Brave検索API ──→ Web検索結果
   ├─ github MCP ────────→ GitHub API ────→ PR・Issue・ファイル
   ├─ playwright MCP ────→ Chromium ──────→ ブラウザ操作
   ├─ context7 MCP ──────→ Docs API ─────→ ライブラリドキュメント
   ├─ discord MCP ───────→ Discord API ──→ メッセージ送受信
-  └─ mermaid MCP ───────→ Mermaid API ──→ 図表生成
+  ├─ mermaid MCP ───────→ Mermaid API ──→ 図表生成
+  ├─ exa MCP ───────────→ Exa API ──────→ セマンティック検索
+  ├─ フォールバック先 MCP ───────→ 代替プロバイダー API ──→ テキスト処理（コスト削減）
+  ├─ フォールバック先-official ──→ 代替プロバイダー API ──→ 画像・音楽・動画生成
+  ├─ フォールバック先-video ─────→ 代替プロバイダー API ──→ 動画生成（従量課金）
+  ├─ 4_5v_mcp ──────────→ 画像分析AI ───→ 画像診断・UI模写
+  └─ web_reader ────────→ URL取得 ──────→ WebページMarkdown化
 </code></pre>
 <p>MCPサーバーを追加すると、Claude Codeが<strong>そのサーバーのツール</strong>を使えるようになる。各ツールはコンテキストを消費するため、必要なものだけを維持する。</p>
 <hr />
-<h2>現在の構成（8サーバー・119ツール）</h2>
-<h3><a id="glm"></a>glm（19ツール）</h3>
-<p><strong>LLM委譲用MCPサーバー（自作）</strong>。環境によって役割が異なる。</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>環境</th>
-<th>役割</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Windows Desktop版</strong></td>
-<td>SonnetがMCP経由でGLMに処理を委譲。Sonnetがエンドポイントを変更できないため、会話ごとにglm MCPを呼び出してGLMに回答生成を依頼し、Sonnetが最終回答する</td>
-</tr>
-<tr>
-<td><strong>WSL CLI版</strong></td>
-<td>Claude Code自体がglm-rate-proxy経由でGLMで動作しているため、このMCPを呼び出すと二重になり<strong>実質不要</strong></td>
-</tr>
-</tbody>
-</table></div>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>ツール</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>glm_ask</code></td>
-<td>汎用LLM呼び出し（最も頻繁に使う）</td>
-</tr>
-<tr>
-<td><code>glm_generate_code</code></td>
-<td>コード生成</td>
-</tr>
-<tr>
-<td><code>glm_review_code</code></td>
-<td>コードレビュー</td>
-</tr>
-<tr>
-<td><code>glm_explain_code</code></td>
-<td>コード説明</td>
-</tr>
-<tr>
-<td><code>glm_refactor_suggest</code></td>
-<td>リファクタリング提案</td>
-</tr>
-<tr>
-<td><code>glm_debug_error</code></td>
-<td>エラーデバッグ</td>
-</tr>
-<tr>
-<td><code>glm_generate_tests</code></td>
-<td>テスト生成</td>
-</tr>
-<tr>
-<td><code>glm_security_audit</code></td>
-<td>セキュリティ監査</td>
-</tr>
-<tr>
-<td><code>glm_analyze_file</code></td>
-<td>ファイル分析</td>
-</tr>
-<tr>
-<td><code>glm_generate_docs</code></td>
-<td>ドキュメント生成</td>
-</tr>
-<tr>
-<td><code>glm_write_readme</code></td>
-<td>README生成</td>
-</tr>
-<tr>
-<td><code>glm_write_document</code></td>
-<td>汎用ドキュメント作成</td>
-</tr>
-<tr>
-<td><code>glm_write_dockerfile</code></td>
-<td>Dockerfile生成</td>
-</tr>
-<tr>
-<td><code>glm_design_api</code></td>
-<td>API設計</td>
-</tr>
-<tr>
-<td><code>glm_optimize_sql</code></td>
-<td>SQL最適化</td>
-</tr>
-<tr>
-<td><code>glm_generate_regex</code></td>
-<td>正規表現生成</td>
-</tr>
-<tr>
-<td><code>glm_generate_changelog</code></td>
-<td>CHANGELOG生成</td>
-</tr>
-<tr>
-<td><code>glm_git_commit_message</code></td>
-<td>コミットメッセージ生成</td>
-</tr>
-<tr>
-<td><code>glm_translate</code></td>
-<td>翻訳</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>使いどころ</strong>: Windows Desktop版でコード生成・レビュー・説明など開発全般の処理をGLMに委譲したい場合。<br />
-<strong>注意（Windows Desktop版）</strong>: ZAI APIキーが設定されていないと接続不可。<br />
-<strong>注意（WSL CLI版）</strong>: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/glm-mcp-server.py</code> — 自作Pythonスクリプト。glm-rate-proxyとは<strong>別ファイル</strong>。glm-rate-proxyはWSL CLI版のエンドポイント制御担当、glm MCPサーバーはMCPプロトコル経由の呼び出し担当。</p></div>
-<hr />
-<h3><a id="フォールバック先"></a>フォールバック先（17ツール）</h3>
-<p><strong>LLM委譲用MCPサーバー（自作）。環境によって役割が異なる。</strong></p>
+<h2>現在の構成（12サーバー・125ツール）</h2>
+<h3><a id="フォールバック先"></a>フォールバック先（自作テキスト処理 / 17ツール / ~1kトークン）</h3>
+<p><strong>LLM委譲用MCPサーバー（自作・代替プロバイダー-M3使用）</strong>。環境によって役割が異なる。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -285,7 +178,7 @@
 </tr>
 <tr>
 <td><strong>WSL CLI版</strong></td>
-<td>① glm-rate-proxyのフォールバック先（GLMがレート制限・エラー時に<strong>自動</strong>切替） ② 明示的にMCPツールとして呼び出すことも可能</td>
+<td>① glm-rate-proxyのフォールバック先（GLMがレート制限・エラー時に<strong>自動</strong>切替） ② 明示的にMCPツールとして呼び出すことも可能（要約・翻訳・データ処理等でコスト削減）</td>
 </tr>
 </tbody>
 </table></div>
@@ -370,8 +263,8 @@
 <p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。</p>
 <div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/フォールバック先-mcp-server.py</code> — 自作Pythonスクリプト（<strong>代替プロバイダー-M3</strong>使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p></div>
 <hr />
-<h3><a id="フォールバック先-official"></a>フォールバック先-official（10ツール）</h3>
-<p><strong>代替プロバイダー公式MCPサーバー</strong>。動画・画像・音声などのメディア生成機能を提供する。カスタム版 <code>フォールバック先</code>（テキスト処理特化）とは別サーバー。</p>
+<h3><a id="フォールバック先-official"></a>フォールバック先-official（公式 / 画像・音楽・動画・10ツール）</h3>
+<p><strong>代替プロバイダー公式MCPサーバー</strong>。画像・音楽・動画・音声などのメディア生成機能を提供する。自作の <code>フォールバック先</code>（テキスト処理特化）とは別サーバー。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -382,7 +275,7 @@
 <tbody>
 <tr>
 <td><code>generate_video</code></td>
-<td>テキストプロンプト or 画像から動画を生成（<code>代替プロバイダー-Hailuo-02</code>等のモデルを使用）</td>
+<td>テキストプロンプト or 画像から動画を生成（<code>代替プロバイダー-Hailuo-02</code>等）</td>
 </tr>
 <tr>
 <td><code>query_video_generation</code></td>
@@ -390,7 +283,7 @@
 </tr>
 <tr>
 <td><code>text_to_image</code></td>
-<td>テキストから画像を生成</td>
+<td>テキストから画像を生成（image-01）</td>
 </tr>
 <tr>
 <td><code>text_to_audio</code></td>
@@ -422,50 +315,10 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>使いどころ</strong>: 「〇〇の動画を生成して」「画像を作って」「BGMを生成して」など、メディア生成タスク全般。<br />
+<p><strong>使いどころ</strong>: 「〇〇の動画を生成して」「画像を作って」「BGMを生成して」など、メディア生成タスク全般。
 <strong>出力先</strong>: <code>~/フォールバック先-output/</code>（WSL内）に自動保存される。</p>
-<p><strong>セットアップ手順</strong>:</p>
-<pre><code class="language-bash"># 1. 公式パッケージをインストール（WSL内）
-pip install フォールバック先-mcp --break-system-packages
-
-# 2. 起動スクリプトを作成
-# /home/&lt;USER&gt;/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh
-# → source ~/.secrets.env してから フォールバック先-mcp を起動
-
-# 3. settings.json に追加
-# C:\Users\yn441\.claude\settings.json の mcpServers に以下を追加:
-# &quot;フォールバック先-official&quot;: {
-#   &quot;command&quot;: &quot;wsl&quot;,
-#   &quot;args&quot;: [&quot;bash&quot;, &quot;/home/&lt;USER&gt;/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh&quot;],
-#   &quot;type&quot;: &quot;stdio&quot;
-# }
-</code></pre>
-<p><strong>必須環境変数</strong>:</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>変数名</th>
-<th>値</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>MINIMAX_API_KEY</code></td>
-<td>代替プロバイダー APIキー（platform.fallback-provider.example で取得）</td>
-</tr>
-<tr>
-<td><code>MINIMAX_API_HOST</code></td>
-<td><code>https://api.fallback-provider.example</code></td>
-</tr>
-<tr>
-<td><code>MINIMAX_MCP_BASE_PATH</code></td>
-<td>出力先ディレクトリ（例: <code>~/フォールバック先-output</code>）</td>
-</tr>
-</tbody>
-</table></div>
-<div class="callout callout-info"><p><strong>実装</strong>: 公式パッケージ <code>フォールバック先-mcp</code>（PyPI）。<code>~/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh</code> で起動。2026-06-06 追加。</p></div>
 <hr />
-<h3><a id="フォールバック先-video"></a>フォールバック先-video（動画生成専用・従量課金）</h3>
+<h3><a id="フォールバック先-video"></a>フォールバック先-video（公式 / 動画生成専用・従量課金）</h3>
 <p><strong>代替プロバイダー公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）</strong>。<code>フォールバック先-official</code> と<strong>同じバイナリ</strong>（公式パッケージ <code>フォールバック先-mcp</code>）だが、<strong>APIキー（従量課金アカウント）と出力先を分離</strong>した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -484,12 +337,12 @@ pip install フォールバック先-mcp --break-system-packages
 <tr>
 <td>APIキー</td>
 <td>無料枠アカウント（<code>MINIMAX_API_KEY</code>）</td>
-<td><strong>従量 Cash$</strong>（別アカウント）</td>
+<td><strong>従量 Cash$</strong>（<code>MINIMAX_API_KEY_VIDEO</code>・別アカウント）</td>
 </tr>
 <tr>
 <td>出力先</td>
 <td><code>~/フォールバック先-output/</code></td>
-<td>別ディレクトリ</td>
+<td><code>~/フォールバック先-output-video/</code></td>
 </tr>
 <tr>
 <td>用途</td>
@@ -499,18 +352,18 @@ pip install フォールバック先-mcp --break-system-packages
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: 動画生成を大量に行いたい場合。official の無料枠とは課金体系が独立しているため、動画専用に従量アカウントを分けて運用する。</p>
-<p><strong>セットアップ手順</strong>:</p>
-<pre><code class="language-bash"># 1. 起動スクリプトを作成（official と同じバイナリ・VIDEOキーで起動）
-# /home/&lt;USER&gt;/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh
-
-# 2. settings.json に追加
-# &quot;フォールバック先-video&quot;: {
-#   &quot;command&quot;: &quot;bash&quot;,
-#   &quot;args&quot;: [&quot;/home/&lt;USER&gt;/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh&quot;],
-#   &quot;type&quot;: &quot;stdio&quot;
-# }
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh</code> — 公式パッケージ <code>フォールバック先-mcp</code> を VIDEO キーで起動（<code>export MINIMAX_API_KEY=&quot;${MINIMAX_API_KEY_VIDEO}&quot;</code> でマップ）。<code>フォールバック先-official</code> と同じバイナリ・別アカウント・別出力先。2026-06-14 追加。</p></div>
+<h4>フォールバック先系のセットアップ（公式2サーバー）</h4>
+<p>同一の <code>フォールバック先-mcp</code> バイナリを2本起動し、環境変数でAPIキーとアカウントを切り替えて<strong>コスト分離</strong>する構成。</p>
+<p><strong>使い分けのポイント</strong>: 同一バイナリのため <code>generate_video</code> 等が両サーバーに生える。<strong>動画生成時は必ず <code>mcp__フォールバック先-video__generate_video</code></strong> を使う（<code>フォールバック先-official</code> は Token Plan の動画 quota が枯渇するため）。</p>
+<ul>
+<li><strong>サーバー登録は <code>claude mcp add -s user</code> で <code>~/.claude.json</code>（userスコープ）へ。<code>settings.json</code> の <code>mcpServers</code> は読まれないので注意</strong>（2026-06-15検証済み・下記トラブルシューティング「2層問題」参照）。<pre><code class="language-bash">claude mcp add フォールバック先-video -s user -- bash ~/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh
 </code></pre>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh</code> — 公式パッケージ <code>フォールバック先-mcp</code> を VIDEO キーで起動。<code>フォールバック先-official</code> と同じバイナリ・別アカウント・別出力先。2026-06-14 追加。</p></div>
+</li>
+<li>起動スクリプト: <code>~/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh</code> / <code>start-フォールバック先-video-mcp.sh</code></li>
+<li>鍵管理: <code>~/.secrets.env</code> の <code>MINIMAX_API_KEY</code>（無料枠）/ <code>MINIMAX_API_KEY_VIDEO</code>（従量）</li>
+</ul>
+<p><strong>注意</strong>: MCP接続は起動時確立のため、設定変更後は Claude Code の再起動が必要。</p>
 <hr />
 <h3><a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）</h3>
 <p>Web検索に関する各種機能。</p>
@@ -712,8 +565,270 @@ pip install フォールバック先-mcp --break-system-packages
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: フローチャート、シーケンス図、クラス図の生成</p>
-<h3><a id="zernio"></a>zernio（280+ツール / ホストMCP）</h3>
-<p>SNS自動投稿MCP。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。</p>
+<h3><a id="exa"></a>exa（3ツール / ~1.5kトークン）</h3>
+<p>セマンティックWeb検索。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web_search_exa</code></td>
+<td>セマンティックWeb検索（技術記事の深掘り）</td>
+</tr>
+<tr>
+<td><code>web_fetch_exa</code></td>
+<td>URLの内容をMarkdownで取得（バッチ対応）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: 技術記事の深掘り調査、コード検索</p>
+<h3><a id="4-5v-mcp"></a>4_5v_mcp（画像分析 / ~0.8kトークン）</h3>
+<p>AI画像分析。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>analyze_image</code></td>
+<td>画像の詳細分析（OCR・レイアウト理解・UI複製用プロンプト生成）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: スクリーンショット診断、UI模写、図解理解</p>
+<h3><a id="web-reader"></a>web_reader（1ツール / ~0.5kトークン）</h3>
+<p>URL内容取得。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>webReader</code></td>
+<td>URLをMarkdownに変換（画像保持オプション付き）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: Webページ内容の取得、ドキュメント読み込み</p>
+<hr />
+<h2>環境別の対応（WSL CLI / Windows Desktop）</h2>
+<p>一部のMCPサーバーは実行環境によって役割・有無が異なる：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>サーバー</th>
+<th>WSL CLI版</th>
+<th>Windows Desktop版</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>フォールバック先</td>
+<td>✅ あり</td>
+<td>✅ あり</td>
+<td>コスト削減で明示的に呼び出し（要約・翻訳・データ処理等）</td>
+</tr>
+<tr>
+<td>フォールバック先-official</td>
+<td>✅ あり</td>
+<td>✅ あり</td>
+<td>動画・画像・音声生成（Hailuo）。両環境で利用可能</td>
+</tr>
+<tr>
+<td>フォールバック先-video</td>
+<td>✅ あり</td>
+<td>✅ あり</td>
+<td>動画生成専用（従量・両環境）</td>
+</tr>
+<tr>
+<td>brave-search</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>github</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>playwright</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>context7</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>discord</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>mermaid</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>exa</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>4_5v_mcp</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td>web_reader</td>
+<td>✅</td>
+<td>✅</td>
+<td>共通</td>
+</tr>
+<tr>
+<td><strong>glm</strong></td>
+<td>❌ <strong>不要</strong></td>
+<td>✅ あり</td>
+<td>WSL CLI版は自分自身がGLMで動作。Windows版はSonnet→GLM委譲用（下記参照）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p><strong>注意</strong>: WSL CLI版はClaude Code自体のエンドポイントがglm-rate-proxy経由でGLMを指しているため、セッション全体がすでにGLMで動作している。その中でglm MCPをさらに呼ぶのは二重になるため不要。Windows Desktop版はSonnetで動作するため、GLMに委譲する手段としてglm MCPが有効。</p>
+<p><strong>将来変更の可能性</strong>: 現在はGLMだが、プロバイダー乗り換えやコスト変化でルーティング先が変わる可能性がある。その場合はglm MCPの要否を再評価すること。変更はglm-rate-proxyの向き先を変えるだけでCLI全体に反映される。</p></div>
+<hr />
+<h2><a id="glm"></a>glm（Windows Desktop版用 / WSL CLI版では不要・自作 / ~1kトークン）</h2>
+<p><strong>LLM委譲用MCPサーバー（自作・GLM-5.2/Z.AI API）</strong>。<strong>WSL CLI版では不要のため「現在の構成（実態12サーバー）」には含まれない</strong>。Windows Desktop版でのみ有効。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>環境</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Windows Desktop版</strong></td>
+<td>SonnetがMCP経由でGLMに処理を委譲。Sonnetがエンドポイントを変更できないため、会話ごとにglm MCPを呼び出してGLMに回答生成を依頼し、Sonnetが最終回答する</td>
+</tr>
+<tr>
+<td><strong>WSL CLI版</strong></td>
+<td>Claude Code自体がglm-rate-proxy経由でGLMで動作しているため、このMCPを呼び出すと二重になり<strong>実質不要</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>glm_ask</code></td>
+<td>汎用LLM呼び出し（最も頻繁に使う）</td>
+</tr>
+<tr>
+<td><code>glm_generate_code</code></td>
+<td>コード生成</td>
+</tr>
+<tr>
+<td><code>glm_review_code</code></td>
+<td>コードレビュー</td>
+</tr>
+<tr>
+<td><code>glm_explain_code</code></td>
+<td>コード説明</td>
+</tr>
+<tr>
+<td><code>glm_refactor_suggest</code></td>
+<td>リファクタリング提案</td>
+</tr>
+<tr>
+<td><code>glm_debug_error</code></td>
+<td>エラーデバッグ</td>
+</tr>
+<tr>
+<td><code>glm_generate_tests</code></td>
+<td>テスト生成</td>
+</tr>
+<tr>
+<td><code>glm_security_audit</code></td>
+<td>セキュリティ監査</td>
+</tr>
+<tr>
+<td><code>glm_analyze_file</code></td>
+<td>ファイル分析</td>
+</tr>
+<tr>
+<td><code>glm_generate_docs</code></td>
+<td>ドキュメント生成</td>
+</tr>
+<tr>
+<td><code>glm_write_readme</code></td>
+<td>README生成</td>
+</tr>
+<tr>
+<td><code>glm_write_document</code></td>
+<td>汎用ドキュメント作成</td>
+</tr>
+<tr>
+<td><code>glm_write_dockerfile</code></td>
+<td>Dockerfile生成</td>
+</tr>
+<tr>
+<td><code>glm_design_api</code></td>
+<td>API設計</td>
+</tr>
+<tr>
+<td><code>glm_optimize_sql</code></td>
+<td>SQL最適化</td>
+</tr>
+<tr>
+<td><code>glm_generate_regex</code></td>
+<td>正規表現生成</td>
+</tr>
+<tr>
+<td><code>glm_generate_changelog</code></td>
+<td>CHANGELOG生成</td>
+</tr>
+<tr>
+<td><code>glm_git_commit_message</code></td>
+<td>コミットメッセージ生成</td>
+</tr>
+<tr>
+<td><code>glm_translate</code></td>
+<td>翻訳</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: Windows Desktop版でコード生成・レビュー・説明など開発全般の処理をGLMに委譲したい場合。
+<strong>注意（Windows Desktop版）</strong>: ZAI APIキーが設定されていないと接続不可。
+<strong>注意（WSL CLI版）</strong>: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/glm-mcp-server.py</code> — 自作Pythonスクリプト。glm-rate-proxyとは<strong>別ファイル</strong>。glm-rate-proxyはWSL CLI版のエンドポイント制御担当、glm MCPサーバーはMCPプロトコル経由の呼び出し担当。</p></div>
+<hr />
+<h2><a id="zernio"></a>zernio（導入済み・現在未接続 / ホストMCP / 280+ツール）</h2>
+<p><strong>SNS自動投稿MCP</strong>。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。導入済み・投稿テスト済みだが、<strong>現在は未接続</strong>（必要時に再有効化）。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -750,83 +865,12 @@ pip install フォールバック先-mcp --break-system-packages
 </table></div>
 <p><strong>使いどころ</strong>: TikTok/Instagram等への自動投稿、SNS分析、投稿スケジュール管理</p>
 <p><strong>料金</strong>: 最初2アカウント無料 → 3つ目以降 $6/月</p>
-<p><strong>セットアップ</strong>: 公式プラグイン方式で導入</p>
+<p><strong>セットアップ</strong>: 公式プラグイン方式で導入（手動の <code>url</code> + <code>headers</code> + <code>env</code> 設定は非推奨 — <code>${VAR}</code> 変数展開が動作しない場合あり）</p>
 <pre><code class="language-bash">/plugin marketplace add zernio-dev/zernio-claude-plugin
 /plugin install zernio@zernio
 # APIキー入力 → システムキーチェーンに保存
 </code></pre>
 <p><strong>投稿テスト結果</strong>（2026-06-13）: 4プラットフォーム（Discord / Instagram / TikTok / YouTube）の下書き投稿・クロス投稿・一覧取得・削除まで全て正常動作を確認。即時投稿（<code>publish_now=True</code>）も利用可能。</p>
-<hr />
-<h2>環境別の対応（WSL CLI / Windows Desktop）</h2>
-<p>一部のMCPサーバーは実行環境によって役割・有無が異なる：</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>サーバー</th>
-<th>WSL CLI版</th>
-<th>Windows Desktop版</th>
-<th>備考</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>glm</td>
-<td>❌ 不要</td>
-<td>✅ あり</td>
-<td>WSL CLI版はClaude Code自体がGLM経由で動作するため、さらにglm MCPを呼ぶ必要がない</td>
-</tr>
-<tr>
-<td>フォールバック先</td>
-<td>✅ あり</td>
-<td>✅ あり</td>
-<td>コスト削減で明示的に呼び出し（要約・翻訳・データ処理等）</td>
-</tr>
-<tr>
-<td>brave-search</td>
-<td>✅</td>
-<td>✅</td>
-<td>共通</td>
-</tr>
-<tr>
-<td>github</td>
-<td>✅</td>
-<td>✅</td>
-<td>共通</td>
-</tr>
-<tr>
-<td>playwright</td>
-<td>✅</td>
-<td>✅</td>
-<td>共通</td>
-</tr>
-<tr>
-<td>context7</td>
-<td>✅</td>
-<td>✅</td>
-<td>共通</td>
-</tr>
-<tr>
-<td>discord</td>
-<td>✅</td>
-<td>✅</td>
-<td>共通</td>
-</tr>
-<tr>
-<td>mermaid</td>
-<td>✅</td>
-<td>✅</td>
-<td>共通</td>
-</tr>
-<tr>
-<td>zernio</td>
-<td>✅</td>
-<td>✅</td>
-<td>共通（ホストMCP・APIキー必要）</td>
-</tr>
-</tbody>
-</table></div>
-<div class="callout callout-info"><p><strong>補足</strong>: WSL CLI版はClaude Code自体のエンドポイントがglm-rate-proxy経由でGLMを指しているため、セッション全体がすでにGLMで動作している。その中でglm MCPをさらに呼ぶのは二重になるため不要。Windows Desktop版はSonnetで動作するため、GLMに委譲する手段としてglm MCPが有効。</p>
-<p><strong>将来変更の可能性</strong>: 現在はGLMだが、プロバイダー乗り換えやコスト変化でルーティング先が変わる可能性がある。その場合はglm MCPの要否を再評価すること。変更はglm-rate-proxyの向き先を変えるだけでCLI全体に反映される。</p></div>
 <hr />
 <h2>セキュリティ: APIキーの管理</h2>
 <p>全MCPサーバーは <code>~/.secrets.env</code> からAPIキーを読み込むラッパースクリプト経由で起動する。<strong>settings.jsonにAPIキーを直接記載しない。</strong></p>
@@ -844,66 +888,95 @@ start-&lt;name&gt;.sh
 <tr>
 <th>サーバー</th>
 <th>ツール数</th>
-<th>備考</th>
+<th>トークン</th>
+<th>コンテキスト比</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>glm</td>
-<td>19</td>
-<td>メインLLM委譲用・Windows Desktopのみ実用（CLI版は不要）</td>
-</tr>
-<tr>
-<td>フォールバック先</td>
-<td>17</td>
-<td>コスト削減用LLM・両環境</td>
-</tr>
-<tr>
 <td>github</td>
 <td>41</td>
-<td>最もツール数が多い</td>
+<td>9.6k</td>
+<td>4.8%</td>
 </tr>
 <tr>
 <td>brave-search</td>
 <td>6</td>
-<td>~5.5kトークン</td>
+<td>5.5k</td>
+<td>2.8%</td>
 </tr>
 <tr>
 <td>playwright</td>
 <td>25</td>
-<td>~4.7kトークン</td>
+<td>4.7k</td>
+<td>2.4%</td>
+</tr>
+<tr>
+<td>exa</td>
+<td>3</td>
+<td>~1.5k</td>
+<td>~0.8%</td>
 </tr>
 <tr>
 <td>context7</td>
 <td>2</td>
-<td>~1.2kトークン</td>
+<td>1.2k</td>
+<td>0.6%</td>
+</tr>
+<tr>
+<td>4_5v_mcp</td>
+<td>1</td>
+<td>~0.8k</td>
+<td>~0.4%</td>
 </tr>
 <tr>
 <td>discord</td>
 <td>5</td>
-<td>~0.6kトークン</td>
+<td>0.6k</td>
+<td>0.3%</td>
 </tr>
 <tr>
 <td>mermaid</td>
 <td>4</td>
-<td>~0.4kトークン</td>
+<td>0.4k</td>
+<td>0.2%</td>
 </tr>
 <tr>
-<td>zernio</td>
-<td>280+</td>
-<td>~6k（ホストMCP）</td>
+<td>web_reader</td>
+<td>1</td>
+<td>~0.5k</td>
+<td>~0.3%</td>
+</tr>
+<tr>
+<td>フォールバック先</td>
+<td>17</td>
+<td>~1k</td>
+<td>~0.5%</td>
+</tr>
+<tr>
+<td>フォールバック先-official</td>
+<td>10</td>
+<td>~1k</td>
+<td>~0.5%</td>
+</tr>
+<tr>
+<td>フォールバック先-video</td>
+<td>10</td>
+<td>~1k</td>
+<td>~0.5%</td>
 </tr>
 <tr>
 <td><strong>合計</strong></td>
-<td><strong>399+</strong></td>
-<td></td>
+<td><strong>125</strong></td>
+<td><strong>~24.8k</strong></td>
+<td><strong>~12.4%</strong></td>
 </tr>
 </tbody>
 </table></div>
 <ul>
-<li><strong>GitHub</strong>が最も重い（41ツール = 全MCPの3分の1強）</li>
-<li>GLM/代替プロバイダーはLLM委譲用の特殊サーバー（他のMCPとは性質が異なる）</li>
-<li>以前は9サーバー（~35kトークン）だったが、使用頻度分析で最適化済み</li>
+<li><strong>GitHub</strong>が最も重い（41ツール = 全MCPの約3割）</li>
+<li>以前は9サーバー（~35kトークン）だったが、使用頻度分析で最適化後、exa・画像分析・web_readerを追加</li>
+<li><strong>クイックリファレンス</strong>: <a href="https://%3CUSERNAME%3E.github.io/guides/claude-code-mcp-catalog/">ガイドサイト - MCPサーバーカタログ</a></li>
 </ul>
 <div class="callout callout-tip"><p><strong>現場の知見</strong>: MCPツールは呼び出した時だけコストが発生するわけではない。<strong>ツール定義だけで毎ターン消費</strong>される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ <a href="11-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
 <hr />
@@ -918,6 +991,62 @@ start-&lt;name&gt;.sh
 <pre><code class="language-bash">claude mcp list
 </code></pre>
 <p><strong>注意</strong>: <code>settings.json</code> だけでなく <code>~/.claude.json</code> の両方から削除する必要がある場合がある（2ファイル問題）。</p>
+<h3>トラブルシューティング: 「設定したのに接続されない」（Windows Desktop版）</h3>
+<p>Windows Desktop版（特に<strong>Microsoft Store版 / サンドボックス化されたインストール</strong>）でMCPサーバーを追加しても一向に接続されない場合、<strong>編集すべき設定ファイルを間違えている</strong>可能性が高い。候補は3つある：</p>
+<ol>
+<li><code>C:\Users\&lt;user&gt;\.claude\settings.json</code> — CLI/共通設定用</li>
+<li><code>C:\Users\&lt;user&gt;\AppData\Roaming\Claude\claude_desktop_config.json</code> — 通常版チャットアプリ用</li>
+<li><code>C:\Users\&lt;user&gt;\AppData\Local\Packages\&lt;Claudeのパッケージフォルダ&gt;\LocalCache\Roaming\Claude\claude_desktop_config.json</code> — <strong>サンドボックス化パッケージキャッシュ内</strong>（Microsoft Store版で実際に使われるのはここ）</li>
+</ol>
+<p><strong>判別方法</strong>: 既に動いている他のMCPサーバーのエントリの <code>args</code>（<code>wsl -d Ubuntu -- bash &lt;path&gt;</code> のようなコマンド形式）が、UI上の接続ログ（<code>/mcp</code> → サーバー詳細）に表示される実際の起動コマンドと一致しているファイルが「本物」。3つの候補に同名・類似のサーバーエントリがあっても、起動コマンドが実際のログと食い違っていれば、それは使われていない古いコピーである。</p>
+<p>詳細な調査の経緯: <code>01_DECISIONS/claude-code/2026-06-07_フォールバック先-official-MCP接続トラブル解決と動画生成成功.md</code></p>
+<h3>トラブルシューティング: 「設定ファイルの2層問題」（WSL CLI版）</h3>
+<p>WSL CLI版でMCPサーバーが <code>Connection closed (-32000)</code> になる場合、<strong><code>settings.json</code> と <code>.claude.json</code> の両方にMCP定義があるか確認</strong>する。</p>
+<p><strong>どちらが使われているか</strong>: <code>/mcp</code> → サーバー選択 → 詳細画面の「Config location」で確認。</p>
+<p><strong>よくある原因</strong>:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>原因</th>
+<th>症状</th>
+<th>修正</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.claude.json</code> のパス間違い</td>
+<td><code>-32000</code> エラー</td>
+<td><code>scripts/xxx.py</code> → <code>scripts/mcp/xxx.py</code></td>
+</tr>
+<tr>
+<td><code>.claude.json</code> が python3 直接起動</td>
+<td>APIキー未設定でクラッシュ</td>
+<td><code>bash start-*.sh</code> 経由に変更（<code>secrets.env</code> をsource）</td>
+</tr>
+<tr>
+<td>一方だけ修正</td>
+<td>修正が反映されない</td>
+<td>両ファイルの定義を一致させる</td>
+</tr>
+<tr>
+<td>glm が WSL CLI で不要なのに有効</td>
+<td>警告が出る</td>
+<td><code>disabled: true</code> を追加</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>診断コマンド</strong>:</p>
+<pre><code class="language-bash"># 両ファイルのMCP定義を確認（env値は非表示）
+python3 -c &quot;
+import json
+for path in ['.claude/settings.json', '.claude.json']:
+    s = json.load(open(path))
+    for name, cfg in s.get('mcpServers', {}).items():
+        display = {k: v for k, v in cfg.items() if k != 'env'}
+        print(f'{path} → {name}: {display}')
+&quot;
+</code></pre>
+<p>詳細: <code>01_DECISIONS/claude-code/2026-06-11_MCP設定2層問題と接続トラブル修正.md</code></p>
 <hr />
 <h2>MCPツール使い分けガイド</h2>
 <p>詳細な使い分け基準は別ドキュメントを参照:</p>

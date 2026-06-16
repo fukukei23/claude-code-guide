@@ -289,7 +289,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tbody>
 <tr>
 <td><code>model</code></td>
-<td>デフォルトモデル（<code>opus</code>, <code>sonnet</code>, <code>haiku</code>）</td>
+<td>デフォルトモデル（<code>opus</code>, <code>sonnet</code>, <code>haiku</code>）。glm-5.2運用では各階層に割当</td>
 </tr>
 <tr>
 <td><code>effortLevel</code></td>
@@ -321,7 +321,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 </tbody>
 </table></div>
-<h5>statusLine の詳細</h5>
+<h5><a id="statusline"></a>statusLine の詳細</h5>
 <p>画面下部にLLM名・コスト・作業量・コンテキスト残量・会話サイズを表示する。glm-rate-proxy の実動作状態を反映し、peak時間帯のフォールバックもバッジで示す。</p>
 <ul>
 <li><strong>設定</strong>: <code>{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;bash ~/.claude/scripts/llm/llm-status.sh&quot;}</code></li>
@@ -351,7 +351,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 <tr>
 <td><code>Ctx XX% (XXk/窓)</code></td>
-<td>コンテキスト窓使用率。窓サイズは <code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code> で動的判定（<code>200k</code> or <code>1M</code>）。<strong>85%赤 / 70%黄 / 他緑</strong></td>
+<td>コンテキスト窓使用率。<strong>85%赤 / 70%黄 / 他緑</strong></td>
 </tr>
 <tr>
 <td><code>Req XX.XMB/32</code></td>
@@ -359,9 +359,10 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-warn"><p><strong>注意</strong>: コンテキスト使用率が高くなったら早めに <code>/compact</code> すること。100%に達すると <code>/compact</code> 自体も失敗し、新セッションが必要になる。<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code> で窓サイズを拡張（1M窓等）しても、会話サイズ（<code>Req</code>）は32MB API上限に縛られるため別管理。</p></div>
+<div class="callout callout-warn"><p><strong>注意</strong>: コンテキスト使用率が高くなったら早めに <code>/compact</code> すること。100%に達すると <code>/compact</code> 自体も失敗し、新セッションが必要になる。会話サイズ（<code>Req</code>）は32MB API上限に縛られるため context窓とは別管理。</p></div>
 <h3><a id="env-settings"></a>env（環境変数の注入）</h3>
-<p><code>env</code> セクションで Claude Code プロセスに環境変数を追加できる。APIキーは <code>~/.secrets.env</code> で管理するため、ここには非機密の制御変数のみ記載する。</p>
+<p><code>env</code> セクションで Claude Code プロセスに環境変数を追加できる。APIキーは <code>~/.secrets.env</code> で管理するため、ここには非機密の制御変数のみ記載する（シークレットは SessionStart フックで自動注入）。</p>
+<p><strong>代表的な制御変数（非機密）</strong>:</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -381,10 +382,27 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <td><code>300000</code></td>
 <td>MCPツール実行タイムアウト（既定60秒→5分に延長）</td>
 </tr>
+<tr>
+<td><code>DISABLE_AUTO_COMPACT</code></td>
+<td><code>1</code></td>
+<td>auto-compact無効化（パターンB運用・手動<code>/compact</code>可）</td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code></td>
+<td><code>1000000</code></td>
+<td>窓サイズ指定（※200K cap注意・下記注記）</td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></td>
+<td><code>1</code></td>
+<td>不要な通信（テレメトリ等）の抑制</td>
+</tr>
 </tbody>
 </table></div>
-<div class="callout callout-warn"><p><strong>MCP_TOOL_TIMEOUT を設定する理由</strong>: Claude等の思考型モデルは長い生成に60秒以上かかることがある。未設定だと <code>MCP error -32001 (Request timed out)</code> が連続発生する。glm-mcp-server.py は直列処理なので1件目のタイムアウトが2件目を巻き込む連鎖に注意。値はミリ秒単位（300000 = 5分）。</p></div>
-<hr />
+<p><strong>glm-rate-proxy経由のルーティング変数</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> / <code>ANTHROPIC_BASE_URL</code> / <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 等）→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a> で詳述。</p>
+<div class="callout callout-info"><p><strong>auto-compact制御の罠（パターンB運用）</strong>: glm-5.2等のカスタムモデルは Claude Code で <strong>200K認識</strong>される。<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000</code> を設定しても200Kに <strong>cap</strong> されるため無意味（statusLine表示と本体判定がズレて「1% until auto-compact」が異常早発動）。auto-compact を止めるには <code>DISABLE_AUTO_COMPACT=1</code>。glm-5.2 を真に1M認識させるには <code>DISABLE_COMPACT=1</code> + <code>CLAUDE_CODE_MAX_CONTEXT_TOKENS=1000000</code>（ただし手動<code>/compact</code>も不可）。→ <a href="#">AUTO_COMPACT_WINDOW訂正・パターンB運用移行</a></p></div>
+<div class="callout callout-warn"><p><strong>MCP_TOOL_TIMEOUT を設定する理由</strong>: GLM-5.2等の思考型モデルは長い生成に60秒以上かかることがある。未設定だと <code>MCP error -32001 (Request timed out)</code> が連続発生する。glm-mcp-server.py は直列処理なので1件目のタイムアウトが2件目を巻き込む連鎖に注意。値はミリ秒単位（300000 = 5分）。→ <a href="#">GLM MCPタイムアウト修正</a></p></div>
+<div class="callout callout-info"><p><strong>WSL CLI版でglm MCPをdisabledにする理由</strong>: WSL CLI版ではCLI本体がGLMで動作するためglm MCPは二重呼び出しになり不要。<code>command</code>/<code>url</code> を省略すると「設定不備」警告が出るため、<code>disabled: true</code> を設定して警告を抑制。Desktop App版では <code>false</code> に戻すだけで再利用可。</p></div>
 <h3><a id="settings-local"></a>プロジェクト設定: <code>&lt;repo&gt;/.claude/settings.json</code></h3>
 <p>プロジェクト固有の設定。</p>
 <ul>
@@ -496,6 +514,19 @@ settings.json          ← 実体。バックアップ・出力・表示は禁�
 </tr>
 </tbody>
 </table></div>
+<h3><a id="gitignore-best-practice"></a>.gitignore ベストプラクティス（設定リポジトリ向け）</h3>
+<p><code>claude-config</code> のような設定・hook・スクリプト類を管理するリポジトリでは、<strong>Auto sync / PostToolUse hook が編集系のバックアップファイルを巻き込んで commit する</strong>事故が過去に発生している（<code>*.bak</code> 129行混入の事例あり）。</p>
+<p>最低限入れておく除外パターン:</p>
+<pre><code class="language-gitignore"># バックアップファイル（エディタ・merge・rebase 由来）
+*.bak
+*.orig
+*~
+
+# 既存パターン
+backups/
+backup-*/
+</code></pre>
+<div class="callout callout-info"><p>教訓：hook は <code>.gitignore</code> を読んでくれない。<code>.bak</code> を作ったら <code>.bak</code> のまま commit される。「作らない」ではなく「無視する」設計にすること。</p></div>
 <hr />
 <h2><a id="windows-vs-wsl"></a>Windows Desktop vs WSL CLI — 設定の違い</h2>
 <p>WSL2環境では <strong>Windows Desktopアプリ</strong> と <strong>WSL CLI</strong> の2つのClaude Codeが共存する。設定ファイル・管理系統・ツール定義のシリアライズに重要な違いがある。</p>
