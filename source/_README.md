@@ -35,4 +35,4 @@
 - [MCPツール使い分けガイド](../MCPツール使い分けガイド.md)
 - [LLMルーティング](../共通ルール/LLMルーティング.md)
 - [Claude-Codeコマンド](../共通ルール/Claude-Codeコマンド.md)
-- [スキルカタログ](claude-config/SKILL_CATALOG.md)
+- [スキルカタログ](SKILL_CATALOG.md)

@@ -127,6 +127,12 @@
             コスト最適化構成
         </a>
         
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
     </nav>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -428,6 +434,16 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td>スキル定義の整合性ガード</td>
 </tr>
 <tr>
+<td></td>
+<td><code>check-ssot-sync-staleness.sh</code></td>
+<td>SSOT整合性の日次自動発動（state日付≠今日で <code>/ssot-sync auto</code> をプロンプト注入・1日1回・REPL idle依存なし）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>startup-banner.sh</code></td>
+<td>各フックのステータスを集約してセッション開始バナーを出力（SessionStartの最後に配置）</td>
+</tr>
+<tr>
 <td><strong>PreToolUse</strong></td>
 <td></td>
 <td></td>
@@ -529,7 +545,18 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p>SessionStartは18コマンド構成。初期化・セキュリティ・SSOT同期・設定チェックの4カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
+<div class="callout callout-info"><p>SessionStartは19コマンド構成。初期化・セキュリティ・SSOT同期・設定チェック・日次自動発動の5カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
+<h3>state日付管理による日次自動発動パターン（再利用可能）</h3>
+<p><code>check-ssot-sync-staleness.sh</code> が実装する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
+<pre><code class="language-bash">STATE=&quot;$HOME/.claude/state/&lt;task&gt;-last-run&quot;
+TODAY=$(date +%Y-%m-%d)
+LAST=$(cat &quot;$STATE&quot; 2&gt;/dev/null)
+if [ &quot;$LAST&quot; != &quot;$TODAY&quot; ]; then
+  # stdout がプロンプトとして注入される → CCが自律実行
+  echo &quot;[&lt;task&gt; 日次実行トリガー] ...を実行してください&quot;
+fi
+</code></pre>
+<p>実行側スキルは完了後 <code>date +%Y-%m-%d &gt; &quot;$STATE&quot;</code> で再発火を抑制する。</p>
 <hr />
 <h2>自律タスクループ（Stop Hook 応用）</h2>
 <h3>概要</h3>
