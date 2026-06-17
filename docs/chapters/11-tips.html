@@ -314,6 +314,75 @@ cat ~/.claude/settings.json | jq '.mcpServers | keys'
 <h3>「コンパクション（compact）= 要約品質が高い」</h3>
 <p><strong>注意が必要</strong>。自動コンパクションは古い会話を要約して捨てるが、<strong>詳細が失われる</strong>。重要な文脈は compact 前にメモリに保存するか、自分で要約を控えておく。</p>
 <hr />
+<h2>F. APIスクリプト共通基盤（api_base.py）</h2>
+<p>外部API（Gemini・Last.fm等）をCLIから叩くとき、<strong>共通基盤 <code>lib/api_base.py</code> を経由</strong>するとプロバイダを増やすたびに同じパターンが使い回せる。2プロバイダで同一雛形が再利用可能なことを実証済み。</p>
+<h3>設計思想：CCはAPIを直接叩かない</h3>
+<pre><code>SKILL.md → scripts/api/&lt;provider&gt;.py → lib/api_base.py → 統一JSON
+</code></pre>
+<p>スクリプトは<strong>統一JSON</strong>（<code>status/summary/full_data/error</code>）を返し、CCは<code>summary</code>のみ受け取る。巨大な<code>full_data</code>（生レスポンス）はキャッシュファイルに退避するので<strong>トークン膨張を防げる</strong>。</p>
+<h3>api_base.py の中身（4関数のみ）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>関数</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run_api(call_fn, summary_fn, cache_key)</code></td>
+<td>API呼び出しをラップし<strong>全例外を統一JSONへ</strong>捕捉</td>
+</tr>
+<tr>
+<td><code>make_error_result(error)</code></td>
+<td>例外をエラーJSONに正規化</td>
+</tr>
+<tr>
+<td><code>make_success_result(summary, full_data, cache_key)</code></td>
+<td>成功JSON生成 + <code>full_data</code>を<code>~/tmp/api_cache/</code>に退避</td>
+</tr>
+<tr>
+<td><code>_cache_dir()</code></td>
+<td>キャッシュディレクトリ生成</td>
+</tr>
+</tbody>
+</table></div>
+<p>核心は <code>run_api</code> の抽象：プロバイダ固有ロジックは <code>call_fn</code>（API呼び出し）と <code>summary_fn</code>（結果→成功JSON）の2関数に閉じ込め、基盤側は汎用的。</p>
+<h3>新しいAPIを追加する手順（5ステップ）</h3>
+<ol>
+<li><strong>キー取得</strong> — ユーザーが <code>~/.secrets.env</code> に <code>&lt;PROVIDER&gt;_API_KEY</code> 追加（<strong>値は会話・ファイルに書かない</strong>）</li>
+<li><strong>TDD実装</strong> — <code>scripts/api/&lt;provider&gt;.py</code> を新設。下記雛形の <code>_call</code>/<code>_summarize</code> だけ書き換える。<code>tests/test_&lt;provider&gt;.py</code> でparse系純粋関数を先にテスト</li>
+<li><strong>スキル統合</strong> — 呼び出し元SKILL.mdにPhase追加（🔷ユーザー確認ポイント付き）</li>
+<li><strong>実URL検証</strong> — 本物の入力でE2Eを通す（モックじゃなく実API）</li>
+<li><strong>完了記録</strong> — SSOT <code>01_DECISIONS/claude-code/</code> に完了ファイル。<code>prev:</code> で前フェーズにリンク</li>
+</ol>
+<h3>雛形（コピペして <code>_call</code>/<code>_summarize</code> だけ書き換え）</h3>
+<pre><code class="language-python">import json
+from lib.api_base import run_api, make_success_result
+
+def _call():
+    # プロバイダ固有のAPI呼び出し（SDK / urllib）
+    ...
+
+def _summarize(result, cache_key):
+    # result → summary文字列 + full_dataをmake_success_resultへ
+    return make_success_result(summary=..., full_data=result, cache_key=cache_key)
+
+if __name__ == &quot;__main__&quot;:
+    args = parse_args()
+    cache_key = f&quot;{provider}_{args.xxx}&quot;
+    print(json.dumps(run_api(_call, _summarize, cache_key), ensure_ascii=False))
+</code></pre>
+<h3>現場で踏んだ罠</h3>
+<ul>
+<li><strong>Gemini モデル廃止</strong>: <code>gemini-2.0-flash</code> は404。最新GAモデルを都度確認（現 <code>gemini-3.5-flash</code>）</li>
+<li><strong>SDK引数の勘</strong>: <code>Part.from_uri</code> は <code>file_uri=</code>（<code>url=</code> ではない）</li>
+<li><strong>自動特定の誤認</strong>: Last.fm <code>track.search</code> はYouTube動画タイトルのノイズで誤認しやすい → 🔷ユーザー確認 + 手動指定フォールバック必須</li>
+<li><strong>片方指定バグ</strong>: <code>--track</code>/<code>--artist</code> の片方だけ指定すると無視される → XORバリデーション</li>
+<li><strong>timeout は今は死にパラメータ</strong>: docstringに「将来signalで適用」と明記（SDK側がタイムアウト保持）</li>
+</ul>
+<div class="callout callout-info"><p>詳細（アーキテクチャ全体・フェーズ別成果）: SSOT <code>01_DECISIONS/claude-code/2026-06-18_サードパーティAPI統合アーキテクチャ.md</code></p></div>
+<hr />
 <h2>G. コード行数の正確な計測</h2>
 <p>ポートフォリオや経歴書に「コード行数」を記載する際、<strong>自動生成ファイルを除外しないと数字が大きく狂う</strong>。</p>
 <h3>必ず除外すべきディレクトリ</h3>
