@@ -121,10 +121,10 @@
             SSOTから探して
         </a>
         
-        <a href="15.html"
+        <a href="15-cost-optimization.html"
            class="sidebar-link">
-            <span class="sidebar-icon">📄</span>
-            コスト最適化構成
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
         </a>
         
         <a href="skill-catalog.html"
@@ -519,6 +519,31 @@ Claude Code がその指示に従って動作
 <li><strong>重要</strong>: プロキシが止まっても Claude Code は自動で ZAI 直結に切り替わる（<code>.bashrc</code> の <code>claude()</code> 関数）。プロキシ停止＝詰む、ではない</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/proxy-doctor/</code>）</li>
 </ul>
+<hr />
+<h2>プラグインスキルのカスタマイズ保持（skills-custom/）</h2>
+<p>公式プラグイン（superpowers, skill-creator 等）の <code>SKILL.md</code> を直接編集しても、プラグイン更新時に上書きされてカスタマイズが消える。これを防ぐため <code>claude-config/skills-custom/</code> に改変版をミラー保持し、起動時に復元する2フック構成。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>役割</th>
+<th>フック</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>変更の保存</td>
+<td>PostToolUse <code>mirror-to-custom.sh</code></td>
+<td>プラグイン配下の <code>*/skills/*/SKILL.md</code> を Edit/Write した時、自動で <code>skills-custom/&lt;skill&gt;/SKILL.md</code> へコピー</td>
+</tr>
+<tr>
+<td>起動時の復元</td>
+<td>SessionStart <code>skill-guard.sh</code></td>
+<td>インストール済みSKILL.md と skills-custom/ を sha256 で比較し、差異があれば skills-custom/ 側で上書き復元（プラグイン更新後もカスタマイズ保持）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p><strong>運用</strong>: プラグインSKILL.mdは直接編集してOK。<code>mirror-to-custom.sh</code> が自動で <code>skills-custom/</code> へ保存し、次回起動時に <code>skill-guard.sh</code> が復元する。<code>/tmp/skill-guard.log</code> で復元履歴を確認可能。</p></div>
 <hr />
 <h2>スキルの自作方法</h2>
 <ol>
