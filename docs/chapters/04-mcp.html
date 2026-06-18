@@ -1054,6 +1054,47 @@ for path in ['.claude/settings.json', '.claude.json']:
 </code></pre>
 <p>詳細: <code>01_DECISIONS/claude-code/2026-06-11_MCP設定2層問題と接続トラブル修正.md</code></p>
 <hr />
+<h2>MCPをスクリプトに置き換える（コンテキスト節約）</h2>
+<p>MCPサーバーは便利だが、<strong>常時起動するだけでコンテキストを消費する</strong>。
+定型操作に限れば <code>gh</code> コマンドや curl（webhook）で代替でき、MCPを切れる。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>MCPの代わりに使うもの</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub Issue作成</td>
+<td><code>gh issue create</code></td>
+<td>gh CLI で完結</td>
+</tr>
+<tr>
+<td>GitHub PR確認・マージ</td>
+<td><code>gh pr list</code> / <code>gh pr merge</code></td>
+<td>gh CLI で完結</td>
+</tr>
+<tr>
+<td>CI結果確認</td>
+<td><code>gh run watch</code></td>
+<td>gh CLI で完結</td>
+</tr>
+<tr>
+<td>Discord への通知送信</td>
+<td><code>curl</code> + webhook URL</td>
+<td>MCP不要・軽量</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>判断基準：</strong></p>
+<ul>
+<li>「Claudeに話しかけながら操作したい」→ MCP を使う</li>
+<li>「スクリプトで定型的に実行したい」→ gh コマンド / curl に置き換えてMCPを切る</li>
+</ul>
+<p>→ GitHub の基本概念・gh コマンドの詳細は <strong><a href="https://%3CUSERNAME%3E.github.io/github-basics/">GitHub 基礎ガイド</a></strong> を参照</p>
+<hr />
 <h2>MCPツール使い分けガイド</h2>
 <p>詳細な使い分け基準は別ドキュメントを参照:</p>
 <hr />

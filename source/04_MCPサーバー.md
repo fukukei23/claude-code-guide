@@ -438,6 +438,26 @@ for path in ['.claude/settings.json', '.claude.json']:
 
 ---
 
+## MCPをスクリプトに置き換える（コンテキスト節約）
+
+MCPサーバーは便利だが、**常時起動するだけでコンテキストを消費する**。
+定型操作に限れば `gh` コマンドや curl（webhook）で代替でき、MCPを切れる。
+
+| 操作 | MCPの代わりに使うもの | 備考 |
+|---|---|---|
+| GitHub Issue作成 | `gh issue create` | gh CLI で完結 |
+| GitHub PR確認・マージ | `gh pr list` / `gh pr merge` | gh CLI で完結 |
+| CI結果確認 | `gh run watch` | gh CLI で完結 |
+| Discord への通知送信 | `curl` + webhook URL | MCP不要・軽量 |
+
+**判断基準：**
+- 「Claudeに話しかけながら操作したい」→ MCP を使う
+- 「スクリプトで定型的に実行したい」→ gh コマンド / curl に置き換えてMCPを切る
+
+→ GitHub の基本概念・gh コマンドの詳細は **[GitHub 基礎ガイド](https://fukukei23.github.io/github-basics/)** を参照
+
+---
+
 ## MCPツール使い分けガイド
 
 詳細な使い分け基準は別ドキュメントを参照:
