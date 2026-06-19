@@ -202,13 +202,36 @@
 </ul>
 <h3><code>/context</code> 1回で~4Kトークン消費</h3>
 <p>コンテキスト使用量を確認する <code>/context</code> コマンド自身もトークンを消費する。1回約4K。多用は避け、気になった時だけ使う。</p>
-<h3>32MBバイト上限（画像で早く到達する）</h3>
+<h3>32MBバイト上限（画像が唯一の犯人）</h3>
 <p>トークンとは別に**リクエストペイロードのバイトサイズ上限（32MB）**がある。<code>Request too large (max 32MB)</code> が出たらこれ。</p>
+<p><strong>2つの上限を混同しないこと</strong>（これが核心）:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>上限</th>
+<th>単位</th>
+<th>MCP削減の効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1M窓</strong></td>
+<td>トークン</td>
+<td>✅ <strong>効く</strong>（MCP固定費32kが長時間・複数セッションで効く）</td>
+</tr>
+<tr>
+<td><strong>32MB</strong></td>
+<td>バイト</td>
+<td>❌ <strong>無意味</strong>（テキスト定義全部で0.3MB・物理的に届かない）</td>
+</tr>
+</tbody>
+</table></div>
 <ul>
-<li><strong>真犯人は画像ではなく履歴全体の累積</strong>。毎ターン「システムプロンプト + スキル定義 + MCP定義 + 会話全量 + 過去画像(毎回再送)」を全部詰め直して送る。これが32MBに到達すると画像1枚追加が「最後の1滴」で弾かれる。</li>
-<li><strong>画像は無罪</strong>: スクショ1枚は数百KB〜1MB（base64化しても×1.33）。3枚送っても2-3MB。画像が重いのではなく、<strong>履歴に残った画像が毎ターン再送され続けて雪だるま式に積もる</strong>から画像経由が早く到達するだけ。現象は合っている、解釈が逆。</li>
-<li><strong>curl(proxy/status)では測れない</strong>: <code>last_request_mb</code> は proxy→GLM 送信後のサイズ。画像は proxy が CDN URL 化して軽くする。32MBチェックは Claude Code 側が proxy 送信前に弾くので proxy に届かず、<code>last_request_mb</code> は常に軽いまま。</li>
-<li><strong>対策</strong>: <code>/compact</code>（要約圧縮）・<code>/clear</code>（履歴リセット）・画像を扱うセッションは短く保つ。1M窓設定(<code>AUTO_COMPACT_WINDOW</code>)は履歴を溜め込んでバイト肥大を助長するので、画像が絡むなら早めに切る。</li>
+<li><strong>犯人は画像</strong>。テキストだけで32MBには<strong>絶対届かない</strong>（1M窓を使い切っても3-4MB）。32MB到達の<strong>唯一の経路は画像のbase64蓄積</strong>。画像1枚は数百KB〜1MBだが、履歴に残って毎ターン再送され雪だるま式に積もる。画像1枚追加が「最後の1滴」で弾かれる。</li>
+<li><strong>テキスト定義（MCP/スキル等）は無罪</strong>。全部で0.3MB。MCP削減は1M窓の節約には効くが32MB問題には無意味。<code>/context</code>実測で全体110kトークン=0.5MB。</li>
+<li><strong>curl(proxy/status)では測れない</strong>。<code>last_request_mb</code> は proxy→GLM 送信後のCDN化サイズ（常に0.4MB前後）。32MBチェックは Claude Code 側が proxy 送信前に弾くので proxy に届かず反映されない。正しく測るなら <strong>JSONLファイルサイズ</strong>（画像base64含む実会話サイズ）。</li>
+<li><strong>対策</strong>: 画像セッションは短く（=/clear惜しまない）・<code>/compact</code>で画像を履歴から消す・同じ画像を何度もReadしない。画像分析は<strong>subagentに委任</strong>（テキスト結果だけメインに戻せばメイン履歴に画像が残らない）。</li>
+<li><strong>statusLineで常時監視</strong>: <code>llm-status.sh</code> がJSONL実サイズを <code>Req X.XMB/32</code> で表示（27MB黄・30MB赤）。色が変わったら画像整理の合図。</li>
 </ul>
 <hr />
 <h2>B. 落とし穴（ハマりポイント）</h2>
