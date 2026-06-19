@@ -52,3 +52,12 @@
 ## Built-in / Plugin Skills
 
 ビルトイン（`init` / `review` / `security-review` / `simplify` / `update-config` / `claude-api` / `loop` / `verify` / `run` 等）とプラグイン（`superpowers` / `pr-review-toolkit` / `code-review` / `feature-dev` / `skill-creator` 等）の全一覧は [03_スキルシステム](03_スキルシステム.md) 参照。
+
+---
+
+## 💡 やさしい補足（初心者向け）
+
+- このページは「使えるスキルの一覧表」。何ができるかざっと見たい時に
+- 分野別に分類: 楽曲制作・記録・ガイド作成・開発 等
+- 各スキルの詳しい使い方は [03_スキルシステム](03_スキルシステム.md) で
+- 「こんなことできないかな？」と思ったら、ここを眺めて探す

@@ -661,6 +661,14 @@ backup-*/
 </table></div>
 <div class="callout callout-tip"><p><strong>現場の知見</strong>: Desktopアプリのコンテキスト過多はAnthropicのアップデート待ち。当面はWSL CLI版をメインで使用する。→ <a href="11-tips.html">11_現場の知見</a></p></div>
 <hr />
+<h2>💡 やさしい補足（初心者向け）</h2>
+<ul>
+<li><strong>設定は3層</strong>: 全体共通・プロジェクト固有・ローカル（自分だけ）。細かいほど優先される</li>
+<li><strong>CLAUDE.md = ルールブック</strong>: 毎回読む。何をどう扱うかの決まりを書く</li>
+<li><strong>settings.json = 機能設定</strong>: 追加機能・権限・自動動作を書く</li>
+<li><strong>秘密は別管理</strong>: APIキー等の重要な値は <code>.secrets.env</code> に一つにまとめて、設定ファイルには書かない（漏洩防止）</li>
+</ul>
+<hr />
 
         </article>
 
