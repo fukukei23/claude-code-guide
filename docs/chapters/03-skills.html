@@ -399,6 +399,7 @@ Claude Code がその指示に従って動作
 <li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM呼び出し不要・不可）、Windows Desktop版はMCP経由で外部LLM呼び出し可</li>
 <li><strong>CCガイド自動同期</strong>: 記録内容がClaude Code機能（スキル/MCP/フック/settings）に関連する場合、対応するガイドページ（03/04/05/08等）への追記を自動判定・実行。SSOT内CCガイドマスターから claude-code-guide（派生物）へ同期</li>
 <li><strong>自動化タグ連動</strong>: tagsに「自動化」が含まれる場合、<code>自動化.md</code> も自動更新</li>
+<li><strong>フェーズ7（セッション終了確認・2026-06-20追加）</strong>: 記録完了後に「セッションを終了して新セッションへ引き継ぐか [y/N]」を確認。N（デフォルト）で作業継続・y で <code>new-session</code> 呼出（引き継ぎサマリー生成）。<strong>統合ではなく確認ステップ</strong>（<code>ssot-record</code>=タスク毎高頻度 / <code>new-session</code>=セッション区切り低頻度 の粒度差で、自動統合は全タスク切り替えでセッションが切れる事故になるため）</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-record/</code>）</li>
 </ul>
 <hr />
