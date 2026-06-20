@@ -305,7 +305,7 @@ Claude Code がその指示に従って動作
 <p><strong>トークン消費</strong>: スキル呼び出し時に一時的にトークンを消費するが、セッション開始時のスキル一覧（~2.4k）は常にロードされている。</p>
 <hr />
 <h2>主要スキルの使い方</h2>
-<h3><a id="brainstorming"></a><code>superpowers:brainstorming</code></h3>
+<h3 id="brainstorming"><code>superpowers:brainstorming</code></h3>
 <p><strong>創造的作業前の要件整理</strong>。新機能追加・コンポーネント作成・動作変更の前に必ず使う。</p>
 <ol>
 <li>プロジェクト状況を確認</li>
@@ -314,83 +314,83 @@ Claude Code がその指示に従って動作
 <li>設計を承認</li>
 <li>設計書を保存</li>
 </ol>
-<h3><a id="writing-plans"></a><code>superpowers:writing-plans</code></h3>
+<h3 id="writing-plans"><code>superpowers:writing-plans</code></h3>
 <p><strong>実装計画の作成</strong>。設計が確定した後に使う。</p>
 <ul>
 <li>実装ステップを詳細に分解</li>
 <li>各ステップの依存関係を整理</li>
 <li>実装順序を最適化</li>
 </ul>
-<h3><a id="executing-plans"></a><code>superpowers:executing-plans</code></h3>
+<h3 id="executing-plans"><code>superpowers:executing-plans</code></h3>
 <p><strong>計画の実行</strong>。作成した実装計画を元にコードを書く。</p>
-<h3><a id="systematic-debugging"></a><code>superpowers:systematic-debugging</code></h3>
+<h3 id="systematic-debugging"><code>superpowers:systematic-debugging</code></h3>
 <p><strong>バグ・テスト失敗の体系的調査</strong>。修正を提案する前に必ず使う。</p>
 <ul>
 <li>原因の仮説立案</li>
 <li>段階的な検証</li>
 <li>根本原因の特定</li>
 </ul>
-<h3><a id="tdd"></a><code>superpowers:test-driven-development</code></h3>
+<h3 id="tdd"><code>superpowers:test-driven-development</code></h3>
 <p><strong>TDD（テスト駆動開発）の実践</strong>。</p>
 <ul>
 <li>Red → Green → Refactor のサイクル</li>
 <li>テストを先に書いてから実装</li>
 </ul>
-<h3><a id="verification"></a><code>superpowers:verification-before-completion</code></h3>
+<h3 id="verification"><code>superpowers:verification-before-completion</code></h3>
 <p><strong>完了宣言前の検証</strong>。「完了した」と言う前に必ず実行。</p>
 <ul>
 <li>テストが通ることを確認</li>
 <li>ビルドが成功することを確認</li>
 <li>証拠（テスト出力等）を確認してから完了宣言</li>
 </ul>
-<h3><a id="worktrees"></a><code>superpowers:using-git-worktrees</code></h3>
+<h3 id="worktrees"><code>superpowers:using-git-worktrees</code></h3>
 <p><strong>Git Worktree の作成・管理</strong>。機能開発時にメインブランチから分離する。</p>
-<h3><a id="code-review"></a><code>code-review:code-review</code></h3>
+<h3 id="code-review"><code>code-review:code-review</code></h3>
 <p><strong>コードレビュー</strong>。PRの差分をレビュー。</p>
-<h3><a id="pr-review"></a><code>pr-review-toolkit:review-pr</code></h3>
+<h3 id="pr-review"><code>pr-review-toolkit:review-pr</code></h3>
 <p><strong>PR包括レビュー</strong>。複数の専門エージェント（code-reviewer, code-simplifier, silent-failure-hunter等）を並列起動して包括的にレビュー。</p>
-<h3><a id="feature-dev"></a><code>feature-dev:feature-dev</code></h3>
+<h3 id="feature-dev"><code>feature-dev:feature-dev</code></h3>
 <p><strong>機能開発ガイド</strong>。コードベース理解 → アーキテクチャ設計 → 実装の流れをガイド。</p>
-<h3><a id="claude-api"></a><code>claude-api</code>（Built-in）</h3>
+<h3 id="claude-api"><code>claude-api</code>（Built-in）</h3>
 <p><strong>Anthropic SDK関連作業</strong>。Claude APIを使ったアプリの開発・デバッグ。</p>
-<h3><a id="update-config"></a><code>update-config</code>（Built-in）</h3>
+<h3 id="update-config"><code>update-config</code>（Built-in）</h3>
 <p><strong>settings.jsonの変更</strong>。権限追加・環境変数設定・フック設定等。</p>
-<h3><a id="init"></a><code>init</code>（Built-in）</h3>
+<h3 id="init"><code>init</code>（Built-in）</h3>
 <p><strong>プロジェクト初期化</strong>。CLAUDE.mdを自動生成。</p>
-<h3><a id="loop"></a><code>loop</code>（Built-in）</h3>
+<h3 id="loop"><code>loop</code>（Built-in）</h3>
 <p><strong>定期実行タスク</strong>。指定間隔でコマンドを自動実行。</p>
-<h3><a id="fewer-permission"></a><code>fewer-permission-prompts</code>（Built-in）</h3>
+<h3 id="fewer-permission"><code>fewer-permission-prompts</code>（Built-in）</h3>
 <p><strong>権限プロンプト削減</strong>。よく使うツール呼び出しを自動許可に設定。</p>
 <hr />
-<h3><a id="dev-cycle"></a><code>dev-cycle</code>（カスタムスキル）</h3>
+<h3 id="dev-cycle"><code>dev-cycle</code>（カスタムスキル）</h3>
 <p><strong>コード品質改善の全サイクルを自律実行</strong>。品質スイープ→コードレビュー→Issue化→実装ループ→完了通知の5フェーズを自動で回す。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/dev-cycle</code>、「dev-cycle」、「品質改善」、「自律ループ」</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/dev-cycle/</code>）</li>
 </ul>
 <hr />
-<h3><a id="gas-autopilot"></a><code>gas-autopilot</code>（カスタムスキル）</h3>
+<h3 id="gas-autopilot"><code>gas-autopilot</code>（カスタムスキル）</h3>
 <p><strong>Google Apps Script（GAS）の自律開発</strong>。コード作成・デプロイ・テスト・修正をセルフドライブで実行。clasp でコード管理、Web App + gas-run.sh で自動デプロイ。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「GAS」「Apps Script」「スプレッドシート自動化」「clasp」</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/gas-autopilot/</code>）</li>
 </ul>
 <hr />
-<h3><a id="guide-builder"></a><code>guide-builder</code>（カスタムスキル）</h3>
+<h3 id="guide-builder"><code>guide-builder</code>（カスタムスキル）</h3>
 <p><strong>MarkdownソースからGitHub Pagesガイドサイトを構築・更新</strong>。新規リポジトリ立ち上げ（newモード）と既存サイトへの章追加（addモード）の2モード。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「ガイド作って」「ガイドサイト立ち上げて」「章追加して」<code>/guide-builder</code></li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/guide-builder/</code>）</li>
 </ul>
 <hr />
-<h3><a id="html-guide"></a><code>html-guide</code>（カスタムスキル）</h3>
+<h3 id="html-guide"><code>html-guide</code>（カスタムスキル）</h3>
 <p><strong>claude-code-guide用のインタラクティブHTMLページを作成</strong>。このガイドサイト専用のページ生成スキル。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/html-guide</code></li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/html-guide/</code>）</li>
 </ul>
 <hr />
-<h3><a id="ssot-record"></a><code>ssot-record</code>（カスタムスキル）</h3>
+<h3 id="ssot-record"><code>ssot-record</code>（カスタムスキル）</h3>
 <p><strong>SSOTへの記録・振り分けを自動化</strong>。内容をLLMで分析して最適な振り分け先（01_DECISIONS / 10_DAILY等）を判定し、フォーマット生成・リンク付与・ガイド転記まで一気に実行。<code>record-decision</code> の上位互換。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「記録して」「書き留めて」「保存して」「メモして」「残しておいて」「SSOTに入れて」「ガイドに追加して」<code>/ssot-record</code></li>
@@ -403,14 +403,14 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-record/</code>）</li>
 </ul>
 <hr />
-<h3><a id="record-new-feature"></a><code>record-new-feature</code>（カスタムスキル）</h3>
+<h3 id="record-new-feature"><code>record-new-feature</code>（カスタムスキル）</h3>
 <p><strong>Claude Codeの新バージョン機能をSSOTとガイドに自動追記</strong>。SessionStart hookで新バージョンを検知した後に発動。</p>
 <ul>
 <li><strong>呼び出し</strong>: SessionStart hookから自動発動</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/record-new-feature/</code>）</li>
 </ul>
 <hr />
-<h3><a id="ssot-search"></a><code>ssot-search</code>（カスタムスキル）</h3>
+<h3 id="ssot-search"><code>ssot-search</code>（カスタムスキル）</h3>
 <p><strong>個人ナレッジベース（knowledge-base）をRAG検索</strong>。ripgrep全文検索 + sentence-transformers によるリランクで、1,900件超のMarkdownから関連ドキュメントを5件表示。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「SSOTから探して: &lt;キーワード&gt;」<code>/ssot-search</code></li>
@@ -418,7 +418,7 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-search/</code>）</li>
 </ul>
 <hr />
-<h3><a id="new-session"></a><code>new-session</code>（カスタムスキル）</h3>
+<h3 id="new-session"><code>new-session</code>（カスタムスキル）</h3>
 <p><strong>コンテキスト圧縮・セッション引き継ぎ</strong>。コンテキストが溜まってきたときに新セッションへの引き継ぎプロンプトを自動生成する。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/new-session</code>（または「新セッション」「引き継ぎ」と言う）</li>
@@ -438,7 +438,7 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/new-session/</code>）</li>
 </ul>
 <hr />
-<h3><a id="update-guide"></a><code>update-guide</code>（カスタムスキル）</h3>
+<h3 id="update-guide"><code>update-guide</code>（カスタムスキル）</h3>
 <p><strong>claude-code-guideの更新キューを処理</strong>。変更されたスクリプト・設定に合わせてガイドのHTMLを最新化する。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/update-guide</code></li>
@@ -451,7 +451,7 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（自作、<code>~/.claude/skills/update-guide/</code>）</li>
 </ul>
 <hr />
-<h3><a id="skill-test"></a><code>skill-test</code>（カスタムスキル）</h3>
+<h3 id="skill-test"><code>skill-test</code>（カスタムスキル）</h3>
 <p><strong>スキル定義（SKILL.md）を静的点検・ドライランで検証する</strong>。<code>/debug</code>（コードファイル向け）とは対象が異なる専用スキル。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/skill-test</code> または「スキルを点検して」「スキルのバグ確認」</li>
@@ -496,7 +496,7 @@ Claude Code がその指示に従って動作
 <blockquote>
 <p><strong>注意</strong>: <code>/debug</code> と入力するとClaude Codeの組み込みデバッグログコマンドが起動する。スキル点検には必ず <code>/skill-test</code> を使うこと。</p></div>
 <hr />
-<h3><a id="send-email"></a><code>send-email</code>（カスタムスキル）</h3>
+<h3 id="send-email"><code>send-email</code>（カスタムスキル）</h3>
 <p><strong>Gmail SMTP経由でメールを送信</strong>。宛先・件名・本文を会話の文脈から自動収集し、Pythonスクリプトで送信。添付ファイルにも対応。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「メールで送って」「email送信」「メール送信」<code>/send-email</code></li>
@@ -506,7 +506,7 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/send-email/</code>）</li>
 </ul>
 <hr />
-<h3><a id="proxy-doctor"></a><code>proxy-doctor</code>（カスタムスキル）</h3>
+<h3 id="proxy-doctor"><code>proxy-doctor</code>（カスタムスキル）</h3>
 <p><strong>glm-rate-proxy（localhost:8787）の診断・修復</strong>。Claude Code CLI が GLM/代替プロバイダー へ接続するためのローカルプロキシが止まる・エラーが出る・フォールバックが失敗する等の問題を素早く診断し、対処コマンドを案内する。診断＋案内のみでソースコードの自動書き換えは行わない。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/proxy-doctor</code>、「プロキシが壊れた」「GLMが使えない」「代替プロバイダーに切り替わらない」「フォールバックが失敗した」「400エラー」「401エラー」「429が頻発」「proxy止まってる」</li>

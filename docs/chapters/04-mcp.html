@@ -168,7 +168,7 @@
 <p>MCPサーバーを追加すると、Claude Codeが<strong>そのサーバーのツール</strong>を使えるようになる。各ツールはコンテキストを消費するため、必要なものだけを維持する。</p>
 <hr />
 <h2>現在の構成（12サーバー・125ツール）</h2>
-<h3><a id="フォールバック先"></a>フォールバック先（自作テキスト処理 / 17ツール / ~1kトークン）</h3>
+<h3 id="フォールバック先">フォールバック先（自作テキスト処理 / 17ツール / ~1kトークン）</h3>
 <p><strong>LLM委譲用MCPサーバー（自作・代替プロバイダー-M3使用）</strong>。環境によって役割が異なる。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -269,7 +269,7 @@
 <p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。</p>
 <div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/フォールバック先-mcp-server.py</code> — 自作Pythonスクリプト（<strong>代替プロバイダー-M3</strong>使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p></div>
 <hr />
-<h3><a id="フォールバック先-official"></a>フォールバック先-official（公式 / 画像・音楽・動画・10ツール）</h3>
+<h3 id="フォールバック先-official">フォールバック先-official（公式 / 画像・音楽・動画・10ツール）</h3>
 <p><strong>代替プロバイダー公式MCPサーバー</strong>。画像・音楽・動画・音声などのメディア生成機能を提供する。自作の <code>フォールバック先</code>（テキスト処理特化）とは別サーバー。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -324,7 +324,7 @@
 <p><strong>使いどころ</strong>: 「〇〇の動画を生成して」「画像を作って」「BGMを生成して」など、メディア生成タスク全般。
 <strong>出力先</strong>: <code>~/フォールバック先-output/</code>（WSL内）に自動保存される。</p>
 <hr />
-<h3><a id="フォールバック先-video"></a>フォールバック先-video（公式 / 動画生成専用・従量課金）</h3>
+<h3 id="フォールバック先-video">フォールバック先-video（公式 / 動画生成専用・従量課金）</h3>
 <p><strong>代替プロバイダー公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）</strong>。<code>フォールバック先-official</code> と<strong>同じバイナリ</strong>（公式パッケージ <code>フォールバック先-mcp</code>）だが、<strong>APIキー（従量課金アカウント）と出力先を分離</strong>した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -371,7 +371,7 @@
 </ul>
 <p><strong>注意</strong>: MCP接続は起動時確立のため、設定変更後は Claude Code の再起動が必要。</p>
 <hr />
-<h3><a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）</h3>
+<h3 id="brave-search">brave-search（6ツール / ~5.5kトークン）</h3>
 <p>Web検索に関する各種機能。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -409,7 +409,7 @@
 </table></div>
 <p><strong>使いどころ</strong>: 最新情報の調査、エラーの検索、技術記事の検索</p>
 <div class="callout callout-info"><p><strong>起動方法</strong>: <code>~/.claude/scripts/mcp/start-brave-search.sh</code> — <code>.secrets.env</code> から <code>BRAVE_API_KEY</code> を読み込んで <code>brave-search-mcp-server</code> を起動。</p></div>
-<h3><a id="github"></a>github（41ツール / ~9.6kトークン）</h3>
+<h3 id="github">github（41ツール / ~9.6kトークン）</h3>
 <p>最もツール数が多いサーバー。GitHub上のあらゆる操作が可能。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -451,7 +451,7 @@
 </table></div>
 <p><strong>使いどころ</strong>: PR作成、Issue管理、コード検索、リポジトリ操作</p>
 <div class="callout callout-info"><p><strong>起動方法</strong>: <code>~/.claude/scripts/mcp/start-github.sh</code> — <code>.secrets.env</code> から <code>GITHUB_TOKEN</code> 等を読み込んで <code>github-mcp-server</code> を起動。</p></div>
-<h3><a id="playwright"></a>playwright（25ツール / ~4.7kトークン）</h3>
+<h3 id="playwright">playwright（25ツール / ~4.7kトークン）</h3>
 <p>ブラウザの自動操作。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -488,7 +488,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: Webアプリのテスト、UI確認、スクレイピング</p>
-<h3><a id="context7"></a>context7（2ツール / ~1.2kトークン）</h3>
+<h3 id="context7">context7（2ツール / ~1.2kトークン）</h3>
 <p>ライブラリの公式ドキュメント検索。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -509,7 +509,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: ライブラリの最新API確認、使用方法の調査</p>
-<h3><a id="discord"></a>discord（5ツール / ~0.6kトークン）</h3>
+<h3 id="discord">discord（5ツール / ~0.6kトークン）</h3>
 <p>Discordとの連携。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -542,7 +542,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: Discord経由での通知、メッセージ監視</p>
-<h3><a id="mermaid"></a>mermaid（4ツール / ~0.4kトークン）</h3>
+<h3 id="mermaid">mermaid（4ツール / ~0.4kトークン）</h3>
 <p>図表の生成。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -571,7 +571,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: フローチャート、シーケンス図、クラス図の生成</p>
-<h3><a id="exa"></a>exa（3ツール / ~1.5kトークン）</h3>
+<h3 id="exa">exa（3ツール / ~1.5kトークン）</h3>
 <p>セマンティックWeb検索。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -592,7 +592,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: 技術記事の深掘り調査、コード検索</p>
-<h3><a id="4-5v-mcp"></a>4_5v_mcp（画像分析 / ~0.8kトークン）</h3>
+<h3 id="4-5v-mcp">4_5v_mcp（画像分析 / ~0.8kトークン）</h3>
 <p>AI画像分析。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -609,7 +609,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: スクリーンショット診断、UI模写、図解理解</p>
-<h3><a id="web-reader"></a>web_reader（1ツール / ~0.5kトークン）</h3>
+<h3 id="web-reader">web_reader（1ツール / ~0.5kトークン）</h3>
 <p>URL内容取得。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -722,7 +722,7 @@
 <div class="callout callout-warn"><p><strong>注意</strong>: WSL CLI版はClaude Code自体のエンドポイントがglm-rate-proxy経由でGLMを指しているため、セッション全体がすでにGLMで動作している。その中でglm MCPをさらに呼ぶのは二重になるため不要。Windows Desktop版はSonnetで動作するため、GLMに委譲する手段としてglm MCPが有効。</p>
 <p><strong>将来変更の可能性</strong>: 現在はGLMだが、プロバイダー乗り換えやコスト変化でルーティング先が変わる可能性がある。その場合はglm MCPの要否を再評価すること。変更はglm-rate-proxyの向き先を変えるだけでCLI全体に反映される。</p></div>
 <hr />
-<h2><a id="glm"></a>glm（Windows Desktop版用 / WSL CLI版では不要・自作 / ~1kトークン）</h2>
+<h2 id="glm">glm（Windows Desktop版用 / WSL CLI版では不要・自作 / ~1kトークン）</h2>
 <p><strong>LLM委譲用MCPサーバー（自作・GLM-5.2/Z.AI API）</strong>。<strong>WSL CLI版では不要のため「現在の構成（実態12サーバー）」には含まれない</strong>。Windows Desktop版でのみ有効。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -833,7 +833,7 @@
 <strong>注意（WSL CLI版）</strong>: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
 <div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/glm-mcp-server.py</code> — 自作Pythonスクリプト。glm-rate-proxyとは<strong>別ファイル</strong>。glm-rate-proxyはWSL CLI版のエンドポイント制御担当、glm MCPサーバーはMCPプロトコル経由の呼び出し担当。</p></div>
 <hr />
-<h2><a id="zernio"></a>zernio（導入済み・現在未接続 / ホストMCP / 280+ツール）</h2>
+<h2 id="zernio">zernio（導入済み・現在未接続 / ホストMCP / 280+ツール）</h2>
 <p><strong>SNS自動投稿MCP</strong>。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。導入済み・投稿テスト済みだが、<strong>現在は未接続</strong>（必要時に再有効化）。</p>
 <div class="table-wrapper"><table>
 <thead>

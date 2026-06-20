@@ -529,9 +529,26 @@ def filter_sections(text: str) -> str:
 # --- Markdown → HTML変換 ---
 
 def convert_md_to_html(md_text: str) -> str:
-    """MarkdownをHTMLに変換."""
+    """MarkdownをHTMLに変換（見出しID記法 {#id} を id 属性に変換）。."""
     md = MarkdownIt("commonmark", {"html": False}).enable("table")
-    return md.render(md_text)
+    html = md.render(md_text)
+    return _attach_heading_ids(html)
+
+
+def _attach_heading_ids(html: str) -> str:
+    """MarkdownIt が残した {#id} を h1-h6 の id 属性に変換.
+
+    例: <h2>概要 {#overview}</h2> → <h2 id="overview">概要</h2>
+    html:False 環境で attrs プラグイン不要の軽量パーサ。
+    """
+    def _repl(match: "re.Match") -> str:
+        level, text, hid = match.group(1), match.group(2), match.group(3)
+        return f'<h{level} id="{hid}">{text}</h{level}>'
+    return re.sub(
+        r'<h([1-6])>(.*?)\s*\{#([^}]+)\}\s*</h\1>',
+        _repl,
+        html,
+    )
 
 
 def inject_mermaid(html: str, filename: str) -> str:
@@ -549,8 +566,8 @@ def inject_mermaid(html: str, filename: str) -> str:
             f'</div>'
         )
 
-        # <h2>テキスト</h2> または <h2><a ...></a>テキスト</h2> の前に挿入
-        pattern = f"(<h2>(?:<a[^>]*></a>)?{re.escape(heading_text)}</h2>)"
+        # <h2 id="...">テキスト</h2> の前に挿入（{#id}記法 → id属性化に対応）
+        pattern = f'(<h2[^>]*>{re.escape(heading_text)}</h2>)'
         if re.search(pattern, html):
             html = re.sub(pattern, mermaid_block + r"\1", html, count=1)
 

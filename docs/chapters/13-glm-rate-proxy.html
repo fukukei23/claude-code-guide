@@ -152,7 +152,7 @@
 Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/代替プロバイダーを使う場合は <a href="04-mcp.html#glm">04_MCPサーバー</a> のglm/フォールバック先 MCPを参照してください。</p></div>
 <p>Claude Code CLIのバックエンドをAnthropicからZAI（Claude）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
 <hr />
-<h2><a id="overview"></a>概要：なぜプロキシが必要か</h2>
+<h2 id="overview">概要：なぜプロキシが必要か</h2>
 <p>Claude Codeは通常、Anthropic APIに直接接続する。しかし <code>ANTHROPIC_BASE_URL</code> を差し替えることで、<strong>Anthropic互換APIを持つ別プロバイダ</strong>に向けられる。</p>
 <pre><code>通常:
 Claude Code ────→ api.anthropic.com (Sonnet/Opus)
@@ -202,7 +202,7 @@ Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (Claude
 </table></div>
 <div class="callout callout-info"><p><strong>ポイント</strong>: ZAI Max（$160/月）でClaude Max（$200/月）の<strong>約3倍</strong>の利用量を使える。ZAIは月額サブスク制で、5時間・週単位のローリング制限あり（従量課金ではない）。</p></div>
 <hr />
-<h2><a id="architecture"></a>アーキテクチャ</h2>
+<h2 id="architecture">アーキテクチャ</h2>
 <pre><code>settings.json
   └─ ANTHROPIC_BASE_URL: &quot;http://127.0.0.1:8787&quot;
 
@@ -237,7 +237,7 @@ api.z.ai              api.fallback-provider.example
     └── glm-rate-proxy.service  # systemdサービス定義
 </code></pre>
 <hr />
-<h2><a id="model-routing"></a>モデルルーティング</h2>
+<h2 id="model-routing">モデルルーティング</h2>
 <p>使用量（<code>usage_pct</code>）に応じて自動でモデルが切り替わる。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -287,7 +287,7 @@ ZAI 5xx → 代替プロバイダー → 503エラー
 </code></pre>
 <p><strong>対策</strong>: コンテキストが溜まってきたら早めに <code>/compact</code> または <code>/new-session</code> で切り替える。80%を超えたら <code>/new-session</code> 推奨。</p></div>
 <hr />
-<h2><a id="thinking"></a>Thinking（思考）モードの動的制御</h2>
+<h2 id="thinking">Thinking（思考）モードの動的制御</h2>
 <p>Claudeはデフォルトで「思考モード」が有効で、内部推論トークンを大量消費する。</p>
 <h3>問題</h3>
 <ul>
@@ -335,7 +335,7 @@ ZAI 5xx → 代替プロバイダー → 503エラー
 </table></div>
 <div class="callout callout-warn"><p><strong>budget_tokensの注意</strong>: これは上限であり、モデルが必ず使い切るわけではない。ただしClaudeが上限を守るかは未検証。16,000以上は暴走リスクあり。</p></div>
 <hr />
-<h2><a id="status"></a>ステータス確認</h2>
+<h2 id="status">ステータス確認</h2>
 <pre><code class="language-bash"># プロキシの状態確認
 curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
 </code></pre>
@@ -379,7 +379,7 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
 </tbody>
 </table></div>
 <hr />
-<h2><a id="start-stop"></a>起動・停止</h2>
+<h2 id="start-stop">起動・停止</h2>
 <pre><code class="language-bash"># 起動（SessionStart hookで自動実行されるが、手動でも可）
 bash ~/.claude/scripts/llm/start-glm-proxy.sh
 
@@ -397,7 +397,7 @@ tail -f /tmp/glm-proxy.log
 GLM_PEAK_BLOCK=false bash ~/.claude/scripts/llm/start-glm-proxy.sh
 </code></pre>
 <hr />
-<h2><a id="troubleshooting"></a>トラブルシューティング</h2>
+<h2 id="troubleshooting">トラブルシューティング</h2>
 <h3>❌ Claude Codeが「API error」を返す</h3>
 <p><strong>確認手順:</strong></p>
 <pre><code class="language-bash"># 1. プロキシが起動しているか
@@ -495,7 +495,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 <p>ZAIの <code>enabled</code> モードはモデルが「自動判断」して思考量を決める。<code>budget_tokens</code>を上げても体感が変わらない場合、モデル自身が「不要」と判断している可能性がある。</p>
 <p><code>always_on</code> + <code>budget_tokens: 16000</code> を試すことで強制的に思考を増やせるが、<strong>トークン暴走リスクが上がる</strong>。</p>
 <hr />
-<h2><a id="config-reference"></a>設定リファレンス</h2>
+<h2 id="config-reference">設定リファレンス</h2>
 <p><code>config/config.json</code> の全項目：</p>
 <pre><code class="language-json">{
   &quot;zai_base_url&quot;: &quot;https://api.z.ai/api/anthropic&quot;,
@@ -531,7 +531,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 }
 </code></pre>
 <hr />
-<h2><a id="proxy-doctor"></a>proxy-doctor スキル — 診断を自動化する</h2>
+<h2 id="proxy-doctor">proxy-doctor スキル — 診断を自動化する</h2>
 <p>プロキシが壊れた時の原因調査を自動化する Claude Code スキル。</p>
 <h3>できること</h3>
 <ul>
@@ -575,14 +575,6 @@ ZAI使用率     : 0.0%
 <li><strong>意識しなくてOK</strong>: 普段は裏で自動で動いている。トラブル時だけこの章を見る</li>
 </ul>
 <hr />
-<h2><a id="related"></a>関連リンク</h2>
-<ul>
-<li><a href="https://docs.z.ai/guides/capabilities/thinking">ZAI公式ドキュメント - Deep Thinking</a></li>
-<li><a href="https://docs.z.ai/guides/llm/glm-5.1">ZAI公式ドキュメント - Claudeモデル概要</a></li>
-<li><a href="https://artificialanalysis.ai/models/glm-5-1">Artificial Analysis - Claudeベンチマーク</a></li>
-<li><a href="04-mcp.html">04 MCPサーバー</a></li>
-<li><a href="11-tips.html">11 現場の知見</a></li>
-</ul>
 
         </article>
 

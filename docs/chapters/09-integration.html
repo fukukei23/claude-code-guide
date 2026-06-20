@@ -148,7 +148,7 @@
 
         <article class="chapter-body">
             <h1>09 統合 — IDE・リモート・CI/CD・Worktree</h1>
-<h2><a id="ide"></a>IDE連携</h2>
+<h2 id="ide">IDE連携</h2>
 <p>Claude Codeは主要IDEと連携できる。</p>
 <h3>VS Code拡張</h3>
 <ul>
@@ -185,7 +185,7 @@
 </tbody>
 </table></div>
 <hr />
-<h2><a id="remote"></a>リモートモード</h2>
+<h2 id="remote">リモートモード</h2>
 <p>Claude Codeを<strong>ヘッドレス（非対話）モード</strong>で実行できる。</p>
 <h3>使い方</h3>
 <pre><code class="language-bash"># ヘッドレス実行（結果をファイルに出力）
@@ -208,7 +208,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <li>セキュリティスキャン</li>
 </ul>
 <hr />
-<h2><a id="worktree"></a>Git Worktreeとの連携</h2>
+<h2 id="worktree">Git Worktreeとの連携</h2>
 <p>Git Worktreeを使うと、<strong>メインブランチを汚さずに</strong>独立した作業環境を作れる。</p>
 <h3>Worktreeの作成</h3>
 <pre><code>EnterWorktree → 新しいworktreeを作成
@@ -264,7 +264,7 @@ graph TD
     F -->|"許可"| G["上位モデルで処理"]
     G --> C
     F -->|"拒否"| B
-</div></div><h2><a id="model-switch"></a>モデル切替</h2>
+</div></div><h2 id="model-switch">モデル切替</h2>
 <p>Claude Codeは複数のモデルを切り替えて使用できる。</p>
 <h3>利用可能なモデル</h3>
 <div class="table-wrapper"><table>

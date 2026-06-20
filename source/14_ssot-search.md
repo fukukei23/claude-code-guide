@@ -4,7 +4,7 @@
 
 ---
 
-## <a id="overview"></a>概要：これは何か
+## 概要：これは何か {#overview}
 
 「SSOTから探して: glm-rate-proxy」と話しかけると、1,900件超のMarkdownファイルを横断検索して関連ドキュメントを5件表示するスキルです。
 
@@ -22,7 +22,7 @@ Claude: 🔍 SSOT検索: 「MiniMax フォールバック 設定」— 5件ヒ�
 
 ---
 
-## <a id="architecture"></a>アーキテクチャ
+## アーキテクチャ {#architecture}
 
 ```
 ユーザーの質問
@@ -51,7 +51,7 @@ Claude: 🔍 SSOT検索: 「MiniMax フォールバック 設定」— 5件ヒ�
 
 ---
 
-## <a id="setup"></a>セットアップ
+## セットアップ {#setup}
 
 ### 1. ripgrep インストール
 
@@ -86,7 +86,7 @@ cat ~/.claude/skills/ssot-search/SKILL.md
 
 ---
 
-## <a id="usage"></a>使い方
+## 使い方 {#usage}
 
 ### 基本
 
@@ -115,7 +115,7 @@ ClaudeにBashコマンドを直接実行させる場合:
 
 ---
 
-## <a id="japanese"></a>日本語クエリのコツ
+## 日本語クエリのコツ {#japanese}
 
 スペース区切りでキーワードを並べると精度が上がります:
 
@@ -131,7 +131,7 @@ SSOTから探して: MiniMaxのフォールバック設定方法
 
 ---
 
-## <a id="internals"></a>内部動作の詳細
+## 内部動作の詳細 {#internals}
 
 ### search.py の処理フロー
 
@@ -167,7 +167,7 @@ DELIMITERS = r"[\s　のをがはにでもとからまでよりへ、。・]+"
 
 ---
 
-## <a id="troubleshoot"></a>トラブルシューティング
+## トラブルシューティング {#troubleshoot}
 
 ### `ModuleNotFoundError: No module named 'sentence_transformers'`
 
@@ -203,7 +203,7 @@ sudo apt-get install -y ripgrep
 
 ---
 
-## <a id="files"></a>関連ファイル
+## 関連ファイル {#files}
 
 | ファイル | 役割 |
 |---|---|

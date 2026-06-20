@@ -155,7 +155,7 @@
 <hr />
 <h2>主要コマンド深掘り</h2>
 <p>よく使う・挙動を正確に把握すべきコマンドの詳解。全一覧は後述の網羅表へ。</p>
-<h3><a id="clear"></a><code>/clear</code> と <code>/compact</code> — コンテキスト管理の両輪</h3>
+<h3 id="clear"><code>/clear</code> と <code>/compact</code> — コンテキスト管理の両輪</h3>
 <p><strong><code>/clear</code></strong>: 会話履歴を<strong>完全にリセット</strong>する。</p>
 <ul>
 <li>システムプロンプト・MCPツール定義・スキル・メモリは残る</li>
@@ -170,7 +170,7 @@
 <li><code>/clear</code> との違い: <strong>文脈を残すか捨てるか</strong></li>
 </ul>
 <div class="callout callout-info"><p>どちらも<a href="10-glossary.html#context-saturation">コンテキスト飽和</a>対策。文脈を引き継ぎたいなら <code>/compact</code>、完全に切り替えるなら <code>/clear</code>。</p></div>
-<h3><a id="context"></a><code>/context</code> — コンテキスト使用量の確認</h3>
+<h3 id="context"><code>/context</code> — コンテキスト使用量の確認</h3>
 <p>現在の<strong>コンテキスト使用量</strong>を表示する。</p>
 <ul>
 <li>トークン消費の内訳（システム・MCP・メモリ・メッセージ等）が見える</li>
@@ -184,13 +184,13 @@
   MCP tools: 21.4k tokens (10.7%)
   Free space: 108.7k (54.3%)
 </code></pre>
-<h3><a id="model"></a><code>/model</code> — モデルの表示・切替</h3>
+<h3 id="model"><code>/model</code> — モデルの表示・切替</h3>
 <ul>
 <li>引数なし: 現在のモデルを表示</li>
 <li>モデル名指定: そのモデルに切り替え（例: <code>/model sonnet</code>）</li>
 <li>GLM-5.2 がデフォルト（glm-rate-proxy経由）</li>
 </ul>
-<h3><a id="plan-mode"></a>Plan Mode（<code>/plan</code>・<code>EnterPlanMode</code>）</h3>
+<h3 id="plan-mode">Plan Mode（<code>/plan</code>・<code>EnterPlanMode</code>）</h3>
 <p>コマンドではないが、重要な機能モード。</p>
 <ul>
 <li>Claude Codeが「計画を立ててから実装する」モードに入る</li>

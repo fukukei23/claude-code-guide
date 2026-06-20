@@ -7,7 +7,7 @@ Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.1）に切り�
 
 ---
 
-## <a id="overview"></a>概要：なぜプロキシが必要か
+## 概要：なぜプロキシが必要か {#overview}
 
 Claude Codeは通常、Anthropic APIに直接接続する。しかし `ANTHROPIC_BASE_URL` を差し替えることで、**Anthropic互換APIを持つ別プロバイダ**に向けられる。
 
@@ -32,7 +32,7 @@ Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (GLM-5.
 
 ---
 
-## <a id="architecture"></a>アーキテクチャ
+## アーキテクチャ {#architecture}
 
 ```
 settings.json
@@ -74,7 +74,7 @@ api.z.ai              api.minimax.io
 
 ---
 
-## <a id="model-routing"></a>モデルルーティング
+## モデルルーティング {#model-routing}
 
 使用量（`usage_pct`）に応じて自動でモデルが切り替わる。
 
@@ -107,7 +107,7 @@ ZAI 5xx → MiniMax → 503エラー
 
 ---
 
-## <a id="thinking"></a>Thinking（思考）モードの動的制御
+## Thinking（思考）モードの動的制御 {#thinking}
 
 GLM-5.1はデフォルトで「思考モード」が有効で、内部推論トークンを大量消費する。
 
@@ -151,7 +151,7 @@ GLM-5.1はデフォルトで「思考モード」が有効で、内部推論ト�
 
 ---
 
-## <a id="status"></a>ステータス確認
+## ステータス確認 {#status}
 
 ```bash
 # プロキシの状態確認
@@ -179,7 +179,7 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
 
 ---
 
-## <a id="start-stop"></a>起動・停止
+## 起動・停止 {#start-stop}
 
 ```bash
 # 起動（SessionStart hookで自動実行されるが、手動でも可）
@@ -204,7 +204,7 @@ GLM_PEAK_BLOCK=false bash ~/.claude/scripts/llm/start-glm-proxy.sh
 
 ---
 
-## <a id="troubleshooting"></a>トラブルシューティング
+## トラブルシューティング {#troubleshooting}
 
 ### ❌ Claude Codeが「API error」を返す
 
@@ -342,7 +342,7 @@ ZAIの `enabled` モードはモデルが「自動判断」して思考量を決
 
 ---
 
-## <a id="config-reference"></a>設定リファレンス
+## 設定リファレンス {#config-reference}
 
 `config/config.json` の全項目：
 
@@ -383,7 +383,7 @@ ZAIの `enabled` モードはモデルが「自動判断」して思考量を決
 
 ---
 
-## <a id="proxy-doctor"></a>proxy-doctor スキル — 診断を自動化する
+## proxy-doctor スキル — 診断を自動化する {#proxy-doctor}
 
 プロキシが壊れた時の原因調査を自動化する Claude Code スキル。
 
@@ -440,7 +440,7 @@ ZAI使用率     : 0.0%
 
 ---
 
-## <a id="related"></a>関連リンク
+## 関連リンク {#related}
 
 - [ZAI公式ドキュメント - Deep Thinking](https://docs.z.ai/guides/capabilities/thinking)
 - [ZAI公式ドキュメント - GLM-5.1モデル概要](https://docs.z.ai/guides/llm/glm-5.1)

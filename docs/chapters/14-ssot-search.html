@@ -150,7 +150,7 @@
             <h1>14 SSOTから探して — 個人ナレッジベースへのRAG検索</h1>
 <div class="callout callout-info"><p>Claude Codeから knowledge-base（個人ナレッジベース）を横断検索するスキル。ripgrep + sentence-transformers のハイブリッドRAG構成。</p></div>
 <hr />
-<h2><a id="overview"></a>概要：これは何か</h2>
+<h2 id="overview">概要：これは何か</h2>
 <p>「SSOTから探して: glm-rate-proxy」と話しかけると、1,900件超のMarkdownファイルを横断検索して関連ドキュメントを5件表示するスキルです。</p>
 <pre><code>あなた: SSOTから探して: 代替プロバイダーのフォールバック設定
 
@@ -162,7 +162,7 @@ Claude: 🔍 SSOT検索: 「代替プロバイダー フォールバック 設�
 <h3>RAGとは</h3>
 <p><strong>R</strong>etrieval-<strong>A</strong>ugmented <strong>G</strong>eneration（検索拡張生成）の略。LLMに回答させる前に関連文書を検索してプロンプトに渡す仕組みです。専用のベクトルDBなしで、ファイルシステム上で軽量に実現しています。</p>
 <hr />
-<h2><a id="architecture"></a>アーキテクチャ</h2>
+<h2 id="architecture">アーキテクチャ</h2>
 <pre><code>ユーザーの質問
     │
     ▼
@@ -206,7 +206,7 @@ Claude: 🔍 SSOT検索: 「代替プロバイダー フォールバック 設�
 </tbody>
 </table></div>
 <hr />
-<h2><a id="setup"></a>セットアップ</h2>
+<h2 id="setup">セットアップ</h2>
 <h3>1. ripgrep インストール</h3>
 <pre><code class="language-bash">sudo apt-get install -y ripgrep
 </code></pre>
@@ -225,7 +225,7 @@ python3 -m venv ~/.claude/venv/ssot-search
 <pre><code class="language-bash">cat ~/.claude/skills/ssot-search/SKILL.md
 </code></pre>
 <hr />
-<h2><a id="usage"></a>使い方</h2>
+<h2 id="usage">使い方</h2>
 <h3>基本</h3>
 <pre><code>SSOTから探して: &lt;キーワード&gt;
 SSOT検索: &lt;キーワード&gt;
@@ -242,7 +242,7 @@ SSOTから探して: 代替プロバイダー フォールバック
 <pre><code class="language-bash">~/.claude/venv/ssot-search/bin/python3 ~/.claude/scripts/ssot/search.py &quot;クエリ&quot; --top 10
 </code></pre>
 <hr />
-<h2><a id="japanese"></a>日本語クエリのコツ</h2>
+<h2 id="japanese">日本語クエリのコツ</h2>
 <p>スペース区切りでキーワードを並べると精度が上がります:</p>
 <pre><code># よりよい
 SSOTから探して: 代替プロバイダー フォールバック 設定
@@ -252,7 +252,7 @@ SSOTから探して: 代替プロバイダーのフォールバック設定方�
 </code></pre>
 <p>スペースなしでも内部でトークン分割（助詞・英数字境界で分割）するため多くの場合動作します。</p>
 <hr />
-<h2><a id="internals"></a>内部動作の詳細</h2>
+<h2 id="internals">内部動作の詳細</h2>
 <h3>search.py の処理フロー</h3>
 <pre><code class="language-python"># 1. ripgrep でフレーズ検索
 hits = rg_search(query, ssot_dir, max_files=80)
@@ -298,7 +298,7 @@ results = rerank(query, hits, top_n=5)
 </tbody>
 </table></div>
 <hr />
-<h2><a id="troubleshoot"></a>トラブルシューティング</h2>
+<h2 id="troubleshoot">トラブルシューティング</h2>
 <h3><code>ModuleNotFoundError: No module named 'sentence_transformers'</code></h3>
 <p>venvが使われていません:</p>
 <pre><code class="language-bash"># 正しい実行方法
@@ -320,37 +320,6 @@ results = rerank(query, hits, top_n=5)
 <li><strong>内部の仕組み</strong>: 詳細は上の章。普段は「検索したい時に使う」とだけ覚えればOK</li>
 </ul>
 <hr />
-<h2><a id="files"></a>関連ファイル</h2>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>ファイル</th>
-<th>役割</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>~/.claude/scripts/ssot/search.py</code></td>
-<td>検索スクリプト本体</td>
-</tr>
-<tr>
-<td><code>~/.claude/skills/ssot-search/SKILL.md</code></td>
-<td>スキル定義（トリガーワード等）</td>
-</tr>
-<tr>
-<td><code>~/.claude/venv/ssot-search/</code></td>
-<td>Python仮想環境</td>
-</tr>
-<tr>
-<td><code>~/projects/claude-config/scripts/ssot/</code></td>
-<td>スクリプトのソース（シンボリックリンク元）</td>
-</tr>
-<tr>
-<td><code>~/projects/claude-config/skills/ssot-search/</code></td>
-<td>スキルのソース</td>
-</tr>
-</tbody>
-</table></div>
 
         </article>
 

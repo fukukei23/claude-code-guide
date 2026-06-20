@@ -27,7 +27,7 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ## 現在の構成（12サーバー・125ツール）
 
-### <a id="minimax"></a>minimax（自作テキスト処理 / 17ツール / ~1kトークン）
+### minimax（自作テキスト処理 / 17ツール / ~1kトークン） {#minimax}
 
 **LLM委譲用MCPサーバー（自作・MiniMax-M3使用）**。環境によって役割が異なる。
 
@@ -62,7 +62,7 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ---
 
-### <a id="minimax-official"></a>minimax-official（公式 / 画像・音楽・動画・10ツール）
+### minimax-official（公式 / 画像・音楽・動画・10ツール） {#minimax-official}
 
 **MiniMax公式MCPサーバー**。画像・音楽・動画・音声などのメディア生成機能を提供する。自作の `minimax`（テキスト処理特化）とは別サーバー。
 
@@ -84,7 +84,7 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ---
 
-### <a id="minimax-video"></a>minimax-video（公式 / 動画生成専用・従量課金）
+### minimax-video（公式 / 動画生成専用・従量課金） {#minimax-video}
 
 **MiniMax公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）**。`minimax-official` と**同じバイナリ**（公式パッケージ `minimax-mcp`）だが、**APIキー（従量課金アカウント）と出力先を分離**した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。
 
@@ -116,7 +116,7 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ---
 
-### <a id="brave-search"></a>brave-search（6ツール / ~5.5kトークン）
+### brave-search（6ツール / ~5.5kトークン） {#brave-search}
 
 Web検索に関する各種機能。
 
@@ -133,7 +133,7 @@ Web検索に関する各種機能。
 
 > **起動方法**: `~/.claude/scripts/mcp/start-brave-search.sh` — `.secrets.env` から `BRAVE_API_KEY` を読み込んで `brave-search-mcp-server` を起動。
 
-### <a id="github"></a>github（41ツール / ~9.6kトークン）
+### github（41ツール / ~9.6kトークン） {#github}
 
 最もツール数が多いサーバー。GitHub上のあらゆる操作が可能。
 
@@ -151,7 +151,7 @@ Web検索に関する各種機能。
 
 > **起動方法**: `~/.claude/scripts/mcp/start-github.sh` — `.secrets.env` から `GITHUB_TOKEN` 等を読み込んで `github-mcp-server` を起動。
 
-### <a id="playwright"></a>playwright（25ツール / ~4.7kトークン）
+### playwright（25ツール / ~4.7kトークン） {#playwright}
 
 ブラウザの自動操作。
 
@@ -166,7 +166,7 @@ Web検索に関する各種機能。
 
 **使いどころ**: Webアプリのテスト、UI確認、スクレイピング
 
-### <a id="context7"></a>context7（2ツール / ~1.2kトークン）
+### context7（2ツール / ~1.2kトークン） {#context7}
 
 ライブラリの公式ドキュメント検索。
 
@@ -177,7 +177,7 @@ Web検索に関する各種機能。
 
 **使いどころ**: ライブラリの最新API確認、使用方法の調査
 
-### <a id="discord"></a>discord（5ツール / ~0.6kトークン）
+### discord（5ツール / ~0.6kトークン） {#discord}
 
 Discordとの連携。
 
@@ -191,7 +191,7 @@ Discordとの連携。
 
 **使いどころ**: Discord経由での通知、メッセージ監視
 
-### <a id="mermaid"></a>mermaid（4ツール / ~0.4kトークン）
+### mermaid（4ツール / ~0.4kトークン） {#mermaid}
 
 図表の生成。
 
@@ -204,7 +204,7 @@ Discordとの連携。
 
 **使いどころ**: フローチャート、シーケンス図、クラス図の生成
 
-### <a id="exa"></a>exa（3ツール / ~1.5kトークン）
+### exa（3ツール / ~1.5kトークン） {#exa}
 
 セマンティックWeb検索。
 
@@ -215,7 +215,7 @@ Discordとの連携。
 
 **使いどころ**: 技術記事の深掘り調査、コード検索
 
-### <a id="4-5v-mcp"></a>4_5v_mcp（画像分析 / ~0.8kトークン）
+### 4_5v_mcp（画像分析 / ~0.8kトークン） {#4-5v-mcp}
 
 AI画像分析。
 
@@ -225,7 +225,7 @@ AI画像分析。
 
 **使いどころ**: スクリーンショット診断、UI模写、図解理解
 
-### <a id="web-reader"></a>web_reader（1ツール / ~0.5kトークン）
+### web_reader（1ツール / ~0.5kトークン） {#web-reader}
 
 URL内容取得。
 
@@ -263,7 +263,7 @@ URL内容取得。
 
 ---
 
-## <a id="glm"></a>glm（Windows Desktop版用 / WSL CLI版では不要・自作 / ~1kトークン）
+## glm（Windows Desktop版用 / WSL CLI版では不要・自作 / ~1kトークン） {#glm}
 
 **LLM委譲用MCPサーバー（自作・GLM-5.2/Z.AI API）**。**WSL CLI版では不要のため「現在の構成（実態12サーバー）」には含まれない**。Windows Desktop版でのみ有効。
 
@@ -302,7 +302,7 @@ URL内容取得。
 
 ---
 
-## <a id="zernio"></a>zernio（導入済み・現在未接続 / ホストMCP / 280+ツール）
+## zernio（導入済み・現在未接続 / ホストMCP / 280+ツール） {#zernio}
 
 **SNS自動投稿MCP**。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。導入済み・投稿テスト済みだが、**現在は未接続**（必要時に再有効化）。
 
