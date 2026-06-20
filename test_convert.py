@@ -6,6 +6,8 @@ import pytest
 
 from convert import (
     CHAPTER_MAP,
+    CHAPTER_TEMPLATE,
+    INDEX_TEMPLATE,
     filter_sections,
     inject_mermaid,
     rewrite_links,
@@ -155,6 +157,66 @@ class TestRewriteLinks:
         result = rewrite_links(html)
         for info in CHAPTER_MAP.values():
             assert f'{info["slug"]}.html' in result
+
+
+# === 3.5 XSS回帰テスト（autoescape + html:False） ===
+
+class TestConvertMdToHtml:
+
+    def test_raw_html_is_escaped_not_rendered(self):
+        """source の生 HTML は出力でエスケープされ、要素として解釈されない."""
+        html = convert_md_to_html("<script>alert(1)</script>")
+        assert "<script>" not in html
+        assert "&lt;script&gt;" in html
+
+    def test_inline_html_in_text_is_escaped(self):
+        html = convert_md_to_html("本文 <iframe src=x> 末尾")
+        assert "<iframe" not in html
+        assert "&lt;iframe" in html
+
+
+class TestTemplateAutoEscape:
+
+    def _chapter_payload(self):
+        return {
+            "title": "<script>alert(1)</script>",
+            "slug": "00-x",
+            "current_slug": "00-x",
+            "content": "<p>OK</p>",
+            "chapters": [
+                {
+                    "slug": "00-x",
+                    "number": "00",
+                    "title": "<b>t</b>",
+                    "icon": "🎵",
+                    "desc": "<img src=x onerror=alert(1)>",
+                    "filename": "00.md",
+                }
+            ],
+            "prev_ch": None,
+            "next_ch": None,
+            "version": "1",
+            "build_date": "2026.01.01",
+        }
+
+    def test_chapter_template_escapes_title_and_desc(self):
+        out = CHAPTER_TEMPLATE.render(**self._chapter_payload())
+        assert "<script>alert(1)</script>" not in out
+        assert "<img src=x onerror=alert(1)>" not in out
+        assert "&lt;script&gt;" in out
+
+    def test_chapter_template_keeps_safe_content_html(self):
+        out = CHAPTER_TEMPLATE.render(**self._chapter_payload())
+        assert "<p>OK</p>" in out
+
+    def test_index_template_escapes_desc(self):
+        out = INDEX_TEMPLATE.render(
+            chapters=self._chapter_payload()["chapters"],
+            version="1",
+            build_date="2026.01.01",
+        )
+        assert "<img src=x onerror=alert(1)>" not in out
+        assert "&lt;img" in out
 
 
 # === 4. Mermaid注入 ===
