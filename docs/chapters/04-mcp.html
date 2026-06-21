@@ -410,6 +410,7 @@
 <p><strong>使いどころ</strong>: 最新情報の調査、エラーの検索、技術記事の検索</p>
 <div class="callout callout-info"><p><strong>起動方法</strong>: <code>~/.claude/scripts/mcp/start-brave-search.sh</code> — <code>.secrets.env</code> から <code>BRAVE_API_KEY</code> を読み込んで <code>brave-search-mcp-server</code> を起動。</p></div>
 <h3 id="github">github（41ツール / ~9.6kトークン）</h3>
+<div class="callout callout-warn"><p>⚠️ <strong>2026-06-21 無効化</strong>: 41ツール・9.6kトークンが毎ターンのシステムプロンプトに積まれ、コンテキスト肥大（32MB上限問題）の最大要因となっていたため無効化。Issue/PR/push は <strong>gh CLI + git 直接操作</strong>に移行した。復元は <code>settings.json</code> の <code>enabledPlugins.github</code> を <code>true</code> に戻すだけ。</p></div>
 <p>最もツール数が多いサーバー。GitHub上のあらゆる操作が可能。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -665,9 +666,9 @@
 </tr>
 <tr>
 <td>github</td>
-<td>✅</td>
-<td>✅</td>
-<td>共通</td>
+<td>❌無効化(2026-06-21)</td>
+<td>✅（CLI版）</td>
+<td>共通・gh CLI+git直接使用に移行</td>
 </tr>
 <tr>
 <td>playwright</td>

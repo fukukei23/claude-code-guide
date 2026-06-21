@@ -135,6 +135,8 @@ Web検索に関する各種機能。
 
 ### github（41ツール / ~9.6kトークン） {#github}
 
+> ⚠️ **2026-06-21 無効化**: 41ツール・9.6kトークンが毎ターンのシステムプロンプトに積まれ、コンテキスト肥大（32MB上限問題）の最大要因となっていたため無効化。Issue/PR/push は **gh CLI + git 直接操作**に移行した。復元は `settings.json` の `enabledPlugins.github` を `true` に戻すだけ。
+
 最もツール数が多いサーバー。GitHub上のあらゆる操作が可能。
 
 | カテゴリ | ツール例 |
@@ -247,7 +249,7 @@ URL内容取得。
 | minimax-official | ✅ あり | ✅ あり | 動画・画像・音声生成（Hailuo）。両環境で利用可能 |
 | minimax-video | ✅ あり | ✅ あり | 動画生成専用（従量・両環境） |
 | brave-search | ✅ | ✅ | 共通 |
-| github | ✅ | ✅ | 共通 |
+| github | ❌無効化(2026-06-21) | ✅（CLI版） | 共通・gh CLI+git直接使用に移行 |
 | playwright | ✅ | ✅ | 共通 |
 | context7 | ✅ | ✅ | 共通 |
 | discord | ✅ | ✅ | 共通 |
