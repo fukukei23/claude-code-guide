@@ -376,11 +376,28 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/gas-autopilot/</code>）</li>
 </ul>
 <hr />
-<h3 id="guide-builder"><code>guide-builder</code>（カスタムスキル）</h3>
-<p><strong>MarkdownソースからGitHub Pagesガイドサイトを構築・更新</strong>。新規リポジトリ立ち上げ（newモード）と既存サイトへの章追加（addモード）の2モード。</p>
+<h3 id="make-guide"><code>make-guide</code>（カスタムスキル）</h3>
+<p><strong>ガイド系スキル作成のディスパッチャ（振り分け）</strong>。作りたい内容から「読む系（詳細ガイド）」「引く系（チートシート/語彙帳）」をLLMが判定し、ユーザーに確認してから <code>guide-builder</code> か <code>textbook-guide</code> に分岐する。<strong>ユーザーは種別を覚えなくてよい</strong>のが導入の動機。</p>
 <ul>
-<li><strong>呼び出し</strong>: 「ガイド作って」「ガイドサイト立ち上げて」「章追加して」<code>/guide-builder</code></li>
+<li><strong>呼び出し</strong>: 「ガイド作って」「教科書作って」「チートシート作って」「語彙帳作って」「チュートリアル作って」<code>/make-guide</code></li>
+<li><strong>役割</strong>: 新規ガイド作成の入口。既存サイトへの章追加は各スキル（<code>guide-builder</code>/<code>textbook-guide</code>）が直接受け持つ</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/make-guide/</code>）</li>
+</ul>
+<hr />
+<h3 id="guide-builder"><code>guide-builder</code>（カスタムスキル）</h3>
+<p><strong>Markdownソース → モバイル対応GitHub Pagesガイドサイトを構築・更新</strong>（読む系・詳細ガイド向け）。新規リポジトリ立ち上げ（newモード）と既存サイトへの章追加（addモード）の2モード。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「章追加して」「/guide-builder」<code>/guide-builder</code></li>
+<li><strong>新規作成</strong>: <code>make-guide</code> が受け持ち、読む系と判定されてから本スキルに振り分けられる</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/guide-builder/</code>）</li>
+</ul>
+<hr />
+<h3 id="textbook-guide"><code>textbook-guide</code>（カスタムスキル）</h3>
+<p><strong>語彙帳・教科書・チートシート型のインタラクティブHTMLガイドサイトを構築</strong>（引く系向け）。単一HTMLファイル・アコーディオン展開・ダーク/ライト切替・GitHub Pages公開まで一気に実行。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「章追加して」「/textbook-guide」<code>/textbook-guide</code></li>
+<li><strong>新規作成</strong>: <code>make-guide</code> が受け持ち、引く系と判定されてから本スキルに振り分けられる</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/textbook-guide/</code>）</li>
 </ul>
 <hr />
 <h3 id="html-guide"><code>html-guide</code>（カスタムスキル）</h3>
