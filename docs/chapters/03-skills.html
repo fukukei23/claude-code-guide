@@ -282,7 +282,7 @@ Claude Code がその指示に従って動作
 </table></div>
 <h3>3. カスタムスキル（ユーザーが自作）</h3>
 <p><code>skill-creator</code> スキルや手動で作成可能。<code>.claude/skills/</code> ディレクトリに配置。</p>
-<div class="callout callout-warn"><p><strong>自作スキルの例（楽曲系ウィザード3種）</strong></p>
+<div class="callout callout-danger"><p><strong>自作スキルの例（楽曲系ウィザード3種）</strong></p>
 <ul>
 <li><code>sangoku-song</code> — 三国志武将のHIPHOP楽曲を、武将選択から曲+歌詞+画像+動画まで質問ドリブンで制作。7フェーズ・<code>AskUserQuestion</code> 選択式・人間判断ポイント5箇所。トリガー: 「武将で曲作って」「/sangoku-song」</li>
 <li><code>cyber-wa-song</code> — サイバー和モダン3作品（原点廻帰/電子参拝/百鬼夜行）の楽曲+映像を、作品選択から曲+歌詞+画像+動画まで質問ドリブンで制作。<code>sangoku-song</code> の構造を複製し世界観を差し替え。Phase 5 動画をタイムライン分析で強化。トリガー: 「サイバー和モダン」「原点廻帰」「/cyber-wa-song」</li>
@@ -303,6 +303,32 @@ Claude Code がその指示に従って動作
 <li>Claude Codeはその指示に従って動作する</li>
 </ol>
 <p><strong>トークン消費</strong>: スキル呼び出し時に一時的にトークンを消費するが、セッション開始時のスキル一覧（~2.4k）は常にロードされている。</p>
+<h3>プラグインスキルと自作スキルで発火機構が違う（重要）</h3>
+<p><strong>プラグインスキル（superpowers等）は、プラグインを導入するだけで自動発火する。</strong> superpowers プラグインを入れると <code>using-superpowers</code> スキルが SessionStart でシステムプロンプトへ自動ロードされ、このスキルが持つ「1%でも当てはまれば発動せよ」ルールにより、ユーザーが明示的に <code>/brainstorming</code> を打たなくても「ブレストしたい」等の自然発話で発火する。<strong>CLAUDE.md のワード明示は不要。</strong></p>
+<p><strong>自作スキル（resume-session・teian等）は、自動ロード機構がない。</strong> CLAUDE.md の「スキルトリガー」欄でワード明示しないと、description だけでは確実に発火しない。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>スキル種別</th>
+<th>発火の仕組み</th>
+<th>CLAUDE.mdのワード明示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>プラグインスキル</td>
+<td>導入で <code>using-superpowers</code> が自動ロード → 「1%でも当てはまれば発動」</td>
+<td>不要</td>
+</tr>
+<tr>
+<td>自作スキル</td>
+<td>自動ロード機構なし（description のみ）</td>
+<td>必須</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>トラブル時の確認</strong>: 「スキルが発火しない」場合、まず ① プラグインか自作か ② システムプロンプト冒頭に <code>EXTREMELY_IMPORTANT</code> ブロック（using-superpowers）があるか を確認。</p></div>
 <hr />
 <h2>主要スキルの使い方</h2>
 <h3 id="brainstorming"><code>superpowers:brainstorming</code></h3>
@@ -512,8 +538,7 @@ Claude Code がその指示に従って動作
 </tr>
 </tbody>
 </table></div>
-<blockquote>
-<p><strong>注意</strong>: <code>/debug</code> と入力するとClaude Codeの組み込みデバッグログコマンドが起動する。スキル点検には必ず <code>/skill-test</code> を使うこと。</p></div>
+<div class="callout callout-warn"><p><strong>注意</strong>: <code>/debug</code> と入力するとClaude Codeの組み込みデバッグログコマンドが起動する。スキル点検には必ず <code>/skill-test</code> を使うこと。</p></div>
 <hr />
 <h3 id="send-email"><code>send-email</code>（カスタムスキル）</h3>
 <p><strong>Gmail SMTP経由でメールを送信</strong>。宛先・件名・本文を会話の文脈から自動収集し、Pythonスクリプトで送信。添付ファイルにも対応。</p>
