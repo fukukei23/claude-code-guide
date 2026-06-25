@@ -278,6 +278,11 @@ Claude Code がその指示に従って動作
 <td><code>consolidate-memory</code>, <code>setup-cowork</code>, <code>skill-creator</code>, <code>docx</code>, <code>pdf</code>, <code>pptx</code>, <code>xlsx</code></td>
 <td>メモリ整理・Coworkセットアップ・ドキュメント変換</td>
 </tr>
+<tr>
+<td><strong>agent-skills</strong></td>
+<td><code>doubt-driven-development</code>, <code>interview-me</code>, <code>spec-driven-development</code>, <code>/spec</code> <code>/plan</code> <code>/build</code> <code>/test</code> <code>/review</code> <code>/ship</code> <code>/webperf</code> 等</td>
+<td>開発全工程（定義→計画→実装→検証→レビュー→Ship）の26スキル</td>
+</tr>
 </tbody>
 </table></div>
 <h3>3. カスタムスキル（ユーザーが自作）</h3>
@@ -377,6 +382,30 @@ Claude Code がその指示に従って動作
 <p><strong>PR包括レビュー</strong>。複数の専門エージェント（code-reviewer, code-simplifier, silent-failure-hunter等）を並列起動して包括的にレビュー。</p>
 <h3 id="feature-dev"><code>feature-dev:feature-dev</code></h3>
 <p><strong>機能開発ガイド</strong>。コードベース理解 → アーキテクチャ設計 → 実装の流れをガイド。</p>
+<h3 id="doubt-driven"><code>agent-skills:doubt-driven-development</code>（疑い駆動）</h3>
+<p><strong>非自明な決定を、別エージェントに「敵対的レビュー」させてから確定する</strong>。前提は「自信のある答え≠正しい答え」――長いセッションは前提を知らず「事実」に変えてしまうのを防ぐ。</p>
+<p><strong>いつ使う</strong>: 分岐ロジック追加・モジュール/サービス境界を跨ぐ・型システムで検証できない性質（スレッド安全・冪等性・順序）・本番デプロイ等の取り消し困難な決定。リネーム等の機械操作には使わない。</p>
+<p><strong>5ステップ（Doubt cycle）</strong>:</p>
+<ol>
+<li><strong>CLAIM</strong> — 決定を2-3行で書く＋なぜ重要か</li>
+<li><strong>EXTRACT</strong> — <code>ARTIFACT</code>（diff/関数/提案）と <code>CONTRACT</code>（満たすべき制約）だけ抽出。<strong>推論は捨てる</strong></li>
+<li><strong>DOUBT</strong> — <strong>Agent ツールで別エージェントを起動</strong>し、敵対的プロンプトで叩かせる:
+<div class="callout callout-info"><p>&quot;Find what is wrong with this artifact. Assume the author is overconfident. Look for: unstated assumptions, edge cases, hidden coupling, ways the contract could be violated. Do NOT validate. Do NOT summarize.&quot;</p></div>
+<ul>
+<li><strong>CLAIM（自分の結論）は渡さない</strong>（同意に傾く）。<code>ARTIFACT</code> + <code>CONTRACT</code> のみ渡す</li>
+<li>対話時は cross-model（Gemini/Codex）の第2意見もユーザーに提案（毎サイクル必須・silent skip禁止）</li>
+</ul>
+</li>
+<li><strong>RECONCILE</strong> — 指摘を分類: ① contract misread（CONTRACTが不明確）② actionable（直す）③ trade-off（許容・明記）④ noise（誤指摘）。<strong>ゴム印禁止</strong>・自分が依然オーケストレータ</li>
+<li><strong>STOP</strong> — trivial になるまで / 3サイクル上限 / ユーザー「ship it」</li>
+</ol>
+<div class="callout callout-warn"><p>⚠️ <strong>自分で自分を叩くのは劣化版</strong>（自分のバイアス・結論を引き継ぐ）。本式は<strong>必ず別エージェント</strong>にレビューさせる。CLAIM を渡さない制約が、自問では守れない（自分の結論を知ったまま叩くから）。</p></div>
+<h3 id="interview-me"><code>agent-skills:interview-me</code></h3>
+<p><strong>ユーザーが「本当に欲しいもの」を引き出す</strong>（1問1答・約95%到達まで）。アンダースペック依頼（「X作って」に「誰のため・なぜ今」なし）や「突っ込んで」「ストレステストして」で発動。</p>
+<h3 id="spec-driven"><code>agent-skills:spec-driven-development</code></h3>
+<p><strong>コード前にspecを書く</strong>。新規プロジェクト・機能・要件が曖昧な時。<code>/spec</code> コマンドでも。</p>
+<h3><code>agent-skills</code> のスラッシュコマンド群</h3>
+<p><code>/spec</code>（仕様）・<code>/plan</code>（計画）・<code>/build</code>（実装）・<code>/test</code>（TDD）・<code>/review</code>（5軸レビュー）・<code>/ship</code>（ローンチ前チェック）・<code>/code-simplify</code>（簡略化）・<code>/webperf</code>（Core Web Vitals監査）。<strong>人間が対話的に打つ設計</strong>（エージェント自律ループには組み込まない）。全26スキルは <a href="skill-catalog.html">SKILL_CATALOG.md</a> 参照。</p>
 <h3 id="claude-api"><code>claude-api</code>（Built-in）</h3>
 <p><strong>Anthropic SDK関連作業</strong>。Claude APIを使ったアプリの開発・デバッグ。</p>
 <h3 id="update-config"><code>update-config</code>（Built-in）</h3>
