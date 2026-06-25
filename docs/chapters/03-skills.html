@@ -404,6 +404,22 @@ Claude Code がその指示に従って動作
 <p><strong>ユーザーが「本当に欲しいもの」を引き出す</strong>（1問1答・約95%到達まで）。アンダースペック依頼（「X作って」に「誰のため・なぜ今」なし）や「突っ込んで」「ストレステストして」で発動。</p>
 <h3 id="spec-driven"><code>agent-skills:spec-driven-development</code></h3>
 <p><strong>コード前にspecを書く</strong>。新規プロジェクト・機能・要件が曖昧な時。<code>/spec</code> コマンドでも。</p>
+<h3 id="source-driven"><code>agent-skills:source-driven-development</code>（公式doc裏取り）</h3>
+<p><strong>フレームワーク固有のコード決定を、すべて公式docで裏付ける</strong>。記憶から書かない――訓練データは陳腐化しAPIは非推奨になる。</p>
+<p><strong>4ステップ（DETECT→FETCH→IMPLEMENT→CITE）</strong>: ① <code>package.json</code>/<code>requirements.txt</code> 等から正確なバージョン特定（推測しない・不明は聞く）② 該当ページの公式doc取得（<strong>出典階層</strong>: 公式doc &gt; 公式blog &gt; MDN &gt; caniuse。Stack Overflow/blog/AI生成物は<strong>不可</strong>）③ doc通りに実装（非推奨API禁止・既存コードと矛盾したら表面化）④ フルURL+アンカーで出典明記。検証できない時は <code>UNVERIFIED:</code> と明記</p>
+<div class="callout callout-tip"><p>💡 <strong>「コード読めない」課題に直結</strong> ― 公式docを読む癖がコード読解力を育てる。LLMの「確信あるけど古い」パターンの防止。</p></div>
+<h3 id="context-engineering"><code>agent-skills:context-engineering</code>（コンテキスト最適化）</h3>
+<p><strong>適切な情報を、適切なタイミングで</strong>。多すぎると焦点ボケ・少なすぎるとハルシネーション。コンテキストは出力品質の最大レバー。</p>
+<p><strong>5層階層</strong>（永続→一時）: 1.Rules Files（CLAUDE.md・常時）2.Spec/Architecture 3.Relevant Source Files 4.Error Output 5.Conversation。1タスクの焦点コンテキストは <strong>&lt;2000行</strong>（大量≠高品質）。主要機能切り替えで<strong>新鮮セッション</strong>。矛盾・要件不足を<strong>勝手に決めず表面化</strong>（CONFUSION / MISSING REQUIREMENT として提示）。</p>
+<div class="callout callout-tip"><p>💡 <strong>長時間セッションが多い運用に直結</strong> ― コンテキスト肥大による品質低下を構造で防ぐ。</p></div>
+<h3 id="doc-adr"><code>agent-skills:documentation-and-adrs</code>（決定記録）</h3>
+<p><strong>コードだけでなく「なぜ」を記録する</strong>。コードは <em>what</em>、docは <em>why</em>（文脈・制約・代替案）。将来の自分・エージェントが同じ決定を再判断するのを防ぐ。</p>
+<p><strong>ADR（Architecture Decision Record）</strong> ― 取り消しコストが高い決定の記録: <code>Context（制約・要件）/ Decision / Alternatives Considered（代替案と却下理由）/ Consequences</code>。<strong>コメントは <em>why</em> のみ</strong>（<em>what</em> は書かない・コードが語る）。TODO・コメントアウトコードは禁止（今やるか消すか）。</p>
+<div class="callout callout-tip"><p>💡 <strong>SSOT運用と直結</strong> ― <code>01_DECISIONS/</code> は実質ADR。Alternatives Considered を書くと「なぜこれにしたか」が将来分かる。</p></div>
+<h3 id="idea-refine"><code>agent-skills:idea-refine</code>（アイデア精製）</h3>
+<p><strong>raw idea を sharp な concept に練る</strong>。vagueなアイデア・計画前のストレステストに。</p>
+<p><strong>3フェーズ</strong>: 1.Understand &amp; Expand（「How Might We」で問題再定義→鋭い質問→5-8変種を発散）2.Evaluate &amp; Converge（2-3方向に集群→ユーザー価値/実現性/差別化でストレステスト→<strong>隠し前提を明示</strong>）3.Sharpen &amp; Ship（one-pager生成・<strong>「Not Doing」リストが最大価値</strong>）。</p>
+<div class="callout callout-warn"><p>⚠️ <strong>yes-machineになるな</strong> ― 弱いアイデアに優しく反対する。複雑さ・実価値にケチをつける。</p></div>
 <h3><code>agent-skills</code> のスラッシュコマンド群</h3>
 <p><code>/spec</code>（仕様）・<code>/plan</code>（計画）・<code>/build</code>（実装）・<code>/test</code>（TDD）・<code>/review</code>（5軸レビュー）・<code>/ship</code>（ローンチ前チェック）・<code>/code-simplify</code>（簡略化）・<code>/webperf</code>（Core Web Vitals監査）。<strong>人間が対話的に打つ設計</strong>（エージェント自律ループには組み込まない）。全26スキルは <a href="skill-catalog.html">SKILL_CATALOG.md</a> 参照。</p>
 <h3 id="claude-api"><code>claude-api</code>（Built-in）</h3>
