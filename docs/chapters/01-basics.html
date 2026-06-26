@@ -404,6 +404,58 @@ graph LR
 <li><strong>セキュリティフック</strong>: PreToolUseで危険コマンドを自動ブロック</li>
 </ul>
 <hr />
+<h2>セッション管理</h2>
+<p>Claude Code のセッション開始・再開・引き継ぎを支える3つの仕組み。</p>
+<h3>SessionStart Hook — SSOT日記の自動ロード</h3>
+<p><code>~/.claude/settings.json</code> の <code>SessionStart</code> に登録された <code>load-obsidian-log.sh</code> が、セッション開始時に以下を自動的にコンテキストへ流す：</p>
+<ul>
+<li><strong>今日のSSOT日記</strong>（直近3セッション分）</li>
+<li><strong>昨日〜直近のセッションサマリー</strong>（1行ずつ）</li>
+<li><strong>バックログのP0+P1タスク</strong></li>
+<li><strong>本日セッション数</strong>（複数セッション運用の可視化）</li>
+</ul>
+<p>軽量版で自動表示されるため、ユーザーが手動で handoff を読み込む必要はない（初回・作業中断後の再開時に文脈を即座に復元できる）。</p>
+<h3>resume-session / new-session — セッション区切りのスキル</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>スキル</th>
+<th>タイミング</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resume-session</code></td>
+<td>セッション開始時「おはよう」「再開」「/resume-session」</td>
+<td>最新5件のhandoff（<code>config/handoff/</code>）を読み込み文脈を復元（new-sessionの対・読込側）</td>
+</tr>
+<tr>
+<td><code>new-session</code></td>
+<td>コンテキスト満杯時「新セッション」「/new-session」</td>
+<td>現在の状態を収集→GLMで引き継ぎプロンプト生成→<code>config/handoff/YYYY-MM-DD_HHMM.md</code> に保存→3行サマリー出力</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>引き継ぎは <strong>日時付きファイル</strong> に蓄積されるため、過去の引き継ぎも <code>ls</code> で参照可能（旧: <code>/tmp/new-session-prompt.md</code> は2026-05-31に廃止）</li>
+<li><code>new-session</code> 実行時、active-sessionsボードの自分エントリを <code>✅終了</code> に更新（即commit+push）</li>
+</ul>
+<h3>タスク占有ボード — 並行セッションの競合防止</h3>
+<p>複数セッションを並行運用する場合、共通ファイル（settings.json / CLAUDE.md / hook群 / 共通スキル等）を<strong>逆向きに変更する競合</strong>を防ぐための作業宣言ボード。</p>
+<ul>
+<li>場所: <code>knowledge-base/config/active-sessions.md</code></li>
+<li><strong>🟢現在進行中タスク表</strong>: 着手中のセッションがタスク名・窓・開始時刻・方針を記入</li>
+<li><strong>ルール</strong>:
+<ul>
+<li><strong>開始時</strong>（resume-session）: タスク選択時に🟢表へ追加 → 即push</li>
+<li><strong>終了時</strong>（new-session）: 🟢表から削除 → 即push（タスクはバックログに戻る）</li>
+<li><strong>着手前</strong>: 他セッションの🟢タスクに着手する時はユーザーにsoft警告（重複の旨・ブロックはしない）</li>
+</ul>
+</li>
+<li><strong>逆方向の変更</strong>（修正 vs 削除 等）は勝手に進めず必ずユーザー判断</li>
+</ul>
+<hr />
 <h2>💡 やさしい補足（初心者向け）</h2>
 <p>この章に出てくる言葉を、できるだけ平たく言い直します。</p>
 <ul>

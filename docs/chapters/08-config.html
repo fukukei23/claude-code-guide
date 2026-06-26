@@ -283,6 +283,24 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 </tbody>
 </table></div>
+<h4>SessionStartフックの構成（起動シーケンス）</h4>
+<p>SessionStart で複数のフックが<strong>決まった順序で連鎖</strong>する：</p>
+<pre><code class="language-json">{
+  &quot;SessionStart&quot;: [
+    { &quot;command&quot;: &quot;sync-secrets-to-settings.sh&quot; },   // 1. ~/.secrets.env → settings.json 注入
+    { &quot;command&quot;: &quot;load-obsidian-log.sh&quot; },          // 2. SSOT日記・バックログをコンテキストへ
+    { &quot;command&quot;: &quot;sync-settings-to-example.sh&quot; },   // 3. settings.json → settings.example.json（マスク）
+    { &quot;command&quot;: &quot;skill-guard.sh&quot; },                // 4. プラグインSKILL.md と skills-custom/ 復元
+    { &quot;command&quot;: &quot;startup-banner.sh&quot; }              // 5. ターミナルにバナー表示（GLMモデル等）
+  ]
+}
+</code></pre>
+<ul>
+<li><strong>load-obsidian-log.sh（軽量版）</strong>: 今日=直近3セッション / 昨日=1行サマリー / バックログ=P0+P1のみ。<code>/dev/tty</code> でターミナルにも同時表示</li>
+<li><strong>セッション数カウント</strong>: 今日の <code>10_DAILY/YYYY-MM-DD.md</code> 内 <code>## セッションログ</code> の出現回数を集計しバナーに表示</li>
+<li><strong>バックログ自動確認</strong>: 7日以上更新のないタスクは <code>バックログ7日経過</code> 警告を表示（鮮度管理）</li>
+</ul>
+<p>詳細: <a href="01-basics.html#%E3%82%BB%E3%83%83%E3%82%B7%E3%83%A7%E3%83%B3%E7%AE%A1%E7%90%86">01_基礎概念.md#セッション管理</a></p>
 <h4>その他の設定項目</h4>
 <div class="table-wrapper"><table>
 <thead>
