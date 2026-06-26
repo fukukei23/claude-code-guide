@@ -8,7 +8,7 @@
 Claude Code
   │
   ├─ brave-search MCP ──→ Brave検索API ──→ Web検索結果
-  ├─ github MCP ────────→ GitHub API ────→ PR・Issue・ファイル
+  ├─ github MCP ────────→ GitHub API ──→ PR・Issue・ファイル
   ├─ playwright MCP ────→ Chromium ──────→ ブラウザ操作
   ├─ context7 MCP ──────→ Docs API ─────→ ライブラリドキュメント
   ├─ discord MCP ───────→ Discord API ──→ メッセージ送受信
@@ -26,6 +26,19 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 ---
 
 ## 現在の構成（12サーバー・125ツール）
+
+MCPサーバー数が多いため、**4つのカテゴリ**に整理しています。目的のサーバーを探す場合は[📑 目次](#toc)からジャンプしてください。
+
+### 📑 サーバー一覧（目次） {#toc}
+
+- **[🤖 LLM・生成AI系（3サーバー）](#llm-gen)** — minimax / minimax-official / minimax-video
+- **[🔍 検索・情報取得系（4サーバー）](#search)** — brave-search / exa / context7 / web_reader
+- **[🛠️ 開発・自動化系（4サーバー）](#dev)** — github（無効化）/ playwright / discord / mermaid
+- **[📊 画像分析系（1サーバー）](#image)** — 4_5v_mcp
+
+---
+
+## 🤖 LLM・生成AI系（3サーバー） {#llm-gen}
 
 ### minimax（自作テキスト処理 / 17ツール / ~1kトークン） {#minimax}
 
@@ -116,6 +129,8 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ---
 
+## 🔍 検索・情報取得系（4サーバー） {#search}
+
 ### brave-search（6ツール / ~5.5kトークン） {#brave-search}
 
 Web検索に関する各種機能。
@@ -133,7 +148,49 @@ Web検索に関する各種機能。
 
 > **起動方法**: `~/.claude/scripts/mcp/start-brave-search.sh` — `.secrets.env` から `BRAVE_API_KEY` を読み込んで `brave-search-mcp-server` を起動。
 
-### github（41ツール / ~9.6kトークン） {#github}
+---
+
+### exa（3ツール / ~1.5kトークン） {#exa}
+
+セマンティックWeb検索。
+
+| ツール | 用途 |
+|---|---|
+| `web_search_exa` | セマンティックWeb検索（技術記事の深掘り） |
+| `web_fetch_exa` | URLの内容をMarkdownで取得（バッチ対応） |
+
+**使いどころ**: 技術記事の深掘り調査、コード検索
+
+---
+
+### context7（2ツール / ~1.2kトークン） {#context7}
+
+ライブラリの公式ドキュメント検索。
+
+| ツール | 用途 |
+|---|---|
+| `resolve-library-id` | ライブラリ名からIDを解決 |
+| `query-docs` | ドキュメントを検索・取得 |
+
+**使いどころ**: ライブラリの最新API確認、使用方法の調査
+
+---
+
+### web_reader（1ツール / ~0.5kトークン） {#web-reader}
+
+URL内容取得。
+
+| ツール | 用途 |
+|---|---|
+| `webReader` | URLをMarkdownに変換（画像保持オプション付き） |
+
+**使いどころ**: Webページ内容の取得、ドキュメント読み込み
+
+---
+
+## 🛠️ 開発・自動化系（4サーバー） {#dev}
+
+### github（41ツール / ~9.6kトークン・**無効化**） {#github}
 
 > ⚠️ **2026-06-21 無効化**: 41ツール・9.6kトークンが毎ターンのシステムプロンプトに積まれ、コンテキスト肥大（32MB上限問題）の最大要因となっていたため無効化。Issue/PR/push は **gh CLI + git 直接操作**に移行した。復元は `settings.json` の `enabledPlugins.github` を `true` に戻すだけ。
 
@@ -153,6 +210,8 @@ Web検索に関する各種機能。
 
 > **起動方法**: `~/.claude/scripts/mcp/start-github.sh` — `.secrets.env` から `GITHUB_TOKEN` 等を読み込んで `github-mcp-server` を起動。
 
+---
+
 ### playwright（25ツール / ~4.7kトークン） {#playwright}
 
 ブラウザの自動操作。
@@ -168,16 +227,7 @@ Web検索に関する各種機能。
 
 **使いどころ**: Webアプリのテスト、UI確認、スクレイピング
 
-### context7（2ツール / ~1.2kトークン） {#context7}
-
-ライブラリの公式ドキュメント検索。
-
-| ツール | 用途 |
-|---|---|
-| `resolve-library-id` | ライブラリ名からIDを解決 |
-| `query-docs` | ドキュメントを検索・取得 |
-
-**使いどころ**: ライブラリの最新API確認、使用方法の調査
+---
 
 ### discord（5ツール / ~0.6kトークン） {#discord}
 
@@ -193,6 +243,8 @@ Discordとの連携。
 
 **使いどころ**: Discord経由での通知、メッセージ監視
 
+---
+
 ### mermaid（4ツール / ~0.4kトークン） {#mermaid}
 
 図表の生成。
@@ -206,16 +258,9 @@ Discordとの連携。
 
 **使いどころ**: フローチャート、シーケンス図、クラス図の生成
 
-### exa（3ツール / ~1.5kトークン） {#exa}
+---
 
-セマンティックWeb検索。
-
-| ツール | 用途 |
-|---|---|
-| `web_search_exa` | セマンティックWeb検索（技術記事の深掘り） |
-| `web_fetch_exa` | URLの内容をMarkdownで取得（バッチ対応） |
-
-**使いどころ**: 技術記事の深掘り調査、コード検索
+## 📊 画像分析系（1サーバー） {#image}
 
 ### 4_5v_mcp（画像分析 / ~0.8kトークン） {#4-5v-mcp}
 
@@ -226,16 +271,6 @@ AI画像分析。
 | `analyze_image` | 画像の詳細分析（OCR・レイアウト理解・UI複製用プロンプト生成） |
 
 **使いどころ**: スクリーンショット診断、UI模写、図解理解
-
-### web_reader（1ツール / ~0.5kトークン） {#web-reader}
-
-URL内容取得。
-
-| ツール | 用途 |
-|---|---|
-| `webReader` | URLをMarkdownに変換（画像保持オプション付き） |
-
-**使いどころ**: Webページ内容の取得、ドキュメント読み込み
 
 ---
 

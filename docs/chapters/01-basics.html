@@ -184,7 +184,7 @@
 <p>このガイドは主に <strong>CLI（WSL2環境）</strong> を前提に書かれている。</p>
 <hr />
 <h2>Desktop App と CLI の違い</h2>
-<div class="callout callout-warn"><p>⚠️ <strong>公式の仕様</strong> を比較しています。個人のコスト最適化構成（GLM/代替プロバイダールーティング等）は <a href="15-cost-optimization.html">15_コスト最適化構成</a> を参照。</p></div>
+<div class="callout callout-warn"><p>⚠️ <strong>公式の仕様</strong> を比較しています。個人のコスト最適化構成（GLM/MiniMaxルーティング等）は <a href="15-cost-optimization.html">15_コスト最適化構成</a> を参照。</p></div>
 <h3>比較表</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -399,7 +399,7 @@ graph LR
 <hr />
 <h2>環境の特記事項</h2>
 <ul>
-<li><strong>コスト最適化</strong>: 公式のSonnet/Opus/Haikuではなく、GLM-5.2と代替プロバイダーにルーティングする独自構成 → <a href="15-cost-optimization.html">15_コスト最適化構成</a></li>
+<li><strong>コスト最適化</strong>: 公式のSonnet/Opus/Haikuではなく、GLM-5.2とMiniMaxにルーティングする独自構成 → <a href="15-cost-optimization.html">15_コスト最適化構成</a></li>
 <li><strong>コンテキスト最適化済み</strong>: 以前9サーバー→11サーバーに最適化</li>
 <li><strong>セキュリティフック</strong>: PreToolUseで危険コマンドを自動ブロック</li>
 </ul>
@@ -411,7 +411,7 @@ graph LR
 <li><strong>「コンテキスト」= 作業机の広さ</strong>: Claudeは一度に覚えていられる量に限りがあります。上の図のとおり、<strong>会話を始める前から既に机の3割くらいは埋まっています</strong>（基本ルールや追加機能の説明書で埋まっている）。だから長く使うとすぐいっぱいになります。</li>
 <li><strong>「トークン」= 文字数の単位</strong>: ざっくり「日本語1文字=1〜2トークン」と思ってください。これが<strong>お金の計算単位</strong>です。机に積める量も、請求される金額も、全部このトークンで決まります。</li>
 <li><strong>「毎ターン全部読み直している」</strong>: 1回やり取りするたびに、<strong>それまでの会話すべてを最初から読み直して</strong>返事を作ります。だから会話が長くなるほど1回あたり重く（高く）なります。これが「雪だるま式にコストが増える」理由です。</li>
-<li><strong>この環境は「お得な構成」</strong>: 公式の高価なAIではなく、GLM・代替プロバイダーという別のAIに切り替える設定にしてあって、コストを大幅に抑えています（詳しくは <a href="15-cost-optimization.html">15章</a>）。</li>
+<li><strong>この環境は「お得な構成」</strong>: 公式の高価なAIではなく、GLM・MiniMaxという別のAIに切り替える設定にしてあって、コストを大幅に抑えています（詳しくは <a href="15-cost-optimization.html">15章</a>）。</li>
 </ul>
 
         </article>

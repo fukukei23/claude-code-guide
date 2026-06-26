@@ -159,9 +159,9 @@
   ├─ discord MCP ───────→ Discord API ──→ メッセージ送受信
   ├─ mermaid MCP ───────→ Mermaid API ──→ 図表生成
   ├─ exa MCP ───────────→ Exa API ──────→ セマンティック検索
-  ├─ フォールバック先 MCP ───────→ 代替プロバイダー API ──→ テキスト処理（コスト削減）
-  ├─ フォールバック先-official ──→ 代替プロバイダー API ──→ 画像・音楽・動画生成
-  ├─ フォールバック先-video ─────→ 代替プロバイダー API ──→ 動画生成（従量課金）
+  ├─ minimax MCP ───────→ MiniMax API ──→ テキスト処理（コスト削減）
+  ├─ minimax-official ──→ MiniMax API ──→ 画像・音楽・動画生成
+  ├─ minimax-video ─────→ MiniMax API ──→ 動画生成（従量課金）
   ├─ 4_5v_mcp ──────────→ 画像分析AI ───→ 画像診断・UI模写
   └─ web_reader ────────→ URL取得 ──────→ WebページMarkdown化
 </code></pre>
@@ -171,15 +171,15 @@
 <p>MCPサーバー数が多いため、<strong>4つのカテゴリ</strong>に整理しています。目的のサーバーを探す場合は<a href="#toc">📑 目次</a>からジャンプしてください。</p>
 <h3 id="toc">📑 サーバー一覧（目次）</h3>
 <ul>
-<li><strong><a href="#llm-gen">🤖 LLM・生成AI系（3サーバー）</a></strong> — フォールバック先 / フォールバック先-official / フォールバック先-video</li>
+<li><strong><a href="#llm-gen">🤖 LLM・生成AI系（3サーバー）</a></strong> — minimax / minimax-official / minimax-video</li>
 <li><strong><a href="#search">🔍 検索・情報取得系（4サーバー）</a></strong> — brave-search / exa / context7 / web_reader</li>
 <li><strong><a href="#dev">🛠️ 開発・自動化系（4サーバー）</a></strong> — github（無効化）/ playwright / discord / mermaid</li>
 <li><strong><a href="#image">📊 画像分析系（1サーバー）</a></strong> — 4_5v_mcp</li>
 </ul>
 <hr />
 <h2 id="llm-gen">🤖 LLM・生成AI系（3サーバー）</h2>
-<h3 id="フォールバック先">フォールバック先（自作テキスト処理 / 17ツール / ~1kトークン）</h3>
-<p><strong>LLM委譲用MCPサーバー（自作・代替プロバイダー-M3使用）</strong>。環境によって役割が異なる。</p>
+<h3 id="minimax">minimax（自作テキスト処理 / 17ツール / ~1kトークン）</h3>
+<p><strong>LLM委譲用MCPサーバー（自作・MiniMax-M3使用）</strong>。環境によって役割が異なる。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -190,7 +190,7 @@
 <tbody>
 <tr>
 <td><strong>Windows Desktop版</strong></td>
-<td>SonnetがMCP経由で代替プロバイダーに処理を委譲。glm MCPと同様の位置づけで、GLMと代替プロバイダーを用途で使い分ける</td>
+<td>SonnetがMCP経由でMiniMaxに処理を委譲。glm MCPと同様の位置づけで、GLMとMiniMaxを用途で使い分ける</td>
 </tr>
 <tr>
 <td><strong>WSL CLI版</strong></td>
@@ -207,80 +207,80 @@
 </thead>
 <tbody>
 <tr>
-<td><code>フォールバック先_ask</code></td>
+<td><code>minimax_ask</code></td>
 <td>汎用LLM呼び出し</td>
 </tr>
 <tr>
-<td><code>フォールバック先_summarize_file</code></td>
+<td><code>minimax_summarize_file</code></td>
 <td>ファイル要約</td>
 </tr>
 <tr>
-<td><code>フォールバック先_summarize_url</code></td>
+<td><code>minimax_summarize_url</code></td>
 <td>URL要約</td>
 </tr>
 <tr>
-<td><code>フォールバック先_translate_file</code></td>
+<td><code>minimax_translate_file</code></td>
 <td>ファイル翻訳</td>
 </tr>
 <tr>
-<td><code>フォールバック先_extract_keywords</code></td>
+<td><code>minimax_extract_keywords</code></td>
 <td>キーワード抽出</td>
 </tr>
 <tr>
-<td><code>フォールバック先_convert_format</code></td>
+<td><code>minimax_convert_format</code></td>
 <td>フォーマット変換</td>
 </tr>
 <tr>
-<td><code>フォールバック先_clean_data</code></td>
+<td><code>minimax_clean_data</code></td>
 <td>データクリーニング</td>
 </tr>
 <tr>
-<td><code>フォールバック先_generate_test_data</code></td>
+<td><code>minimax_generate_test_data</code></td>
 <td>テストデータ生成</td>
 </tr>
 <tr>
-<td><code>フォールバック先_generate_schema</code></td>
+<td><code>minimax_generate_schema</code></td>
 <td>スキーマ生成</td>
 </tr>
 <tr>
-<td><code>フォールバック先_write_email</code></td>
+<td><code>minimax_write_email</code></td>
 <td>メール文面生成</td>
 </tr>
 <tr>
-<td><code>フォールバック先_log_analysis</code></td>
+<td><code>minimax_log_analysis</code></td>
 <td>ログ分析</td>
 </tr>
 <tr>
-<td><code>フォールバック先_error_group</code></td>
+<td><code>minimax_error_group</code></td>
 <td>エラーグルーピング</td>
 </tr>
 <tr>
-<td><code>フォールバック先_diff_summary</code></td>
+<td><code>minimax_diff_summary</code></td>
 <td>diff要約</td>
 </tr>
 <tr>
-<td><code>フォールバック先_diff_releases</code></td>
+<td><code>minimax_diff_releases</code></td>
 <td>リリース差分比較</td>
 </tr>
 <tr>
-<td><code>フォールバック先_batch_process</code></td>
+<td><code>minimax_batch_process</code></td>
 <td>バッチ処理</td>
 </tr>
 <tr>
-<td><code>フォールバック先_env_check</code></td>
+<td><code>minimax_env_check</code></td>
 <td>環境チェック</td>
 </tr>
 <tr>
-<td><code>フォールバック先_cron_helper</code></td>
+<td><code>minimax_cron_helper</code></td>
 <td>cron設定補助</td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。</p>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/フォールバック先-mcp-server.py</code> — 自作Pythonスクリプト（<strong>代替プロバイダー-M3</strong>使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p></div>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/minimax-mcp-server.py</code> — 自作Pythonスクリプト（<strong>MiniMax-M3</strong>使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p></div>
 <hr />
-<h3 id="フォールバック先-official">フォールバック先-official（公式 / 画像・音楽・動画・10ツール）</h3>
-<p><strong>代替プロバイダー公式MCPサーバー</strong>。画像・音楽・動画・音声などのメディア生成機能を提供する。自作の <code>フォールバック先</code>（テキスト処理特化）とは別サーバー。</p>
+<h3 id="minimax-official">minimax-official（公式 / 画像・音楽・動画・10ツール）</h3>
+<p><strong>MiniMax公式MCPサーバー</strong>。画像・音楽・動画・音声などのメディア生成機能を提供する。自作の <code>minimax</code>（テキスト処理特化）とは別サーバー。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -291,7 +291,7 @@
 <tbody>
 <tr>
 <td><code>generate_video</code></td>
-<td>テキストプロンプト or 画像から動画を生成（<code>代替プロバイダー-Hailuo-02</code>等）</td>
+<td>テキストプロンプト or 画像から動画を生成（<code>MiniMax-Hailuo-02</code>等）</td>
 </tr>
 <tr>
 <td><code>query_video_generation</code></td>
@@ -332,23 +332,23 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: 「〇〇の動画を生成して」「画像を作って」「BGMを生成して」など、メディア生成タスク全般。
-<strong>出力先</strong>: <code>~/フォールバック先-output/</code>（WSL内）に自動保存される。</p>
+<strong>出力先</strong>: <code>~/minimax-output/</code>（WSL内）に自動保存される。</p>
 <hr />
-<h3 id="フォールバック先-video">フォールバック先-video（公式 / 動画生成専用・従量課金）</h3>
-<p><strong>代替プロバイダー公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）</strong>。<code>フォールバック先-official</code> と<strong>同じバイナリ</strong>（公式パッケージ <code>フォールバック先-mcp</code>）だが、<strong>APIキー（従量課金アカウント）と出力先を分離</strong>した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。</p>
+<h3 id="minimax-video">minimax-video（公式 / 動画生成専用・従量課金）</h3>
+<p><strong>MiniMax公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）</strong>。<code>minimax-official</code> と<strong>同じバイナリ</strong>（公式パッケージ <code>minimax-mcp</code>）だが、<strong>APIキー（従量課金アカウント）と出力先を分離</strong>した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>項目</th>
-<th>フォールバック先-official</th>
-<th>フォールバック先-video</th>
+<th>minimax-official</th>
+<th>minimax-video</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>バイナリ</td>
-<td>公式 <code>フォールバック先-mcp</code></td>
-<td><strong>同じ</strong>（公式 <code>フォールバック先-mcp</code>）</td>
+<td>公式 <code>minimax-mcp</code></td>
+<td><strong>同じ</strong>（公式 <code>minimax-mcp</code>）</td>
 </tr>
 <tr>
 <td>APIキー</td>
@@ -357,8 +357,8 @@
 </tr>
 <tr>
 <td>出力先</td>
-<td><code>~/フォールバック先-output/</code></td>
-<td><code>~/フォールバック先-output-video/</code></td>
+<td><code>~/minimax-output/</code></td>
+<td><code>~/minimax-output-video/</code></td>
 </tr>
 <tr>
 <td>用途</td>
@@ -368,15 +368,15 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: 動画生成を大量に行いたい場合。official の無料枠とは課金体系が独立しているため、動画専用に従量アカウントを分けて運用する。</p>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh</code> — 公式パッケージ <code>フォールバック先-mcp</code> を VIDEO キーで起動（<code>export MINIMAX_API_KEY=&quot;${MINIMAX_API_KEY_VIDEO}&quot;</code> でマップ）。<code>フォールバック先-official</code> と同じバイナリ・別アカウント・別出力先。2026-06-14 追加。</p></div>
-<h4>フォールバック先系のセットアップ（公式2サーバー）</h4>
-<p>同一の <code>フォールバック先-mcp</code> バイナリを2本起動し、環境変数でAPIキーとアカウントを切り替えて<strong>コスト分離</strong>する構成。</p>
-<p><strong>使い分けのポイント</strong>: 同一バイナリのため <code>generate_video</code> 等が両サーバーに生える。<strong>動画生成時は必ず <code>mcp__フォールバック先-video__generate_video</code></strong> を使う（<code>フォールバック先-official</code> は Token Plan の動画 quota が枯渇するため）。</p>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/start-minimax-video-mcp.sh</code> — 公式パッケージ <code>minimax-mcp</code> を VIDEO キーで起動（<code>export MINIMAX_API_KEY=&quot;${MINIMAX_API_KEY_VIDEO}&quot;</code> でマップ）。<code>minimax-official</code> と同じバイナリ・別アカウント・別出力先。2026-06-14 追加。</p></div>
+<h4>minimax系のセットアップ（公式2サーバー）</h4>
+<p>同一の <code>minimax-mcp</code> バイナリを2本起動し、環境変数でAPIキーとアカウントを切り替えて<strong>コスト分離</strong>する構成。</p>
+<p><strong>使い分けのポイント</strong>: 同一バイナリのため <code>generate_video</code> 等が両サーバーに生える。<strong>動画生成時は必ず <code>mcp__minimax-video__generate_video</code></strong> を使う（<code>minimax-official</code> は Token Plan の動画 quota が枯渇するため）。</p>
 <ul>
-<li><strong>サーバー登録は <code>claude mcp add -s user</code> で <code>~/.claude.json</code>（userスコープ）へ。<code>settings.json</code> の <code>mcpServers</code> は読まれないので注意</strong>（2026-06-15検証済み・下記トラブルシューティング「2層問題」参照）。<pre><code class="language-bash">claude mcp add フォールバック先-video -s user -- bash ~/.claude/scripts/mcp/start-フォールバック先-video-mcp.sh
+<li><strong>サーバー登録は <code>claude mcp add -s user</code> で <code>~/.claude.json</code>（userスコープ）へ。<code>settings.json</code> の <code>mcpServers</code> は読まれないので注意</strong>（2026-06-15検証済み・下記トラブルシューティング「2層問題」参照）。<pre><code class="language-bash">claude mcp add minimax-video -s user -- bash ~/.claude/scripts/mcp/start-minimax-video-mcp.sh
 </code></pre>
 </li>
-<li>起動スクリプト: <code>~/.claude/scripts/mcp/start-フォールバック先-official-mcp.sh</code> / <code>start-フォールバック先-video-mcp.sh</code></li>
+<li>起動スクリプト: <code>~/.claude/scripts/mcp/start-minimax-official-mcp.sh</code> / <code>start-minimax-video-mcp.sh</code></li>
 <li>鍵管理: <code>~/.secrets.env</code> の <code>MINIMAX_API_KEY</code>（無料枠）/ <code>MINIMAX_API_KEY_VIDEO</code>（従量）</li>
 </ul>
 <p><strong>注意</strong>: MCP接続は起動時確立のため、設定変更後は Claude Code の再起動が必要。</p>
@@ -662,19 +662,19 @@
 </thead>
 <tbody>
 <tr>
-<td>フォールバック先</td>
+<td>minimax</td>
 <td>✅ あり</td>
 <td>✅ あり</td>
 <td>コスト削減で明示的に呼び出し（要約・翻訳・データ処理等）</td>
 </tr>
 <tr>
-<td>フォールバック先-official</td>
+<td>minimax-official</td>
 <td>✅ あり</td>
 <td>✅ あり</td>
 <td>動画・画像・音声生成（Hailuo）。両環境で利用可能</td>
 </tr>
 <tr>
-<td>フォールバック先-video</td>
+<td>minimax-video</td>
 <td>✅ あり</td>
 <td>✅ あり</td>
 <td>動画生成専用（従量・両環境）</td>
@@ -976,19 +976,19 @@ start-&lt;name&gt;.sh
 <td>~0.3%</td>
 </tr>
 <tr>
-<td>フォールバック先</td>
+<td>minimax</td>
 <td>17</td>
 <td>~1k</td>
 <td>~0.5%</td>
 </tr>
 <tr>
-<td>フォールバック先-official</td>
+<td>minimax-official</td>
 <td>10</td>
 <td>~1k</td>
 <td>~0.5%</td>
 </tr>
 <tr>
-<td>フォールバック先-video</td>
+<td>minimax-video</td>
 <td>10</td>
 <td>~1k</td>
 <td>~0.5%</td>
@@ -1027,7 +1027,7 @@ start-&lt;name&gt;.sh
 <li><code>C:\Users\&lt;user&gt;\AppData\Local\Packages\&lt;Claudeのパッケージフォルダ&gt;\LocalCache\Roaming\Claude\claude_desktop_config.json</code> — <strong>サンドボックス化パッケージキャッシュ内</strong>（Microsoft Store版で実際に使われるのはここ）</li>
 </ol>
 <p><strong>判別方法</strong>: 既に動いている他のMCPサーバーのエントリの <code>args</code>（<code>wsl -d Ubuntu -- bash &lt;path&gt;</code> のようなコマンド形式）が、UI上の接続ログ（<code>/mcp</code> → サーバー詳細）に表示される実際の起動コマンドと一致しているファイルが「本物」。3つの候補に同名・類似のサーバーエントリがあっても、起動コマンドが実際のログと食い違っていれば、それは使われていない古いコピーである。</p>
-<p>詳細な調査の経緯: <code>01_DECISIONS/claude-code/2026-06-07_フォールバック先-official-MCP接続トラブル解決と動画生成成功.md</code></p>
+<p>詳細な調査の経緯: <code>01_DECISIONS/claude-code/2026-06-07_minimax-official-MCP接続トラブル解決と動画生成成功.md</code></p>
 <h3>トラブルシューティング: 「設定ファイルの2層問題」（WSL CLI版）</h3>
 <p>WSL CLI版でMCPサーバーが <code>Connection closed (-32000)</code> になる場合、<strong><code>settings.json</code> と <code>.claude.json</code> の両方にMCP定義があるか確認</strong>する。</p>
 <p><strong>どちらが使われているか</strong>: <code>/mcp</code> → サーバー選択 → 詳細画面の「Config location」で確認。</p>

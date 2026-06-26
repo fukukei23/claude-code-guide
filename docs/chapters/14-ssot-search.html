@@ -152,9 +152,9 @@
 <hr />
 <h2 id="overview">概要：これは何か</h2>
 <p>「SSOTから探して: glm-rate-proxy」と話しかけると、1,900件超のMarkdownファイルを横断検索して関連ドキュメントを5件表示するスキルです。</p>
-<pre><code>あなた: SSOTから探して: 代替プロバイダーのフォールバック設定
+<pre><code>あなた: SSOTから探して: MiniMaxのフォールバック設定
 
-Claude: 🔍 SSOT検索: 「代替プロバイダー フォールバック 設定」— 5件ヒット
+Claude: 🔍 SSOT検索: 「MiniMax フォールバック 設定」— 5件ヒット
   1. 📋 DECISIONS  01_DECISIONS/claude-code/2026-05-11_...
   2. 📅 DAILY      10_DAILY/2026-05-11.md
   ...
@@ -235,7 +235,7 @@ SSOT検索: &lt;キーワード&gt;
 <pre><code>SSOTから探して: glm-rate-proxy の設定
 SSOTから探して: openclaw-stack 設計方針
 SSOTから探して: Zenn記事 LLMルーティング
-SSOTから探して: 代替プロバイダー フォールバック
+SSOTから探して: MiniMax フォールバック
 </code></pre>
 <h3>件数を増やす</h3>
 <p>ClaudeにBashコマンドを直接実行させる場合:</p>
@@ -245,10 +245,10 @@ SSOTから探して: 代替プロバイダー フォールバック
 <h2 id="japanese">日本語クエリのコツ</h2>
 <p>スペース区切りでキーワードを並べると精度が上がります:</p>
 <pre><code># よりよい
-SSOTから探して: 代替プロバイダー フォールバック 設定
+SSOTから探して: MiniMax フォールバック 設定
 
 # 動くが精度が落ちる場合も
-SSOTから探して: 代替プロバイダーのフォールバック設定方法
+SSOTから探して: MiniMaxのフォールバック設定方法
 </code></pre>
 <p>スペースなしでも内部でトークン分割（助詞・英数字境界で分割）するため多くの場合動作します。</p>
 <hr />
@@ -268,7 +268,7 @@ results = rerank(query, hits, top_n=5)
 <h3>日本語トークナイザ</h3>
 <pre><code class="language-python">DELIMITERS = r&quot;[\s　のをがはにでもとからまでよりへ、。・]+&quot;
 # さらに英数字↔日本語境界でも分割
-# 例: &quot;代替プロバイダーのAPI&quot; → [&quot;代替プロバイダー&quot;, &quot;API&quot;]
+# 例: &quot;MiniMaxのAPI&quot; → [&quot;MiniMax&quot;, &quot;API&quot;]
 </code></pre>
 <h3>使用モデル</h3>
 <div class="table-wrapper"><table>

@@ -150,7 +150,19 @@
             <h1>11 現場の知見 — 使ってみないとわからないこと</h1>
 <div class="callout callout-info"><p>実際にClaude Codeを使い込んで得た実践知。公式ドキュメントには書いていない「暗黙知」をまとめる。</p></div>
 <hr />
-<h2>A. コンテキスト経済学</h2>
+<h2 id="toc">📑 セクション一覧（目次）</h2>
+<ul>
+<li><strong><a href="#sec-a">A. コンテキスト経済学</a></strong> — トークン消費の実態・雪だるま式コスト</li>
+<li><strong><a href="#sec-b">B. 落とし穴（ハマりポイント）</a></strong> — 2ファイル問題・MCP復活・フックブロック等</li>
+<li><strong><a href="#sec-c">C. 効率テクニック</a></strong> — compact・BGエージェント・model切替</li>
+<li><strong><a href="#sec-d">D. よくある誤解</a></strong> — コスト/メモリ/clear/compact等の誤解</li>
+<li><strong><a href="#sec-e">E. Cron管理の注意点</a></strong> — 7日失効・膨張バグ・スクリプト化</li>
+<li><strong><a href="#sec-f">F. APIスクリプト共通基盤</a></strong> — api_base.py・プロバイダ追加手順</li>
+<li><strong><a href="#sec-g">G. コード行数の正確な計測</a></strong> — 自動生成除外・3層証明</li>
+<li><strong><a href="#sec-h">H. 並行セッションの競合回避</a></strong> — active-sessionsボード運用</li>
+</ul>
+<hr />
+<h2 id="sec-a">A. コンテキスト経済学</h2>
 <p>トークンがどう消費されているかを理解することが、効率的な使い方の第一歩。</p>
 <h3>入力:出力 = 13:1 は正常</h3>
 <p>ChatGPT等のチャットAIでは「短い質問 → 長い回答」なので出力の方が多くなりがち。しかし<strong>Claude Codeでは逆転</strong>する。</p>
@@ -234,7 +246,7 @@
 <li><strong>statusLineで常時監視</strong>: <code>llm-status.sh</code> がJSONL実サイズを <code>Req X.XMB/32</code> で表示（27MB黄・30MB赤）。色が変わったら画像整理の合図。</li>
 </ul>
 <hr />
-<h2>B. 落とし穴（ハマりポイント）</h2>
+<h2 id="sec-b">B. 落とし穴（ハマりポイント）</h2>
 <h3>設定ファイルが2つ存在する（2ファイル問題）</h3>
 <pre><code>~/.claude.json          ← CLI自動生成（隠れファイル）
 ~/.claude/settings.json ← ユーザー編集用
@@ -266,9 +278,9 @@ cat ~/.claude/settings.json | jq '.mcpServers | keys'
 <h3>セッション開始時にMCPが全ツール一括ロード</h3>
 <p>MCPツールは「必要になったら読み込む」のではなく、<strong>セッション開始時に全ツール定義を一括でロード</strong>する。これがコンテキストの固定消費の主因。</p>
 <hr />
-<h2>C. 効率テクニック</h2>
+<h2 id="sec-c">C. 効率テクニック</h2>
 <h3>作業が長くなったら <code>/compact</code> か新セッション</h3>
-<p>セッションが長くなると過去の会話が蓄積し、1ターンあたりの入力トークンが増え続ける。</p>
+<p>セッションが長くなると過去の会話が蓄積し、1ターンあたりの入力トークンが増加し続ける。</p>
 <ul>
 <li><strong><code>/compact</code></strong>: 古い会話を要約して圧縮。会話の文脈は維持</li>
 <li><strong>新セッション</strong>: <code>/clear</code> または再起動。完全にリセット</li>
@@ -296,7 +308,7 @@ cat ~/.claude/settings.json | jq '.mcpServers | keys'
 <li>長いドキュメントは別ファイルにして、必要時だけ参照</li>
 </ul>
 <hr />
-<h2>D. よくある誤解</h2>
+<h2 id="sec-d">D. よくある誤解</h2>
 <h3>「会話履歴がコンテキスト圧迫の主因」</h3>
 <p><strong>半分正解・半分不正解</strong>。</p>
 <ul>
@@ -345,7 +357,43 @@ cat ~/.claude/settings.json | jq '.mcpServers | keys'
 <h3>「コンパクション（compact）= 要約品質が高い」</h3>
 <p><strong>注意が必要</strong>。自動コンパクションは古い会話を要約して捨てるが、<strong>詳細が失われる</strong>。重要な文脈は compact 前にメモリに保存するか、自分で要約を控えておく。</p>
 <hr />
-<h2>F. APIスクリプト共通基盤（api_base.py）</h2>
+<h2 id="sec-e">E. Cron管理の注意点</h2>
+<h3>Cron は7日で自動失効する</h3>
+<p>Claude Code の <code>CronCreate</code> で登録したCronジョブは、<strong><code>durable=false</code> の場合は7日後に自動削除される</strong>。<code>durable=true</code> も実質7日が上限とされている（2026年6月時点）。</p>
+<p>→ <strong>放置するとCronが静かに消える。</strong></p>
+<h3>自己更新プロンプトは膨張バグを引き起こす</h3>
+<p>「このプロンプト全文をそのままコピーして再登録せよ」というプロンプトをCronに埋め込むと、再登録のたびにプロンプトが重複コピーされ続け、最終的に8倍以上の長さになる。</p>
+<pre><code>初回: &quot;このプロンプト全文を...&quot;（100文字）
+1回目実行後: &quot;このプロンプト全文を...このプロンプト全文を...&quot;（200文字）
+N回目実行後: N倍の長さに膨張
+</code></pre>
+<h3>推奨: スクリプト方式で永続化する</h3>
+<p>Cron定義を外部スクリプトに書き出し、更新専用Cronがそれを読んで再登録する方式が安全。</p>
+<p><strong>構成例:</strong></p>
+<pre><code class="language-bash"># ~/bin/renew-crons.sh
+# このファイルは実行ではなく、Claudeがcatして読むための定義ファイル
+#
+# 1. Knowledge Lint
+#    schedule: &quot;3 3 * * 0,2,4&quot;
+#    prompt:   &quot;bash ~/.claude/scripts/knowledge-lint/run-lint.sh &amp;&amp; ...&quot;
+#
+# 2. Cron更新タスク（このスクリプト自身）
+#    schedule: &quot;0 3 */6 * *&quot;
+#    prompt:   &quot;bash ~/bin/renew-crons.sh を cat して全Cronを再登録せよ&quot;
+</code></pre>
+<p><strong>更新Cronのプロンプト（短く固定）:</strong></p>
+<pre><code>bash ~/bin/renew-crons.sh を cat して、記載された全Cronを
+CronCreate(durable=true, recurring=true) で再登録せよ。
+既存の同名Cronは削除してから登録すること。
+</code></pre>
+<p><strong>ポイント:</strong></p>
+<ul>
+<li>プロンプト本文にCron定義を書かない（スクリプトに委譲する）</li>
+<li>スクリプト内容を変更してもプロンプトは変わらないため膨張しない</li>
+<li>更新スケジュールは <code>0 3 */6 * *</code>（6日ごと）で7日失効の前に再登録</li>
+</ul>
+<hr />
+<h2 id="sec-f">F. APIスクリプト共通基盤（api_base.py）</h2>
 <p>外部API（Gemini・Last.fm等）をCLIから叩くとき、<strong>共通基盤 <code>lib/api_base.py</code> を経由</strong>するとプロバイダを増やすたびに同じパターンが使い回せる。2プロバイダで同一雛形が再利用可能なことを実証済み。</p>
 <h3>設計思想：CCはAPIを直接叩かない</h3>
 <pre><code>SKILL.md → scripts/api/&lt;provider&gt;.py → lib/api_base.py → 統一JSON
@@ -414,7 +462,7 @@ if __name__ == &quot;__main__&quot;:
 </ul>
 <div class="callout callout-info"><p>詳細（アーキテクチャ全体・フェーズ別成果）: SSOT <code>01_DECISIONS/claude-code/2026-06-18_サードパーティAPI統合アーキテクチャ.md</code></p></div>
 <hr />
-<h2>G. コード行数の正確な計測</h2>
+<h2 id="sec-g">G. コード行数の正確な計測</h2>
 <p>ポートフォリオや経歴書に「コード行数」を記載する際、<strong>自動生成ファイルを除外しないと数字が大きく狂う</strong>。</p>
 <h3>必ず除外すべきディレクトリ</h3>
 <div class="table-wrapper"><table>
@@ -474,43 +522,7 @@ if __name__ == &quot;__main__&quot;:
 </ol>
 <p>→ <code>/code-metrics</code> スキルがこれらを自動実行する。</p>
 <hr />
-<h2>E. Cron管理の注意点</h2>
-<h3>Cron は7日で自動失効する</h3>
-<p>Claude Code の <code>CronCreate</code> で登録したCronジョブは、<strong><code>durable=false</code> の場合は7日後に自動削除される</strong>。<code>durable=true</code> も実質7日が上限とされている（2026年6月時点）。</p>
-<p>→ <strong>放置するとCronが静かに消える。</strong></p>
-<h3>自己更新プロンプトは膨張バグを引き起こす</h3>
-<p>「このプロンプト全文をそのままコピーして再登録せよ」というプロンプトをCronに埋め込むと、再登録のたびにプロンプトが重複コピーされ続け、最終的に8倍以上の長さになる。</p>
-<pre><code>初回: &quot;このプロンプト全文を...&quot;（100文字）
-1回目実行後: &quot;このプロンプト全文を...このプロンプト全文を...&quot;（200文字）
-N回目実行後: N倍の長さに膨張
-</code></pre>
-<h3>推奨: スクリプト方式で永続化する</h3>
-<p>Cron定義を外部スクリプトに書き出し、更新専用Cronがそれを読んで再登録する方式が安全。</p>
-<p><strong>構成例:</strong></p>
-<pre><code class="language-bash"># ~/bin/renew-crons.sh
-# このファイルは実行ではなく、Claudeがcatして読むための定義ファイル
-#
-# 1. Knowledge Lint
-#    schedule: &quot;3 3 * * 0,2,4&quot;
-#    prompt:   &quot;bash ~/.claude/scripts/knowledge-lint/run-lint.sh &amp;&amp; ...&quot;
-#
-# 2. Cron更新タスク（このスクリプト自身）
-#    schedule: &quot;0 3 */6 * *&quot;
-#    prompt:   &quot;bash ~/bin/renew-crons.sh を cat して全Cronを再登録せよ&quot;
-</code></pre>
-<p><strong>更新Cronのプロンプト（短く固定）:</strong></p>
-<pre><code>bash ~/bin/renew-crons.sh を cat して、記載された全Cronを
-CronCreate(durable=true, recurring=true) で再登録せよ。
-既存の同名Cronは削除してから登録すること。
-</code></pre>
-<p><strong>ポイント:</strong></p>
-<ul>
-<li>プロンプト本文にCron定義を書かない（スクリプトに委譲する）</li>
-<li>スクリプト内容を変更してもプロンプトは変わらないため膨張しない</li>
-<li>更新スケジュールは <code>0 3 */6 * *</code>（6日ごと）で7日失効の前に再登録</li>
-</ul>
-<hr />
-<h2>H. 並行セッションの競合回避（active-sessionsボード）</h2>
+<h2 id="sec-h">H. 並行セッションの競合回避（active-sessionsボード）</h2>
 <h3>問題：複数セッションが「共通ファイル」を逆向きに触る</h3>
 <p>通常4セッション程度を並行運用するが、トピックを分けていても<strong>境界が曖昧な「共通ファイル」を複数セッションが同時に逆向きに触り、矛盾・無効化</strong>が起きる。</p>
 <p><strong>共通ファイル（9種）</strong> — 複数セッションの境界をまたぐ設定・運用ファイル:</p>

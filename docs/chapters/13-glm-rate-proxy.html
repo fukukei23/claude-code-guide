@@ -149,7 +149,7 @@
         <article class="chapter-body">
             <h1>13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用</h1>
 <div class="callout callout-warn"><p><strong>⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。</strong>
-Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/代替プロバイダーを使う場合は <a href="04-mcp.html#glm">04_MCPサーバー</a> のglm/フォールバック先 MCPを参照してください。</p></div>
+Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_MCPサーバー</a> のglm/minimax MCPを参照してください。</p></div>
 <p>Claude Code CLIのバックエンドをAnthropicからZAI（Claude）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
 <hr />
 <h2 id="overview">概要：なぜプロキシが必要か</h2>
@@ -159,7 +159,7 @@ Claude Code ────→ api.anthropic.com (Sonnet/Opus)
 
 プロキシ経由:
 Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (Claude)
-                                                 └──→ api.fallback-provider.example (代替プロバイダー, フォールバック)
+                                                 └──→ api.minimax.io (MiniMax, フォールバック)
 </code></pre>
 <h3>コスト比較</h3>
 <div class="table-wrapper"><table>
@@ -215,13 +215,13 @@ Claude Code（CLI）
 │  1. モデル名を書き換え（claude → Claude） │
 │  2. thinking制御を注入                  │
 │  3. 使用量に応じてモデルをダウングレード   │
-│  4. ピーク時間帯は代替プロバイダーに強制切替       │
-│  5. 429/502エラー時は代替プロバイダーにフォールバック│
+│  4. ピーク時間帯はMiniMaxに強制切替       │
+│  5. 429/502エラー時はMiniMaxにフォールバック│
 └─────────────────────────────────────────┘
   │                        │
   ▼                        ▼
-api.z.ai              api.fallback-provider.example
-(Claude)             (代替軽量モデル)
+api.z.ai              api.minimax.io
+(Claude)             (MiniMax-M2.7)
 </code></pre>
 <h3>ファイル構成</h3>
 <pre><code>~/.claude/scripts/glm-rate-proxy/
@@ -229,7 +229,7 @@ api.z.ai              api.fallback-provider.example
 │   ├── proxy.py          # メインプロキシ処理・thinking制御
 │   ├── config.py         # 設定読み込み（DEFAULTS + config.json）
 │   ├── model_router.py   # モデル選択ロジック（使用量・ピーク判定）
-│   ├── upstream.py       # ZAI/代替プロバイダーへのHTTP通信
+│   ├── upstream.py       # ZAI/MiniMaxへのHTTP通信
 │   └── usage_tracker.py  # 使用量トラッキング
 ├── config/
 │   └── config.json       # ユーザー設定（DEFAULTSを上書き）
@@ -270,19 +270,19 @@ api.z.ai              api.fallback-provider.example
 <tr>
 <td><code>peak_block</code></td>
 <td>JST 15:00〜19:00</td>
-<td>代替軽量モデル</td>
-<td>代替プロバイダー</td>
+<td>MiniMax-M2.7</td>
+<td>MiniMax</td>
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p><strong>ピーク時間帯の理由</strong>: ZAI公式ドキュメントによるとClaudeはピーク時に<strong>3倍の消費レート</strong>で計算される。代替プロバイダーに逃がすことでZAIクォータを温存する。</p></div>
+<div class="callout callout-info"><p><strong>ピーク時間帯の理由</strong>: ZAI公式ドキュメントによるとClaudeはピーク時に<strong>3倍の消費レート</strong>で計算される。MiniMaxに逃がすことでZAIクォータを温存する。</p></div>
 <h3>フォールバックチェーン</h3>
-<pre><code>ZAI 429 → Claude-Flash（emergency）→ 代替プロバイダー → 503エラー
-ZAI 5xx → 代替プロバイダー → 503エラー
+<pre><code>ZAI 429 → Claude-Flash（emergency）→ MiniMax → 503エラー
+ZAI 5xx → MiniMax → 503エラー
 </code></pre>
 <div class="callout callout-warn"><p><strong>⚠️ 重要な制限: コンテキスト上限到達時はフォールバックが発動しない</strong></p>
-<p>Claude Codeのコンテキストウィンドウが上限に達した場合、<strong>APIリクエストを送る前にClaude Code本体が判定してエラーを返す</strong>。そのためglm-rate-proxyにリクエストが届かず、代替プロバイダーへのフォールバックも発動しない。</p>
-<pre><code>通常時: Claude Code → glm-rate-proxy → GLM（→ エラー時代替プロバイダー）
+<p>Claude Codeのコンテキストウィンドウが上限に達した場合、<strong>APIリクエストを送る前にClaude Code本体が判定してエラーを返す</strong>。そのためglm-rate-proxyにリクエストが届かず、MiniMaxへのフォールバックも発動しない。</p>
+<pre><code>通常時: Claude Code → glm-rate-proxy → GLM（→ エラー時MiniMax）
 上限時: Claude Code → （本体がAPIリクエストを送らずエラー）← プロキシに届かない
 </code></pre>
 <p><strong>対策</strong>: コンテキストが溜まってきたら早めに <code>/compact</code> または <code>/new-session</code> で切り替える。80%を超えたら <code>/new-session</code> 推奨。</p></div>
@@ -438,9 +438,9 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d
 <ul>
 <li><code>usage_pct</code> が80%超 → <code>economy</code>モードに自動切替済みのはず</li>
 <li>95%超 → <code>emergency</code>モード（Claude-Flash）に切替済みのはず</li>
-<li>429が続く場合 → 代替プロバイダーへのフォールバックが機能しているか <code>last_actual_model</code> を確認</li>
+<li>429が続く場合 → MiniMaxへのフォールバックが機能しているか <code>last_actual_model</code> を確認</li>
 </ul>
-<p><strong>手動で代替プロバイダーに切り替え:</strong></p>
+<p><strong>手動でMiniMaxに切り替え:</strong></p>
 <p><code>config/config.json</code> に追加：</p>
 <pre><code class="language-json">{
   &quot;peak_hours&quot;: {
@@ -450,11 +450,11 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d
   }
 }
 </code></pre>
-<p>（24時間ピーク扱いにして強制代替プロバイダー）</p>
+<p>（24時間ピーク扱いにして強制MiniMax）</p>
 <hr />
-<h3>❌ 代替プロバイダー APIキー変更後に400エラーが出る</h3>
+<h3>❌ MiniMax APIキー変更後に400エラーが出る</h3>
 <p><strong>原因</strong></p>
-<p>ピークブロック（JST 15:00–19:00）が有効な状態では全リクエストが代替プロバイダーに強制ルーティングされる。この時間帯に代替プロバイダーのAPIキーをリセット・変更すると、プロキシが古いキーを保持したまま稼働し続け、全リクエストが400エラーになってClaude Codeが停止する。</p>
+<p>ピークブロック（JST 15:00–19:00）が有効な状態では全リクエストがMiniMaxに強制ルーティングされる。この時間帯にMiniMaxのAPIキーをリセット・変更すると、プロキシが古いキーを保持したまま稼働し続け、全リクエストが400エラーになってClaude Codeが停止する。</p>
 <p><strong>確認手順</strong></p>
 <pre><code class="language-bash"># ピークブロック中かどうか確認
 curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d=json.load(sys.stdin); print('peak_block:', d['peak_block'], '/ provider:', d['provider'])&quot;
@@ -499,7 +499,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 <p><code>config/config.json</code> の全項目：</p>
 <pre><code class="language-json">{
   &quot;zai_base_url&quot;: &quot;https://api.z.ai/api/anthropic&quot;,
-  &quot;フォールバック先_base_url&quot;: &quot;https://api.fallback-provider.example/anthropic/v1&quot;,
+  &quot;minimax_base_url&quot;: &quot;https://api.minimax.io/anthropic/v1&quot;,
   &quot;listen_host&quot;: &quot;127.0.0.1&quot;,
   &quot;listen_port&quot;: 8787,
   &quot;upstream_timeout&quot;: 1200,
@@ -511,8 +511,8 @@ PYTHONPATH=src python3 -m glm_rate_proxy
     &quot;emergency&quot;: {&quot;max_pct&quot;: 100, &quot;model&quot;: &quot;Claude-Flash&quot;}
   },
   &quot;fallback&quot;: {
-    &quot;provider&quot;: &quot;フォールバック先&quot;,
-    &quot;model&quot;: &quot;代替軽量モデル&quot;
+    &quot;provider&quot;: &quot;minimax&quot;,
+    &quot;model&quot;: &quot;MiniMax-M2.7&quot;
   },
   &quot;peak_hours&quot;: {
     &quot;enabled&quot;: true,
@@ -556,7 +556,7 @@ GLMが使えない
 プロセス      : 起動中 (PID: 354224)
 BASE_URL      : http://127.0.0.1:8787（プロキシ経由）
 モード        : peak_block
-プロバイダ    : フォールバック先
+プロバイダ    : minimax
 ZAI使用率     : 0.0%
 直近リクエスト: 2.1MB
 ピークブロック: true
@@ -570,7 +570,7 @@ ZAI使用率     : 0.0%
 <h2>💡 やさしい補足（初心者向け）</h2>
 <ul>
 <li><strong>「プロキシ」= AIを安く使うための中継地点</strong>: 公式の高価なAIに直接つなぐ代わりに、間に安いAIを置いてコストを下げる仕組み</li>
-<li><strong>この環境の核心</strong>: Claude Code → 中継（プロキシ）→ GLM/代替プロバイダー（安いAI）。これで大幅に節約</li>
+<li><strong>この環境の核心</strong>: Claude Code → 中継（プロキシ）→ GLM/MiniMax（安いAI）。これで大幅に節約</li>
 <li><strong>壊れたら</strong>: AIが反応しない・エラーが出る等は、このプロキシが原因のことが多い。この章の「トラブルシューティング」を参照</li>
 <li><strong>意識しなくてOK</strong>: 普段は裏で自動で動いている。トラブル時だけこの章を見る</li>
 </ul>
