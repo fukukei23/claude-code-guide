@@ -157,11 +157,101 @@
 <h2>icon: 🔗
 slug: 16-external-references</h2>
 <h1>16 外部参考資料 — 自分の実体験ではないが参考になる情報源</h1>
-<div class="callout callout-info"><p>この章は他の章と性質が違います。01〜15章は「自分の環境で実際に試して確かめた」記録ですが、ここに載せるのは<strong>未検証・他者の知見</strong>です。読む時はその前提で。</p></div>
-<h2>Claude Code関連OSS</h2>
+<div class="callout callout-warn"><p>この章は他の章と性質が違います。01〜15章は「自分の環境で実際に試して確かめた」記録ですが、ここに載せるのは<strong>外部リポジトリの内容を日本語に翻訳・要約したもの</strong>です。未検証・他者の知見である点に注意して読んでください。</p></div>
+<h2>claude-code-best-practice（リポジトリ概要）</h2>
+<p><a href="https://github.com/shanraisshan/claude-code-best-practice">claude-code-best-practice</a> は、vibe codingからagentic engineeringへの実践ノウハウをまとめたOSSリポジトリ（60.9k star・MIT・2026-06-26調査時点）。以下は中身を実際に読んで翻訳した抜粋。</p>
+<h3>Claude Code の隠れ機能「パワーアップ」（<code>/powerup</code>）</h3>
+<p>v2.1.90で追加されたインタラクティブレッスン機能。<code>claude</code> 起動後に <code>/powerup</code> を打つと、以下10レッスンを1つずつ学べる。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>機能</th>
+<th>主要トピック</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>コードベースとの対話</td>
+<td><code>@ファイル</code>、行参照</td>
+</tr>
+<tr>
+<td>2</td>
+<td>モードで操作</td>
+<td><code>shift+tab</code>、プラン、自動</td>
+</tr>
+<tr>
+<td>3</td>
+<td>すべてを取り消し</td>
+<td><code>/rewind</code>、<code>Esc</code>×2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>バックグラウンド実行</td>
+<td>タスク、<code>/tasks</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>ルールを教える</td>
+<td><code>CLAUDE.md</code>、<code>/memory</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>ツール拡張</td>
+<td>MCP、<code>/mcp</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>ワークフロー自動化</td>
+<td>スキル、フック</td>
+</tr>
+<tr>
+<td>8</td>
+<td>自分を複製</td>
+<td>サブエージェント、<code>/agents</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td>どこからでもコード化</td>
+<td><code>/remote-control</code>、<code>/teleport</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>モデル調整</td>
+<td><code>/model</code>、<code>/effort</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>/powerup</code> コマンド自体は試していないが、まだ触ったことのない機能（<code>/teleport</code>・<code>/effort</code>等）の存在を知る一覧として有用。</p>
+<h3>セッション管理と1Mコンテキスト（Thariq氏の知見・翻訳）</h3>
+<p>各ターン後に取れる選択肢は5つ:</p>
+<ol>
+<li><strong>Continue</strong> — 同じセッションを継続（全コンテキスト保持）</li>
+<li><strong>Rewind</strong>（<code>Esc</code>×2） — 前のメッセージに戻り、それ以降を削除して再開</li>
+<li><strong><code>/compact</code></strong> — 会話を要約して圧縮（情報の損失あり）</li>
+<li><strong><code>/clear</code></strong> — 新規セッション開始（自分で書いたブリーフのみ保持）</li>
+<li><strong>Subagents</strong> — 専用コンテキストを持つ子エージェントに委譲</li>
+</ol>
+<p>実践的なポイント:</p>
 <ul>
-<li><a href="https://github.com/shanraisshan/claude-code-best-practice">claude-code-best-practice</a> — vibe codingからagentic engineeringへの実践ノウハウ集。Subagents/Commands/Skills/Workflows/Hooks/MCP/Plugins/Memoryを体系的に解説。Superpowers・gstack・Matt Pocock Skillsなど11+の既存手法を比較。新しいワークフローを作る前に「誰かがもう作ってないか」を確認する用途で参照（2026-06-26調査・60.9k star・MIT）</li>
+<li><strong>「新しいタスク＝新規セッション」が原則</strong></li>
+<li><strong>コンテキストロット</strong>（パフォーマンス低下）は約30〜40万トークン付近から目立ち始める</li>
+<li>失敗した試みは修正メッセージで残すより、<strong>Rewindして学んだ内容を含めて再プロンプト</strong>する方がコンテキスト効率が良い</li>
+<li><code>/compact</code> は「タスク途中で勢いを保ちたい時」向け（低コストだが要約ロスあり）、新規セッションは「重要な判断ポイント」向け（要約ロスなし）</li>
+<li>モデルが次の方向性を予測できない時にCompactすると重要情報が落ちやすい。<strong>「これから何をするか」のヒントを付けてCompactする</strong>と精度が上がる</li>
 </ul>
+<p>この内容は本ガイドの<a href="01-basics.html">01_基礎概念</a>（コンテキストの仕組み）・<a href="11-tips.html">11_現場の知見</a> A節（コンテキスト経済学）の話と重なるが、「Rewindの使い分け」は本ガイドでは扱っていない観点。</p>
+<h3>Opus活用の6つのコツ（Boris Cherny氏・Claude Code開発者の知見）</h3>
+<div class="callout callout-warn"><p>⚠️ 元記事は「Opus 4.7」を前提に書かれており（2026年4月時点の記事）、モデル名は現行（Opus 4.8等）と異なる可能性がある。ただし機能自体は汎用的なので参考になる。</p></div>
+<ol>
+<li><strong>オートモード</strong> — 安全なコマンドは自動承認、リスクのあるものだけ一時停止。<code>Shift+Tab</code>で切替。複数のClaudeを並行実行しやすくなる</li>
+<li><strong><code>/fewer-permission-prompts</code>スキル</strong> — セッション履歴から「安全だが毎回許可を求められるコマンド」を検出し、許可リストへの追加を提案</li>
+<li><strong>リキャップ機能</strong> — 長時間セッションから戻る際に「モデルが何をしたか・次は何か」を短く要約</li>
+<li><strong>フォーカスモード</strong>（<code>/focus</code>） — 中間作業を隠して最終結果だけに集中させる</li>
+<li><strong>エフォートレベル調整</strong>（<code>/effort</code>） — 5段階（低〜最大）で思考量を調整、速度と知能のバランス取り</li>
+<li><strong>検証メカニズムの確保</strong> — モデルが強力なほど「バックエンドはサーバテスト・フロントエンドはブラウザ制御」のようなタスク別の検証手段が重要になる</li>
+</ol>
 
         </article>
 
