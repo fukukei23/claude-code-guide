@@ -162,10 +162,11 @@
         ↓
 【3. 必須】Issue化
         ↓
-【4. 必須】自律実装ループ
+【4. 必須】自律実装ループ（Daily Triage メタループ）
         ↓
 【5. 自動】完了通知
 </code></pre>
+<div class="callout callout-info"><p><strong>フェーズ4は方式刷新済み</strong>: 旧 <code>start.sh --auto</code>（Issue一括自動実装）は廃止。現在は <strong>Daily Triage メタループ</strong>（毎朝タスク候補を生成→人間承認→実装+検証の連鎖）が主役。詳細は「フェーズ4」参照。</p></div>
 <hr />
 <h2>フェーズ1: 品質スイープ</h2>
 <p>全ファイルを機械的に走査し <strong>High/Medium/Low</strong> リストを生成する（読み取り専用・変更なし）。</p>
@@ -186,10 +187,6 @@
 <td>セキュリティ問題・巨大関数（50行超）・重複ロジック・未使用import</td>
 </tr>
 <tr>
-<td>出力先</td>
-<td><code>01_DECISIONS/&lt;project&gt;/YYYY-MM-DD_リファクタリング調査_&lt;area&gt;.md</code></td>
-</tr>
-<tr>
 <td>いつ使う</td>
 <td>50件超の大規模改善前、定期健全性確認</td>
 </tr>
@@ -202,7 +199,7 @@
   prompt: |
     &lt;project&gt; のコード品質スイープ。
     未完了エリアを1つ選び全ファイルを読んでHigh/Medium/Lowに分類。
-    結果をSSOTに保存。コード変更は一切しない。
+    結果を記録に保存。コード変更は一切しない。
 </code></pre>
 <hr />
 <h2>フェーズ2: コードレビュー v3</h2>
@@ -228,7 +225,7 @@ priority: P1（except限定化）、P2（関数分割）
 </code></pre>
 <hr />
 <h2>フェーズ3: Issue化</h2>
-<p>P1/P2 リストを GitHub Issues に一括登録する。</p>
+<p>P1/P2 リストを作業タスク（Issue またはバックログ）に一括登録する。</p>
 <h3>タイトル形式</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -241,17 +238,17 @@ priority: P1（except限定化）、P2（関数分割）
 <tbody>
 <tr>
 <td><code>[A]</code></td>
-<td>priority:low</td>
+<td>low</td>
 <td>1h以下</td>
 </tr>
 <tr>
 <td><code>[B][C]</code></td>
-<td>priority:medium</td>
+<td>medium</td>
 <td>2〜3h</td>
 </tr>
 <tr>
 <td><code>[D]</code></td>
-<td>priority:high</td>
+<td>high</td>
 <td>4h以上</td>
 </tr>
 </tbody>
@@ -261,123 +258,115 @@ priority: P1（except限定化）、P2（関数分割）
 fix:  [B] except Exception を具体的な例外型に限定
 refactor: [D] test_routes_coverage.py を6ファイルに分割
 </code></pre>
-<h3>GitHub API 一括作成</h3>
-<pre><code class="language-python">import json, urllib.request
-
-TOKEN = &quot;your_github_token&quot;
-REPO = &quot;your_username/your_repo&quot;
-
-issues = [
-    {
-        &quot;title&quot;: &quot;test: [A] xxx&quot;,
-        &quot;body&quot;: &quot;## 概要\n...\n\n## 完了条件\n- pytest 全件パス\n\n## 推定工数: 1h&quot;,
-        &quot;labels&quot;: [&quot;type:test&quot;, &quot;priority:low&quot;]
-    },
-]
-
-for issue in issues:
-    req = urllib.request.Request(
-        f&quot;https://api.github.com/repos/{REPO}/issues&quot;,
-        data=json.dumps(issue).encode(),
-        headers={
-            &quot;Authorization&quot;: f&quot;token {TOKEN}&quot;,
-            &quot;Content-Type&quot;: &quot;application/json&quot;
-        }
-    )
-    res = json.load(urllib.request.urlopen(req))
-    print(f&quot;Created #{res['number']}: {res['title']}&quot;)
-</code></pre>
+<div class="callout callout-info"><p>Phase3以降は GitHub Issue に限らず、ローカルのバックログ（Markdown）をタスク源としても運用できる（フェーズ4の Daily Triage は両方を収集対象とする）。</p></div>
 <hr />
-<h2>フェーズ4: 自律実装ループ</h2>
-<p>GitHub Issues を <strong>高→中→低の順に自動実装</strong>する Stop Hook 連鎖方式。</p>
+<h2>フェーズ4: 自律実装ループ（Daily Triage メタループ）</h2>
+<p>タスクを<strong>人間承認付きで自律実行する連鎖</strong>。毎朝タスク候補を自動生成し、承認を経て「実装→検証→次タスク」が自動で回る。</p>
+<h3>1日の流れ</h3>
+<pre><code>① Daily Triage（毎朝6:07・自動）
+   バックログ + handoff + 進行中タスクを収集 → today-tasks.md 生成
+        ↓
+② 候補確認（セッション開始時・自動表示）
+        ↓
+③ 人間承認（approve.py・手動ゲート）
+   実行タスクを選択 → state.json 登録 → 最初のタスク起動
+        ↓
+④ 自律実行連鎖（自動）
+   run-task.sh: 実装（git commit まで）→ 検証（別プロセス・分離）
+     ↓ verify-result.txt に OK / NG を書き出し
+   Stop Hook → next_issue.py が判定:
+     OK → completed 記録 → 次タスク起動
+     NG → blocked 記録 → 停止（人間エスカレーション）
+        ↓
+⑤ 終了（自動）
+   全完了 → 完了通知 / NG等 → 停止通知
+</code></pre>
 <h3>アーキテクチャ</h3>
-<pre><code>start.sh --auto &lt;repo&gt;
-    │
-    ▼
-state.json: active=true / pending=[76,77,78]
-    │
-    ▼
-claude --print &quot;Issue #76 を実装して...&quot;
-    │ セッション終了
-    ▼
-[Stop Hook 発火] → next-issue.py
-    │ completed=[76] / pending=[77,78]
-    ▼
-claude --print &quot;Issue #77 を実装して...&quot;
-    │ ... 繰り返す ...
-    ▼
-pending=[] → active=false → 完了通知
-</code></pre>
-<h3>state.json 構造</h3>
-<pre><code class="language-json">{
-  &quot;project&quot;: &quot;my-project&quot;,
-  &quot;repo_path&quot;: &quot;/path/to/repo&quot;,
-  &quot;active&quot;: true,
-  &quot;pending&quot;: [76, 77, 78],
-  &quot;current&quot;: 76,
-  &quot;completed&quot;: []
-}
-</code></pre>
-<h3>起動コマンド</h3>
-<pre><code class="language-bash"># Issue番号を指定して実行
-bash ~/.claude/scripts/auto-dev/start.sh 76 77 78
-
-# GitHub から priority 順に自動取得
-bash ~/.claude/scripts/auto-dev/start.sh --auto my-repo
-</code></pre>
-<h3>夜間・放置実行（CronCreate 方式）</h3>
-<pre><code>CronCreate:
-  schedule: &quot;7 * * * *&quot;   # 毎時:07
-  durable: true
-  prompt: |
-    GitHub のオープン Issue を priority:high → medium → low の順で1件実装。
-    pytest 全件パス確認 → commit → push → Issue close。
-    1セッション1Issue のみ。失敗は最大3回リトライ。
-</code></pre>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
-<th>方式</th>
-<th>使い分け</th>
+<th>コンポーネント</th>
+<th>役割</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Stop Hook（start.sh）</td>
-<td>今すぐ連続実行したい</td>
+<td><code>daily-triage.sh</code></td>
+<td>Triage 発火エンジン（LLM判定呼出・today-tasks.md 生成・通知）</td>
 </tr>
 <tr>
-<td>CronCreate</td>
-<td>夜間・放置・数日かけて処理</td>
+<td><code>daily_triage.py</code></td>
+<td>バックログ/handoff収集・LLM判定・実在 repo チェック</td>
+</tr>
+<tr>
+<td><code>approve.py</code></td>
+<td>人間承認ゲート・manual タスク除外・state.json 登録</td>
+</tr>
+<tr>
+<td><code>run-task.sh</code></td>
+<td>実装 + 検証（別プロセス）・対象 repo で実行</td>
+</tr>
+<tr>
+<td><code>next_issue.py</code></td>
+<td>Stop hook 発火・検証結果判定・completed/blocked 遷移・次タスク起動</td>
 </tr>
 </tbody>
 </table></div>
-<h3>1 Issue あたりの自動処理</h3>
-<pre><code>実装（LLM でコード生成）
-    ↓
-pytest 全件パス確認
-    ↓
-git commit &amp;&amp; git push
-    ↓
-CI 確認
-    ↓
-Issue close（GitHub API）
-    ↓
-次の Issue へ（Stop Hook 連鎖）
+<h3>state.json 構造（タスクごとに repo を持つ）</h3>
+<pre><code class="language-json">{
+  &quot;active&quot;: false,
+  &quot;current&quot;: null,
+  &quot;pending&quot;: [],
+  &quot;completed&quot;: [
+    { &quot;title&quot;: &quot;validate_email にRFCチェックを追加&quot; }
+  ],
+  &quot;blocked&quot;: []
+}
 </code></pre>
+<ul>
+<li><code>active</code>: ループ生存フラグ（false で即終了）</li>
+<li><code>current</code>: 実行中タスク（<code>repo</code> はタスクごと・真実のソース）</li>
+<li><code>pending</code>: 待機中タスク群（複数 repo 混在可）</li>
+<li><code>completed</code> / <code>blocked</code>: 各タスクの <code>repo</code> を記録</li>
+</ul>
+<div class="callout callout-danger"><p><strong>重要</strong>: 複数リポジトリが混在するキューにも対応するため、repo は top-level ではなく<strong>タスクごと</strong>に持たせる（旧 <code>repo_path</code> は廃止）。</p></div>
+<h3>実装と検証を分離する理由</h3>
+<p><code>run-task.sh</code> は「実装する Claude」と「検証する Claude」を<strong>別プロセス</strong>で起動する。実装した主体が自分で「OK」と判定するのを防ぎ、独立した検証結果（<code>verify-result.txt</code>）を連鎖の判定に使う。これで「テストを通したつもり」の誤判定を排除する。</p>
+<h3>運用コマンド</h3>
+<pre><code class="language-bash"># 手動で Daily Triage 実行（通知なし）
+bash scripts/auto-dev/daily-triage.sh
+
+# 承認（候補選択 → state.json 登録・最初のタスク起動）
+python3 scripts/auto-dev/approve.py
+
+# state 確認
+cat ~/.claude/state/state.json
+
+# テスト
+cd scripts/auto-dev &amp;&amp; python3 -m pytest -q
+</code></pre>
+<h3>毎朝の自動化（CronCreate）</h3>
+<p>Daily Triage は durable Cron で毎朝6:07に発火。結果は Discord 等の webhook に通知（未設定時は skip 警告のみ）。</p>
+<pre><code>CronCreate:
+  schedule: &quot;7 6 * * *&quot;
+  durable: true
+  prompt: |
+    Daily Triage: daily-triage.sh --notify-discord を実行。
+    バックログ + handoff + 進行中タスクを収集 → today-tasks.md 生成 → 通知。
+    失敗時は理由を報告。
+</code></pre>
+<div class="callout callout-warn"><p>Cron は7日で失効するため、<code>renew-crons.sh</code>（外部スクリプト）経由で6日ごとに再登録して永続化する。詳細は <strong>11章「Cron管理の注意点」</strong> 参照。</p></div>
 <h3>緊急停止</h3>
-<pre><code class="language-bash">python3 -c &quot;
-import json
-state_path = '/path/to/state.json'
+<pre><code class="language-python">import json
+state_path = '~/.claude/state/state.json'
 s = json.load(open(state_path))
 s['active'] = False
 json.dump(s, open(state_path, 'w'), indent=2)
 print('停止:', s)
-&quot;
 </code></pre>
 <hr />
 <h2>フェーズ5: 完了通知（自動）</h2>
-<p><code>pending=[]</code> を検知したら自動実行:</p>
+<p>全タスク完了（<code>pending=[]</code>）を検知したら自動実行:</p>
 <ul>
 <li>ターミナルベル音</li>
 <li>OS通知（macOS: <code>osascript</code> / Windows: PowerShell toast）</li>
@@ -385,7 +374,7 @@ print('停止:', s)
 <pre><code class="language-python"># macOS 例
 import subprocess
 subprocess.run([&quot;osascript&quot;, &quot;-e&quot;,
-    'display notification &quot;全 Issue 完了&quot; with title &quot;dev-cycle&quot;'])
+    'display notification &quot;全タスク完了&quot; with title &quot;dev-cycle&quot;'])
 
 # Windows (WSL2) 例
 subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
@@ -441,24 +430,24 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 </thead>
 <tbody>
 <tr>
-<td>Stop 後に次が起動しない</td>
-<td><code>active: false</code></td>
-<td><code>start.sh</code> を再実行</td>
+<td>承認時に候補が変わる</td>
+<td>別セッションが Triage を再実行</td>
+<td>承認直前に today-tasks.md を再読 or タイムスタンプ確認</td>
 </tr>
 <tr>
-<td>Issue が自動取得されない</td>
-<td>ラベルなし</td>
-<td><code>priority:high/medium/low</code> ラベルを付与</td>
+<td>検証 NG で停止</td>
+<td>テスト失敗・実装不備</td>
+<td><code>blocked</code> を確認 → 手動修正 → <code>active:true</code> + pending 追加で再開</td>
 </tr>
 <tr>
-<td>CI 失敗で詰まる</td>
-<td>テストエラー</td>
-<td>ログ確認 → 手動対応 → 再起動</td>
+<td>Cron が消えた</td>
+<td>7日失効</td>
+<td><code>renew-crons.sh</code> で再登録（11章参照）</td>
 </tr>
 <tr>
-<td>完了通知が来ない</td>
-<td>OS 通知の設定</td>
-<td><code>notify-done.sh</code> をデバッグ</td>
+<td>次タスクが起動しない</td>
+<td><code>active: false</code> / Stop hook 未発火</td>
+<td>state.json 確認 → 手動で <code>active:true</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -467,8 +456,9 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <ul>
 <li><strong>「dev-cycle」= コードを自動で良くするサイクル</strong>: 品質チェック→レビュー→修正を、人間が細かく指示しなくても回せる仕組み</li>
 <li><strong>5つのフェーズ</strong>: ①全体をざっと掃除 ②詳しくレビュー ③問題をリスト化 ④自動で修正 ⑤完了報告</li>
-<li><strong>人間は見守るだけ</strong>: 始めると最後まで自動で回る。途中で止めたり指示したりも可能</li>
-<li><strong>使う場面</strong>: 「このプロジェクト、だらしなくなってきたな」を一気に綺麗にしたい時</li>
+<li><strong>フェーズ4が主役</strong>: 毎朝「今日やるタスク」を自動で拾ってきて、承認ボタン1つで実装→検証まで自動で進む</li>
+<li><strong>人間は承認と見守りだけ</strong>: 完全に放置するのではなく、朝の候補を確認して「これでお願い」と渡すと、あとは自律的に回る</li>
+<li><strong>使う場面</strong>: 「このプロジェクト、だらしなくなってきたな」を一気に綺麗にしたい時や、日々の小さな改善を自動で積み重ねたい時</li>
 </ul>
 <hr />
 <h2>実績（参考）</h2>
@@ -491,8 +481,21 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <td>テストカバレッジ 83.81% 達成</td>
 <td>4,602 テスト通過・0 失敗</td>
 </tr>
+<tr>
+<td>NexusCore（Daily Triage方式）</td>
+<td>ハードコードフォールバックの設定化</td>
+<td>連鎖1サイクルで実装+検証完了</td>
+</tr>
 </tbody>
 </table></div>
+<hr />
+<h2>補足: 旧Issue一括自律ループ（start.sh --auto・廃止）</h2>
+<p>Loop Engineering 導入前に使っていた方式。現在は機能喪失中。</p>
+<ul>
+<li><strong>方式</strong>: <code>start.sh --auto &lt;repo&gt;</code> で GitHub のオープン Issue を priority 順に一括自動実装（ブランチ作成→実装→テスト→PR→close を Stop hook 連鎖で回す）</li>
+<li><strong>廃止理由</strong>: 完全自動だと品質・安全のコントロールが難しく、人間承認ゲートを挟む Daily Triage 方式に移行</li>
+<li><strong>後継</strong>: フェーズ4（Daily Triage メタループ）。Issue を手動で選んで承認してから回す設計</li>
+</ul>
 
         </article>
 

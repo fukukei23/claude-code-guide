@@ -153,7 +153,7 @@
 <pre><code>Claude Code
   │
   ├─ brave-search MCP ──→ Brave検索API ──→ Web検索結果
-  ├─ github MCP ────────→ GitHub API ────→ PR・Issue・ファイル
+  ├─ github MCP ────────→ GitHub API ──→ PR・Issue・ファイル
   ├─ playwright MCP ────→ Chromium ──────→ ブラウザ操作
   ├─ context7 MCP ──────→ Docs API ─────→ ライブラリドキュメント
   ├─ discord MCP ───────→ Discord API ──→ メッセージ送受信
@@ -168,6 +168,16 @@
 <p>MCPサーバーを追加すると、Claude Codeが<strong>そのサーバーのツール</strong>を使えるようになる。各ツールはコンテキストを消費するため、必要なものだけを維持する。</p>
 <hr />
 <h2>現在の構成（12サーバー・125ツール）</h2>
+<p>MCPサーバー数が多いため、<strong>4つのカテゴリ</strong>に整理しています。目的のサーバーを探す場合は<a href="#toc">📑 目次</a>からジャンプしてください。</p>
+<h3 id="toc">📑 サーバー一覧（目次）</h3>
+<ul>
+<li><strong><a href="#llm-gen">🤖 LLM・生成AI系（3サーバー）</a></strong> — フォールバック先 / フォールバック先-official / フォールバック先-video</li>
+<li><strong><a href="#search">🔍 検索・情報取得系（4サーバー）</a></strong> — brave-search / exa / context7 / web_reader</li>
+<li><strong><a href="#dev">🛠️ 開発・自動化系（4サーバー）</a></strong> — github（無効化）/ playwright / discord / mermaid</li>
+<li><strong><a href="#image">📊 画像分析系（1サーバー）</a></strong> — 4_5v_mcp</li>
+</ul>
+<hr />
+<h2 id="llm-gen">🤖 LLM・生成AI系（3サーバー）</h2>
 <h3 id="フォールバック先">フォールバック先（自作テキスト処理 / 17ツール / ~1kトークン）</h3>
 <p><strong>LLM委譲用MCPサーバー（自作・代替プロバイダー-M3使用）</strong>。環境によって役割が異なる。</p>
 <div class="table-wrapper"><table>
@@ -371,6 +381,7 @@
 </ul>
 <p><strong>注意</strong>: MCP接続は起動時確立のため、設定変更後は Claude Code の再起動が必要。</p>
 <hr />
+<h2 id="search">🔍 検索・情報取得系（4サーバー）</h2>
 <h3 id="brave-search">brave-search（6ツール / ~5.5kトークン）</h3>
 <p>Web検索に関する各種機能。</p>
 <div class="table-wrapper"><table>
@@ -409,7 +420,71 @@
 </table></div>
 <p><strong>使いどころ</strong>: 最新情報の調査、エラーの検索、技術記事の検索</p>
 <div class="callout callout-info"><p><strong>起動方法</strong>: <code>~/.claude/scripts/mcp/start-brave-search.sh</code> — <code>.secrets.env</code> から <code>BRAVE_API_KEY</code> を読み込んで <code>brave-search-mcp-server</code> を起動。</p></div>
-<h3 id="github">github（41ツール / ~9.6kトークン）</h3>
+<hr />
+<h3 id="exa">exa（3ツール / ~1.5kトークン）</h3>
+<p>セマンティックWeb検索。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web_search_exa</code></td>
+<td>セマンティックWeb検索（技術記事の深掘り）</td>
+</tr>
+<tr>
+<td><code>web_fetch_exa</code></td>
+<td>URLの内容をMarkdownで取得（バッチ対応）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: 技術記事の深掘り調査、コード検索</p>
+<hr />
+<h3 id="context7">context7（2ツール / ~1.2kトークン）</h3>
+<p>ライブラリの公式ドキュメント検索。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resolve-library-id</code></td>
+<td>ライブラリ名からIDを解決</td>
+</tr>
+<tr>
+<td><code>query-docs</code></td>
+<td>ドキュメントを検索・取得</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: ライブラリの最新API確認、使用方法の調査</p>
+<hr />
+<h3 id="web-reader">web_reader（1ツール / ~0.5kトークン）</h3>
+<p>URL内容取得。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>webReader</code></td>
+<td>URLをMarkdownに変換（画像保持オプション付き）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: Webページ内容の取得、ドキュメント読み込み</p>
+<hr />
+<h2 id="dev">🛠️ 開発・自動化系（4サーバー）</h2>
+<h3 id="github">github（41ツール / ~9.6kトークン・<strong>無効化</strong>）</h3>
 <div class="callout callout-warn"><p>⚠️ <strong>2026-06-21 無効化</strong>: 41ツール・9.6kトークンが毎ターンのシステムプロンプトに積まれ、コンテキスト肥大（32MB上限問題）の最大要因となっていたため無効化。Issue/PR/push は <strong>gh CLI + git 直接操作</strong>に移行した。復元は <code>settings.json</code> の <code>enabledPlugins.github</code> を <code>true</code> に戻すだけ。</p></div>
 <p>最もツール数が多いサーバー。GitHub上のあらゆる操作が可能。</p>
 <div class="table-wrapper"><table>
@@ -452,6 +527,7 @@
 </table></div>
 <p><strong>使いどころ</strong>: PR作成、Issue管理、コード検索、リポジトリ操作</p>
 <div class="callout callout-info"><p><strong>起動方法</strong>: <code>~/.claude/scripts/mcp/start-github.sh</code> — <code>.secrets.env</code> から <code>GITHUB_TOKEN</code> 等を読み込んで <code>github-mcp-server</code> を起動。</p></div>
+<hr />
 <h3 id="playwright">playwright（25ツール / ~4.7kトークン）</h3>
 <p>ブラウザの自動操作。</p>
 <div class="table-wrapper"><table>
@@ -489,27 +565,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: Webアプリのテスト、UI確認、スクレイピング</p>
-<h3 id="context7">context7（2ツール / ~1.2kトークン）</h3>
-<p>ライブラリの公式ドキュメント検索。</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>ツール</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>resolve-library-id</code></td>
-<td>ライブラリ名からIDを解決</td>
-</tr>
-<tr>
-<td><code>query-docs</code></td>
-<td>ドキュメントを検索・取得</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>使いどころ</strong>: ライブラリの最新API確認、使用方法の調査</p>
+<hr />
 <h3 id="discord">discord（5ツール / ~0.6kトークン）</h3>
 <p>Discordとの連携。</p>
 <div class="table-wrapper"><table>
@@ -543,6 +599,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: Discord経由での通知、メッセージ監視</p>
+<hr />
 <h3 id="mermaid">mermaid（4ツール / ~0.4kトークン）</h3>
 <p>図表の生成。</p>
 <div class="table-wrapper"><table>
@@ -572,27 +629,8 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: フローチャート、シーケンス図、クラス図の生成</p>
-<h3 id="exa">exa（3ツール / ~1.5kトークン）</h3>
-<p>セマンティックWeb検索。</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>ツール</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>web_search_exa</code></td>
-<td>セマンティックWeb検索（技術記事の深掘り）</td>
-</tr>
-<tr>
-<td><code>web_fetch_exa</code></td>
-<td>URLの内容をMarkdownで取得（バッチ対応）</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>使いどころ</strong>: 技術記事の深掘り調査、コード検索</p>
+<hr />
+<h2 id="image">📊 画像分析系（1サーバー）</h2>
 <h3 id="4-5v-mcp">4_5v_mcp（画像分析 / ~0.8kトークン）</h3>
 <p>AI画像分析。</p>
 <div class="table-wrapper"><table>
@@ -610,23 +648,6 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: スクリーンショット診断、UI模写、図解理解</p>
-<h3 id="web-reader">web_reader（1ツール / ~0.5kトークン）</h3>
-<p>URL内容取得。</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>ツール</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>webReader</code></td>
-<td>URLをMarkdownに変換（画像保持オプション付き）</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>使いどころ</strong>: Webページ内容の取得、ドキュメント読み込み</p>
 <hr />
 <h2>環境別の対応（WSL CLI / Windows Desktop）</h2>
 <p>一部のMCPサーバーは実行環境によって役割・有無が異なる：</p>
