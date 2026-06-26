@@ -127,6 +127,12 @@
             コスト最適化
         </a>
         
+        <a href="16-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
         <a href="skill-catalog.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
@@ -588,10 +594,6 @@ if __name__ == &quot;__main__&quot;:
 <li><strong>「設定ファイルが2つあってややこしい」</strong>: Claude Codeの設定は<strong>2つのファイルに分かれて</strong>いて、両方を合わせて読まれます。片方だけ直してもう片方が古いままだと「直したはずなのに効かない」になります。<strong>MCPの追加・削除は手作業ではなく専用コマンド（<code>claude mcp ...</code>）を使う</strong>と、両方正しく直ります。</li>
 <li><strong>「危ない命令は自動で止まる」</strong>: この環境では、ファイルを消す命令やシステムを壊す命令を<strong>実行前に自動でブロック</strong>する仕組み（フック）が入っています。万が一Claudeが危なそうなことを言っても、勝手には実行されません。</li>
 <li><strong>「複数のClaudeを同時に動かすとぶつかる」</strong>: 複数のセッションが同じファイルを逆向きにいじると台無しになります。「active-sessionsボード」という共有メモでぶつからないようにする運用をしています（上のH節）。</li>
-</ul>
-<h2>外部参考資料</h2>
-<ul>
-<li><a href="https://github.com/shanraisshan/claude-code-best-practice">claude-code-best-practice</a> — vibe codingからagentic engineeringへの実践ノウハウ集。Superpowers/gstack/Matt Pocock Skills等の既存手法比較あり。新しいワークフローを作る前の参考に（2026-06-26調査）</li>
 </ul>
 
         </article>
