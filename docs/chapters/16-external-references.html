@@ -252,6 +252,149 @@ slug: 16-external-references</h2>
 <li><strong>エフォートレベル調整</strong>（<code>/effort</code>） — 5段階（低〜最大）で思考量を調整、速度と知能のバランス取り</li>
 <li><strong>検証メカニズムの確保</strong> — モデルが強力なほど「バックエンドはサーバテスト・フロントエンドはブラウザ制御」のようなタスク別の検証手段が重要になる</li>
 </ol>
+<h2>gstack（リポジトリ概要）</h2>
+<p><a href="https://github.com/garrytan/gstack">gstack</a> は、Garry Tan氏（Y Combinator CEO）が開発したClaude Code拡張フレームワーク（116k star・MIT・作成3.5ヶ月で急成長）。「個人が大規模チームのように生産性を発揮する」がコンセプト。</p>
+<h3>導入（30秒）</h3>
+<pre><code class="language-bash">git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack &amp;&amp; cd ~/.claude/skills/gstack &amp;&amp; ./setup
+</code></pre>
+<p>必要環境: Claude Code・Git・Bun v1.0+（Windowsのみ Node.js も）</p>
+<h3>主要スキル（23の専門家ロール）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>段階</th>
+<th>スキル</th>
+<th>役割・機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>企画</td>
+<td><code>/office-hours</code></td>
+<td>YC担当者役。6つの厳しい質問で製品フレーミングを再考させる</td>
+</tr>
+<tr>
+<td>企画</td>
+<td><code>/autoplan</code></td>
+<td>CEO→デザイン→エンジニアのレビューを自動で一通り実行</td>
+</tr>
+<tr>
+<td>実装</td>
+<td><code>/review</code></td>
+<td>スタッフエンジニア役。本番で落ちそうなバグを検出・自動修正</td>
+</tr>
+<tr>
+<td>実装</td>
+<td><code>/qa</code></td>
+<td>QAリード役。実ブラウザでテスト実行・回帰テスト自動生成</td>
+</tr>
+<tr>
+<td>リリース</td>
+<td><code>/ship</code></td>
+<td>リリースエンジニア役。テスト実行・カバレッジ監査・PR作成まで一括</td>
+</tr>
+<tr>
+<td>リリース</td>
+<td><code>/canary</code></td>
+<td>デプロイ後監視（コンソールエラー・パフォーマンス低下検知）</td>
+</tr>
+<tr>
+<td>デザイン</td>
+<td><code>/design-shotgun</code></td>
+<td>モックアップ案を4〜6個生成・比較・反復</td>
+</tr>
+<tr>
+<td>セキュリティ</td>
+<td><code>/cso</code></td>
+<td>OWASP Top 10 + STRIDE脅威分析（誤検知除外パターン17個内蔵）</td>
+</tr>
+<tr>
+<td>調査</td>
+<td><code>/investigate</code></td>
+<td>系統的な根本原因分析（仮説検証ベース）</td>
+</tr>
+<tr>
+<td>その他</td>
+<td><code>/careful</code>/<code>/freeze</code>/<code>/guard</code></td>
+<td>破壊的コマンド警告・編集範囲ロックの安全ガード</td>
+</tr>
+<tr>
+<td>その他</td>
+<td><code>/retro</code></td>
+<td>チーム向け週次振り返り（出荷記録・テスト品質トレンド）</td>
+</tr>
+<tr>
+<td>その他</td>
+<td><code>/learn</code></td>
+<td>セッション間でのプロジェクトパターン学習・記憶</td>
+</tr>
+</tbody>
+</table></div>
+<p>実行順は「思考→企画→実装→レビュー→テスト→リリース→振り返り」という固定スプリント構造で、各スキルの出力が次のスキルに引き継がれる設計。</p>
+<h3>GBrain（永続知識ベース）</h3>
+<p><code>/setup-gbrain</code> でセットアップ。4つの選択肢（Supabaseクラウド共有・Supabase自動構築・PGLiteローカル・リモートGBrain参照）。<code>/sync-gbrain</code>でコードをインデックス化し、<code>gbrain search</code>等で呼び出す。<strong>セッションを超えた知識保持という点で、このSSOT運用の発想と一致する部分</strong>。</p>
+<h3>留意点</h3>
+<ul>
+<li>テレメトリはデフォルトオフ（送信内容はスキル名・実行時間・成否のみ、コード・ファイルパス・プロンプトは送信しない）</li>
+<li>アンインストールスクリプト（<code>gstack-uninstall</code>）あり、手動削除も明文化されている</li>
+<li>既存の自作スキル群（resume-session/ssot-record等）・agent-skills（<code>/review</code>/<code>/ship</code>等）と<strong>コマンド名が重複する可能性</strong>があるため、実導入する場合は名前衝突の確認が先</li>
+</ul>
+<h2>Anthropic-Cybersecurity-Skills（リポジトリ概要）</h2>
+<p><a href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">Anthropic-Cybersecurity-Skills</a> は、AIエージェント向けセキュリティスキルライブラリ（817スキル・21.4k star・Apache 2.0）。Anthropic非公式の独立コミュニティプロジェクト。</p>
+<h3>フレームワークマッピング（6種）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>フレームワーク</th>
+<th>対応範囲</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MITRE ATT&amp;CK v19.1</td>
+<td>15タクティック・286テクニック（754スキルがマッピング済み）</td>
+</tr>
+<tr>
+<td>NIST CSF 2.0</td>
+<td>6機能・22カテゴリ</td>
+</tr>
+<tr>
+<td>MITRE ATLAS v5.4</td>
+<td>AI/ML脅威（16タクティック・84テクニック）</td>
+</tr>
+<tr>
+<td>MITRE D3FEND v1.3</td>
+<td>防御対策（7カテゴリ・267テクニック）</td>
+</tr>
+<tr>
+<td>NIST AI RMF 1.0</td>
+<td>AIリスク管理（4機能・72サブカテゴリ）</td>
+</tr>
+<tr>
+<td>MITRE F3 v1.1</td>
+<td>サイバー詐欺TTP（8タクティック・123テクニック・JPMorganChase/Citigroup/CrowdStrike共同開発・2026年4月リリース）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>29のセキュリティドメイン（主要領域）</h3>
+<p>クラウドセキュリティ（66スキル）・脅威ハンティング（58）・脅威インテリジェンス（52）・ネットワークセキュリティ（43）・Webアプリケーションセキュリティ（42・OWASP Top 10対応）・デジタルフォレンジクス（41）・マルウェア分析（39）他21領域。</p>
+<h3>スキルの構造</h3>
+<pre><code>skills/skill-name/
+├── SKILL.md           ← YAMLフロントマター + Markdown本体
+├── references/        ← フレームワークマッピング・技術手順
+├── scripts/            ← ヘルパースクリプト
+└── assets/             ← テンプレート・チェックリスト
+</code></pre>
+<p>本体はWhen to Use（起動条件）→Prerequisites（必須ツール）→Workflow（手順）→Verification（成功確認）の4段構成。</p>
+<h3>導入方法</h3>
+<pre><code class="language-bash">npx skills add mukul975/Anthropic-Cybersecurity-Skills
+</code></pre>
+<p>Claude Code・GitHub Copilot・Cursor等26+プラットフォーム対応（agentskills.io標準互換）。</p>
+<h3>留意点</h3>
+<ul>
+<li><strong>817件は明らかに過剰</strong>。AIエージェント側は「スキャン段階(~30トークン)でフロントマターだけ検索→トップ3だけ完全ロード」という設計なので大量にあっても通常運用のコストは低いが、実際にセキュリティレビュー作業が発生した時に該当ドメインだけ拾う運用が現実的</li>
+<li>既存のセキュリティ設定ハブ（<code>run-security-check.sh</code>等）と重複しない領域（クラウド/脅威ハンティング/フォレンジクス等）を補完する位置づけが良さそう</li>
+</ul>
 
         </article>
 
