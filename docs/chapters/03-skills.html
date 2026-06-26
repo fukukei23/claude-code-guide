@@ -336,6 +336,29 @@ Claude Code がその指示に従って動作
 <p><strong>トラブル時の確認</strong>: 「スキルが発火しない」場合、まず ① プラグインか自作か ② システムプロンプト冒頭に <code>EXTREMELY_IMPORTANT</code> ブロック（using-superpowers）があるか を確認。</p></div>
 <hr />
 <h2>主要スキルの使い方</h2>
+<p>スキル数が多いため、<strong>5つのカテゴリ</strong>に整理しています。目的のスキルを探す場合は<a href="#toc">📑 目次</a>からジャンプしてください。</p>
+<h3 id="toc">📑 スキル一覧（目次）</h3>
+<ul>
+<li><strong><a href="#builtin">🧩 ビルトイン</a></strong> — claude-api / update-config / init / loop / fewer-permission-prompts</li>
+<li><strong><a href="#superpowers">⚡ superpowers（開発ワークフロー）</a></strong> — brainstorming / writing-plans / executing-plans / systematic-debugging / test-driven-development / verification-before-completion / using-git-worktrees</li>
+<li><strong><a href="#agent-skills">🛠️ agent-skills（開発全工程・26スキル）</a></strong> — 思いを固める / 計画・設計 / 実装 / 品質・検証 / 守る・届ける / スラッシュコマンド群</li>
+<li><strong><a href="#other-plugins">🔌 その他プラグイン</a></strong> — code-review / review-pr / feature-dev</li>
+<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor</li>
+</ul>
+<hr />
+<h2 id="builtin">🧩 ビルトインスキル</h2>
+<h3 id="claude-api"><code>claude-api</code>（Built-in）</h3>
+<p><strong>Anthropic SDK関連作業</strong>。Claude APIを使ったアプリの開発・デバッグ。</p>
+<h3 id="update-config"><code>update-config</code>（Built-in）</h3>
+<p><strong>settings.jsonの変更</strong>。権限追加・環境変数設定・フック設定等。</p>
+<h3 id="init"><code>init</code>（Built-in）</h3>
+<p><strong>プロジェクト初期化</strong>。CLAUDE.mdを自動生成。</p>
+<h3 id="loop"><code>loop</code>（Built-in）</h3>
+<p><strong>定期実行タスク</strong>。指定間隔でコマンドを自動実行。</p>
+<h3 id="fewer-permission"><code>fewer-permission-prompts</code>（Built-in）</h3>
+<p><strong>権限プロンプト削減</strong>。よく使うツール呼び出しを自動許可に設定。</p>
+<hr />
+<h2 id="superpowers">⚡ superpowers（開発ワークフロー）</h2>
 <h3 id="brainstorming"><code>superpowers:brainstorming</code></h3>
 <p><strong>創造的作業前の要件整理</strong>。新機能追加・コンポーネント作成・動作変更の前に必ず使う。</p>
 <ol>
@@ -376,12 +399,9 @@ Claude Code がその指示に従って動作
 </ul>
 <h3 id="worktrees"><code>superpowers:using-git-worktrees</code></h3>
 <p><strong>Git Worktree の作成・管理</strong>。機能開発時にメインブランチから分離する。</p>
-<h3 id="code-review"><code>code-review:code-review</code></h3>
-<p><strong>コードレビュー</strong>。PRの差分をレビュー。</p>
-<h3 id="pr-review"><code>pr-review-toolkit:review-pr</code></h3>
-<p><strong>PR包括レビュー</strong>。複数の専門エージェント（code-reviewer, code-simplifier, silent-failure-hunter等）を並列起動して包括的にレビュー。</p>
-<h3 id="feature-dev"><code>feature-dev:feature-dev</code></h3>
-<p><strong>機能開発ガイド</strong>。コードベース理解 → アーキテクチャ設計 → 実装の流れをガイド。</p>
+<h2 id="agent-skills">🛠️ agent-skills（開発全工程・26スキル）</h2>
+<p>開発全工程（定義→計画→実装→検証→Ship）をカバーする26スキル。<strong>工程順</strong>に5群に整理しています。</p>
+<p><strong>思いを固める</strong></p>
 <h3 id="doubt-driven"><code>agent-skills:doubt-driven-development</code>（疑い駆動）</h3>
 <p><strong>非自明な決定を、別エージェントに「敵対的レビュー」させてから確定する</strong>。前提は「自信のある答え≠正しい答え」――長いセッションは前提を知らず「事実」に変えてしまうのを防ぐ。</p>
 <p><strong>いつ使う</strong>: 分岐ロジック追加・モジュール/サービス境界を跨ぐ・型システムで検証できない性質（スレッド安全・冪等性・順序）・本番デプロイ等の取り消し困難な決定。リネーム等の機械操作には使わない。</p>
@@ -420,19 +440,53 @@ Claude Code がその指示に従って動作
 <p><strong>raw idea を sharp な concept に練る</strong>。vagueなアイデア・計画前のストレステストに。</p>
 <p><strong>3フェーズ</strong>: 1.Understand &amp; Expand（「How Might We」で問題再定義→鋭い質問→5-8変種を発散）2.Evaluate &amp; Converge（2-3方向に集群→ユーザー価値/実現性/差別化でストレステスト→<strong>隠し前提を明示</strong>）3.Sharpen &amp; Ship（one-pager生成・<strong>「Not Doing」リストが最大価値</strong>）。</p>
 <div class="callout callout-warn"><p>⚠️ <strong>yes-machineになるな</strong> ― 弱いアイデアに優しく反対する。複雑さ・実価値にケチをつける。</p></div>
+<p><strong>残り17スキル（1行サマリ・工程順）</strong></p>
+<p>以下は上記主要7を除く17スキル。開発工程の進行順（構想→設計→実装→検証→運用）に並べています。</p>
+<h3 id="using-agent-skills"><code>agent-skills:using-agent-skills</code>（スキル探索）</h3>
+<p><strong>適切なスキルを発見・起動するメタスキル</strong>。セッション開始時や「今どのスキルが当てはまるか」の判断に。agent-skillsプラグイン全体の入口。</p>
+<h3 id="planning-task-breakdown"><code>agent-skills:planning-and-task-breakdown</code>（タスク分解）</h3>
+<p><strong>spec/要件を作業タスクに順序付きで分解</strong>。タスクが大きすぎて手が止まる・スコープ見積もり・並列作業可能性の判断に。</p>
+<h3 id="api-design"><code>agent-skills:api-and-interface-design</code>（API・境界設計）</h3>
+<p><strong>安定したAPI・インターフェース設計</strong>。REST/GraphQLエンドポイント・モジュール境界・型契約・フロント/バック境界の定義に。</p>
+<h3 id="incremental-implementation"><code>agent-skills:incremental-implementation</code>（差分実装）</h3>
+<p><strong>変更を差分的に小さく届ける</strong>。複数ファイル触る・一気に書く量が多い時に、分割して着地する。</p>
+<h3 id="frontend-ui"><code>agent-skills:frontend-ui-engineering</code>（フロントエンドUI）</h3>
+<p><strong>本番品質のUI構築</strong>。コンポーネント・レイアウト・状態管理。「AI生成っぽくない」見た目と感触に。</p>
+<h3 id="agent-skills-tdd"><code>agent-skills:test-driven-development</code>（TDD）</h3>
+<p><strong>テスト駆動開発</strong>。ロジック実装・バグ修正・振る舞い変更の前に。コードが動くことを証明したい時に（superpowers版 <a href="#tdd">TDD</a> と同系統）。</p>
+<h3 id="debugging"><code>agent-skills:debugging-and-error-recovery</code>（デバッグ）</h3>
+<p><strong>体系的なバグ原因調査</strong>。テスト失敗・ビルド崩れ・想定外挙動に。推測ではなく根本原因を特定（<a href="#systematic-debugging">systematic-debugging</a> と同系統）。</p>
+<h3 id="git-workflow"><code>agent-skills:git-workflow-and-versioning</code>（git運用）</h3>
+<p><strong>gitワークフローの構造化</strong>。コミット・ブランチ・コンフリクト解消・並列ストリームの作業管理に（<a href="#worktrees">using-git-worktrees</a> と同系統）。</p>
+<h3 id="code-review-quality"><code>agent-skills:code-review-and-quality</code>（コードレビュー）</h3>
+<p><strong>多軸コードレビュー</strong>。マージ前に。自分/他者/エージェントが書いたコードを複数観点で評価（<a href="#code-review">code-review</a>・<a href="#pr-review">review-pr</a> と同系統）。</p>
+<h3 id="code-simplification"><code>agent-skills:code-simplification</code>（コード簡略化）</h3>
+<p><strong>振る舞いを変えずにコードを明確化</strong>。リファクタリング・読みやすさ・保守性向上に。</p>
+<h3 id="performance"><code>agent-skills:performance-optimization</code>（パフォーマンス）</h3>
+<p><strong>アプリケーション性能の最適化</strong>。性能要件・疑わしい回退・Core Web Vitalsや読込時間の改善に。</p>
+<h3 id="browser-testing"><code>agent-skills:browser-testing-with-devtools</code>（ブラウザテスト）</h3>
+<p><strong>実ブラウザでテスト（Chrome DevTools MCP経由）</strong>。DOM検査・コンソールエラー・ネットワーク・プロファイリングに。</p>
+<h3 id="observability"><code>agent-skills:observability-and-instrumentation</code>（観測性）</h3>
+<p><strong>本番の振る舞いが見えるように計装</strong>。ログ・メトリクス・トレーシング・アラートの追加に。</p>
+<h3 id="security-hardening"><code>agent-skills:security-and-hardening</code>（セキュリティ）</h3>
+<p><strong>脆弱性対策のハードニング</strong>。ユーザー入力・認証・データ保存・外部連携など、信頼できないデータを扱う時に。</p>
+<h3 id="cicd"><code>agent-skills:ci-cd-and-automation</code>（CI/CD）</h3>
+<p><strong>CI/CDパイプラインの構築・変更</strong>。ビルド/デプロイ自動化・品質ゲート・テストランナー設定に。</p>
+<h3 id="shipping"><code>agent-skills:shipping-and-launch</code>（本番ローンチ）</h3>
+<p><strong>本番デプロイの準備</strong>。ローンチ前チェックリスト・監視設定・段階的ロールアウト・ロールバック戦略に。</p>
+<h3 id="deprecation"><code>agent-skills:deprecation-and-migration</code>（非推奨化・移行）</h3>
+<p><strong>古いシステム/API/機能の削除とユーザー移行</strong>。維持か廃止かの判断と、ユーザーを新実装へ移す手順に。</p>
 <h3><code>agent-skills</code> のスラッシュコマンド群</h3>
 <p><code>/spec</code>（仕様）・<code>/plan</code>（計画）・<code>/build</code>（実装）・<code>/test</code>（TDD）・<code>/review</code>（5軸レビュー）・<code>/ship</code>（ローンチ前チェック）・<code>/code-simplify</code>（簡略化）・<code>/webperf</code>（Core Web Vitals監査）。<strong>人間が対話的に打つ設計</strong>（エージェント自律ループには組み込まない）。全26スキルは <a href="skill-catalog.html">SKILL_CATALOG.md</a> 参照。</p>
-<h3 id="claude-api"><code>claude-api</code>（Built-in）</h3>
-<p><strong>Anthropic SDK関連作業</strong>。Claude APIを使ったアプリの開発・デバッグ。</p>
-<h3 id="update-config"><code>update-config</code>（Built-in）</h3>
-<p><strong>settings.jsonの変更</strong>。権限追加・環境変数設定・フック設定等。</p>
-<h3 id="init"><code>init</code>（Built-in）</h3>
-<p><strong>プロジェクト初期化</strong>。CLAUDE.mdを自動生成。</p>
-<h3 id="loop"><code>loop</code>（Built-in）</h3>
-<p><strong>定期実行タスク</strong>。指定間隔でコマンドを自動実行。</p>
-<h3 id="fewer-permission"><code>fewer-permission-prompts</code>（Built-in）</h3>
-<p><strong>権限プロンプト削減</strong>。よく使うツール呼び出しを自動許可に設定。</p>
+<h2 id="other-plugins">🔌 その他プラグイン</h2>
+<h3 id="code-review"><code>code-review:code-review</code></h3>
+<p><strong>コードレビュー</strong>。PRの差分をレビュー。</p>
+<h3 id="pr-review"><code>pr-review-toolkit:review-pr</code></h3>
+<p><strong>PR包括レビュー</strong>。複数の専門エージェント（code-reviewer, code-simplifier, silent-failure-hunter等）を並列起動して包括的にレビュー。</p>
+<h3 id="feature-dev"><code>feature-dev:feature-dev</code></h3>
+<p><strong>機能開発ガイド</strong>。コードベース理解 → アーキテクチャ設計 → 実装の流れをガイド。</p>
 <hr />
+<h2 id="custom">🎯 カスタムスキル</h2>
 <h3 id="dev-cycle"><code>dev-cycle</code>（カスタムスキル）</h3>
 <p><strong>コード品質改善の全サイクルを自律実行</strong>。品質スイープ→コードレビュー→Issue化→実装ループ→完了通知の5フェーズを自動で回す。</p>
 <ul>
