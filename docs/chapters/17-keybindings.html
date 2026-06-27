@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI操作・キーバインド — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI CLI操作・キーバインドの解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="CLI操作・キーバインド — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI CLI操作・キーバインドの解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/17-keybindings.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="13-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="14-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="15-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="16-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="17-keybindings.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="16-external-references.html" class="nav-prev">← 外部参考資料</a>
+            
+            
+            <a href="skill-catalog.html" class="nav-next">Skill カタログ →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>17 CLI操作・キーバインド — プロンプト入力欄を使い倒す</h1>
+<div class="callout callout-info"><p>ターミナル版Claude Codeの「プロンプト入力欄」でのキーバインド・編集操作を網羅。全選択・消去・行編集・Vim・履歴検索まで。Windows PowerShell + Windows Terminal環境での使い方と落とし穴も解説。公式ドキュメント（code.claude.com）準拠。</p></div>
+<hr />
+<h2 id="toc">📑 セクション一覧（目次）</h2>
+<ul>
+<li><strong><a href="#sec-a">A. 行編集の基本</a></strong> — カーソル移動・削除・貼り付け（Ctrl+A/E/K/U/W）</li>
+<li><strong><a href="#sec-b">B. 全選択・全消去・入力欄クリア</a></strong> — 「使い切れていない」3大操作（Esc×2 / Ctrl+U / Ctrl+L）</li>
+<li><strong><a href="#sec-c">C. 履歴の呼び出し</a></strong> — Up/Down・Ctrl+R逆検索</li>
+<li><strong><a href="#sec-d">D. Vimモード / Emacsモード</a></strong> — <code>/config</code> で切替</li>
+<li><strong><a href="#sec-e">E. 複数行入力・改行</a></strong> — Shift+Enter / <code>\</code>+Enter / Ctrl+J</li>
+<li><strong><a href="#sec-f">F. コピー&amp;ペースト</a></strong> — Windows Terminal では Ctrl+Shift+V</li>
+<li><strong><a href="#sec-g">G. 中断・終了・バックグラウンド化</a></strong> — Ctrl+C / Ctrl+D / Esc / Ctrl+B</li>
+<li><strong><a href="#sec-h">H. その他便利ショートカット</a></strong> — モデル切替・権限モード・外部エディタ</li>
+<li><strong><a href="#sec-i">I. Windows PowerShell / Windows Terminal のハマりどころ</a></strong> — 競合・優先順位・設定推奨</li>
+<li><strong><a href="#sec-j">J. キーバインドのカスタマイズ</a></strong> — <code>~/.claude/keybindings.json</code></li>
+</ul>
+<hr />
+<h2 id="sec-a">A. 行編集の基本</h2>
+<p>デフォルトは <strong>Emacs風キーバインド</strong>。Ctrl キーの組み合わせでカーソル移動と削除を行う。</p>
+<h3>カーソル移動</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ショートカット</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Home</code> / <code>Ctrl+A</code></td>
+<td>行頭へ移動（マルチラインでは現在の論理行の先頭）</td>
+</tr>
+<tr>
+<td><code>End</code> / <code>Ctrl+E</code></td>
+<td>行末へ移動</td>
+</tr>
+<tr>
+<td><code>←</code> / <code>→</code></td>
+<td>左右に1文字移動</td>
+</tr>
+<tr>
+<td><code>Alt+B</code></td>
+<td>1単語戻る</td>
+</tr>
+<tr>
+<td><code>Alt+F</code></td>
+<td>1単語進む</td>
+</tr>
+<tr>
+<td><code>↑</code> / <code>↓</code></td>
+<td>履歴を移動（折り返し行内では先にカーソル移動）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>削除</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ショートカット</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Backspace</code></td>
+<td>カーソル前の1文字削除</td>
+</tr>
+<tr>
+<td><code>Delete</code></td>
+<td>カーソル位置の1文字削除</td>
+</tr>
+<tr>
+<td><code>Ctrl+K</code></td>
+<td><strong>カーソルから行末まで削除</strong>（削除分は貼り付け用に保持）</td>
+</tr>
+<tr>
+<td><code>Ctrl+U</code></td>
+<td><strong>カーソルから行頭まで削除</strong>（マルチラインでは繰り返しで全体クリア）</td>
+</tr>
+<tr>
+<td><code>Ctrl+W</code></td>
+<td><strong>前の1単語を削除</strong>（Windowsでは <code>Ctrl+Backspace</code> も同じ）</td>
+</tr>
+<tr>
+<td><code>Ctrl+Y</code></td>
+<td>削除したテキストを貼り付け（<code>Ctrl+K/U/W</code> で削ったもの）</td>
+</tr>
+<tr>
+<td><code>Alt+Y</code></td>
+<td>貼り付け履歴を循環（<code>Ctrl+Y</code> 直後に使用）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>よくある勘違い</strong>: 「全部消したい → Backspace連打」ではなく <strong><code>Ctrl+U</code></strong>（行頭まで削除）か <strong>後述の <code>Esc</code>×2</strong>（入力クリア）が正解。</p></div>
+<hr />
+<h2 id="sec-b">B. 全選択・全消去・入力欄クリア</h2>
+<div class="callout callout-info"><p>🟡 <strong>「全選択」の公式ショートカットはありません。</strong> シェルのようにマウスドラッグで範囲選択はできるが、キーボード1発で「入力欄をすべて選択」する機能は提供されていない。代わりに下記を使う。</p></div>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th>ショートカット</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>入力をすべて消す</strong></td>
+<td><code>Esc</code> ×2</td>
+<td>入力がある場合: 入力をクリアして履歴に保存（<code>↑</code> で呼出可）。<strong>入力がない場合</strong>: リワインドメニューを開く</td>
+</tr>
+<tr>
+<td><strong>カーソルより前を消す</strong></td>
+<td><code>Ctrl+U</code></td>
+<td>行頭まで削除。カーソルを末尾に置いてから押せば実質「全消去」</td>
+</tr>
+<tr>
+<td><strong>カーソルより後を消す</strong></td>
+<td><code>Ctrl+K</code></td>
+<td>行末まで削除</td>
+</tr>
+<tr>
+<td><strong>画面をクリア</strong></td>
+<td><code>Ctrl+L</code></td>
+<td>画面を再描画。<strong>入力と履歴は保持</strong></td>
+</tr>
+<tr>
+<td><strong>画面クリア(フルスクリーン)</strong></td>
+<td><code>Cmd+K</code> / <code>Ctrl+K</code>*</td>
+<td>フルスクリーン描画時。2回押しで <code>/clear</code> 相当</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p>※ <code>Ctrl+K</code> は「行末まで削除」と「フルスクリーン画面クリア」の2役。文脈（通常入力中 vs フルスクリーン描画中）で挙動が変わる。</p></div>
+<h3>「全部消して書き直したい」時の定石</h3>
+<ol>
+<li><code>Esc</code> を2回押す → 入力がクリアされる（履歴に残るので安心）</li>
+<li>新しく書き直す</li>
+</ol>
+<hr />
+<h2 id="sec-c">C. 履歴の呼び出し</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>ショートカット</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前/次のコマンド</td>
+<td><code>↑</code> / <code>↓</code> または <code>Ctrl+P</code> / <code>Ctrl+N</code></td>
+<td>現在のワーキングディレクトリ単位で履歴を保持</td>
+</tr>
+<tr>
+<td><strong>履歴の逆検索</strong></td>
+<td><code>Ctrl+R</code></td>
+<td>対話的に履歴を検索（一部入力で絞り込み）</td>
+</tr>
+<tr>
+<td>検索スコープ切替</td>
+<td><code>Ctrl+S</code>（検索中）</td>
+<td>セッション → プロジェクト → 全プロジェクト で循環</td>
+</tr>
+<tr>
+<td>検索結果を編集</td>
+<td><code>Tab</code> または <code>Esc</code></td>
+<td>検索を終了して編集続行</td>
+</tr>
+<tr>
+<td>検索結果を実行</td>
+<td><code>Enter</code></td>
+<td>そのまま送信</td>
+</tr>
+<tr>
+<td>検索をキャンセル</td>
+<td><code>Ctrl+C</code></td>
+<td>元の入力を復元</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>履歴の特性</strong>:</p>
+<ul>
+<li>同じプロンプトを連続送信すると履歴は1件のみ（重複排除）</li>
+<li><code>/clear</code> 実行で履歴リセット（ただし会話は保持し resume 可能）</li>
+</ul>
+<hr />
+<h2 id="sec-d">D. Vimモード / Emacsモード</h2>
+<h3>モード切替</h3>
+<pre><code>/config → Editor mode → vim（または emacs）
+</code></pre>
+<p>デフォルトは <strong>Emacs風</strong>（A章の Ctrl キー操作）。Vim派は <code>vim</code> に切替できる。</p>
+<h3>Vimモード早見表</h3>
+<p><strong>モード遷移</strong>:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>切替</th>
+<th>キー</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INSERT → NORMAL</td>
+<td><code>Esc</code></td>
+</tr>
+<tr>
+<td>NORMAL → INSERT</td>
+<td><code>i</code>(前) / <code>a</code>(後) / <code>I</code>(行頭) / <code>A</code>(行末)</td>
+</tr>
+<tr>
+<td>NORMAL → VISUAL</td>
+<td><code>v</code>(文字) / <code>V</code>(行)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>NORMALモード — 移動</strong>:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>キー</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>h/j/k/l</code></td>
+<td>← / ↓ / ↑ / →</td>
+</tr>
+<tr>
+<td><code>w/e/b</code></td>
+<td>次の単語 / 単語末尾 / 前の単語</td>
+</tr>
+<tr>
+<td><code>0</code> / <code>$</code> / <code>^</code></td>
+<td>行頭 / 行末 / 行頭(空白飛ばし)</td>
+</tr>
+<tr>
+<td><code>gg</code> / <code>G</code></td>
+<td>入力の先頭 / 末尾</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>NORMALモード — 編集</strong>:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>キー</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code> / <code>dd</code> / <code>D</code></td>
+<td>1文字削除 / 1行削除 / 行末まで削除</td>
+</tr>
+<tr>
+<td><code>cw</code> / <code>cc</code> / <code>C</code></td>
+<td>単語変更 / 行変更 / 行末まで変更</td>
+</tr>
+<tr>
+<td><code>yy</code> / <code>p</code></td>
+<td>1行ヤンク / 貼り付け</td>
+</tr>
+<tr>
+<td><code>u</code> / <code>.</code></td>
+<td>アンドゥ / 最後の変更を繰り返し</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p>⚠️ Vimモードでは <code>Esc</code> が「NORMALモード切替」に使われるため、応答中断（後述G章）は <code>Ctrl+C</code> 等を使う。</p></div>
+<hr />
+<h2 id="sec-e">E. 複数行入力・改行</h2>
+<p>1つのプロンプト内で改行を入れる方法。<strong>Windows Terminal では <code>Shift+Enter</code> が対応</strong>。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>ショートカット</th>
+<th>対応環境</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>バックスラッシュ</td>
+<td><code>\</code> + <code>Enter</code></td>
+<td>全ターミナル（設定不要）</td>
+</tr>
+<tr>
+<td><strong>Shift+Enter</strong></td>
+<td><code>Shift+Enter</code></td>
+<td>iTerm2 / WezTerm / Ghostty / Kitty / Warp / Apple Terminal / <strong>Windows Terminal</strong></td>
+</tr>
+<tr>
+<td>Option+Enter</td>
+<td><code>Option+Enter</code></td>
+<td>macOS（Option as Meta 要）</td>
+</tr>
+<tr>
+<td><code>Ctrl+J</code></td>
+<td><code>Ctrl+J</code></td>
+<td>全ターミナル（設定不要）</td>
+</tr>
+<tr>
+<td>直接ペースト</td>
+<td>コードブロック/ログを貼り付け</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p>※ VS Code / Cursor / Alacritty / Zed では <code>/terminal-setup</code> を実行して <code>Shift+Enter</code> バインディングをインストールする必要がある。</p></div>
+<hr />
+<h2 id="sec-f">F. コピー&amp;ペースト</h2>
+<div class="callout callout-info"><p>🟡 <strong>Windows Terminal では <code>Ctrl+Shift+V</code> で貼り付け。</strong> <code>Ctrl+V</code> 単体は Claude Code では画像貼り付けに割り当てられている。</p></div>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>ショートカット</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>テキスト貼り付け</td>
+<td><code>Ctrl+Shift+V</code></td>
+<td>Windows Terminal のデフォルト</td>
+</tr>
+<tr>
+<td>画像貼り付け</td>
+<td><code>Ctrl+V</code> / <code>Alt+V</code>(WSL)</td>
+<td><code>[Image #N]</code> チップを挿入</td>
+</tr>
+<tr>
+<td>選択テキストコピー</td>
+<td><code>Ctrl+Shift+C</code></td>
+<td>Windows Terminal 側の機能</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-g">G. 中断・終了・バックグラウンド化</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>ショートカット</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作の中断</td>
+<td><code>Ctrl+C</code></td>
+<td>実行中の操作を中断。入力時は <strong>1回目で入力クリア、2回目で終了</strong></td>
+</tr>
+<tr>
+<td>セッション終了</td>
+<td><code>Ctrl+D</code></td>
+<td>EOF信号で終了</td>
+</tr>
+<tr>
+<td>レスポンス中断</td>
+<td><code>Esc</code></td>
+<td>Claude の応答を停止（作業内容は保持）</td>
+</tr>
+<tr>
+<td>バックグラウンド化</td>
+<td><code>Ctrl+B</code></td>
+<td>Bash/Agent をバックグラウンドへ（tmux では2回押し）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-h">H. その他便利ショートカット</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>ショートカット</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>トランスクリプト表示</td>
+<td><code>Ctrl+O</code></td>
+<td>ツール使用 / MCP呼び出しを展開表示</td>
+</tr>
+<tr>
+<td>外部エディタで編集</td>
+<td><code>Ctrl+G</code> / <code>Ctrl+X Ctrl+E</code></td>
+<td><code>$EDITOR</code>/<code>$VISUAL</code> でプロンプト編集</td>
+</tr>
+<tr>
+<td>タスクリスト表示</td>
+<td><code>Ctrl+T</code></td>
+<td>タスク進捗の表示/非表示</td>
+</tr>
+<tr>
+<td>モデル切替</td>
+<td><code>Alt+P</code></td>
+<td>モデルピッカーを開く（プロンプト保持）</td>
+</tr>
+<tr>
+<td>ファストモード切替</td>
+<td><code>Alt+O</code></td>
+<td>ファストモード ON/OFF</td>
+</tr>
+<tr>
+<td>Extended Thinking切替</td>
+<td><code>Alt+T</code></td>
+<td>Extended Thinking ON/OFF</td>
+</tr>
+<tr>
+<td>権限モード循環</td>
+<td><code>Shift+Tab</code> / <code>Alt+M</code></td>
+<td>default → acceptEdits → plan → auto…</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="sec-i">I. Windows PowerShell / Windows Terminal のハマりどころ</h2>
+<h3>ターミナルとの競合</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ショートカット</th>
+<th>Claude Code側</th>
+<th>ターミナル側</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+V</code></td>
+<td>画像貼り付け</td>
+<td>—</td>
+<td>WSLでは <code>Alt+V</code> も有効</td>
+</tr>
+<tr>
+<td><code>Ctrl+A</code></td>
+<td>行頭移動</td>
+<td>すべて選択</td>
+<td>Claude Code では行頭移動が優先</td>
+</tr>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>中断</td>
+<td>コピー</td>
+<td>PowerShell設定で調整可能</td>
+</tr>
+<tr>
+<td><code>Ctrl+Shift+C/V</code></td>
+<td>—</td>
+<td>コピペ</td>
+<td>Windows Terminal のデフォルト</td>
+</tr>
+</tbody>
+</table></div>
+<h3>優先順位と注意点</h3>
+<ul>
+<li><strong>キーバインド優先順位</strong>: ターミナルアプリ &gt; Windows Terminal &gt; Claude Code（上位が先に握る）</li>
+<li><strong>VT処理</strong>: Node 24.2.0 / 22.17.0 未満、Bun 1.2.23 未満では VT モードが無効になる場合あり</li>
+<li><strong>WSL環境</strong>: <code>Ctrl+V</code> / <code>Alt+V</code> ともに画像貼り付けにバインドされている</li>
+</ul>
+<h3>設定推奨（Windows Terminal settings.json）</h3>
+<p>ペーストを <code>Ctrl+Shift+V</code> に固定しておくと安全:</p>
+<pre><code class="language-json">&quot;commands&quot;: [
+  { &quot;command&quot;: &quot;paste&quot;, &quot;keys&quot;: &quot;ctrl+shift+v&quot; }
+]
+</code></pre>
+<hr />
+<h2 id="sec-j">J. キーバインドのカスタマイズ</h2>
+<p><code>~/.claude/keybindings.json</code> でカスタマイズ可能:</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://www.schemastore.org/claude-code-keybindings.json&quot;,
+  &quot;bindings&quot;: [
+    {
+      &quot;context&quot;: &quot;Chat&quot;,
+      &quot;bindings&quot;: {
+        &quot;ctrl+k&quot;: null,
+        &quot;ctrl+e&quot;: &quot;chat:externalEditor&quot;
+      }
+    }
+  ]
+}
+</code></pre>
+<p><strong>予約済み（再割り当て不可）</strong>:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ショートカット</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>中断 / キャンセル（ハードコード）</td>
+</tr>
+<tr>
+<td><code>Ctrl+D</code></td>
+<td>終了（ハードコード）</td>
+</tr>
+<tr>
+<td><code>Ctrl+M</code></td>
+<td>Enter と同一（CR送信）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p>詳細は <code>/keybindings</code> コマンド、または公式「Customize keyboard shortcuts」を参照。</p></div>
+<hr />
+<h2>参考資料</h2>
+<ul>
+<li><a href="#">Interactive mode（公式）</a> — キーボードショートカット・Vimモード・履歴検索の公式リファレンス</li>
+<li><a href="#">Customize keyboard shortcuts（公式）</a> — <code>keybindings.json</code> の設定方法とアクション一覧</li>
+</ul>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="16-external-references.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔗 外部参考資料</span>
+            </a>
+            
+            
+            <a href="skill-catalog.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📄 Skill カタログ</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

@@ -31,6 +31,7 @@ CHAPTER_MAP = {
     "12_dev-cycle.md": {"slug": "12-dev-cycle", "title": "dev-cycle", "icon": "🔄", "desc": "コード品質改善サイクル — スイープ→レビュー→Issue化→自律実装"},
     "13_glm-rate-proxy.md": {"slug": "13-glm-rate-proxy", "title": "GLM Rate Proxy", "icon": "⚡", "desc": "ZAI/GLMで動かす低コスト運用 — モデルルーティング・Thinking制御"},
     "15_コスト最適化構成.md": {"slug": "15-cost-optimization", "title": "コスト最適化", "icon": "💰", "desc": "GLM/MiniMaxルーティング（独自構成）"},
+    "17_キーバインド.md": {"slug": "17-keybindings", "title": "CLI操作・キーバインド", "icon": "🎛️", "desc": "プロンプト入力欄の編集操作 — 全選択/消去/行編集/Vim/履歴/Windows特有"},
 }
 
 
