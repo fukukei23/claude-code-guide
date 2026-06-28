@@ -429,6 +429,18 @@ a:hover { text-decoration: underline; }
     line-height: 1.6;
 }
 
+.chapter-category {
+    margin-bottom: 32px;
+}
+.chapter-category-heading {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
 .chapter-grid {
     display: grid;
     grid-template-columns: 1fr;
