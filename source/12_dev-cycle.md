@@ -141,6 +141,7 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 | `approve.py` | 人間承認ゲート・manual タスク除外・state.json 登録 |
 | `run-task.sh` | 実装 + 検証（別プロセス）・対象 repo で実行 |
 | `next_issue.py` | Stop hook 発火・検証結果判定・completed/blocked 遷移・次タスク起動 |
+| `apply-crons` | Cron定義（`renew-crons.sh` の `@cron`タグ）↔実体（`scheduled_tasks.json`）の冪等同期・健康診断（`check`/`diff`/`apply`/`clean`）・7日失効を補完するCron永続化インフラ |
 
 ### state.json 構造（タスクごとに repo を持つ）
 
@@ -197,7 +198,7 @@ CronCreate:
     失敗時は理由を報告。
 ```
 
-> Cron は7日で失効するため、`renew-crons.sh`（外部スクリプト）経由で6日ごとに再登録して永続化する。詳細は **11章「Cron管理の注意点」** 参照。
+> Cron は7日で失効するため、`renew-crons.sh`（外部スクリプト）経由で6日ごとに再登録して永続化する。定義（`@cron`タグ）↔実体（`scheduled_tasks.json`）の整合は `apply-crons`（`check`/`apply`/`clean`）で冪等同期・健康診断する。詳細は **11章「Cron管理の注意点」** 参照。
 
 ### 緊急停止
 

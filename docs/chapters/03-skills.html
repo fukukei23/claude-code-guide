@@ -351,11 +351,16 @@ Claude Code がその指示に従って動作
 <p>スキル数が多いため、<strong>5つのカテゴリ</strong>に整理しています。目的のスキルを探す場合は<a href="#toc">📑 目次</a>からジャンプしてください。</p>
 <h3 id="toc">📑 スキル一覧（目次）</h3>
 <ul>
-<li><strong><a href="#builtin">🧩 ビルトイン</a></strong> — claude-api / update-config / init / loop / fewer-permission-prompts</li>
-<li><strong><a href="#superpowers">⚡ superpowers（開発ワークフロー）</a></strong> — brainstorming / writing-plans / executing-plans / systematic-debugging / test-driven-development / verification-before-completion / using-git-worktrees</li>
-<li><strong><a href="#agent-skills">🛠️ agent-skills（開発全工程・26スキル）</a></strong> — 思いを固める / 計画・設計 / 実装 / 品質・検証 / 守る・届ける / スラッシュコマンド群</li>
-<li><strong><a href="#other-plugins">🔌 その他プラグイン</a></strong> — code-review / review-pr / feature-dev</li>
-<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / make-guide / guide-builder / textbook-guide / html-guide / analyze-song / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku</li>
+<li><strong><a href="#builtin">🧩 ビルトイン</a></strong>
+<a href="#claude-api">claude-api</a> / <a href="#update-config">update-config</a> / <a href="#init">init</a> / <a href="#loop">loop</a> / <a href="#fewer-permission">fewer-permission-prompts</a></li>
+<li><strong><a href="#superpowers">⚡ superpowers（開発ワークフロー）</a></strong>
+<a href="#brainstorming">brainstorming</a> / <a href="#writing-plans">writing-plans</a> / <a href="#executing-plans">executing-plans</a> / <a href="#systematic-debugging">systematic-debugging</a> / <a href="#tdd">test-driven-development</a> / <a href="#verification">verification-before-completion</a> / <a href="#worktrees">using-git-worktrees</a></li>
+<li><strong><a href="#agent-skills">🛠️ agent-skills（開発全工程・26スキル）</a></strong>
+<a href="#doubt-driven">doubt-driven-development</a> / <a href="#interview-me">interview-me</a> / <a href="#spec-driven">spec-driven-development</a> / <a href="#source-driven">source-driven-development</a> / <a href="#context-engineering">context-engineering</a> / <a href="#doc-adr">documentation-and-adrs</a> / <a href="#idea-refine">idea-refine</a> / <a href="#using-agent-skills">using-agent-skills</a> / <a href="#planning-task-breakdown">planning-and-task-breakdown</a> / <a href="#api-design">api-and-interface-design</a> / <a href="#incremental-implementation">incremental-implementation</a> / <a href="#frontend-ui">frontend-ui-engineering</a> / <a href="#agent-skills-tdd">test-driven-development</a> / <a href="#debugging">debugging-and-error-recovery</a> / <a href="#git-workflow">git-workflow-and-versioning</a> / <a href="#code-review-quality">code-review-and-quality</a> / <a href="#code-simplification">code-simplification</a> / <a href="#performance">performance-optimization</a> / <a href="#browser-testing">browser-testing-with-devtools</a> / <a href="#observability">observability-and-instrumentation</a> / <a href="#security-hardening">security-and-hardening</a> / <a href="#cicd">ci-cd-and-automation</a> / <a href="#shipping">shipping-and-launch</a> / <a href="#deprecation">deprecation-and-migration</a></li>
+<li><strong><a href="#other-plugins">🔌 その他プラグイン</a></strong>
+<a href="#code-review">code-review</a> / <a href="#pr-review">review-pr</a> / <a href="#feature-dev">feature-dev</a></li>
+<li><strong><a href="#custom">🎯 カスタムスキル</a></strong>
+<a href="#dev-cycle">dev-cycle</a> / <a href="#gas-autopilot">gas-autopilot</a> / <a href="#make-guide">make-guide</a> / <a href="#guide-builder">guide-builder</a> / <a href="#textbook-guide">textbook-guide</a> / <a href="#html-guide">html-guide</a> / <a href="#analyze-song">analyze-song</a> / <a href="#ssot-record">ssot-record</a> / <a href="#record-new-feature">record-new-feature</a> / <a href="#ssot-search">ssot-search</a> / <a href="#new-session">new-session</a> / <a href="#update-guide">update-guide</a> / <a href="#skill-test">skill-test</a> / <a href="#send-email">send-email</a> / <a href="#proxy-doctor">proxy-doctor</a> / <a href="#teian">teian</a> / <a href="#sentaku">sentaku</a></li>
 </ul>
 <hr />
 <h2 id="builtin">🧩 ビルトインスキル</h2>
@@ -693,6 +698,15 @@ Claude Code がその指示に従って動作
 <li><strong>重要</strong>: プロキシが止まっても Claude Code は自動で ZAI 直結に切り替わる（<code>.bashrc</code> の <code>claude()</code> 関数）。プロキシ停止＝詰む、ではない</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/proxy-doctor/</code>）</li>
 </ul>
+<h3 id="teian"><code>teian</code>（カスタムスキル）</h3>
+<p><strong>「提案して」でさっと選択肢を提示する軽量スキル</strong>。分析→（必要時のみ質問）→選択肢2〜3案（メリット・デメリット付き）→推奨案★。会話内に完結・<strong>記録なし</strong>。</p>
+<ul>
+<li><strong>呼び出し</strong>: <code>/teian</code>、「提案して」「提案」「どう思う」「教えて」「アドバイス」</li>
+<li><strong>判断基準</strong>: シンプル（即答・2案）/ 中程度（1〜数回確認・2〜3案）/ 複雑（brainstormingへ誘導）</li>
+<li><strong>深掘り誘導</strong>: 「比較して/深掘りして」→ <a href="#sentaku"><code>sentaku</code></a>、「ちゃんと設計したい」→ <code>brainstorming</code> へ委譲</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/teian/</code>）</li>
+</ul>
+<hr />
 <h3 id="sentaku"><code>sentaku</code>（カスタムスキル）</h3>
 <p><strong>選択肢の深掘り比較→淘汰→推奨1案</strong>。選択肢(A/B/C)が出た場面で「どれがいいか判断できない」時に、深掘り比較でLLM側に最適案を淘汰させる。判断負担の軽減＋判断の質の向上が核心。</p>
 <ul>
