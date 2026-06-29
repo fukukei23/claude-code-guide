@@ -141,6 +141,20 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 | `approve.py` | 人間承認ゲート・manual タスク除外・state.json 登録 |
 | `run-task.sh` | 実装 + 検証（別プロセス）・対象 repo で実行 |
 | `next_issue.py` | Stop hook 発火・検証結果判定・completed/blocked 遷移・次タスク起動 |
+
+### 多 repo 混在キューのタグ付け
+
+`today-tasks.md` の候補は1個のリストに複数リポジトリのタスクが混在しうる。`daily_triage.py` が `repo-index.yaml` から実在リポ名一覧（`collect_repo_names`）を取得し、LLM判定プロンプト（`JUDGE_PROMPT`）に「この中から選べ」と制約として渡す。出力フォーマットは各候補行末に repo タグを付与する:
+
+```
+1. **<タスク>** — <理由>（想定コスト: <S/M/L>）（repo: <name>）
+2. **<タスク>** — <理由>（想定コスト: <S/M/L>）（手動）
+```
+
+- `（repo: <name>）`: コード作業・対象リポジトリが repo_list 内に実在
+- `（手動）`: コード作業でない（応募・学習・手動運用）、または対象リポジトリ外
+
+`approve.py` はこのタグを解析して `state.json` にタスクごとの `repo` を登録する（旧: 承認時に手動でrepoをCLI入力 → 廃止・自動解析に統一）。`手動` タグのタスクは自律実行キューから除外される。
 | `apply-crons` | Cron定義（`renew-crons.sh` の `@cron`タグ）↔実体（`scheduled_tasks.json`）の冪等同期・健康診断（`check`/`diff`/`apply`/`clean`）・7日失効を補完するCron永続化インフラ |
 
 ### state.json 構造（タスクごとに repo を持つ）

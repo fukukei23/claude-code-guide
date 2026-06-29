@@ -322,12 +322,19 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 <td><code>next_issue.py</code></td>
 <td>Stop hook 発火・検証結果判定・completed/blocked 遷移・次タスク起動</td>
 </tr>
-<tr>
-<td><code>apply-crons</code></td>
-<td>Cron定義（<code>renew-crons.sh</code> の <code>@cron</code>タグ）↔実体（<code>scheduled_tasks.json</code>）の冪等同期・健康診断（<code>check</code>/<code>diff</code>/<code>apply</code>/<code>clean</code>）・7日失効を補完するCron永続化インフラ</td>
-</tr>
 </tbody>
 </table></div>
+<h3>多 repo 混在キューのタグ付け</h3>
+<p><code>today-tasks.md</code> の候補は1個のリストに複数リポジトリのタスクが混在しうる。<code>daily_triage.py</code> が <code>repo-index.yaml</code> から実在リポ名一覧（<code>collect_repo_names</code>）を取得し、LLM判定プロンプト（<code>JUDGE_PROMPT</code>）に「この中から選べ」と制約として渡す。出力フォーマットは各候補行末に repo タグを付与する:</p>
+<pre><code>1. **&lt;タスク&gt;** — &lt;理由&gt;（想定コスト: &lt;S/M/L&gt;）（repo: &lt;name&gt;）
+2. **&lt;タスク&gt;** — &lt;理由&gt;（想定コスト: &lt;S/M/L&gt;）（手動）
+</code></pre>
+<ul>
+<li><code>（repo: &lt;name&gt;）</code>: コード作業・対象リポジトリが repo_list 内に実在</li>
+<li><code>（手動）</code>: コード作業でない（応募・学習・手動運用）、または対象リポジトリ外</li>
+</ul>
+<p><code>approve.py</code> はこのタグを解析して <code>state.json</code> にタスクごとの <code>repo</code> を登録する（旧: 承認時に手動でrepoをCLI入力 → 廃止・自動解析に統一）。<code>手動</code> タグのタスクは自律実行キューから除外される。
+| <code>apply-crons</code> | Cron定義（<code>renew-crons.sh</code> の <code>@cron</code>タグ）↔実体（<code>scheduled_tasks.json</code>）の冪等同期・健康診断（<code>check</code>/<code>diff</code>/<code>apply</code>/<code>clean</code>）・7日失効を補完するCron永続化インフラ |</p>
 <h3>state.json 構造（タスクごとに repo を持つ）</h3>
 <pre><code class="language-json">{
   &quot;active&quot;: false,
