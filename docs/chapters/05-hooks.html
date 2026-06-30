@@ -227,6 +227,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 </tbody>
 </table></div>
+<div class="callout callout-tip"><p>💡 <strong>minimax系MCPブロック（WSL CLI版・2026-06-30追加）</strong>: matcher <code>mcp__minimax-(official|video)__.*</code> で cc（日常セッション）側から minimax-official/video の呼出を <code>exit 2</code> でブロック。これらは <code>cc-music</code> プロファイルでのみ利用可能（04_MCPサーバーのプロファイル分離参照）。コンテキスト約7,060tok削減が目的。</p></div>
 <div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="11-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
 <div class="callout callout-info"><p><strong>クロスプラットフォーム対応</strong>: フックスクリプトで <code>python3</code> を直接呼ぶとWindows Git Bashで動作しない。<code>run-security-check.sh</code> ラッパーが python3 / python / wsl を自動検出する。Bashフックは純bash（grep/sed）でJSON解析しpython3に依存しない。</p></div>
 <p>ブロックされるコマンドの例:</p>

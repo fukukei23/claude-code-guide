@@ -566,6 +566,15 @@ backup-*/
 <hr />
 <h2 id="windows-vs-wsl">Windows Desktop vs WSL CLI — 設定の違い</h2>
 <p>WSL2環境では <strong>Windows Desktopアプリ</strong> と <strong>WSL CLI</strong> の2つのClaude Codeが共存する。設定ファイル・管理系統・ツール定義のシリアライズに重要な違いがある。</p>
+<div class="callout callout-warn"><p>💡 <strong>WSL CLI版のコンテキスト最適化プロファイル（2026-06-30）</strong>:</p>
+<ul>
+<li><strong><code>cc-music</code> エイリアス</strong>（<code>.bashrc</code>）: <code>claude --mcp-config ~/.claude/cc-music-mcp.json</code>。音楽/映像/画像生成タスク専用。日常MCPに minimax-official/video を追加マージ（<code>--strict-mcp-config</code> は付けない=日常MCP消失になるため）。</li>
+<li><strong><code>cc-music-mcp.json</code></strong>: minimax-official/video のみ定義（env空・秘密値なし）。</li>
+<li><strong>日常settings.json</strong>: minimax-official/video を mcpServers から削除（テキスト処理 <code>minimax</code> は残留）＋未使用agents 8プラグインを <code>enabledPlugins</code> で無効化。PreToolUseフックでcc側からのminimax呼出をブロック。</li>
+<li>効果: 日常側 約7,060tok削減（実測確認済・minimax分離分。agents 1,926tokは想定過大で実際は微小・8プラグインはagents非提供型だった）・32MBエラー（画像起因）は運用規約で予防。</li>
+<li>※ <code>cc</code> は <code>/usr/bin/cc</code>（C compiler）でClaude起動エイリアスではない。日常起動は <code>claude</code> 直。</li>
+</ul>
+</blockquote>
 <h3>設定ファイルの場所一覧</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -608,7 +617,8 @@ backup-*/
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-warn"><p><strong>注意</strong>: Desktop Extensionsの場所はWindows Storeアプリパッケージの内部にあり、通常の設定フォルダからは見えない。MCP serverやplugin設定とは<strong>完全に別の管理系統</strong>。</p></div>
+<blockquote>
+<p><strong>注意</strong>: Desktop Extensionsの場所はWindows Storeアプリパッケージの内部にあり、通常の設定フォルダからは見えない。MCP serverやplugin設定とは<strong>完全に別の管理系統</strong>。</p></div>
 <h3>設定の独立性</h3>
 <p>WSL側とWindows側の設定は<strong>独立</strong>している:</p>
 <ul>
