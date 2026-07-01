@@ -179,18 +179,18 @@
 </code></pre>
 <p>MCPサーバーを追加すると、Claude Codeが<strong>そのサーバーのツール</strong>を使えるようになる。各ツールはコンテキストを消費するため、必要なものだけを維持する。</p>
 <hr />
-<h2>現在の構成（12サーバー・125ツール）</h2>
+<h2>現在の構成（13サーバー・126ツール）</h2>
 <p>MCPサーバー数が多いため、<strong>4つのカテゴリ</strong>に整理しています。目的のサーバーを探す場合は<a href="#toc">📑 目次</a>からジャンプしてください。</p>
 <div class="callout callout-tip"><p>💡 <strong>WSL CLI版のプロファイル分離（2026-06-30）</strong>: minimax-official / minimax-video は日常セッション（<code>claude</code>直）から除外し、音楽/映像/画像生成タスク専用の <strong><code>cc-music</code> プロファイル</strong>（<code>claude --mcp-config ~/.claude/cc-music-mcp.json</code>）に分離。日常側のコンテキスト約7,060tok削減（実測確認済）。cc側から同MCPを呼ぶとPreToolUseフックでブロック。テキスト処理の <code>minimax</code> は日常残留。Windows Desktop版は従来通り全MCP常時読込。</p></div>
 <h3 id="toc">📑 サーバー一覧（目次）</h3>
 <ul>
-<li><strong><a href="#llm-gen">🤖 LLM・生成AI系（3サーバー）</a></strong> — minimax / minimax-official / minimax-video</li>
+<li><strong><a href="#llm-gen">🤖 LLM・生成AI系（4サーバー）</a></strong> — minimax / minimax-official / minimax-video / gemini</li>
 <li><strong><a href="#search">🔍 検索・情報取得系（4サーバー）</a></strong> — brave-search / exa / context7 / web_reader</li>
 <li><strong><a href="#dev">🛠️ 開発・自動化系（4サーバー）</a></strong> — github（無効化）/ playwright / discord / mermaid</li>
 <li><strong><a href="#image">📊 画像分析系（1サーバー）</a></strong> — 4_5v_mcp</li>
 </ul>
 <hr />
-<h2 id="llm-gen">🤖 LLM・生成AI系（3サーバー）</h2>
+<h2 id="llm-gen">🤖 LLM・生成AI系（4サーバー）</h2>
 <h3 id="minimax">minimax（自作テキスト処理 / 17ツール / ~1kトークン）</h3>
 <p><strong>LLM委譲用MCPサーバー（自作・MiniMax-M3使用）</strong>。環境によって役割が異なる。</p>
 <div class="table-wrapper"><table>
@@ -393,6 +393,33 @@
 <li>鍵管理: <code>~/.secrets.env</code> の <code>MINIMAX_API_KEY</code>（無料枠）/ <code>MINIMAX_API_KEY_VIDEO</code>（従量）</li>
 </ul>
 <p><strong>注意</strong>: MCP接続は起動時確立のため、設定変更後は Claude Code の再起動が必要。</p>
+<hr />
+<h3 id="gemini">gemini（自作 / レビュー第2オピニオン / 1ツール）</h3>
+<p><strong>Gemini（無料枠）をコードレビュー・デバッグの第2オピニオンとして呼び出す自作MCPサーバー</strong>。GLM/Sonnetとは異なるモデルの視点でコードのバグ・論理エラー・境界ケースを指摘させる用途。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>review_with_gemini</code></td>
+<td>コード断片をGeminiに投げてレビュー（focus: bug / logic / boundary 等を指定可能）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: GLM自身のレビューで不安がある時・設計判断を別モデルの視点で検証したい時。「このコードをGeminiにレビューして」等。GLM/Sonnetとは異なるモデルの目を通すことで、見落としを拾う。</p>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/gemini-mcp-server.py</code>（自作Python・<code>review_with_gemini</code> の1ツール）。launcher <code>start-gemini-mcp.sh</code> が <code>set -a; source ~/.secrets.env</code> で <code>GEMINI_API_KEY</code> をエクスポート→ <code>exec python3 -u</code> で起動（<code>-u</code> で null byte問題を回避）。safety filter / 429バックオフ / 入力長上限 / key未設定メッセージのエラー処理付き。</p></div>
+<p><strong>セットアップ</strong>:</p>
+<ul>
+<li>サーバー登録は <code>claude mcp add -s user</code> で <code>~/.claude.json</code>（userスコープ）へ。<strong><code>settings.json</code> の <code>mcpServers</code> は読まれない</strong>（minimax系と同じ注意点・上記「2層問題」参照）。<pre><code class="language-bash">claude mcp add gemini -s user -- bash ~/.claude/scripts/mcp/start-gemini-mcp.sh
+</code></pre>
+</li>
+<li>鍵管理: <code>~/.secrets.env</code> の <code>GEMINI_API_KEY</code>（launcher が source するため <code>env</code> ブロック不要）</li>
+<li><strong>認証の落とし穴</strong>: Gemini REST API は <code>x-goog-api-key</code> ヘッダー（or <code>?key=</code>）が必須。欠けると 403 Forbidden。</li>
+</ul>
 <hr />
 <h2 id="search">🔍 検索・情報取得系（4サーバー）</h2>
 <h3 id="brave-search">brave-search（6ツール / ~5.5kトークン）</h3>

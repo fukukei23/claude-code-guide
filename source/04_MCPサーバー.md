@@ -25,7 +25,7 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ---
 
-## 現在の構成（12サーバー・125ツール）
+## 現在の構成（13サーバー・126ツール）
 
 MCPサーバー数が多いため、**4つのカテゴリ**に整理しています。目的のサーバーを探す場合は[📑 目次](#toc)からジャンプしてください。
 
@@ -33,14 +33,14 @@ MCPサーバー数が多いため、**4つのカテゴリ**に整理していま
 
 ### 📑 サーバー一覧（目次） {#toc}
 
-- **[🤖 LLM・生成AI系（3サーバー）](#llm-gen)** — minimax / minimax-official / minimax-video
+- **[🤖 LLM・生成AI系（4サーバー）](#llm-gen)** — minimax / minimax-official / minimax-video / gemini
 - **[🔍 検索・情報取得系（4サーバー）](#search)** — brave-search / exa / context7 / web_reader
 - **[🛠️ 開発・自動化系（4サーバー）](#dev)** — github（無効化）/ playwright / discord / mermaid
 - **[📊 画像分析系（1サーバー）](#image)** — 4_5v_mcp
 
 ---
 
-## 🤖 LLM・生成AI系（3サーバー） {#llm-gen}
+## 🤖 LLM・生成AI系（4サーバー） {#llm-gen}
 
 ### minimax（自作テキスト処理 / 17ツール / ~1kトークン） {#minimax}
 
@@ -128,6 +128,28 @@ MCPサーバー数が多いため、**4つのカテゴリ**に整理していま
 - 鍵管理: `~/.secrets.env` の `MINIMAX_API_KEY`（無料枠）/ `MINIMAX_API_KEY_VIDEO`（従量）
 
 **注意**: MCP接続は起動時確立のため、設定変更後は Claude Code の再起動が必要。
+
+---
+
+### gemini（自作 / レビュー第2オピニオン / 1ツール） {#gemini}
+
+**Gemini（無料枠）をコードレビュー・デバッグの第2オピニオンとして呼び出す自作MCPサーバー**。GLM/Sonnetとは異なるモデルの視点でコードのバグ・論理エラー・境界ケースを指摘させる用途。
+
+| ツール | 用途 |
+|---|---|
+| `review_with_gemini` | コード断片をGeminiに投げてレビュー（focus: bug / logic / boundary 等を指定可能） |
+
+**使いどころ**: GLM自身のレビューで不安がある時・設計判断を別モデルの視点で検証したい時。「このコードをGeminiにレビューして」等。GLM/Sonnetとは異なるモデルの目を通すことで、見落としを拾う。
+
+> **実装**: `~/.claude/scripts/mcp/gemini-mcp-server.py`（自作Python・`review_with_gemini` の1ツール）。launcher `start-gemini-mcp.sh` が `set -a; source ~/.secrets.env` で `GEMINI_API_KEY` をエクスポート→ `exec python3 -u` で起動（`-u` で null byte問題を回避）。safety filter / 429バックオフ / 入力長上限 / key未設定メッセージのエラー処理付き。
+
+**セットアップ**:
+- サーバー登録は `claude mcp add -s user` で `~/.claude.json`（userスコープ）へ。**`settings.json` の `mcpServers` は読まれない**（minimax系と同じ注意点・上記「2層問題」参照）。
+  ```bash
+  claude mcp add gemini -s user -- bash ~/.claude/scripts/mcp/start-gemini-mcp.sh
+  ```
+- 鍵管理: `~/.secrets.env` の `GEMINI_API_KEY`（launcher が source するため `env` ブロック不要）
+- **認証の落とし穴**: Gemini REST API は `x-goog-api-key` ヘッダー（or `?key=`）が必須。欠けると 403 Forbidden。
 
 ---
 
