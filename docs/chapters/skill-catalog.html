@@ -194,6 +194,11 @@
 <td>入力を映像制作用4構造プロンプト仕様書（タイムライン/ビジュアル/画像/動画モーション）に変換</td>
 <td>「映像プロンプト」「映像構成作って」<code>/video-prompt-spec</code></td>
 </tr>
+<tr>
+<td><code>analyze-song</code></td>
+<td>楽曲を音源から定量分析しBPM/キー/コード進行/メロディ輪郭/音域を抽出</td>
+<td>「楽曲分析して」「曲を定量分析」「BPM/コード抽出」<code>/analyze-song</code></td>
+</tr>
 </tbody>
 </table></div>
 <h2>📝 SSOT・記録・検索</h2>
@@ -230,6 +235,16 @@
 <td><code>record-new-feature</code></td>
 <td>Claude Code新バージョンのリリースノートを調査しSSOTとガイドに追記</td>
 <td>SessionStart hookで自動発動</td>
+</tr>
+<tr>
+<td><code>codebase-memory</code></td>
+<td>コードをナレッジグラフ化し構造検索（呼び出し元/影響範囲/デッドコード/アーキテクチャ）</td>
+<td>「アーキテクチャ理解して」「呼び出し元を探して」「影響範囲」<code>/codebase-memory</code></td>
+</tr>
+<tr>
+<td><code>resume-session</code></td>
+<td>セッション再開時に最新5件のhandoffを読み込み文脈復元。new-sessionの対</td>
+<td>「おはよう」「こんにちは」「再開」<code>/resume-session</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -272,6 +287,11 @@
 <td><code>x-post-draft</code></td>
 <td>Zenn公開時にX（旧Twitter）投稿用文案を複数パターン生成（手動コピペ前提）</td>
 <td>Zenn記事公開時</td>
+</tr>
+<tr>
+<td><code>make-guide</code></td>
+<td>ガイド・教科書・チートシート・語彙帳作成の入口（読む系/引く系を判定し分岐）</td>
+<td>「ガイド作って」「教科書作って」「チートシート作って」<code>/make-guide</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -326,9 +346,19 @@
 <td>「提案して」「どう思う」「教えて」</td>
 </tr>
 <tr>
+<td><code>sentaku</code></td>
+<td>選択肢(A/B/C)の深掘り比較→淘汰→推奨。teian(浅)とbrainstorming(深)の間</td>
+<td>「比較して」「深掘りして」「メリデメ教えて」「徹底的に」<code>/sentaku</code></td>
+</tr>
+<tr>
 <td><code>remove-huadian</code></td>
 <td>AI生成の古代中国女性画像に強制付加される花鈿（眉間の赤点）を画像処理で除去</td>
 <td>「花鈿除去」「赤点消して」<code>/remove-huadian</code></td>
+</tr>
+<tr>
+<td><code>demo-site-sales</code></td>
+<td>ホームページない店舗向けデモサイト(HTML)+営業文面を自動生成（送信は手動）</td>
+<td>「デモサイト作って」「Web制作の新規開拓」<code>/demo-site-sales</code></td>
 </tr>
 </tbody>
 </table></div>
