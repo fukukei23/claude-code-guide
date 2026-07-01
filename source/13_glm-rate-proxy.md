@@ -83,7 +83,7 @@ api.z.ai              api.minimax.io
 | `normal` | usage < 80% | GLM-5.1 | ZAI |
 | `economy` | 80% ≤ usage < 95% | GLM-4.7 | ZAI |
 | `emergency` | usage ≥ 95% | GLM-4.7-Flash | ZAI |
-| `peak_block` | JST 15:00〜19:00 | MiniMax-M2.7 | MiniMax |
+| `peak_block` | JST 15:00〜18:59（15時台〜18時台・`15≦hour<19`） | MiniMax-M3 | MiniMax |
 
 > **ピーク時間帯の理由**: ZAI公式ドキュメントによるとGLM-5.1はピーク時に**3倍の消費レート**で計算される。MiniMaxに逃がすことでZAIクォータを温存する。
 
