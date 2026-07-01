@@ -290,3 +290,67 @@ class TestBuildIntegrity:
             if html_file.exists():
                 content = html_file.read_text(encoding="utf-8")
                 assert "mermaid" in content.lower()
+
+
+# === 6. 未定義CSS変数検出（文字消失再発防止） ===
+#
+# 【仕様・共通】loop-engineering-guide/test_css.py と同一アルゴリズム。
+#   物理共通化（submodule/共有スクリプト）は両repoの構造差（convert経由 vs 手書きHTML）
+#   に対し過剰コストとなるため見送り（YAGNI）。代わりに「同一仕様であること」を
+#   本コメントで明示し、アルゴリズム分岐バグを防ぐ。
+#
+# 判定基準:
+#   - fallback なしの var(--xxx) で、xxx が style.css or インライン<style> に
+#     未定義     → FAIL（ダーク/ライトで文字が消えるリスク）
+#   - fallback 付き var(--xxx, #fff) は許容（文字は見えるため再発リスクなし）
+
+from pathlib import Path as _Path
+
+_CSS_PATH = _Path(__file__).parent / "assets" / "style.css"
+_VAR_USE_RE = re.compile(r'var\((--[A-Za-z0-9_-]+)\s*(,[^)]+)?\)')
+
+
+def _extract_defined_css_vars(text: str) -> set[str]:
+    """CSS / HTML テキストから --var 定義名を抽出（:root/[data-theme]/インライン問わず）."""
+    return set(re.findall(r'(--[A-Za-z0-9_-]+)\s*:', text))
+
+
+def _extract_var_uses_without_fallback(text: str) -> set[str]:
+    """fallback なしの var(--xxx) 使用の変数名を抽出."""
+    return {m.group(1) for m in _VAR_USE_RE.finditer(text) if not m.group(2)}
+
+
+class TestNoUndefinedCssVars:
+    """生成済HTMLで、style.css 未定義のCSS変数を fallback なしで使っていないか検証.
+
+    背景: ダークモードで文字が消えるバグの多くは --fg 等の未定義変数参照が原因。
+    本テストはCI（static.yml の pytest ステップ）で生成をガードする。
+    """
+
+    @pytest.fixture(autouse=True)
+    def _generate(self):
+        main = __import__("convert", fromlist=["main"]).main
+        main()
+
+    def test_no_undefined_css_vars_without_fallback(self):
+        css_text = _CSS_PATH.read_text(encoding="utf-8")
+        defined = _extract_defined_css_vars(css_text)
+
+        html_files = sorted((OUTPUT_DIR / "chapters").glob("*.html"))
+        index = OUTPUT_DIR / "index.html"
+        if index.exists():
+            html_files.append(index)
+
+        problems = []
+        for html_file in html_files:
+            content = html_file.read_text(encoding="utf-8")
+            # 各HTMLのインライン <style> 定義も定義元に追加
+            local_defined = defined | _extract_defined_css_vars(content)
+            undefined = _extract_var_uses_without_fallback(content) - local_defined
+            if undefined:
+                problems.append(f"{html_file.name}: {sorted(undefined)}")
+
+        assert not problems, (
+            "未定義CSS変数(fallbackなし)を検出 — 文字消失リスク:\n  "
+            + "\n  ".join(problems)
+        )
