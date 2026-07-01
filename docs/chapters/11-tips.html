@@ -265,7 +265,8 @@
 </ul>
 </blockquote>
 <blockquote>
-<p>🎯 <strong>追訂正（2026-07-01）・真因確定</strong>: 上記（画像が犯人・auto-compact無効下のツール結果蓄積・proxy送信前弾き）は<strong>全て主因誤認</strong>だった。真因は <strong>glm-rate-proxy の <code>aiohttp.web.Application</code> が <code>client_max_size</code> 未設定（デフォルト1MB）</strong> で、画像添付リクエストが1MB超で <strong>413弾き</strong> されていた。proxyログに413記録＝proxy到達済み（「送信前弾き」は誤り）。CCは「max 32MB」と<strong>固定嘘表示</strong>（実効1MB）。「画像2枚1.3MBが通り3枚目で32MBエラー」の25倍跳びがこの乖離の証拠。対策は <code>proxy.py</code> の <code>create_app()</code> に <code>client_max_size=32*1024*1024</code> 追加の1行（commit 9ac5f24fd）で<strong>32MB問題は解消</strong>。デスクトップ版で出ないのはproxy非経由のため。詳細は [[2026-07-01_32MBエラー真因解明-proxy-client_max_size修正]]。</p></div>
+<p>🎯 <strong>追訂正（2026-07-01）・真因確定</strong>: 上記（画像が犯人・auto-compact無効下のツール結果蓄積・proxy送信前弾き）は<strong>全て主因誤認</strong>だった。真因は <strong>glm-rate-proxy の <code>aiohttp.web.Application</code> が <code>client_max_size</code> 未設定（デフォルト1MB）</strong> で、画像添付リクエストが1MB超で <strong>413弾き</strong> されていた。proxyログに413記録＝proxy到達済み（「送信前弾き」は誤り）。CCは「max 32MB」と<strong>固定嘘表示</strong>（実効1MB）。「画像2枚1.3MBが通り3枚目で32MBエラー」の25倍跳びがこの乖離の証拠。対策は <code>proxy.py</code> の <code>create_app()</code> に <code>client_max_size=32*1024*1024</code> 追加の1行（commit 9ac5f24fd）で<strong>32MB問題は解消</strong>。デスクトップ版で出ないのはproxy非経由のため。詳細は [[2026-07-01_32MBエラー真因解明-proxy-client_max_size修正]]。
+🔬 <strong>検証（2026-07-02・18枚画像積載）</strong>: 18枚（base64想定41MB ≫ 32MB）でもproxy通過・413ゼロ。JSONL実測で<strong>画像はURL参照（<code>maas-log-prod</code>の短いURL・1行約30KB）で履歴保存されbase64では蓄積しない</strong>ことが判明。→ <strong>6/19「画像履歴累積で雪だるま式32MB到達」は過大評価</strong>。画像では32MB到達は構造的に不可能。残る到達経路は「巨大テキスト（ツール結果の蓄積）」のみ。</p></div>
 <ul>
 <li><strong>statusLineで常時監視</strong>: <code>llm-status.sh</code> がJSONL実サイズを <code>Req X.XMB/32</code> で表示（27MB黄・30MB赤）。色が変わったら画像整理の合図。</li>
 </ul>
