@@ -264,6 +264,8 @@
 <li>詳細・継続課題は [[2026-06-30_32MB問題の基礎知見と対策現況]]（01_DECISIONS/claude-code/）を参照。</li>
 </ul>
 </blockquote>
+<blockquote>
+<p>🎯 <strong>追訂正（2026-07-01）・真因確定</strong>: 上記（画像が犯人・auto-compact無効下のツール結果蓄積・proxy送信前弾き）は<strong>全て主因誤認</strong>だった。真因は <strong>glm-rate-proxy の <code>aiohttp.web.Application</code> が <code>client_max_size</code> 未設定（デフォルト1MB）</strong> で、画像添付リクエストが1MB超で <strong>413弾き</strong> されていた。proxyログに413記録＝proxy到達済み（「送信前弾き」は誤り）。CCは「max 32MB」と<strong>固定嘘表示</strong>（実効1MB）。「画像2枚1.3MBが通り3枚目で32MBエラー」の25倍跳びがこの乖離の証拠。対策は <code>proxy.py</code> の <code>create_app()</code> に <code>client_max_size=32*1024*1024</code> 追加の1行（commit 9ac5f24fd）で<strong>32MB問題は解消</strong>。デスクトップ版で出ないのはproxy非経由のため。詳細は [[2026-07-01_32MBエラー真因解明-proxy-client_max_size修正]]。</p></div>
 <ul>
 <li><strong>statusLineで常時監視</strong>: <code>llm-status.sh</code> がJSONL実サイズを <code>Req X.XMB/32</code> で表示（27MB黄・30MB赤）。色が変わったら画像整理の合図。</li>
 </ul>
@@ -482,8 +484,7 @@ if __name__ == &quot;__main__&quot;:
 <li><strong>片方指定バグ</strong>: <code>--track</code>/<code>--artist</code> の片方だけ指定すると無視される → XORバリデーション</li>
 <li><strong>timeout は今は死にパラメータ</strong>: docstringに「将来signalで適用」と明記（SDK側がタイムアウト保持）</li>
 </ul>
-<blockquote>
-<p>詳細（アーキテクチャ全体・フェーズ別成果）: SSOT <code>01_DECISIONS/claude-code/2026-06-18_サードパーティAPI統合アーキテクチャ.md</code></p></div>
+<div class="callout callout-info"><p>詳細（アーキテクチャ全体・フェーズ別成果）: SSOT <code>01_DECISIONS/claude-code/2026-06-18_サードパーティAPI統合アーキテクチャ.md</code></p></div>
 <hr />
 <h2 id="sec-g">G. コード行数の正確な計測</h2>
 <p>ポートフォリオや経歴書に「コード行数」を記載する際、<strong>自動生成ファイルを除外しないと数字が大きく狂う</strong>。</p>
