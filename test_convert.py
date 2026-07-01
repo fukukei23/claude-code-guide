@@ -9,6 +9,7 @@ from convert import (
     CHAPTER_TEMPLATE,
     INDEX_TEMPLATE,
     filter_sections,
+    group_chapters_by_category,
     inject_mermaid,
     rewrite_links,
     convert_md_to_html,
@@ -210,11 +211,10 @@ class TestTemplateAutoEscape:
         assert "<p>OK</p>" in out
 
     def test_index_template_escapes_desc(self):
-        out = INDEX_TEMPLATE.render(
-            chapters=self._chapter_payload()["chapters"],
-            version="1",
-            build_date="2026.01.01",
-        )
+        # INDEX_TEMPLATE は categories(group_chapters_by_category の結果)を受け取る
+        # (convert.py の実使用署名に合わせる。chapters 直渡しでは描画されない)
+        categories = group_chapters_by_category(self._chapter_payload()["chapters"])
+        out = INDEX_TEMPLATE.render(categories=categories)
         assert "<img src=x onerror=alert(1)>" not in out
         assert "&lt;img" in out
 
