@@ -231,18 +231,70 @@ bash ~/.claude/scripts/switch-backend.sh minimax
 
 > ⚠️ **書換後は Claude Code CLI の再起動が必須**（環境変数は起動時読込・実行中プロセスには反映されない）
 
-### 自救フロー
+### いつ使うか（症状別）
 
+| 症状 | 使うモード | 理由 |
+|---|---|---|
+| 「API Error: ConnectionRefused」で全CLI停止 | **`zai`** | プロキシ死亡・ZAI直結で確実復帰 |
+| プロキシ応答が極端に遅い・ハング | **`zai`** | プロキシ経由をバイパス |
+| プロキシ復旧して通常運用に戻したい | **`normal`** | プロキシ経由に復帰 |
+| ZAI側も不調・MiniMaxに逃げたい | **`minimax`** | ※実機検証未・動かなければ `zai` |
+| 現状を確認したいだけ | **`status`** | 変更なし・dry-run |
+
+### 使い方ステップ（完全手順・非エンジニア向け）
+
+**Step 1: 現状確認（変更なし）**
+```bash
+bash ~/.claude/scripts/switch-backend.sh status
 ```
-プロキシ死亡を検知（API Error: ConnectionRefused）
-  ↓
-switch-backend.sh status  → 現在のモード・プロキシ生死確認
-  ↓
-switch-backend.sh zai     → ZAI直結に切替（推奨・確実）
-  ↓
-Claude Code CLI を再起動   → GLM直結で復帰
-  ↓
-（プロキシ復旧後）switch-backend.sh normal → 通常運用に戻す
+→ 現在のモード（normal/zai/minimax）とプロキシ生死が表示される。
+
+**Step 2: モードを選んで切替**
+```bash
+# 推奨: ZAI直結（プロキシ死亡時の確実な自救）
+bash ~/.claude/scripts/switch-backend.sh zai
+```
+→ `✅ 切替完了: zai モード` と表示・バックアップも作成される。
+
+**Step 3: Claude Code CLI を再起動（必須）**
+環境変数は起動時にしか読み込まれないため、**実行中のCLIには反映されない**。再起動方法:
+```bash
+# (a) 一番簡単: ターミナルを閉じて、新しいターミナルで claude を起動し直す
+# (b) プロセスを明示的に終了してから再起動:
+pkill -f "claude"
+#    → その後、新しいターミナルで claude を起動
+```
+> ※ 複数セッションを開いている場合は**全て閉じて**から再起動（切替前の旧設定で動き続けるのを防ぐ）。
+
+**Step 4: 復旧確認**
+```bash
+# 再起動後、status で確認
+bash ~/.claude/scripts/switch-backend.sh status
+# → 「モード: zai (ZAI直結)」になっていれば成功
+```
+Claude Code CLI が正常に応答すれば復旧完了。
+
+**Step 5: 通常運用に戻す（プロキシ復旧後）**
+```bash
+bash ~/.claude/scripts/switch-backend.sh normal
+# → 再度 Claude Code CLI を再起動
+```
+
+### minimax モードが動かない時
+
+`minimax` モードは `ANTHROPIC_API_KEY` 設定時の CLI 挙動が未検証のため、動かない可能性があります。その場合:
+```bash
+# zai モードに切り替えれば確実に自救可
+bash ~/.claude/scripts/switch-backend.sh zai
+```
+
+### バックアップから戻す（設定を書換えすぎて壊した時）
+
+3世代のバックアップが `~/.claude/settings.json.bak.1`（最新）`.bak.2` `.bak.3` に保存されています。壊した時:
+```bash
+# 最新バックアップから復元
+cp ~/.claude/settings.json.bak.1 ~/.claude/settings.json
+# → Claude Code CLI を再起動
 ```
 
 ### B案（Anthropic直結）は後日拡張予定

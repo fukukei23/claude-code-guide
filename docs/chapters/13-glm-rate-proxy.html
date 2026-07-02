@@ -435,16 +435,81 @@ bash ~/.claude/scripts/switch-backend.sh minimax
 <li>atomic置換（tmp→mv・中断でも破損しない）+ 3世代バックアップ（<code>settings.json.bak.1/2/3</code>）</li>
 </ul>
 <div class="callout callout-warn"><p>⚠️ <strong>書換後は Claude Code CLI の再起動が必須</strong>（環境変数は起動時読込・実行中プロセスには反映されない）</p></div>
-<h3>自救フロー</h3>
-<pre><code>プロキシ死亡を検知（API Error: ConnectionRefused）
-  ↓
-switch-backend.sh status  → 現在のモード・プロキシ生死確認
-  ↓
-switch-backend.sh zai     → ZAI直結に切替（推奨・確実）
-  ↓
-Claude Code CLI を再起動   → GLM直結で復帰
-  ↓
-（プロキシ復旧後）switch-backend.sh normal → 通常運用に戻す
+<h3>いつ使うか（症状別）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>使うモード</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「API Error: ConnectionRefused」で全CLI停止</td>
+<td><strong><code>zai</code></strong></td>
+<td>プロキシ死亡・ZAI直結で確実復帰</td>
+</tr>
+<tr>
+<td>プロキシ応答が極端に遅い・ハング</td>
+<td><strong><code>zai</code></strong></td>
+<td>プロキシ経由をバイパス</td>
+</tr>
+<tr>
+<td>プロキシ復旧して通常運用に戻したい</td>
+<td><strong><code>normal</code></strong></td>
+<td>プロキシ経由に復帰</td>
+</tr>
+<tr>
+<td>ZAI側も不調・MiniMaxに逃げたい</td>
+<td><strong><code>minimax</code></strong></td>
+<td>※実機検証未・動かなければ <code>zai</code></td>
+</tr>
+<tr>
+<td>現状を確認したいだけ</td>
+<td><strong><code>status</code></strong></td>
+<td>変更なし・dry-run</td>
+</tr>
+</tbody>
+</table></div>
+<h3>使い方ステップ（完全手順・非エンジニア向け）</h3>
+<p><strong>Step 1: 現状確認（変更なし）</strong></p>
+<pre><code class="language-bash">bash ~/.claude/scripts/switch-backend.sh status
+</code></pre>
+<p>→ 現在のモード（normal/zai/minimax）とプロキシ生死が表示される。</p>
+<p><strong>Step 2: モードを選んで切替</strong></p>
+<pre><code class="language-bash"># 推奨: ZAI直結（プロキシ死亡時の確実な自救）
+bash ~/.claude/scripts/switch-backend.sh zai
+</code></pre>
+<p>→ <code>✅ 切替完了: zai モード</code> と表示・バックアップも作成される。</p>
+<p><strong>Step 3: Claude Code CLI を再起動（必須）</strong>
+環境変数は起動時にしか読み込まれないため、<strong>実行中のCLIには反映されない</strong>。再起動方法:</p>
+<pre><code class="language-bash"># (a) 一番簡単: ターミナルを閉じて、新しいターミナルで claude を起動し直す
+# (b) プロセスを明示的に終了してから再起動:
+pkill -f &quot;claude&quot;
+#    → その後、新しいターミナルで claude を起動
+</code></pre>
+<div class="callout callout-info"><p>※ 複数セッションを開いている場合は<strong>全て閉じて</strong>から再起動（切替前の旧設定で動き続けるのを防ぐ）。</p></div>
+<p><strong>Step 4: 復旧確認</strong></p>
+<pre><code class="language-bash"># 再起動後、status で確認
+bash ~/.claude/scripts/switch-backend.sh status
+# → 「モード: zai (ZAI直結)」になっていれば成功
+</code></pre>
+<p>Claude Code CLI が正常に応答すれば復旧完了。</p>
+<p><strong>Step 5: 通常運用に戻す（プロキシ復旧後）</strong></p>
+<pre><code class="language-bash">bash ~/.claude/scripts/switch-backend.sh normal
+# → 再度 Claude Code CLI を再起動
+</code></pre>
+<h3>minimax モードが動かない時</h3>
+<p><code>minimax</code> モードは <code>ANTHROPIC_API_KEY</code> 設定時の CLI 挙動が未検証のため、動かない可能性があります。その場合:</p>
+<pre><code class="language-bash"># zai モードに切り替えれば確実に自救可
+bash ~/.claude/scripts/switch-backend.sh zai
+</code></pre>
+<h3>バックアップから戻す（設定を書換えすぎて壊した時）</h3>
+<p>3世代のバックアップが <code>~/.claude/settings.json.bak.1</code>（最新）<code>.bak.2</code> <code>.bak.3</code> に保存されています。壊した時:</p>
+<pre><code class="language-bash"># 最新バックアップから復元
+cp ~/.claude/settings.json.bak.1 ~/.claude/settings.json
+# → Claude Code CLI を再起動
 </code></pre>
 <h3>B案（Anthropic直結）は後日拡張予定</h3>
 <p><code>anthropic</code> モード（<code>sk-ant</code> 純正キー・従量課金）は現在キー未設定のため未実装。<code>console.anthropic.com</code> でAPIキー発行後、<code>~/.claude/.env</code> に <code>ANTHROPIC_API_KEY</code> を追記すれば拡張可能。</p>
