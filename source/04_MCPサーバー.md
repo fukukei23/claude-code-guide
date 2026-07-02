@@ -29,7 +29,7 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 MCPサーバー数が多いため、**4つのカテゴリ**に整理しています。目的のサーバーを探す場合は[📑 目次](#toc)からジャンプしてください。
 
-> 💡 **WSL CLI版のプロファイル分離（2026-06-30）**: minimax-official / minimax-video は日常セッション（`claude`直）から除外し、音楽/映像/画像生成タスク専用の **`cc-music` プロファイル**（`claude --mcp-config ~/.claude/cc-music-mcp.json`）に分離。日常側のコンテキスト約7,060tok削減（実測確認済）。cc側から同MCPを呼ぶとPreToolUseフックでブロック。テキスト処理の `minimax` は日常残留。Windows Desktop版は従来通り全MCP常時読込。
+> 💡 **WSL CLI版（2026-07-02統合）**: minimax-official / minimax-video は日常セッション（`claude`直）の mcpServers で常時読込（画像/動画/音楽生成を即呼び可能）。※2026-06-30に `cc-music` プロファイルへ分離していたが、32MB真因が glm-rate-proxy の `client_max_size` 未設定と判明（9ac5f24fd解決）したため分離撤回・統合。Windows Desktop版は従来通り全MCP常時読込。
 
 ### 📑 サーバー一覧（目次） {#toc}
 

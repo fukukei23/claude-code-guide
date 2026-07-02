@@ -181,7 +181,7 @@
 <hr />
 <h2>現在の構成（13サーバー・126ツール）</h2>
 <p>MCPサーバー数が多いため、<strong>4つのカテゴリ</strong>に整理しています。目的のサーバーを探す場合は<a href="#toc">📑 目次</a>からジャンプしてください。</p>
-<div class="callout callout-tip"><p>💡 <strong>WSL CLI版のプロファイル分離（2026-06-30）</strong>: minimax-official / minimax-video は日常セッション（<code>claude</code>直）から除外し、音楽/映像/画像生成タスク専用の <strong><code>cc-music</code> プロファイル</strong>（<code>claude --mcp-config ~/.claude/cc-music-mcp.json</code>）に分離。日常側のコンテキスト約7,060tok削減（実測確認済）。cc側から同MCPを呼ぶとPreToolUseフックでブロック。テキスト処理の <code>minimax</code> は日常残留。Windows Desktop版は従来通り全MCP常時読込。</p></div>
+<div class="callout callout-tip"><p>💡 <strong>WSL CLI版（2026-07-02統合）</strong>: minimax-official / minimax-video は日常セッション（<code>claude</code>直）の mcpServers で常時読込（画像/動画/音楽生成を即呼び可能）。※2026-06-30に <code>cc-music</code> プロファイルへ分離していたが、32MB真因が glm-rate-proxy の <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため分離撤回・統合。Windows Desktop版は従来通り全MCP常時読込。</p></div>
 <h3 id="toc">📑 サーバー一覧（目次）</h3>
 <ul>
 <li><strong><a href="#llm-gen">🤖 LLM・生成AI系（4サーバー）</a></strong> — minimax / minimax-official / minimax-video / gemini</li>
