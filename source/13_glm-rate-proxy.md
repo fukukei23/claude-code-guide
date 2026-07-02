@@ -204,6 +204,53 @@ GLM_PEAK_BLOCK=false bash ~/.claude/scripts/llm/start-glm-proxy.sh
 
 ---
 
+## 🚨 自救ツール: switch-backend.sh（プロキシ死亡時の確実な回避） {#switch-backend}
+
+プロキシが完全に死亡した時、`.bashrc` の自動判定（プロキシ不可ならZAI直結）に頼らず、**settings.json を直接書換えて確実に接続先を切替える**ツール。並行セッション含む全CLIが停止した場合の最終手段。
+
+```bash
+# 現在の設定確認（変更なし）
+bash ~/.claude/scripts/switch-backend.sh status
+
+# 通常運用（プロキシ経由）に戻す
+bash ~/.claude/scripts/switch-backend.sh normal
+
+# ZAI直結（推奨自救・GLM直接・課金増なし・即効）
+bash ~/.claude/scripts/switch-backend.sh zai
+
+# MiniMax直結（※認証方式の実機検証が未完・動かなければ zai で確実）
+bash ~/.claude/scripts/switch-backend.sh minimax
+```
+
+**仕組みと安全装置**:
+- モード別に `BASE_URL` + 認証キーを **両方** 書換（キー汚染防止）
+  - `normal`/`zai` → `ANTHROPIC_AUTH_TOKEN`（`Authorization: Bearer` 送信）
+  - `minimax` → `ANTHROPIC_API_KEY`（`x-api-key` 送信・プロキシと同じ方式）
+- キー供給元: `~/.claude/.env`（`ANTHROPIC_AUTH_TOKEN` / `MINIMAX_API_KEY`）
+- atomic置換（tmp→mv・中断でも破損しない）+ 3世代バックアップ（`settings.json.bak.1/2/3`）
+
+> ⚠️ **書換後は Claude Code CLI の再起動が必須**（環境変数は起動時読込・実行中プロセスには反映されない）
+
+### 自救フロー
+
+```
+プロキシ死亡を検知（API Error: ConnectionRefused）
+  ↓
+switch-backend.sh status  → 現在のモード・プロキシ生死確認
+  ↓
+switch-backend.sh zai     → ZAI直結に切替（推奨・確実）
+  ↓
+Claude Code CLI を再起動   → GLM直結で復帰
+  ↓
+（プロキシ復旧後）switch-backend.sh normal → 通常運用に戻す
+```
+
+### B案（Anthropic直結）は後日拡張予定
+
+`anthropic` モード（`sk-ant` 純正キー・従量課金）は現在キー未設定のため未実装。`console.anthropic.com` でAPIキー発行後、`~/.claude/.env` に `ANTHROPIC_API_KEY` を追記すれば拡張可能。
+
+---
+
 ## トラブルシューティング {#troubleshooting}
 
 ### ❌ Claude Codeが「API error」を返す
