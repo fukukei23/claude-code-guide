@@ -160,6 +160,14 @@
 
         <article class="chapter-body">
             <h1>08 設定ファイル — 全設定の解説</h1>
+<div class="callout callout-warn"><p><strong>3行で分かる</strong></p>
+<ol>
+<li>Claude Code の設定は3層構造・上の層ほど優先度が高い（ディレクトリ＞プロジェクト＞グローバル）</li>
+<li>CLAUDE.md で「どう振る舞うか」を指示・settings.json で権限・環境変数・フックを管理</li>
+<li>グローバル（<code>~/.claude/CLAUDE.md</code>）に共通ルール・各プロジェクトに固有設定を重ねる</li>
+</ol>
+</blockquote>
+<hr />
 <div class="mermaid-wrapper"><div class="mermaid">
 graph BT
     L1["Layer 1: グローバル<br/>~/.claude/CLAUDE.md<br/>全プロジェクト共通"]
@@ -202,7 +210,8 @@ Layer 1: グローバル（全プロジェクト共通）
 <li>セッションタイトルの日本語生成ルール</li>
 <li>実行環境の注意（Windows + WSL2の2層構造 — Cron等は <code>wsl bash -c</code> 経由必須）</li>
 </ul>
-<div class="callout callout-info"><p><strong>補足: デスクトップアプリのUI言語について</strong><br />
+<blockquote>
+<p><strong>補足: デスクトップアプリのUI言語について</strong><br />
 Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できない（アプリ側の仕様）。<br />
 制御できるのはAIが生成するテキスト（セッションタイトル・返答など）のみ。</p></div>
 <h3 id="claude-md-project">Layer 2: プロジェクトCLAUDE.md</h3>
