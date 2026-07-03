@@ -160,13 +160,14 @@
 
         <article class="chapter-body">
             <h1>03 スキルシステム — Skills の仕組み</h1>
-<div class="callout callout-danger"><p><strong>3行で分かる</strong></p>
+<aside class="tldr">
+<p><strong>3行で分かる</strong></p>
 <ol>
 <li>スキルは <code>/コマンド名</code> で呼び出す「指示書のライブラリ」（コードでなくプロンプト）</li>
 <li>呼ぶと対応するプロンプトが読み込まれ Claude Code の動作をガイドする</li>
 <li>ビルトイン・公式プラグイン・自作の3来源・よく使う作業を定型化できる</li>
 </ol>
-</blockquote>
+</aside>
 <hr />
 <h2>スキルとは</h2>
 <p>スキルは <strong>プロンプトテンプレートのライブラリ</strong>。<code>/コマンド名</code> で呼び出すと、対応するプロンプトが読み込まれ、Claude Codeの動作をガイドする。</p>
@@ -307,8 +308,7 @@ Claude Code がその指示に従って動作
 </table></div>
 <h3>3. カスタムスキル（ユーザーが自作）</h3>
 <p><code>skill-creator</code> スキルや手動で作成可能。<code>.claude/skills/</code> ディレクトリに配置。</p>
-<blockquote>
-<p><strong>自作スキルの例（楽曲系ウィザード3種）</strong></p>
+<div class="callout callout-danger"><p><strong>自作スキルの例（楽曲系ウィザード3種）</strong></p>
 <ul>
 <li><code>sangoku-song</code> — 三国志武将のHIPHOP楽曲を、武将選択から曲+歌詞+画像+動画まで質問ドリブンで制作。7フェーズ・<code>AskUserQuestion</code> 選択式・人間判断ポイント5箇所。トリガー: 「武将で曲作って」「/sangoku-song」</li>
 <li><code>cyber-wa-song</code> — サイバー和モダン3作品（原点廻帰/電子参拝/百鬼夜行）の楽曲+映像を、作品選択から曲+歌詞+画像+動画まで質問ドリブンで制作。<code>sangoku-song</code> の構造を複製し世界観を差し替え。Phase 5 動画をタイムライン分析で強化。トリガー: 「サイバー和モダン」「原点廻帰」「/cyber-wa-song」</li>

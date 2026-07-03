@@ -160,13 +160,14 @@
 
         <article class="chapter-body">
             <h1>05 フック — イベント駆動の自動実行</h1>
-<div class="callout callout-danger"><p><strong>3行で分かる</strong></p>
+<aside class="tldr">
+<p><strong>3行で分かる</strong></p>
 <ol>
 <li>フックは特定イベントで自動実行されるシェルスクリプト・Claude Code を拡張する仕組み</li>
 <li>SessionStart / PreToolUse / PostToolUse / Stop の4タイミングで発火する</li>
 <li>危険コマンドのブロック・ログ記録・自動整形などを「設定するだけ」で常駐化できる</li>
 </ol>
-</blockquote>
+</aside>
 <hr />
 <h2>フックとは</h2>
 <p>フックは <strong>特定のイベント発生時に自動実行されるシェルスクリプト</strong>。Claude Codeの動作を拡張・制御する。</p>
@@ -235,8 +236,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 </tbody>
 </table></div>
-<blockquote>
-<p>💡 ※2026-07-02統合撤去: 2026-06-30に追加していた minimax系MCPブロック（matcher <code>mcp__minimax-(official|video)__.*</code>・<code>exit 2</code>）は、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため PreToolUse hook を削除し撤去。minimax-official/video は日常セッションで即呼び可能。</p></div>
+<div class="callout callout-tip"><p>💡 ※2026-07-02統合撤去: 2026-06-30に追加していた minimax系MCPブロック（matcher <code>mcp__minimax-(official|video)__.*</code>・<code>exit 2</code>）は、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため PreToolUse hook を削除し撤去。minimax-official/video は日常セッションで即呼び可能。</p></div>
 <div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="11-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
 <div class="callout callout-info"><p><strong>クロスプラットフォーム対応</strong>: フックスクリプトで <code>python3</code> を直接呼ぶとWindows Git Bashで動作しない。<code>run-security-check.sh</code> ラッパーが python3 / python / wsl を自動検出する。Bashフックは純bash（grep/sed）でJSON解析しpython3に依存しない。</p></div>
 <p>ブロックされるコマンドの例:</p>

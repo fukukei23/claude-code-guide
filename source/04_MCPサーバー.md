@@ -1,5 +1,12 @@
 # 04 MCPサーバー — 外部ツールの統合
 
+> **3行で分かる**
+> 1. MCP（Model Context Protocol）は Claude Code に外部ツールを繋ぐ仕組み
+> 2. Brave検索・GitHub・ブラウザ操作・ドキュメント取得等を MCP 経由で呼べる
+> 3. 設定は settings.json の mcpServers・用途別にサーバーを使い分ける
+
+---
+
 ## MCPとは
 
 **MCP（Model Context Protocol）** は、Claude Codeから外部ツールを利用するための仕組み。

@@ -1,5 +1,12 @@
 # 14 SSOTから探して — 個人ナレッジベースへのRAG検索
 
+> **3行で分かる**
+> 1. Claude Code から個人ナレッジベース（knowledge-base）を横断検索するスキル
+> 2. ripgrep + sentence-transformers のハイブリッド RAG・関連文書を5件表示
+> 3. 「SSOTから探して: キーワード」と話しかけるだけで1900件超から検索
+
+---
+
 > Claude Codeから obsidian-ssot（個人ナレッジベース）を横断検索するスキル。ripgrep + sentence-transformers のハイブリッドRAG構成。
 
 ---
