@@ -739,6 +739,7 @@ def main():
         html_body = inject_mermaid(html_body, ch["filename"])
         html_body = rewrite_links(html_body, effective_map)
         html_body = enhance_html(html_body)
+        html_body = convert_tldr(html_body)
 
         prev_ch = chapters[i - 1] if i > 0 else None
         next_ch = chapters[i + 1] if i < len(chapters) - 1 else None
