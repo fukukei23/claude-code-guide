@@ -8,6 +8,7 @@ from convert import (
     CHAPTER_MAP,
     CHAPTER_TEMPLATE,
     INDEX_TEMPLATE,
+    convert_tldr,
     filter_sections,
     group_chapters_by_category,
     inject_mermaid,
@@ -354,3 +355,45 @@ class TestNoUndefinedCssVars:
             "未定義CSS変数(fallbackなし)を検出 — 文字消失リスク:\n  "
             + "\n  ".join(problems)
         )
+
+
+# === 7. TLDR枠変換（平易化・2026-07-03） ===
+
+class TestTldrConversion:
+    """convert_tldr() の単体テスト — H1直後の『3行で分かる』blockquoteを aside.tldr に変換."""
+
+    def test_tldr_blockquote_converted_to_aside(self):
+        """H1直後の『3行で分かる』blockquoteは <aside class="tldr"> になる."""
+        html = (
+            '<h1>基礎概念</h1>\n'
+            '<blockquote>\n'
+            '<p><strong>3行で分かる</strong></p>\n'
+            '<ol>\n<li>要点1</li>\n<li>要点2</li>\n<li>要点3</li>\n</ol>\n'
+            '</blockquote>\n'
+            '<p>本文</p>'
+        )
+        result = convert_tldr(html)
+        assert '<aside class="tldr">' in result
+        assert '<blockquote>' not in result
+        assert '<strong>3行で分かる</strong>' in result
+        assert '<li>要点1</li>' in result
+
+    def test_normal_blockquote_unaffected(self):
+        """『3行で分かる』でないblockquoteは変換されない."""
+        html = '<h1>タイトル</h1>\n<blockquote>\n<p>注意：何か</p>\n</blockquote>'
+        result = convert_tldr(html)
+        assert '<aside class="tldr">' not in result
+        assert '<blockquote>' in result
+
+    def test_tldr_not_first_after_h1_is_skipped(self):
+        """H1直後でなければ『3行で分かる』があっても変換されない（位置保証）."""
+        html = (
+            '<h1>タイトル</h1>\n'
+            '<p>別の段落</p>\n'
+            '<blockquote>\n'
+            '<p><strong>3行で分かる</strong></p>\n'
+            '</blockquote>'
+        )
+        result = convert_tldr(html)
+        assert '<aside class="tldr">' not in result
+        assert '<blockquote>' in result

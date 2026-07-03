@@ -650,6 +650,29 @@ def enhance_html(html: str) -> str:
     return html
 
 
+def convert_tldr(html: str) -> str:
+    """H1直後の『3行で分かる』blockquote を <aside class="tldr"> に変換.
+
+    平易化（2026-07-03）: 各ページH1直後に置いた `> **3行で分かる**` blockquoteを
+    目立つTLDR枠に変換する。enhance_html の単一段落callout変換（<blockquote><p>…</p></blockquote>）
+    にマッチしない複数要素blockquoteを対象とするため、enhance_html の後に呼ぶこと。
+    H1直後の最初のblockquoteのみ（位置保証）。'3行で分かる' を含まなければ変換しない（後方互換）。
+    """
+    pattern = re.compile(
+        r'(<h1[^>]*>.*?</h1>\s*)(<blockquote>.*?</blockquote>)',
+        re.DOTALL,
+    )
+    m = pattern.search(html)
+    if not m:
+        return html
+    head, block = m.group(1), m.group(2)
+    if '3行で分かる' not in block:
+        return html
+    inner = block[len('<blockquote>'):-len('</blockquote>')]
+    converted = head + f'<aside class="tldr">{inner}</aside>'
+    return html[:m.start()] + converted + html[m.end():]
+
+
 # --- トップページのカテゴリ分け ---
 
 # 章番号→カテゴリの境界（番号レンジは閉区間）
