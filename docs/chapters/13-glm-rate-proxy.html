@@ -522,6 +522,35 @@ cp ~/.claude/settings.json.bak.1 ~/.claude/settings.json
 # → 既存の Claude 月額サブスクで Sonnet が動く（追加課金なし）
 </code></pre>
 <p>Windows Desktop版と同じ OAuth 認証。WSL CLI版でも同じサブスクを共用できます。ZAI/MiniMax の両方不調時の最終手段として、<strong>既存サブスクで Sonnet が即使える</strong>のが最大の利点。</p>
+<h3>再発防止の3層防御（全体像）</h3>
+<p>プロキシは全CLIセッションのLLM通信の喉瓣であり、停止＝即・全セッション通信不能。2026-07-03 の全セッション8分停止事故を契機に、<strong>3層の補完防御</strong>を整備しました（障害パターンを全カバー）。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>仕組み</th>
+<th>効く場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>層1: systemd自動復帰</strong></td>
+<td><code>Restart=always</code>・kill/クラッシュ後自動再起動（実測約10〜20秒復帰）</td>
+<td>プロセス自発クラッシュ・kill・既存セッション救済</td>
+</tr>
+<tr>
+<td><strong>層2: 警告ゲート</strong></td>
+<td>プロキシ操作前に必ず「全セッション停止します」と承認取得（CLAUDE.md+memory）</td>
+<td>人為的kill事故の予防</td>
+</tr>
+<tr>
+<td><strong>層3: 自救ツール</strong></td>
+<td><code>switch-backend.sh</code>（本セクション）・CLI直結に退避</td>
+<td>プロキシ完全死亡</td>
+</tr>
+</tbody>
+</table></div>
+<p>普段は層1（自動）が稼働。事故は層2（警告）で予防。最悪は層3（自救）で復旧。詳細は <code>01_DECISIONS/claude-code/2026-07-03_プロキシ3層防御整備.md</code>。</p>
 <hr />
 <h2 id="troubleshooting">トラブルシューティング</h2>
 <h3>❌ Claude Codeが「API error」を返す</h3>
