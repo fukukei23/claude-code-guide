@@ -220,6 +220,9 @@ bash ~/.claude/scripts/switch-backend.sh zai
 
 # MiniMax直結（※認証方式の実機検証が未完・動かなければ zai で確実）
 bash ~/.claude/scripts/switch-backend.sh minimax
+
+# Anthropic公式（月額サブスクのOAuth・sk-ant従量課金不要・/loginで認証）
+bash ~/.claude/scripts/switch-backend.sh anthropic
 ```
 
 **仕組みと安全装置**:
@@ -297,9 +300,18 @@ cp ~/.claude/settings.json.bak.1 ~/.claude/settings.json
 # → Claude Code CLI を再起動
 ```
 
-### B案（Anthropic直結）は後日拡張予定
+### B案（Anthropic OAuth）実装済み
 
-`anthropic` モード（`sk-ant` 純正キー・従量課金）は現在キー未設定のため未実装。`console.anthropic.com` でAPIキー発行後、`~/.claude/.env` に `ANTHROPIC_API_KEY` を追記すれば拡張可能。
+`anthropic` モードは **月額サブスクのOAuth認証** を使います（`sk-ant` 従量課金キーは不要）。
+
+```bash
+bash ~/.claude/scripts/switch-backend.sh anthropic
+# → BASE_URL/AUTH_TOKEN/API_KEY を全削除
+# → Claude Code CLI 再起動 → /login でブラウザ認証（未ログイン時）
+# → 既存の Claude 月額サブスクで Sonnet が動く（追加課金なし）
+```
+
+Windows Desktop版と同じ OAuth 認証。WSL CLI版でも同じサブスクを共用できます。ZAI/MiniMax の両方不調時の最終手段として、**既存サブスクで Sonnet が即使える**のが最大の利点。
 
 ---
 
