@@ -378,6 +378,14 @@ CHAPTER_TEMPLATE = Template("""\
         </nav>
     </main>
 
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
     <script src="../assets/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
     <script>
@@ -469,6 +477,7 @@ INDEX_TEMPLATE = Template("""\
     <footer class="site-footer">
         <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
          · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
     </footer>
@@ -510,9 +519,21 @@ def filter_sections(text: str) -> str:
     text = "\n".join(result)
 
     # 個人識別子のサニタイズ
+    # ※公開URL（https://fukukei23.github.io/...）は置換対象外（リンク壊れ防止・公開GitHub Pages URL）
+    public_urls = set(re.findall(r'https?://fukukei23\.github\.io[^\s)）]*', text))
+    url_placeholders = {}
+    for i, url in enumerate(sorted(public_urls)):
+        ph = f"__PUBLIC_URL_{i}__"
+        url_placeholders[ph] = url
+        text = text.replace(url, ph)
+
     text = text.replace("yn4416", "<USER>")
     text = text.replace("fukukei23", "<USERNAME>")
     text = text.replace("fukukei", "<USERNAME>")
+
+    # 公開URL復元
+    for ph, url in url_placeholders.items():
+        text = text.replace(ph, url)
 
     # インライン個人情報のサニタイズ
     for pattern, replacement in INLINE_REPLACEMENTS:

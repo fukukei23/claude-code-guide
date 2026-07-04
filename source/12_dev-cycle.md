@@ -299,8 +299,14 @@ subprocess.Popen(["powershell.exe", "-c",
 
 ## 補足: 旧Issue一括自律ループ（start.sh --auto・廃止）
 
-Loop Engineering 導入前に使っていた方式。現在は機能喪失中。
+[Loop Engineering Guide](https://fukukei23.github.io/loop-engineering-guide/) 導入前に使っていた方式。現在は機能喪失中。
 
 - **方式**: `start.sh --auto <repo>` で GitHub のオープン Issue を priority 順に一括自動実装（ブランチ作成→実装→テスト→PR→close を Stop hook 連鎖で回す）
 - **廃止理由**: 完全自動だと品質・安全のコントロールが難しく、人間承認ゲートを挟む Daily Triage 方式に移行
 - **後継**: フェーズ4（Daily Triage メタループ）。Issue を手動で選んで承認してから回す設計
+
+---
+
+## 関連ガイド
+
+- **[Loop Engineering Guide](https://fukukei23.github.io/loop-engineering-guide/)** — Daily Triage・自律開発ループの設計と運用（毎朝タスク候補自動生成→承認→検証付き自律実行）。本ページの dev-cycle（品質改善サイクル）はその構成要素の一つで、運用の全体像・Daily Triage の仕組みは同ガイドを参照。

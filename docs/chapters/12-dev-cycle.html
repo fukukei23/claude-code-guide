@@ -522,12 +522,13 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 </table></div>
 <hr />
 <h2>補足: 旧Issue一括自律ループ（start.sh --auto・廃止）</h2>
-<p>Loop Engineering 導入前に使っていた方式。現在は機能喪失中。</p>
+<p><a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a> 導入前に使っていた方式。現在は機能喪失中。</p>
 <ul>
 <li><strong>方式</strong>: <code>start.sh --auto &lt;repo&gt;</code> で GitHub のオープン Issue を priority 順に一括自動実装（ブランチ作成→実装→テスト→PR→close を Stop hook 連鎖で回す）</li>
 <li><strong>廃止理由</strong>: 完全自動だと品質・安全のコントロールが難しく、人間承認ゲートを挟む Daily Triage 方式に移行</li>
 <li><strong>後継</strong>: フェーズ4（Daily Triage メタループ）。Issue を手動で選んで承認してから回す設計</li>
 </ul>
+<hr />
 
         </article>
 
@@ -546,6 +547,14 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
             
         </nav>
     </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
 
     <script src="../assets/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>

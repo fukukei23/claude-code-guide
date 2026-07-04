@@ -49,6 +49,8 @@ class TestNoPersonalInfoInOutput:
             body = re.sub(r'<footer.*?</footer>', '', content, flags=re.DOTALL)
             body = re.sub(r'<meta property="og:.*?">', '', body)
             body = re.sub(r'<a href="https://github\.com/[^"]*">', '', body)
+            # 公開GitHub Pages URL（fukukei23.github.io）は公開済みアカウントのURLのため除外
+            body = re.sub(r'<a href="https://fukukei23\.github\.io[^"]*">', '', body)
             assert pattern not in body, (
                 f"{pattern} found in {html_file.name}"
             )
