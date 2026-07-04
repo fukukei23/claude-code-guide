@@ -557,6 +557,7 @@ Claude Code がその指示に従って動作
 <p><strong>SSOTへの記録・振り分けを自動化</strong>。内容をLLMで分析して最適な振り分け先（01_DECISIONS / 10_DAILY等）を判定し、フォーマット生成・リンク付与・ガイド転記まで一気に実行。<code>record-decision</code> の上位互換。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「記録して」「書き留めて」「保存して」「メモして」「残しておいて」「SSOTに入れて」「ガイドに追加して」<code>/ssot-record</code></li>
+<li><strong>構想モード</strong>: 「これ残して」「決定事項にして」「構想メモ」で発動。<code>01_DECISIONS/</code> ではなく <code>バックログ.md</code> 該当タスク直下に📝WIPメモとして永続化（合意成立・spec未作成の中間状態を保存）。詳細は ssot-guide「<a href="https://fukukei23.github.io/ssot-guide/chapters/05-recording.html">05_記録・ドキュメント</a>」の「構想段階の合意の永続化」</li>
 <li><strong>動作フロー</strong>: 情報収集 → 関連ファイル自動検出（フェーズ0.5） → 分類判定 → 確認表示 → SSOT記録 → CCガイド自動追記 → 関連ドキュメント同時更新 → ガイド転記 → git commit &amp; push</li>
 <li><strong>フェーズ0.5（関連ファイル自動検出）</strong>: タグマッピング設定（<code>knowledge-base/config/タグマッピング.md</code>）に基づき、プロジェクト側の更新対象ドキュメントを自動検出。SSOT記録と同時に該当ファイルへ内容を反映</li>
 <li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM呼び出し不要・不可）、Windows Desktop版はMCP経由で外部LLM呼び出し可</li>
@@ -700,6 +701,7 @@ Claude Code がその指示に従って動作
 </ul>
 </li>
 <li><strong>2モード</strong>: 対話（ユーザー主導）/ 自律（loop-eng・dev-cycle でLLM自問自答・ユーザー不在時にL1→L2→L3自動昇格）</li>
+<li><strong>ルートα（構想永続化）</strong>: sentaku 終了時に spec を出さなかった場合、「代わりに構想をバックログ該当タスク直下に📝WIPメモとして残しますか?」と確認（<code>ssot-record</code> 構想モードへ連携）。合意成立・spec未作成の中間状態を保存</li>
 <li><strong>棲み分け</strong>: <code>teian</code>（浅:さっと2-3案提案）→ <strong>sentaku</strong>（中:深掘り比較→淘汰→推奨）→ <code>brainstorming</code>（深:要件抽出から設計全体）</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/sentaku/</code>）</li>
 </ul>
