@@ -708,3 +708,10 @@ a:hover { text-decoration: underline; }
     }
     .chapter-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* === 画像レスポンシブ（スマホ幅に収める・2026-07-07 追加）=== */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
