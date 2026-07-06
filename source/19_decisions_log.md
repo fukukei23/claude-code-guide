@@ -82,30 +82,7 @@
 
 ### 2. SVG（本物の図・無料）
 
-<div class="flow-svg-wrap" style="background:var(--bg-secondary, #e8edf5);padding:1rem;border-radius:12px;margin:1rem 0">
-<svg viewBox="0 0 600 240" width="100%" style="max-width:600px;margin:0 auto;display:block;font-family:system-ui,sans-serif">
-  <defs>
-    <marker id="arrL15" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="var(--accent, #6366f1)"/>
-    </marker>
-  </defs>
-  <rect x="10" y="20" width="130" height="50" rx="10" fill="var(--accent-bg, #eef2ff)" stroke="var(--accent, #6366f1)" stroke-width="2"/>
-  <text x="75" y="50" text-anchor="middle" fill="var(--text, #1e293b)" font-size="14" font-weight="700">L1: 比較</text>
-  <rect x="235" y="20" width="170" height="50" rx="10" fill="var(--accent-bg, #eef2ff)" stroke="var(--accent, #6366f1)" stroke-width="2"/>
-  <text x="320" y="43" text-anchor="middle" fill="var(--text, #1e293b)" font-size="14" font-weight="700">L1.5: Diverge</text>
-  <text x="320" y="60" text-anchor="middle" fill="var(--text-secondary, #64748b)" font-size="11">「他に軸はないか？」</text>
-  <rect x="500" y="20" width="90" height="50" rx="10" fill="var(--accent-bg, #eef2ff)" stroke="var(--accent, #6366f1)" stroke-width="2"/>
-  <text x="545" y="50" text-anchor="middle" fill="var(--text, #1e293b)" font-size="14" font-weight="700">L2</text>
-  <line x1="140" y1="45" x2="230" y2="45" stroke="var(--accent, #6366f1)" stroke-width="2" marker-end="url(#arrL15)"/>
-  <line x1="405" y1="45" x2="495" y2="45" stroke="var(--accent, #6366f1)" stroke-width="2" marker-end="url(#arrL15)"/>
-  <line x1="320" y1="70" x2="320" y2="120" stroke="var(--accent, #6366f1)" stroke-width="2" marker-end="url(#arrL15)"/>
-  <rect x="245" y="125" width="150" height="40" rx="8" fill="var(--bg-card, #ffffff)" stroke="var(--border, #cbd5e1)" stroke-width="1.5"/>
-  <text x="320" y="150" text-anchor="middle" fill="var(--text, #1e293b)" font-size="13">💡 新案 1-2個</text>
-  <line x1="320" y1="165" x2="320" y2="195" stroke="var(--text-secondary, #64748b)" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrL15)"/>
-  <rect x="220" y="200" width="200" height="32" rx="8" fill="var(--bg-card, #ffffff)" stroke="var(--accent, #6366f1)" stroke-width="1.5" stroke-dasharray="5,3"/>
-  <text x="320" y="221" text-anchor="middle" fill="var(--accent-dark, #4f46e5)" font-size="12">「もっと広げて」→ 6技法フル</text>
-</svg>
-</div>
+![sentaku L1.5 Divergeのフロー図：L1比較→L1.5 Diverge（新案生成）→L2マトリクス](/claude-code-guide/assets/images/flow-l1-5.svg)
 
 ### 3. 画像イラスト（写真みたいな絵・有料・minimax MCP生成）
 
