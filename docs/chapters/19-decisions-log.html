@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>決定ログ — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 決定ログの解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="決定ログ — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 決定ログの解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/19-decisions-log.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="13-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="14-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="15-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="16-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="17-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="18-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="19-decisions-log.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="18-loop-system.html" class="nav-prev">← ループシステム（Loop Engineering）</a>
+            
+            
+            <a href="skill-catalog.html" class="nav-next">Skill カタログ →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>決定ログ — 設計判断の図解記録</h1>
+<div class="callout callout-info"><p>設計判断を「どういう考えで決めたか」図と表入りで残す場所。スマホでサクッと見返す用。</p></div>
+<hr />
+<h2>🧩 sentaku に「L1.5 Diverge（案拡張）」を追加した話</h2>
+<h3>🎯 TL;DR（3行）</h3>
+<ul>
+<li>比較スキル <code>sentaku</code> に <strong>L1.5 Diverge</strong>（案拡張・軽量・毎回自動）を追加</li>
+<li>比較の直後に「他の軸はないか？」と自問し、<strong>新案を1-2個提示</strong></li>
+<li>「もっと広げて」で6技法（逆転/類推/統合/極端化/制約解除/次元追加）フルへ昇格</li>
+</ul>
+<h3>🗺️ 全体像（図）</h3>
+<pre><code>[旧] L1比較 → (L2まで行かないと案が増えない)
+              ↓ L1で終わると案が少ないまま ⚠
+
+[新] L1比較 → L1.5 Diverge（自動・毎回）→ L2マトリクス
+              ↑                          ↑
+              「他の軸はないか？」1回自問    広がった案で定量比較
+              → 新案1-2個提示              （質が高い）
+                    ↓
+              「もっと広げて」→ 6技法フル
+</code></pre>
+<h3>🌧️ きっかけ</h3>
+<p>ある決定で比較スキルを使った後、「<strong>他に案はない？</strong>」と聞いたことで、<strong>3段階細分化</strong>という新視点の案が出た。この「他に案はない？」の威力を実感し、定型化したいという発想に。</p>
+<h3>🤔 検討した選択肢（表）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>案</th>
+<th>概要</th>
+<th>評価点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1: L2.5拡張</strong></td>
+<td>L2マトリクス後にDiverge</td>
+<td>49</td>
+</tr>
+<tr>
+<td>2: 新スキル</td>
+<td>Diverge専用スキル新設</td>
+<td>31</td>
+</tr>
+<tr>
+<td>3: トリガー拡張</td>
+<td>「他に案はない？」で自動</td>
+<td>46</td>
+</tr>
+<tr>
+<td>4: 既存スキル活用</td>
+<td>brainstormingへ委譲</td>
+<td>40</td>
+</tr>
+<tr>
+<td>5: プロンプト集</td>
+<td>6技法を文書化</td>
+<td>41</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>決め手</strong>: 「L2マトリクスまで行かないことが多い。案を増やすなら最初のうちに」→ <strong>L2.5でなくL1.5（L2の前）</strong> に配置。</p>
+<h3>✅ 決定と理由</h3>
+<p><strong>L1.5 Diverge（軽量版）採用</strong>。理由:</p>
+<ol>
+<li><strong>L2前配置</strong>で、L1で終わるケースもカバー</li>
+<li>**軽量版（毎回1-2新案）**で手軽さを保持・6技法フルは「もっと広げて」で昇格</li>
+<li><strong>sentaku内に統合</strong>で新スキル増やさない</li>
+<li><strong>6技法体系化</strong>で水平思考を明示</li>
+</ol>
+<p>却下: L2.5（L2後で遅い） / 新スキル（呼び分け負担） / フル6技法毎回（重い）</p>
+<h3>📋 次のアクション</h3>
+<ul>
+<li>実運用でのL1.5効果検証（次回sentaku使用時・新案が出るか）</li>
+<li>L1.5軽量版で新案が出ない場合→フル6技法をデフォルトにするか検討</li>
+</ul>
+<hr />
+<h2>💡 このページの使い方</h2>
+<ul>
+<li><strong>目的</strong>: 設計判断を図解入りで残し、スマホで見返す</li>
+<li><strong>更新</strong>: 記録は更新されるが、このページは「その時決めた内容のスナップショット」。陳腐化しても気にしない</li>
+<li><strong>追加</strong>: 新しい決定があれば章を追加していく</li>
+</ul>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="18-loop-system.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔁 ループシステム（Loop Engineering）</span>
+            </a>
+            
+            
+            <a href="skill-catalog.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📄 Skill カタログ</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

@@ -32,6 +32,7 @@ CHAPTER_MAP = {
     "13_glm-rate-proxy.md": {"slug": "13-glm-rate-proxy", "title": "GLM Rate Proxy", "icon": "⚡", "desc": "ZAI/GLMで動かす低コスト運用 — モデルルーティング・Thinking制御"},
     "15_コスト最適化構成.md": {"slug": "15-cost-optimization", "title": "コスト最適化", "icon": "💰", "desc": "GLM/MiniMaxルーティング（独自構成）"},
     "17_キーバインド.md": {"slug": "17-keybindings", "title": "CLI操作・キーバインド", "icon": "🎛️", "desc": "プロンプト入力欄の編集操作 — 全選択/消去/行編集/Vim/履歴/Windows特有"},
+    "19_decisions_log.md": {"slug": "19-decisions-log", "title": "決定ログ", "icon": "🧩", "desc": "設計判断の図解入り記録 — どういう考えで決めたか"},
 }
 
 
