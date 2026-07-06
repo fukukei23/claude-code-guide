@@ -286,6 +286,7 @@ fix:  [B] except Exception を具体的な例外型に限定
 refactor: [D] test_routes_coverage.py を6ファイルに分割
 </code></pre>
 <div class="callout callout-info"><p>Phase3以降は GitHub Issue に限らず、ローカルのバックログ（Markdown）をタスク源としても運用できる（フェーズ4の Daily Triage は両方を収集対象とする）。</p></div>
+<div class="callout callout-info"><p><strong>GitHub Issue 取得エンジン</strong>: <code>fetch_issues.py</code> が <code>auto-loop</code> ラベル付き Issue を取得し <code>state.json</code> の <code>pending</code> に供給する。Daily Triage からの <code>manual</code> モード（候補混入）と <code>next_issue.py</code> からの <code>auto</code> モード（枯渇補充）の両方から呼ばれる。</p></div>
 <hr />
 <h2>フェーズ4: 自律実装ループ（Daily Triage メタループ）</h2>
 <p>タスクを<strong>人間承認付きで自律実行する連鎖</strong>。毎朝タスク候補を自動生成し、承認を経て「実装→検証→次タスク」が自動で回る。</p>
@@ -337,6 +338,14 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 <td><code>next_issue.py</code></td>
 <td>Stop hook 発火・検証結果判定・completed/blocked 遷移・次タスク起動</td>
 </tr>
+<tr>
+<td><code>fetch_issues.py</code></td>
+<td>GitHub Issue → <code>pending</code> 自動積込エンジン。<code>auto-loop</code> ラベル付き Issue を gh CLI で取得し state.json に供給（manual は Daily Triage 候補混入・auto は <code>next_issue.py</code> の枯渇補充の両方から呼ばれる）</td>
+</tr>
+<tr>
+<td><code>apply-crons</code></td>
+<td>Cron定義（<code>renew-crons.sh</code> の <code>@cron</code>タグ）↔実体（<code>scheduled_tasks.json</code>）の冪等同期・健康診断（<code>check</code>/<code>diff</code>/<code>apply</code>/<code>clean</code>）・7日失効を補完するCron永続化インフラ</td>
+</tr>
 </tbody>
 </table></div>
 <h3>多 repo 混在キューのタグ付け</h3>
@@ -348,8 +357,7 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 <li><code>（repo: &lt;name&gt;）</code>: コード作業・対象リポジトリが repo_list 内に実在</li>
 <li><code>（手動）</code>: コード作業でない（応募・学習・手動運用）、または対象リポジトリ外</li>
 </ul>
-<p><code>approve.py</code> はこのタグを解析して <code>state.json</code> にタスクごとの <code>repo</code> を登録する（旧: 承認時に手動でrepoをCLI入力 → 廃止・自動解析に統一）。<code>手動</code> タグのタスクは自律実行キューから除外される。
-| <code>apply-crons</code> | Cron定義（<code>renew-crons.sh</code> の <code>@cron</code>タグ）↔実体（<code>scheduled_tasks.json</code>）の冪等同期・健康診断（<code>check</code>/<code>diff</code>/<code>apply</code>/<code>clean</code>）・7日失効を補完するCron永続化インフラ |</p>
+<p><code>approve.py</code> はこのタグを解析して <code>state.json</code> にタスクごとの <code>repo</code> を登録する（旧: 承認時に手動でrepoをCLI入力 → 廃止・自動解析に統一）。<code>手動</code> タグのタスクは自律実行キューから除外される。</p>
 <h3>state.json 構造（タスクごとに repo を持つ）</h3>
 <pre><code class="language-json">{
   &quot;active&quot;: false,

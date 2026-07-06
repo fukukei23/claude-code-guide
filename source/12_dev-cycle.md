@@ -111,6 +111,8 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 
 > Phase3以降は GitHub Issue に限らず、ローカルのバックログ（Markdown）をタスク源としても運用できる（フェーズ4の Daily Triage は両方を収集対象とする）。
 
+> **GitHub Issue 取得エンジン**: `fetch_issues.py` が `auto-loop` ラベル付き Issue を取得し `state.json` の `pending` に供給する。Daily Triage からの `manual` モード（候補混入）と `next_issue.py` からの `auto` モード（枯渇補充）の両方から呼ばれる。
+
 ---
 
 ## フェーズ4: 自律実装ループ（Daily Triage メタループ）
@@ -148,6 +150,8 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 | `approve.py` | 人間承認ゲート・manual タスク除外・state.json 登録 |
 | `run-task.sh` | 実装 + 検証（別プロセス）・対象 repo で実行 |
 | `next_issue.py` | Stop hook 発火・検証結果判定・completed/blocked 遷移・次タスク起動 |
+| `fetch_issues.py` | GitHub Issue → `pending` 自動積込エンジン。`auto-loop` ラベル付き Issue を gh CLI で取得し state.json に供給（manual は Daily Triage 候補混入・auto は `next_issue.py` の枯渇補充の両方から呼ばれる） |
+| `apply-crons` | Cron定義（`renew-crons.sh` の `@cron`タグ）↔実体（`scheduled_tasks.json`）の冪等同期・健康診断（`check`/`diff`/`apply`/`clean`）・7日失効を補完するCron永続化インフラ |
 
 ### 多 repo 混在キューのタグ付け
 
@@ -162,7 +166,6 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 - `（手動）`: コード作業でない（応募・学習・手動運用）、または対象リポジトリ外
 
 `approve.py` はこのタグを解析して `state.json` にタスクごとの `repo` を登録する（旧: 承認時に手動でrepoをCLI入力 → 廃止・自動解析に統一）。`手動` タグのタスクは自律実行キューから除外される。
-| `apply-crons` | Cron定義（`renew-crons.sh` の `@cron`タグ）↔実体（`scheduled_tasks.json`）の冪等同期・健康診断（`check`/`diff`/`apply`/`clean`）・7日失効を補完するCron永続化インフラ |
 
 ### state.json 構造（タスクごとに repo を持つ）
 
