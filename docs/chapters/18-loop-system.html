@@ -242,15 +242,15 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
 </tr>
 <tr>
 <td><code>run-task.sh</code></td>
-<td>検証付き実行。実装と検証を<strong>別のLLMプロセス</strong>に分離（自己採点を防ぐ）</td>
+<td>検証付き実行。実装と検証を<strong>別のLLMプロセス</strong>に分離（自己採点を防ぐ）。currentなし起動時は即exit（REPOフォールバックによるHOME repo誤動作防止）・起動時に <code>current.started=True</code> + <code>running=True</code> を設定</td>
 </tr>
 <tr>
 <td><code>next_issue.py</code></td>
-<td>Stop hookから発火。検証結果（OK/NG）を機械判定し、次タスク起動 or blocked停止</td>
+<td>Stop hookから発火。検証結果（OK/NG）を機械判定し、次タスク起動 or blocked停止。<code>current.started</code> 未設定/False なら消化スキップ（並行セッションのStop hookでの事前消化防止）</td>
 </tr>
 <tr>
 <td><code>state.json</code></td>
-<td>ループの状態（active / current / pending / completed / blocked）</td>
+<td>ループの状態（active / running / current[started] / pending / completed / blocked）</td>
 </tr>
 </tbody>
 </table></div>
