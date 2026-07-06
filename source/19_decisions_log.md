@@ -107,6 +107,8 @@
 </svg>
 </div>
 
-### 3. 画像イラスト（写真みたいな絵・有料・minimax MCP）
+### 3. 画像イラスト（写真みたいな絵・有料・minimax MCP生成）
 
-> ※画像生成API利用（1枚あたり課金）。必要なら生成します。
+<img src="/claude-code-guide/assets/images/decision-l1-5.jpeg" alt="sentaku L1.5 Divergeの概念イラスト：比較中に新たな視点が分岐して現れる" style="width:100%;max-width:400px;border-radius:12px;border:1px solid var(--border, #cbd5e1);display:block;margin:1rem auto" loading="lazy" />
+
+> 比較の途中で「他に切り口はないか？」と立ち止まり、新しい道（新案）が分岐して現れる様子をイラスト化。
