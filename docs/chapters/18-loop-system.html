@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ループシステム（Loop Engineering） — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI ループシステム（Loop Engineering）の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="ループシステム（Loop Engineering） — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI ループシステム（Loop Engineering）の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/18-loop-system.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="13-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="14-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="15-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="16-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="17-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="18-loop-system.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="17-keybindings.html" class="nav-prev">← CLI操作・キーバインド</a>
+            
+            
+            <a href="skill-catalog.html" class="nav-next">Skill カタログ →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>icon: 🔁
+slug: 18-loop-system
+card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と、外部LLMレビューを組み込む理由</h2>
+<h1>ループシステム（Loop Engineering） — 自律開発ループの全体像</h1>
+<aside class="tldr">
+<p><strong>3行で分かる</strong></p>
+<ol>
+<li>毎朝タスク候補を自動生成し、人間が承認すると「実装→検証→次タスク」が自律的に回る仕組み</li>
+<li>全自動なのは候補生成と実行連鎖。<strong>承認だけは意図的に人間の仕事</strong>として残している</li>
+<li>設計・監査の成果物には<strong>別のLLMによるレビュー</strong>を挟む——モデルが賢くても作者バイアスの死角は自己レビューでは消えないため</li>
+</ol>
+</aside>
+<hr />
+<p>Claude Code を「指示待ちの道具」から「毎日自走する開発パートナー」に変えるための仕組み全体を <strong>Loop Engineering</strong> と呼んでいる。個別の部品（cron・hook・スキル）の話は各章に譲り、本章は<strong>全体像と設計思想</strong>をまとめる。</p>
+<hr />
+<h2>全体フロー</h2>
+<pre><code>朝6:07（自動）  Daily Triage 発火
+                バックログ + 前回の引き継ぎ + 進行中タスクを収集
+                → LLMが優先度判定 → today-tasks.md 生成 → Discord通知
+       ↓
+セッション開始   候補が自動表示される
+       ↓
+人間の承認      approve.py で番号選択（ここだけ手動・意図的なゲート）
+       ↓
+自律実行連鎖    run-task.sh: 実装用LLM → 検証用LLM（別プロセス・別コンテキスト）
+                Stop hook: 検証OK → 次タスク自動起動 / NG → blocked停止・通知
+       ↓
+終了            全完了トースト or 人間へエスカレーション
+</code></pre>
+<hr />
+<h2>自動と手動の境界</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>区分</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全自動</td>
+<td>候補生成（毎朝）・通知・実装→検証の連鎖・次タスク起動・完了/停止通知・cronの失効対策（6日毎の自己再登録）・記録の引き継ぎ（handoff生成→次セッション復元）</td>
+</tr>
+<tr>
+<td>手動（意図的）</td>
+<td><strong>タスクの承認</strong>・blocked後の修正と再開・auto/manualモード切替</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 「どこまで自動化するか」より「<strong>どこを意図的に手動で残すか</strong>」が設計の本体。承認ゲートを消すと、LLMの誤判断がそのまま実行される。</p></div>
+<hr />
+<h2>主要コンポーネント</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>部品</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>daily-triage.sh</code> / <code>daily_triage.py</code></td>
+<td>候補生成エンジン。バックログ・引き継ぎ・進行中を収集しLLMが優先度判定</td>
+</tr>
+<tr>
+<td><code>approve.py</code></td>
+<td>人間承認ゲート。選択されたタスクをキュー（state.json）に登録し最初のタスクを起動</td>
+</tr>
+<tr>
+<td><code>run-task.sh</code></td>
+<td>検証付き実行。実装と検証を<strong>別のLLMプロセス</strong>に分離（自己採点を防ぐ）</td>
+</tr>
+<tr>
+<td><code>next_issue.py</code></td>
+<td>Stop hookから発火。検証結果（OK/NG）を機械判定し、次タスク起動 or blocked停止</td>
+</tr>
+<tr>
+<td><code>state.json</code></td>
+<td>ループの状態（active / current / pending / completed / blocked）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>現在地（2026-07-05 実測診断）</h2>
+<p>自分の環境を実測して採点した結果は <strong>総合76/100</strong>。内訳: 候補生成90・cron基盤90・記録引き継ぎ90・実行連鎖75・失敗回復50・ドキュメント65。</p>
+<p>得られた教訓は2つ。</p>
+<ol>
+<li><strong>仕組みの完成と運用の定着は別物。</strong> 実行連鎖は実装・検証済みなのに、実運用の完走は1件だけだった。「承認して流す」という毎朝30秒の習慣が最後のピースになる。</li>
+<li><strong>ドキュメントは書いた瞬間から腐り始める。</strong> 「hookとして稼働中」と台帳に書かれた同期スクリプトが、実際は11日前から<strong>どこからも呼ばれていなかった</strong>（設定整理の際に登録が消え、それを検知するはずの検知器も同時に消えていた）。台帳は手書きせず、実登録から自動生成する方向へ移行中。</li>
+</ol>
+<hr />
+<h2>外部LLMレビューの組み込み（実証済みの知見）</h2>
+<p>ループの品質を支えるもう1つの柱が、<strong>設計・監査の成果物を別のLLMにレビューさせる</strong>運用。「最上位モデルが作った案なら不要では？」という疑問に対し、実測で答えが出た。</p>
+<p>最高級モデルの監査・設計成果物へ外部LLMレビューを3回（計15指摘）実施した採否実績:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>結果</th>
+<th>件数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>致命的な穴の検出（設計テーマ自体の見落とし）</td>
+<td>1</td>
+</tr>
+<tr>
+<td>優先度の再重み付け・有用な盲点追加</td>
+<td>5</td>
+</tr>
+<tr>
+<td>ホスト側の改善を誘発（触媒）</td>
+<td>2</td>
+</tr>
+<tr>
+<td>妥当性の確認</td>
+<td>4</td>
+</tr>
+<tr>
+<td>誤指摘（却下）</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>重要なのは次の3点。</p>
+<ol>
+<li><strong>革新は来ない。死角の消し込みが来る。</strong> 新しいアーキテクチャはレビューからは出ない。出るのは「作者が自分の前提の内側で完結してしまった穴」。これはモデルの能力を上げても自己レビューでは消えにくい</li>
+<li><strong>価値の源泉は賢さではなく視点の独立性。</strong> レビュアーが作成者より賢い必要はない</li>
+<li><strong>取捨する側の文脈力とセットでのみ黒字。</strong> 誤指摘（今回2割）は環境文脈の不足から生じる。文脈を持つ側が採否判定する前提を崩すと、逆に品質が下がる</li>
+</ol>
+</blockquote>
+<hr />
+<h2>正典ドキュメントの構成（迷子にならないために）</h2>
+<p>複数の文書がループを説明していると、どれが正か分からなくなる。役割を固定している:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>役割</th>
+<th>場所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>仕組みの正典（1日の流れ・コンポーネント）</td>
+<td>ナレッジベース内 <code>共通ルール/自律開発ループ.md</code></td>
+</tr>
+<tr>
+<td>稼働台帳（hook/cron/スクリプトの現状）</td>
+<td><code>自動化.md</code></td>
+</tr>
+<tr>
+<td>設計判断の記録</td>
+<td><code>01_DECISIONS/</code>（日付付き決定ログ）</td>
+</tr>
+<tr>
+<td>実装本体</td>
+<td><code>claude-config/scripts/auto-dev/</code>（pytest付き）</td>
+</tr>
+<tr>
+<td>公開ガイド（概念・入門）</td>
+<td><a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="17-keybindings.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🎛️ CLI操作・キーバインド</span>
+            </a>
+            
+            
+            <a href="skill-catalog.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📄 Skill カタログ</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
