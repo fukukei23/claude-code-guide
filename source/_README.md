@@ -29,6 +29,7 @@
 | SSOTから探して | [14_ssot-search.md](14_ssot-search.md) | 個人ナレッジベースのRAG検索 | 2〜3p |
 | コスト最適化 | [15_コスト最適化構成.md](15_コスト最適化構成.md) | GLM/MiniMaxルーティング（独自構成） | 3〜4p |
 | スキルマップ | （HTML専用・[公開ページ](https://fukukei23.github.io/claude-code-guide/chapters/16-skill-map.html)） | フェーズ別スキル選択のインタラクティブ早見表 | — |
+| バージョン管理 | [20_バージョン管理.md](20_バージョン管理.md) | 更新・ダウングレード手順・プロキシ環境の注意 | 2〜3p |
 
 ## 関連ドキュメント
 
