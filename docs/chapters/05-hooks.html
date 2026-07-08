@@ -465,6 +465,11 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
+<td><code>check-proxy-compat.sh</code></td>
+<td>CC版変化時にプロキシ互換性（GLM応答のtool_use）を自動検証・同版かつ前回okは省略・警告のみでブロックしない（2026-07-09 追加）</td>
+</tr>
+<tr>
+<td></td>
 <td><code>sync-settings-to-example.sh</code></td>
 <td>settings.jsonのサンプル同期</td>
 </tr>
@@ -585,7 +590,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p>SessionStartは19コマンド構成。初期化・セキュリティ・SSOT同期・設定チェック・日次自動発動の5カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
+<div class="callout callout-info"><p>SessionStartは20コマンド構成。初期化・セキュリティ・SSOT同期・設定チェック・日次自動発動の5カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
 <h3>state日付管理による日次自動発動パターン（再利用可能）</h3>
 <p><code>check-ssot-sync-staleness.sh</code> が実装する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
 <pre><code class="language-bash">STATE=&quot;$HOME/.claude/state/&lt;task&gt;-last-run&quot;
