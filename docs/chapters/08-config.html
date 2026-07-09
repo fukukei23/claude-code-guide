@@ -544,6 +544,24 @@ settings.json          ← 実体。バックアップ・出力・表示は禁�
 <li>マスクなしの <code>grep</code>（APIキー検索）</li>
 <li>フィルタなしの <code>env</code>（全環境変数表示）</li>
 </ul>
+<h4><code>settings.json</code> を安全に編集するには（python構造操作）</h4>
+<p><code>settings.json</code> 等の機密ファイルは Read がブロックされるため、<strong>値を見ずに構造だけ操作</strong>して書き戻すのが安全な編集方法。Edit ツールは Read 前提で動かないため、Python で構造のみ触る:</p>
+<pre><code class="language-python">import json, shutil
+p = &quot;/home/&lt;USER&gt;/.claude/settings.json&quot;
+shutil.copy(p, p + &quot;.tmp-bak&quot;)          # バックアップ
+d = json.load(open(p))
+d[&quot;hooks&quot;][&quot;SessionStart&quot;][0][&quot;hooks&quot;].append(
+    {&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;/home/&lt;USER&gt;/.claude/scripts/session/foo.sh&quot;}
+)
+with open(p, &quot;w&quot;) as f:
+    json.dump(d, f, indent=2, ensure_ascii=False)  # 元フォーマット(indent=2)保持
+</code></pre>
+<ul>
+<li>値（envのAPIキー等）には触れない（構造のみ変更）→ 差分 <code>diff bak new | grep '^&gt;'</code> に secret は出ない</li>
+<li><code>indent=2</code> + <code>ensure_ascii=False</code> で元フォーマット保持（最小差分・surgical）</li>
+<li><strong>Bash 経由の変更は PostToolUse の auto-sync が発火しない</strong>（Edit/Write トリガーのみ）→ SSOT の設定ファイルコピー(<code>01_DECISIONS/claude-code/設定ファイル/</code>)は手動同期が必要</li>
+<li>ブロック時の guard メッセージにもこの手順が表示される（<code>check-command-safety.py</code> の <code>check_read</code>）</li>
+</ul>
 <hr />
 <h2>設定変更の方法</h2>
 <div class="table-wrapper"><table>
