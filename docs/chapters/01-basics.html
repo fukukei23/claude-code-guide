@@ -256,8 +256,8 @@
 </tr>
 <tr>
 <td><strong>コンテキスト上限</strong></td>
-<td>200k（Code タブ）</td>
-<td>最大1M（プランによる）</td>
+<td>モデル依存（Sonnet 5は1M自動・他は<code>[1m]</code>選択）</td>
+<td>モデル依存（同じ）</td>
 </tr>
 <tr>
 <td><strong>スクリプト連携</strong></td>
@@ -266,8 +266,18 @@
 </tr>
 <tr>
 <td><strong>対応OS</strong></td>
-<td>Windows / macOS のみ</td>
+<td>Windows / macOS / Linux(beta)</td>
 <td>全OS（Linux/WSL2/Mac/Windows）</td>
+</tr>
+<tr>
+<td><strong>Desktop固有機能</strong></td>
+<td>ビジュアルdiff・アプリプレビュー(組込ブラウザ)・Computer Use(GUI操作)・Dispatch・サイドチャット</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>CLI固有機能</strong></td>
+<td>—</td>
+<td><code>--print</code>/Agent SDK(スクリプト自動化)・エージェントチーム・dontAskモード・ターミナル系コマンド</td>
 </tr>
 <tr>
 <td><strong>設定ファイル</strong></td>
@@ -308,6 +318,14 @@
 </tr>
 </tbody>
 </table></div>
+<div class="callout callout-warn"><p>⚠️ <strong>Windows Desktop App(MSIX版)のMCP設定ファイルについて（2026-07-06実測）</strong>
+Windows Desktop App（ストア配布のMSIXパッケージ版）は、MCPサーバー設定を <code>AppData\Local\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\claude_desktop_config.json</code>（MSIX仮想化パス）から読み込みます。<strong><code>~/.claude/settings.json</code> にMCPを書いても反映されません。</strong></p>
+<ul>
+<li><strong>変更の反映確認</strong>: アプリ内「設定 → 開発者 → ローカルMCPサーバー」パネルで <code>running</code> 表示を直接確認するのが確実</li>
+<li><strong>注意</strong>: このパスは2026-07-06時点の実測で、アプリ更新で変わりうります。一度確定した対応関係を恒久前提にしないこと（2026-05時点は別ファイルが有効に見えた時期もあり）</li>
+<li>詳細: <a href="#">Windows Desktop版Gemini-MCP真因確定 — MSIXconfig特定</a></li>
+</ul>
+</blockquote>
 <h3>どちらを選ぶか</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -339,7 +357,8 @@
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p>詳細: <a href="#">自作MCPサーバー構造メモ</a></p></div>
+<blockquote>
+<p>詳細: <a href="#">自作MCPサーバー構造メモ</a></p></div>
 <hr />
 <div class="mermaid-wrapper"><div class="mermaid">
 graph TD
@@ -393,9 +412,9 @@ graph LR
         E["空き容量<br/>~70%"]
     end
 </div></div><h2>コンテキストの仕組み</h2>
-<p>Claude Code は <strong>コンテキストウィンドウ</strong>（最大200kトークン）の中で動作する。セッション開始時に以下がロードされる。</p>
+<p>Claude Code は <strong>コンテキストウィンドウ</strong>（最大1Mトークン・モデル依存。標準は200k、Sonnet 5/Fable 5/Opus 4.6以降/Sonnet 4.6は1M窓に対応）の中で動作する。セッション開始時に以下がロードされる。</p>
 <h3>コンテキストの構成要素</h3>
-<pre><code>200k トークン（コンテキストウィンドウ上限）
+<pre><code>200k トークン（標準窓の例・1M対応モデルなら空きが約5倍に拡大）
 ├── システムプロンプト      ~5.7k  (2.8%)   ← Claude Codeの基本ルール
 ├── システムツール定義     ~18.1k  (9.0%)   ← Read, Edit, Bash等のツール説明
 ├── MCPツール定義          ~21.4k (10.7%)   ← 83個のMCPツール説明
@@ -426,7 +445,7 @@ graph LR
 <div class="callout callout-tip"><p>詳解: <a href="11-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
 <p>Claude Codeでは<strong>入力トークン &gt;&gt; 出力トークン</strong>になるのが普通（比率は約13:1）。</p>
 <p>理由は毎ターンで「システムプロンプト + MCP定義 + メモリ + 過去会話すべて」を再送するため。チャットAI（ChatGPT等）では出力が多くなりがちだが、コーディングアシスタントでは逆転する。</p>
-<p>また、<strong>200Kの実質使える量は約160K</strong>。システム・MCP・メモリで約40Kが固定消費される。</p>
+<p>また、<strong>実質使える量は窓サイズ依存</strong>: 標準200K窓なら約160K、1M窓なら約960K（いずれもシステム・MCP・メモリで約40Kが固定消費される）。</p>
 <hr />
 <h2>トークンとは</h2>
 <p>トークンはテキストの最小単位。日本語1文字 ≒ 1〜2トークン、英単語1語 ≒ 1トークン。</p>
