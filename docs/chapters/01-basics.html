@@ -486,12 +486,12 @@ graph LR
 <tr>
 <td><code>resume-session</code></td>
 <td>セッション開始時「おはよう」「再開」「/resume-session」</td>
-<td>最新5件のhandoff（<code>config/handoff/</code>）を読み込み文脈を復元（new-sessionの対・読込側）</td>
+<td>最新5件のhandoff（<code>00★SYSTEM/handoff/</code>）を読み込み文脈を復元（new-sessionの対・読込側）</td>
 </tr>
 <tr>
 <td><code>new-session</code></td>
 <td>コンテキスト満杯時「新セッション」「/new-session」</td>
-<td>現在の状態を収集→GLMで引き継ぎプロンプト生成→<code>config/handoff/YYYY-MM-DD_HHMM.md</code> に保存→3行サマリー出力</td>
+<td>現在の状態を収集→GLMで引き継ぎプロンプト生成→<code>00★SYSTEM/handoff/YYYY-MM-DD_HHMM.md</code> に保存→3行サマリー出力</td>
 </tr>
 </tbody>
 </table></div>
@@ -502,7 +502,7 @@ graph LR
 <h3>タスク占有ボード — 並行セッションの競合防止</h3>
 <p>複数セッションを並行運用する場合、共通ファイル（settings.json / CLAUDE.md / hook群 / 共通スキル等）を<strong>逆向きに変更する競合</strong>を防ぐための作業宣言ボード。</p>
 <ul>
-<li>場所: <code>knowledge-base/config/active-sessions.md</code></li>
+<li>場所: <code>knowledge-base/00★SYSTEM/active-sessions.md</code></li>
 <li><strong>🟢現在進行中タスク表</strong>: 着手中のセッションがタスク名・窓・開始時刻・方針を記入</li>
 <li><strong>ルール</strong>:
 <ul>

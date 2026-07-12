@@ -172,7 +172,7 @@ INLINE_REPLACEMENTS = [
     # obsidian-ssot / 00_SYSTEM パス（スキル内コードブロック）
     (r"obsidian-ssot/00_SYSTEM/handoff/", "claude-code/handoff/"),
     (r"obsidian-ssot", "knowledge-base"),
-    (r"00_SYSTEM/", "config/"),
+    (r"00_SYSTEM/", "00★SYSTEM/"),
     # 「あなたの設定」テーブル列 → 行ごと書き換え
     (r"\| あなたの設定 \|.*?\|", "| 備考 | なし |"),
 ]

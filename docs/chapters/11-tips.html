@@ -583,16 +583,16 @@ if __name__ == &quot;__main__&quot;:
 <li><code>~/.claude/CLAUDE.md</code></li>
 <li><code>SKILL.md</code>群（<code>skills/*/SKILL.md</code>）</li>
 <li>hook群（<code>scripts/hooks/*</code>・<code>scripts/obsidian/*</code>）</li>
-<li><code>config/自動化.md</code></li>
-<li><code>config/全体マップ_MOC.md</code></li>
-<li><code>config/repo-index.yaml</code> / <code>リポジトリ索引.md</code></li>
-<li><code>config/MCPツール使い分けガイド.md</code></li>
-<li><code>config/リンク運用方針.md</code></li>
+<li><code>00★SYSTEM/自動化.md</code></li>
+<li><code>00★SYSTEM/全体マップ_MOC.md</code></li>
+<li><code>00★SYSTEM/repo-index.yaml</code> / <code>リポジトリ索引.md</code></li>
+<li><code>00★SYSTEM/MCPツール使い分けガイド.md</code></li>
+<li><code>00★SYSTEM/リンク運用方針.md</code></li>
 </ol>
 <p><strong>実例（同一日内で発生）</strong>: <code>check-link-policy.sh</code> が3セッションで「修正 / 削除 / 活用」と分裂。どれか1人が作業しても別の1人が無効化する状態になった。</p>
 <p>根本原因は <strong>各セッションが他の並行セッションの「進行中方針」を知らない</strong>こと。git log には未commitの意図は載らない。</p>
 <h3>解決：作業宣言の共有ボード</h3>
-<p><code>config/active-sessions.md</code> に「いま誰がどの共通ファイルを・どうするか」を宣言する。</p>
+<p><code>00★SYSTEM/active-sessions.md</code> に「いま誰がどの共通ファイルを・どうするか」を宣言する。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
