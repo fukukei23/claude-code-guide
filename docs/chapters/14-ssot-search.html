@@ -359,6 +359,61 @@ results = rerank(query, hits, top_n=5)
 <li><strong>内部の仕組み</strong>: 詳細は上の章。普段は「検索したい時に使う」とだけ覚えればOK</li>
 </ul>
 <hr />
+<h2 id="ssot-skills">SSOT関連スキル</h2>
+<p>SSOT運用に必要なスキルは3つ。使い分けを把握しておくと運用が楽になります。</p>
+<h3>SSOTレコード</h3>
+<p>「記録して」「保存して」と言うだけでSSOTへの記録・振り分け・ガイド転記まで自動化されるスキル。</p>
+<p><strong>トリガーワード</strong>:</p>
+<ul>
+<li>「記録して」</li>
+<li>「保存して」</li>
+<li>「メモして」</li>
+<li>「SSOTに入れて」</li>
+<li>「ガイドに追加して」</li>
+</ul>
+<p><strong>特徴</strong>:</p>
+<ul>
+<li>内容を分析して機密レベル・想定寿命・削除可能性・検索優先度に基づく保管場所を判定</li>
+<li>転記先・日記追記・ガイド転記を一括実行</li>
+<li>ssot-guideの「03 SSOT」章に詳細あり</li>
+</ul>
+<p>詳細: <a href="https://fukukei23.github.io/ssot-guide/#ssot-record">ssot-guide 03 SSOT - SSOTレコード</a></p>
+<h3>SSOTチェック</h3>
+<p>SSOTと実際のファイル/設定の整合性をチェックし、乖離があれば修正するスキル。</p>
+<p><strong>トリガーワード</strong>:</p>
+<ul>
+<li>「SSOT整合性チェックして」</li>
+<li>「SSOT整理して」</li>
+<li>「SSOT同期して」</li>
+<li>「00_SYSTEM更新して」</li>
+<li><code>/ssot-check</code></li>
+</ul>
+<p><strong>チェック対象</strong>:</p>
+<ul>
+<li><code>config/自動化.md</code> — hooks/cron/スクリプトの記載漏れ</li>
+<li><code>config/repo-index.yaml</code> — リポジトリ数・visibility・last_updated</li>
+<li><code>config/MCPツール使い分けガイド.md</code> — 有効サーバー数</li>
+<li><code>config/全体マップ_MOC.md</code> — リポジトリ数・プロジェクト一覧</li>
+<li><code>config/チャーター.md</code> — 禁止操作リスト</li>
+</ul>
+<p>詳細: <a href="https://fukukei23.github.io/ssot-guide/#ssot-check">ssot-guide 03 SSOT - SSOTチェック</a></p>
+<h3>特性カタログ</h3>
+<p>SSOTの9つの保管場所の分類基準。</p>
+<p><strong>保管場所構成</strong>:</p>
+<ul>
+<li><code>01_DECISIONS/&lt;project&gt;</code>: 決定ログ・技術詳細</li>
+<li><code>10_DAILY/YYYY-MM-DD</code>: 日次サマリー・セッションログ</li>
+<li><code>config/</code>: 全体マップ・共通ルール・自動化・設定</li>
+<li><code>30_RESEARCH/</code>: 参考資料・調査結果</li>
+<li><code>バックログ.md</code>: 未完了タスク・WIP構想</li>
+<li><code>20_PUBLISHING/</code>: 外部公開コンテンツ</li>
+<li>プロジェクト固有フォルダ</li>
+<li>メモリ: セッション中のコンテキスト</li>
+<li><code>feedback_*.md</code>: ユーザー指摘・好みのパターン</li>
+</ul>
+<p><strong>判定基準</strong>: 機密レベル・想定寿命・削除可能性・検索優先度</p>
+<p>詳細: <a href="https://fukukei23.github.io/ssot-guide/#%E7%89%B9%E6%80%A7%E3%82%AB%E3%82%BF%E3%83%AD%E3%82%B0">ssot-guide 03 SSOT - 特性カタログ</a></p>
+<hr />
 
         </article>
 

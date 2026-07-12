@@ -219,3 +219,74 @@ sudo apt-get install -y ripgrep
 | `~/.claude/venv/ssot-search/` | Python仮想環境 |
 | `~/projects/claude-config/scripts/ssot/` | スクリプトのソース（シンボリックリンク元）|
 | `~/projects/claude-config/skills/ssot-search/` | スキルのソース |
+
+---
+
+## SSOT関連スキル {#ssot-skills}
+
+SSOT運用に必要なスキルは3つ。使い分けを把握しておくと運用が楽になります。
+
+### SSOTレコード
+
+「記録して」「保存して」と言うだけでSSOTへの記録・振り分け・ガイド転記まで自動化されるスキル。
+
+**トリガーワード**:
+- 「記録して」
+- 「保存して」
+- 「メモして」
+- 「SSOTに入れて」
+- 「ガイドに追加して」
+
+**特徴**:
+- 内容を分析して機密レベル・想定寿命・削除可能性・検索優先度に基づく保管場所を判定
+- 転記先・日記追記・ガイド転記を一括実行
+- ssot-guideの「03 SSOT」章に詳細あり
+
+詳細: [ssot-guide 03 SSOT - SSOTレコード](https://fukukei23.github.io/ssot-guide/#ssot-record)
+
+### SSOTチェック
+
+SSOTと実際のファイル/設定の整合性をチェックし、乖離があれば修正するスキル。
+
+**トリガーワード**:
+- 「SSOT整合性チェックして」
+- 「SSOT整理して」
+- 「SSOT同期して」
+- 「00_SYSTEM更新して」
+- `/ssot-check`
+
+**チェック対象**:
+- `00_SYSTEM/自動化.md` — hooks/cron/スクリプトの記載漏れ
+- `00_SYSTEM/repo-index.yaml` — リポジトリ数・visibility・last_updated
+- `00_SYSTEM/MCPツール使い分けガイド.md` — 有効サーバー数
+- `00_SYSTEM/全体マップ_MOC.md` — リポジトリ数・プロジェクト一覧
+- `00_SYSTEM/チャーター.md` — 禁止操作リスト
+
+詳細: [ssot-guide 03 SSOT - SSOTチェック](https://fukukei23.github.io/ssot-guide/#ssot-check)
+
+### 特性カタログ
+
+SSOTの9つの保管場所の分類基準。
+
+**保管場所構成**:
+- `01_DECISIONS/<project>`: 決定ログ・技術詳細
+- `10_DAILY/YYYY-MM-DD`: 日次サマリー・セッションログ
+- `00_SYSTEM/`: 全体マップ・共通ルール・自動化・設定
+- `30_RESEARCH/`: 参考資料・調査結果
+- `バックログ.md`: 未完了タスク・WIP構想
+- `20_PUBLISHING/`: 外部公開コンテンツ
+- プロジェクト固有フォルダ
+- メモリ: セッション中のコンテキスト
+- `feedback_*.md`: ユーザー指摘・好みのパターン
+
+**判定基準**: 機密レベル・想定寿命・削除可能性・検索優先度
+
+詳細: [ssot-guide 03 SSOT - 特性カタログ](https://fukukei23.github.io/ssot-guide/#特性カタログ)
+
+---
+
+## 関連章 {#related-chapters}
+
+- [15 auto-sync改善](15_auto-sync改善.md) — 自動化・設定の整合性チェック
+- [16 record-decision](16_record-decision.md) — 単一決定の記録
+- [17 sentaku](17_sentaku.md) — 選択肢の深掘り比較
