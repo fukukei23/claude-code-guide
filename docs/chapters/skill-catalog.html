@@ -118,7 +118,7 @@
         <a href="14-ssot-search.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
-            SSOTから探して
+            SSOT
         </a>
         
         <a href="15-cost-optimization.html"
@@ -220,6 +220,7 @@
 </tbody>
 </table></div>
 <h2>📝 SSOT・記録・検索</h2>
+<div class="callout callout-info"><p><strong>SSOTの全体像・使い分け・保管場所の分類基準は <a href="14-ssot-search.html">14 SSOT</a> を参照</strong></p></div>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -245,9 +246,14 @@
 <td>「SSOTから探して」「SSOT検索」</td>
 </tr>
 <tr>
+<td><code>ssot-check</code></td>
+<td>SSOTと実ファイル/設定の整合性チェック。乖離があれば自動修正・修正提案</td>
+<td>「SSOT整合性チェックして」「SSOT整理して」「乖離を修正して」</td>
+</tr>
+<tr>
 <td><code>ssot-sync</code></td>
-<td>SSOTと実ファイル/設定の整合性チェック。乖離があれば修正</td>
-<td>「SSOT整合性チェックして」「乖離を修正して」</td>
+<td>⚠️ 非推奨（ssot-check に統合予定）。<code>/ssot-sync</code> は ssot-check に委譲</td>
+<td><code>/ssot-sync</code></td>
 </tr>
 <tr>
 <td><code>record-new-feature</code></td>

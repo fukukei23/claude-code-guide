@@ -15,12 +15,15 @@
 
 ## 📝 SSOT・記録・検索
 
+> **SSOTの全体像・使い分け・保管場所の分類基準は [14 SSOT](14_ssot-search.md) を参照**
+
 | Skill | 説明 | トリガー |
 |---|---|---|
 | `ssot-record` | SSOTへの記録・振り分け自動化。タグマッピングからプロジェクト側docs更新も自動検出 | 「記録して」「書き留めて」「SSOTに入れて」 |
 | `record-decision` | ⚠️ 非推奨（ssot-record に統合済み）。`/record-decision` は ssot-record に委譲 | `/record-decision` |
 | `ssot-search` | 個人ナレッジベース（obsidian-ssot）をRAG検索。1,900件超から関連5件表示 | 「SSOTから探して」「SSOT検索」 |
-| `ssot-sync` | SSOTと実ファイル/設定の整合性チェック。乖離があれば修正 | 「SSOT整合性チェックして」「乖離を修正して」 |
+| `ssot-check` | SSOTと実ファイル/設定の整合性チェック。乖離があれば自動修正・修正提案 | 「SSOT整合性チェックして」「SSOT整理して」「乖離を修正して」 |
+| `ssot-sync` | ⚠️ 非推奨（ssot-check に統合予定）。`/ssot-sync` は ssot-check に委譲 | `/ssot-sync` |
 | `record-new-feature` | Claude Code新バージョンのリリースノートを調査しSSOTとガイドに追記 | SessionStart hookで自動発動 |
 | `codebase-memory` | コードをナレッジグラフ化し構造検索（呼び出し元/影響範囲/デッドコード/アーキテクチャ） | 「アーキテクチャ理解して」「呼び出し元を探して」「影響範囲」`/codebase-memory` |
 | `resume-session` | セッション再開時に最新5件のhandoffを読み込み文脈復元。new-sessionの対 | 「おはよう」「こんにちは」「再開」`/resume-session` |
