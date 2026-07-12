@@ -52,7 +52,7 @@ SSOT運用は3つのスキルで完結します:
 
 ## 各スキルの詳細
 
-<details><summary>📝 ssot-record（記録）</summary>
+📝 **ssot-record（記録）**
 
 **トリガーワード**:
 - 「記録して」「保存して」「メモして」
@@ -66,9 +66,9 @@ SSOT運用は3つのスキルで完結します:
 
 **詳細は**: [ssot-guide 03 SSOT - SSOTレコード](https://fukukei23.github.io/ssot-guide/#ssot-record)
 
-</details>
+---
 
-<details><summary>🔍 ssot-search（検索）</summary>
+🔍 **ssot-search（検索）**
 
 **トリガーワード**:
 - 「SSOTから探して」「SSOT検索」
@@ -190,9 +190,9 @@ results = rerank(query, hits, top_n=5)
 - **日本語で聞ける**: 「〇〇について書いたメモある？」と聞くと、該当箇所を探してくれる
 - **探す時間を省ける**: 手動でフォルダを漁る代わりに、一発で見つけられる
 
-</details>
+---
 
-<details><summary>🔧 ssot-check（整合性）</summary>
+🔧 **ssot-check（整合性）**
 
 **トリガーワード**:
 - 「SSOT整合性チェックして」「SSOT整理して」「SSOT同期して」
@@ -216,8 +216,6 @@ results = rerank(query, hits, top_n=5)
 - Cron実体の増減と記述のズレ（ゴーストCron等）
 
 **詳細は**: [ssot-guide 03 SSOT - SSOTチェック](https://fukukei23.github.io/ssot-guide/#ssot-check)
-
-</details>
 
 ---
 
