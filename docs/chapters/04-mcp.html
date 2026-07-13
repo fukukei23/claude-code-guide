@@ -433,12 +433,14 @@
 <tbody>
 <tr>
 <td><code>review_with_gemini</code></td>
-<td>コード断片をGeminiに投げてレビュー（focus: bug / logic / boundary 等を指定可能）</td>
+<td>コード断片をGeminiに投げてレビュー（focus: bug / security / performance / readability / all(省略時) を指定可能）</td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: GLM自身のレビューで不安がある時・設計判断を別モデルの視点で検証したい時。「このコードをGeminiにレビューして」等。GLM/Sonnetとは異なるモデルの目を通すことで、見落としを拾う。</p>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/gemini-mcp-server.py</code>（自作Python・<code>review_with_gemini</code> の1ツール）。launcher <code>start-gemini-mcp.sh</code> が <code>set -a; source ~/.secrets.env</code> で <code>GEMINI_API_KEY</code> をエクスポート→ <code>exec python3 -u</code> で起動（<code>-u</code> で null byte問題を回避）。safety filter / 429バックオフ / 入力長上限 / key未設定メッセージのエラー処理付き。</p></div>
+<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/gemini-mcp-server.py</code>（自作Python・<code>review_with_gemini</code> の1ツール）。launcher <code>start-gemini-mcp.sh</code> が <code>set -a; source ~/.secrets.env</code> で <code>GEMINI_API_KEY</code> をエクスポート→ <code>exec python3 -u</code> で起動（<code>-u</code> で null byte問題を回避）。safety filter / 429バックオフ / 入力長上限（24,000 chars・約8kトークン相当）/ key未設定メッセージのエラー処理付き。</p></div>
+<p><strong>モデル陳腐化耐性（層①設定外部化・2026-07-10追加）</strong>: <code>lib/api_base.py</code> の <code>_load_candidates</code> を経由し、<code>config/gemini-models.json</code> の <code>text</code> 候補先頭を <code>DEFAULT_MODEL</code> として自動選択。config 不在時は <code>gemini-2.5-pro</code> にフォールバック（起動は維持）。<code>review</code> は品質重視で有料込み（<code>paid_ok=True</code>）。完全フォールバック統合（<code>run_api_with_fallback</code>）は別タスクで保留中。</p>
+<p><strong>モデル健診ツール</strong>: <code>~/.claude/scripts/api/gemini-models-health.py</code> で月1の能動的健診。<code>--invalidate</code>（ListModelsキャッシュ強制更新）/ <code>--report</code>（statsログ集計）/ <code>--ping</code>（候補生存確認・4系統 vision/audio/video/text 別）。</p>
 <p><strong>セットアップ</strong>:</p>
 <ul>
 <li>サーバー登録は <code>claude mcp add -s user</code> で <code>~/.claude.json</code>（userスコープ）へ。<strong><code>settings.json</code> の <code>mcpServers</code> は読まれない</strong>（minimax系と同じ注意点・上記「2層問題」参照）。<pre><code class="language-bash">claude mcp add gemini -s user -- bash ~/.claude/scripts/mcp/start-gemini-mcp.sh

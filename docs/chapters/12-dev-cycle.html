@@ -202,9 +202,11 @@
 【3. 必須】Issue化
         ↓
 【4. 必須】自律実装ループ（Daily Triage メタループ）
+   └ 内部フェーズ（0/1/6/7）= objective抽出 → 計画 → 実装 → drift検知 → task-log
         ↓
 【5. 自動】完了通知
 </code></pre>
+<div class="callout callout-info"><p><strong>フェーズ4 内部のサブフェーズ（auto-dev 実行連鎖）</strong>: Daily Triage で承認されたタスクは <code>run-task.sh</code> から自律実行される。内部で <strong>フェーズ0（objective抽出）→ フェーズ1（計画）→ フェーズ6（drift検知）→ フェーズ7（task-log生成）</strong> の4層が順に走る。各層は独立した Python モジュール（<code>scripts/auto-dev/</code> 配下）で、<code>objective_extractor.py</code> / <code>review_lib.py</code> / <code>drift_detector.py</code> / <code>task_logger.py</code> が対応する責務を持つ（ユニットテストは <code>tests/test_*.py</code>）。</p></div>
 <div class="callout callout-info"><p><strong>フェーズ4は方式刷新済み</strong>: 旧 <code>start.sh --auto</code>（Issue一括自動実装）は廃止。現在は <strong>Daily Triage メタループ</strong>（毎朝タスク候補を生成→人間承認→実装+検証の連鎖）が主役。詳細は「フェーズ4」参照。</p></div>
 <hr />
 <h2>フェーズ1: 品質スイープ</h2>
@@ -357,6 +359,22 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 <tr>
 <td><code>apply-crons</code></td>
 <td>Cron定義（<code>renew-crons.sh</code> の <code>@cron</code>タグ）↔実体（<code>scheduled_tasks.json</code>）の冪等同期・健康診断（<code>check</code>/<code>diff</code>/<code>apply</code>/<code>clean</code>）・7日失効を補完するCron永続化インフラ</td>
+</tr>
+<tr>
+<td><code>objective_extractor.py</code></td>
+<td><strong>フェーズ0</strong>: タスク prompt から <code>[OBJECTIVE]</code> / <code>[KPI]</code> マーカーで目的文とKPI数値を抽出</td>
+</tr>
+<tr>
+<td><code>review_lib.py</code></td>
+<td><strong>フェーズ1〜4</strong>: multi-llm-review のロジックを Python 関数化（<code>extract_json_from_text</code> / <code>normalize_severity</code> / <code>classify_review_item</code>・direct/meta/offtopic 3-tier 分類）</td>
+</tr>
+<tr>
+<td><code>drift_detector.py</code></td>
+<td><strong>フェーズ6</strong>: ズレ検知 v1（ルールベース+KPI数値評価）。KPI数値が目標未達なら drift=True</td>
+</tr>
+<tr>
+<td><code>task_logger.py</code></td>
+<td><strong>フェーズ7</strong>: <code>&lt;task_dir&gt;/task-log.md</code>（目的・KPI・plan・review・drift 履歴）を生成</td>
 </tr>
 </tbody>
 </table></div>

@@ -504,6 +504,11 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td>破壊的コマンドのガード（python3不要・純bash動作）</td>
 </tr>
 <tr>
+<td></td>
+<td><code>guard-config-secrets.sh</code></td>
+<td><code>01_DECISIONS/claude-code/設定ファイル/</code> 配下への生値シークレット混入をブロック（監査⑩根本対策・2026-07-06追加）。<code>api_key</code>/<code>auth_token</code>/<code>secret</code>/<code>password</code> 等のキー値が <code>${ENV}</code> 参照でない場合 exit 2 でブロック。常にブロック（フラグ迂回なし・正当ケースなし）</td>
+</tr>
+<tr>
 <td><strong>PostToolUse</strong></td>
 <td></td>
 <td></td>
