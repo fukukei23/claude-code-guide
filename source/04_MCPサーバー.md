@@ -144,11 +144,15 @@ MCPサーバー数が多いため、**4つのカテゴリ**に整理していま
 
 | ツール | 用途 |
 |---|---|
-| `review_with_gemini` | コード断片をGeminiに投げてレビュー（focus: bug / logic / boundary 等を指定可能） |
+| `review_with_gemini` | コード断片をGeminiに投げてレビュー（focus: bug / security / performance / readability / all(省略時) を指定可能） |
 
 **使いどころ**: GLM自身のレビューで不安がある時・設計判断を別モデルの視点で検証したい時。「このコードをGeminiにレビューして」等。GLM/Sonnetとは異なるモデルの目を通すことで、見落としを拾う。
 
-> **実装**: `~/.claude/scripts/mcp/gemini-mcp-server.py`（自作Python・`review_with_gemini` の1ツール）。launcher `start-gemini-mcp.sh` が `set -a; source ~/.secrets.env` で `GEMINI_API_KEY` をエクスポート→ `exec python3 -u` で起動（`-u` で null byte問題を回避）。safety filter / 429バックオフ / 入力長上限 / key未設定メッセージのエラー処理付き。
+> **実装**: `~/.claude/scripts/mcp/gemini-mcp-server.py`（自作Python・`review_with_gemini` の1ツール）。launcher `start-gemini-mcp.sh` が `set -a; source ~/.secrets.env` で `GEMINI_API_KEY` をエクスポート→ `exec python3 -u` で起動（`-u` で null byte問題を回避）。safety filter / 429バックオフ / 入力長上限（24,000 chars・約8kトークン相当）/ key未設定メッセージのエラー処理付き。
+
+**モデル陳腐化耐性（層①設定外部化・2026-07-10追加）**: `lib/api_base.py` の `_load_candidates` を経由し、`config/gemini-models.json` の `text` 候補先頭を `DEFAULT_MODEL` として自動選択。config 不在時は `gemini-2.5-pro` にフォールバック（起動は維持）。`review` は品質重視で有料込み（`paid_ok=True`）。完全フォールバック統合（`run_api_with_fallback`）は別タスクで保留中。
+
+**モデル健診ツール**: `~/.claude/scripts/api/gemini-models-health.py` で月1の能動的健診。`--invalidate`（ListModelsキャッシュ強制更新）/ `--report`（statsログ集計）/ `--ping`（候補生存確認・4系統 vision/audio/video/text 別）。
 
 **セットアップ**:
 - サーバー登録は `claude mcp add -s user` で `~/.claude.json`（userスコープ）へ。**`settings.json` の `mcpServers` は読まれない**（minimax系と同じ注意点・上記「2層問題」参照）。
