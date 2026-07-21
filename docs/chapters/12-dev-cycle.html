@@ -378,6 +378,7 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 </tr>
 </tbody>
 </table></div>
+<div class="callout callout-info"><p><strong>並行実行防止（D'案・2026-07-14追加）</strong>: <code>daily-triage.sh</code> が <code>flock</code>（<code>~/.claude/state/daily-triage.lock</code>）で秒差の真の同時重複起動を防止する（動的FD・bash4+ で未使用FDを自動割当→<code>exec python</code> にも引き継がれプロセス終了で自動解放）。分差の再実行（17分差事故等）は <code>daily_triage.py</code> 側の当日既生成チェックが主軸で防ぐ。また Discord 通知は巨大データ時に省略印仕様でフォールバック（<code>test_notify.py</code> で担保・<code>send_discord</code> 省略印仕様）。</p></div>
 <h3>多 repo 混在キューのタグ付け</h3>
 <p><code>today-tasks.md</code> の候補は1個のリストに複数リポジトリのタスクが混在しうる。<code>daily_triage.py</code> が <code>repo-index.yaml</code> から実在リポ名一覧（<code>collect_repo_names</code>）を取得し、LLM判定プロンプト（<code>JUDGE_PROMPT</code>）に「この中から選べ」と制約として渡す。出力フォーマットは各候補行末に repo タグを付与する:</p>
 <pre><code>1. **&lt;タスク&gt;** — &lt;理由&gt;（想定コスト: &lt;S/M/L&gt;）（repo: &lt;name&gt;）

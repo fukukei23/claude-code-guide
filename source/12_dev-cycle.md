@@ -26,9 +26,12 @@ Claude Code で**コード品質を継続的に改善するための5フェー�
 【3. 必須】Issue化
         ↓
 【4. 必須】自律実装ループ（Daily Triage メタループ）
+   └ 内部フェーズ（0/1/6/7）= objective抽出 → 計画 → 実装 → drift検知 → task-log
         ↓
 【5. 自動】完了通知
 ```
+
+> **フェーズ4 内部のサブフェーズ（auto-dev 実行連鎖）**: Daily Triage で承認されたタスクは `run-task.sh` から自律実行される。内部で **フェーズ0（objective抽出）→ フェーズ1（計画）→ フェーズ6（drift検知）→ フェーズ7（task-log生成）** の4層が順に走る。各層は独立した Python モジュール（`scripts/auto-dev/` 配下）で、`objective_extractor.py` / `review_lib.py` / `drift_detector.py` / `task_logger.py` が対応する責務を持つ（ユニットテストは `tests/test_*.py`）。
 
 > **フェーズ4は方式刷新済み**: 旧 `start.sh --auto`（Issue一括自動実装）は廃止。現在は **Daily Triage メタループ**（毎朝タスク候補を生成→人間承認→実装+検証の連鎖）が主役。詳細は「フェーズ4」参照。
 
@@ -152,6 +155,12 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 | `next_issue.py` | Stop hook 発火・検証結果判定・completed/blocked 遷移・次タスク起動 |
 | `fetch_issues.py` | GitHub Issue → `pending` 自動積込エンジン。`auto-loop` ラベル付き Issue を gh CLI で取得し state.json に供給（manual は Daily Triage 候補混入・auto は `next_issue.py` の枯渇補充の両方から呼ばれる） |
 | `apply-crons` | Cron定義（`renew-crons.sh` の `@cron`タグ）↔実体（`scheduled_tasks.json`）の冪等同期・健康診断（`check`/`diff`/`apply`/`clean`）・7日失効を補完するCron永続化インフラ |
+| `objective_extractor.py` | **フェーズ0**: タスク prompt から `[OBJECTIVE]` / `[KPI]` マーカーで目的文とKPI数値を抽出 |
+| `review_lib.py` | **フェーズ1〜4**: multi-llm-review のロジックを Python 関数化（`extract_json_from_text` / `normalize_severity` / `classify_review_item`・direct/meta/offtopic 3-tier 分類） |
+| `drift_detector.py` | **フェーズ6**: ズレ検知 v1（ルールベース+KPI数値評価）。KPI数値が目標未達なら drift=True |
+| `task_logger.py` | **フェーズ7**: `<task_dir>/task-log.md`（目的・KPI・plan・review・drift 履歴）を生成 |
+
+> **並行実行防止（D'案・2026-07-14追加）**: `daily-triage.sh` が `flock`（`~/.claude/state/daily-triage.lock`）で秒差の真の同時重複起動を防止する（動的FD・bash4+ で未使用FDを自動割当→`exec python` にも引き継がれプロセス終了で自動解放）。分差の再実行（17分差事故等）は `daily_triage.py` 側の当日既生成チェックが主軸で防ぐ。また Discord 通知は巨大データ時に省略印仕様でフォールバック（`test_notify.py` で担保・`send_discord` 省略印仕様）。
 
 ### 多 repo 混在キューのタグ付け
 
