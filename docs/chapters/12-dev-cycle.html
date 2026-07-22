@@ -358,7 +358,7 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 </tr>
 <tr>
 <td><code>apply-crons</code></td>
-<td>Cron定義（<code>renew-crons.sh</code> の <code>@cron</code>タグ）↔実体（<code>scheduled_tasks.json</code>）の冪等同期・健康診断（<code>check</code>/<code>diff</code>/<code>apply</code>/<code>clean</code>）・7日失効を補完するCron永続化インフラ</td>
+<td>Cron定義（<code>renew-crons.sh</code> の <code>@cron</code>タグ）↔実体（<code>scheduled_tasks.json</code>）の冪等同期・健康診断（<code>check</code>/<code>diff</code>/<code>apply</code>/<code>clean</code>）。プロンプト末尾に <code>[cron-id:N]</code> マーカーを付与し<strong>3層マッチング</strong>（両方マーカー一致で同一判定／片方のみlegacyの場合は schedule+先頭40字でフォールバック）で再登録時の重複作成を防止・7日失効を補完するCron永続化インフラ</td>
 </tr>
 <tr>
 <td><code>objective_extractor.py</code></td>

@@ -154,7 +154,7 @@ refactor: [D] test_routes_coverage.py を6ファイルに分割
 | `run-task.sh` | 実装 + 検証（別プロセス）・対象 repo で実行 |
 | `next_issue.py` | Stop hook 発火・検証結果判定・completed/blocked 遷移・次タスク起動 |
 | `fetch_issues.py` | GitHub Issue → `pending` 自動積込エンジン。`auto-loop` ラベル付き Issue を gh CLI で取得し state.json に供給（manual は Daily Triage 候補混入・auto は `next_issue.py` の枯渇補充の両方から呼ばれる） |
-| `apply-crons` | Cron定義（`renew-crons.sh` の `@cron`タグ）↔実体（`scheduled_tasks.json`）の冪等同期・健康診断（`check`/`diff`/`apply`/`clean`）・7日失効を補完するCron永続化インフラ |
+| `apply-crons` | Cron定義（`renew-crons.sh` の `@cron`タグ）↔実体（`scheduled_tasks.json`）の冪等同期・健康診断（`check`/`diff`/`apply`/`clean`）。プロンプト末尾に `[cron-id:N]` マーカーを付与し**3層マッチング**（両方マーカー一致で同一判定／片方のみlegacyの場合は schedule+先頭40字でフォールバック）で再登録時の重複作成を防止・7日失効を補完するCron永続化インフラ |
 | `objective_extractor.py` | **フェーズ0**: タスク prompt から `[OBJECTIVE]` / `[KPI]` マーカーで目的文とKPI数値を抽出 |
 | `review_lib.py` | **フェーズ1〜4**: multi-llm-review のロジックを Python 関数化（`extract_json_from_text` / `normalize_severity` / `classify_review_item`・direct/meta/offtopic 3-tier 分類） |
 | `drift_detector.py` | **フェーズ6**: ズレ検知 v1（ルールベース+KPI数値評価）。KPI数値が目標未達なら drift=True |
