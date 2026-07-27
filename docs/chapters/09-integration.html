@@ -118,7 +118,7 @@
         <a href="14-ssot-search.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
-            SSOT
+            SSOTから探して
         </a>
         
         <a href="15-cost-optimization.html"
@@ -178,16 +178,7 @@
 
         <article class="chapter-body">
             <h1>09 統合 — IDE・リモート・CI/CD・Worktree</h1>
-<aside class="tldr">
-<p><strong>3行で分かる</strong></p>
-<ol>
-<li>Claude Code は IDE（VS Code・JetBrains）・リモート・CI/CD・Worktree と統合できる</li>
-<li>IDE 拡張で CLI と同じ機能が IDE 内で使える・ネイティブ diff 表示が便利</li>
-<li>Worktree で並行作業・CI/CD 連携で自動化も可能</li>
-</ol>
-</aside>
-<hr />
-<h2 id="ide">IDE連携</h2>
+<h2>&lt;a id=&quot;ide&quot;&gt;&lt;/a&gt;IDE連携</h2>
 <p>Claude Codeは主要IDEと連携できる。</p>
 <h3>VS Code拡張</h3>
 <ul>
@@ -224,7 +215,7 @@
 </tbody>
 </table></div>
 <hr />
-<h2 id="remote">リモートモード</h2>
+<h2>&lt;a id=&quot;remote&quot;&gt;&lt;/a&gt;リモートモード</h2>
 <p>Claude Codeを<strong>ヘッドレス（非対話）モード</strong>で実行できる。</p>
 <h3>使い方</h3>
 <pre><code class="language-bash"># ヘッドレス実行（結果をファイルに出力）
@@ -247,7 +238,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <li>セキュリティスキャン</li>
 </ul>
 <hr />
-<h2 id="worktree">Git Worktreeとの連携</h2>
+<h2>&lt;a id=&quot;worktree&quot;&gt;&lt;/a&gt;Git Worktreeとの連携</h2>
 <p>Git Worktreeを使うと、<strong>メインブランチを汚さずに</strong>独立した作業環境を作れる。</p>
 <h3>Worktreeの作成</h3>
 <pre><code>EnterWorktree → 新しいworktreeを作成
@@ -291,19 +282,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <h3>エージェントとの連携</h3>
 <p>サブエージェントを <code>isolation: &quot;worktree&quot;</code> で起動すると、エージェントが独立したworktreeで作業する。メインセッションのコードに影響なし。</p>
 <hr />
-<div class="mermaid-wrapper"><div class="mermaid">
-graph TD
-    A["📋 タスク受付"] --> B{"Opus<br/>デフォルト"}
-    B -->|"成功"| C["✅ 結果返却"]
-    B -->|"失敗"| D{"Haiku<br/>フォールバック"}
-    D -->|"成功"| C
-    B -->|"大量処理"| E["軽量モデルに委譲"]
-    E --> C
-    B -->|"高品質必要"| F{"👤 ユーザー確認"}
-    F -->|"許可"| G["上位モデルで処理"]
-    G --> C
-    F -->|"拒否"| B
-</div></div><h2 id="model-switch">モデル切替</h2>
+<h2>&lt;a id=&quot;model-switch&quot;&gt;&lt;/a&gt;モデル切替</h2>
 <p>Claude Codeは複数のモデルを切り替えて使用できる。</p>
 <h3>利用可能なモデル</h3>
 <div class="table-wrapper"><table>
@@ -318,7 +297,7 @@ graph TD
 <tr>
 <td>Claude Opus 4.7</td>
 <td>最高品質・複雑タスク</td>
-<td>API経由で利用可能</td>
+<td>GLM-5.2にルーティング</td>
 </tr>
 <tr>
 <td>Claude Sonnet 4.6</td>

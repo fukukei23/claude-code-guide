@@ -118,7 +118,7 @@
         <a href="14-ssot-search.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
-            SSOT
+            SSOTから探して
         </a>
         
         <a href="15-cost-optimization.html"
@@ -330,8 +330,10 @@ Claude Code がその指示に従って動作
 </ul>
 <p><strong>レビュー・品質保証系</strong></p>
 <ul>
-<li><code>multi-llm-review</code> — 設計・コード・文章を複数の<strong>異なるLLM</strong>（WSL版=MiniMax+Gemini / Win版=GLM+MiniMax+Gemini）に並列独立レビューさせ、ホストLLMが<strong>当初目的を唯一の基準</strong>に取捨統合して改訂案を作る。手動発動のみ（<code>disable-model-invocation: true</code>）。核心は<strong>モデル多様性</strong>（<code>doubt-driven</code>/<code>sentaku</code>/<code>dispatching-parallel-agents</code> は context 多様性のみ・本スキルは異LLMの死角を補完し直交）。機密確認→2段階ファイル経由で並列送信→文字種ステートマシンJSON抽出→8ステップ統合（Step6 pre-flight中断フェーズ）→改訂案+review_log.md出力。トリガー: 「マルチLLMレビューして」「複数LLMでレビュー」panel/jury/cross-LLM review/<code>/multi-llm-review</code></li>
+<li><code>multi-llm-review</code> — 設計・コード・文章を複数の<strong>異なるLLM</strong>（WSL版=MiniMax+Gemini / Win版=GLM+MiniMax+Gemini）に並列独立レビューさせ、ホストLLMが<strong>当初目的を唯一の基準</strong>に取捨統合して<strong>改訂案</strong>を作る。手動発動のみ（<code>disable-model-invocation: true</code>）。核心は<strong>モデル多様性</strong>。機密確認→2段階ファイル経由で並列送信→文字種ステートマシンJSON抽出→8ステップ統合（Step6 pre-flight中断フェーズ）→改訂案+review_log.md出力。<strong>triple指定（<code>--triple</code> /「3機で」）で3機</strong>: MiniMax+Gemini+OpenRouter無料1機（purpose別選定）でしっかり批評。トリガー: 「マルチLLMレビューして」「複数LLMでレビュー」「各LLMにレビューして」「3つのLLMで」「しっかりレビューして」panel/jury/cross-LLM review/<code>/multi-llm-review</code>。<strong>Step6.5 集団サボりバイアス検知（自動発動）</strong>: 複数レビュアーが「省略/作るな」で一致＋根拠が測定結果依存の時、機械的に反証シナリオ生成＋行動可能警告を改訂案冒頭に挿入（ホスト判断委ねない・承認Phase2事象の再発防止・2026-07-26 C″追加）</li>
+<li><code>multi-llm-review-lite</code> — 本式の<strong>軽量版</strong>（50-70行）・<strong>改訂案は作らない</strong>（箇条書きツッコミのみ）。設計・方針・構想を <strong>OpenRouter free 枠</strong>の LLM（用途別自動選定: code=north-mini-code / design=gpt-oss-20b / general=nemotron-3-super-120b）に独立ツッコミさせ、ホストが「重要度高/その他 + 押さえどころ1行」に整理。採用/却下はユーザー判断・会話内完結・ファイル出力なし・箇条書き返却。1機でも効果あり（ホストと別LLMの盲点補完）・複数LLMの確度確認や改訂案が要る時は normal へ。<strong>集団サボりバイアス機械検知</strong>: <code>--mode dual</code>等で複数LLMが省略方向に一致＋測定結果依存の時、警告を機械付与（深検査は normal Step6.5・2026-07-26 C″追加）。トリガー: **「軽く」**ツッコミ/「軽く他LLMでレビュー」/「サクッと方針チェック」/「これで抜けないか軽く聞いて」/<code>/multi-llm-review-lite</code></li>
 </ul>
+<p><strong>两スキルの使い分け（鉄則・2026-07-25）</strong>: 「軽く/サクッと」が入ったら <strong>lite</strong>（ツッコミ・改訂案なし）。「改訂案が欲しい・しっかり・3機」は <strong>normal</strong>。</p>
 <p><strong>画像理解系</strong></p>
 <ul>
 <li><code>vision-analyze</code> — GLM-5.2等のvision非対応モデル環境で画像を理解（被写体・OCR・構図・UI構造）。主ルート Gemini 2.5 Flash（<code>scripts/api/gemini_vision.py</code>）・副ルート 4_5v MCP（ReadのCDN URL→analyze_image）。モデル陳腐化耐性5層（config候補外部化＋自動フォールバック＋paid_ok課金防止）。トリガー: 「画像見て」「スクショ見て」「画像分析して」「画像理解」<code>/vision-analyze</code></li>
@@ -385,7 +387,7 @@ Claude Code がその指示に従って動作
 <li><strong><a href="#superpowers">⚡ superpowers（開発ワークフロー）</a></strong> — brainstorming / writing-plans / executing-plans / systematic-debugging / test-driven-development / verification-before-completion / using-git-worktrees</li>
 <li><strong><a href="#agent-skills">🛠️ agent-skills（開発全工程・26スキル）</a></strong> — 思いを固める / 計画・設計 / 実装 / 品質・検証 / 守る・届ける / スラッシュコマンド群</li>
 <li><strong><a href="#other-plugins">🔌 その他プラグイン</a></strong> — code-review / review-pr / feature-dev</li>
-<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku / teian / demo-site-sales / resume-session / codebase-memory / multi-llm-review / delegate-to-minimax / vision-analyze / fable-advisor</li>
+<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku / teian / demo-site-sales / resume-session / codebase-memory / multi-llm-review / multi-llm-review-lite / delegate-to-minimax / vision-analyze / fable-advisor</li>
 </ul>
 <hr />
 <h2 id="builtin">🧩 ビルトインスキル</h2>
@@ -591,6 +593,7 @@ Claude Code がその指示に従って動作
 <li><strong>セッション横断総括（フェーズ7.5・2026-07-01追加）</strong>: 1トピック=1ファイルの個別記録だけでは、複数トピックを跨ぐセッションの「なぜ始まり・どう発展し・何ができたか」という横断的な文脈が失われる問題を解消。フェーズ7で<code>y</code>（セッション終了）と回答された時、<strong>同一セッション内で2回以上記録していた場合のみ</strong>、フェーズ7.5として横断総括を自動生成する。カウントは会話文脈に依存せず外部カウンタファイル（<code>~/.claude/state/ssot-record-session-count.txt</code>）方式（PreCompact圧縮耐性のためGLMレビューで採用）。配置先は常に<code>01_DECISIONS/claude-code/</code>固定。生成後は下書きのファイル名・トラック件数のみを1回確認してから確定保存する</li>
 <li><strong>カウンタ二重防御クリア（2026-07-02追加）</strong>: 上記の外部カウンタファイルをクリアする処理が当初どのスキルにも定義されておらず、無期限増殖＋WSL CLI版/Windows Desktop版が同一実ファイルを共有することによる記録混線リスクが判明。Gemini・MiniMax双方のレビュー（Geminiはセッションid分離を推奨、MiniMaxはYAGNI的に見送りその代わり二重防御を推奨）を経て、<code>resume-session</code>（セッション開始時）と<code>new-session</code>（セッション終了時）の両方で<code>rm -f</code>する方式を採用</li>
 <li><strong>物理分割不要の判断（2026-07-07）</strong>: SKILL.md（1089行）の物理分割（ファイル分割）は行わず、現状維持。真因は「行数」でなく「判断ポイントで明示的シグナル」であり、フェーズ0.5/0.8/3.5/3.6/3-8追加で既に解決。物理分割は②バグ連鎖+③保守の問題を追加する。再検討条件: 省略再発/1200行超/別LLMで省略発生 のいずれか</li>
+<li><strong>記録前自己説明ゲート（2026-07-24追加）</strong>: 保管場所を決めたら記録実行前に「なぜこの場所を選んだか」を1文で表明する（ユーザー提示 or 自己内省）。理由がすんなり言えない＝場所選びが怪しい→再判定。memory過信事故（永久版情報をmemory/01_DECISIONSに逃がしたe36d）の構造的再発防止。CLAUDE.md「SSOT正典優先」ルールと二重化（CLAUDE.md=常時読込の心構え・本ゲート=記録実行時の強制）。Gemini+MiniMaxレビューで「ルールは思い出す必要・構造は忘れられない」の指摘を受け導入</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-record/</code>）</li>
 </ul>
 <hr />
@@ -631,7 +634,6 @@ Claude Code がその指示に従って動作
 </li>
 <li><strong>セッション識別子メタ情報（2026-07-06追加・spec 2026-07-06）</strong>: handoff 先頭に <code>## メタ情報</code> ブロック（<code>session_id</code> / <code>wt_session</code> / <code>セッション名</code> / <code>開始</code> / <code>終了</code>）を付与。<code>WT_SESSION</code>（ターミナルタブ単位・new-session跨ぎで同じ値維持）を主軸にし、resume-session 側で「どのタブでどの作業をしたか」を機械的にグループ化復元できるようにする。環境変数は <code>CLAUDE_CODE_SESSION_ID</code> / <code>WT_SESSION</code> から取得（CLI 版）・不在時は <code>unknown</code> でフォールバック・過去 handoff（メタ情報なし）は後方互換で「メタ情報なし」グループへ</li>
 <li><strong>handoffファイル名のセッション識別子付与（2026-07-07追加・spec 2026-07-07）</strong>: handoff の<strong>ファイル名</strong>にも <code>WT_SESSION</code> 先頭4桁を付与 → <code>YYYY-MM-DD_HHMM_&lt;wt4&gt;.md</code>（例: <code>2026-07-07_1119_c9b1.md</code>）。同日同時刻（同 <code>%H%M</code>）に別タブが終了してもファイル名が衝突しない（別 wt_session = 別 <code>&lt;wt4&gt;</code>）→ 上書きによるデータ消失を構造防止。<code>WT_SESSION</code> 未設定時は <code>_unknown</code> でフォールバック。実装は new-session SKILL.md Step8 Python のみ・resume-session は改修不要（<code>*.md</code> で拾う・グループ化は本文メタ情報から読むため）・過去 handoff（旧形式 <code>YYYY-MM-DD_HHMM.md</code>）は遡及しない</li>
-<li><strong>Step1 収集対象の拡張（2026-07-17追加）</strong>: 収集フェーズ（Step1）を特定プロジェクト決め打ちから<strong>全プロジェクト横断</strong>に一般化。検出対象は <code>01_DECISIONS/*/*.md</code>（新しい順5件）＋<code>40_CAREER/01_ドキュメント/</code>（3件・career系見落とし対策）＋<code>00★SYSTEM/*.md</code>（ボード/handoff/活動統計/_INDEX は自動生成ログとして除外・5件）＋その他SSOTフォルダ（<code>20_PUBLISHING</code>/<code>30_RESEARCH</code>/<code>50_PROJECTS</code>/<code>70_PROMPTS</code> 各3件・<code>99_ARCHIVE</code>は振り返り対象外）。00_SYSTEM の構成変更・career セッション成果を引き継ぎに確実に取り込むのが目的</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/new-session/</code>）</li>
 </ul>
 <hr />

@@ -118,7 +118,7 @@
         <a href="14-ssot-search.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
-            SSOT
+            SSOTから探して
         </a>
         
         <a href="15-cost-optimization.html"
@@ -178,15 +178,6 @@
 
         <article class="chapter-body">
             <h1>10 用語集 — Claude Code 関連の全用語</h1>
-<aside class="tldr">
-<p><strong>3行で分かる</strong></p>
-<ol>
-<li>Claude Code 固有の用語を A〜Z で解説（Auto Memory・Autocompact・Context 等）</li>
-<li>プログラミング一般の用語（TDD・SOLID 等）は別の用語集を参照</li>
-<li>他章を読んでいて分からない言葉が出たらここに戻って確認</li>
-</ol>
-</aside>
-<hr />
 <div class="callout callout-info"><p><strong>プログラミング全般の用語</strong>（TDD, DDD, SOLID, Pydantic等）は <a href="#">用語集</a> を参照。
 このページはClaude Code固有の用語のみを扱います。</p></div>
 <h2>A</h2>
@@ -212,10 +203,22 @@
 <p>Claude Codeが一度に処理できる情報の総量。システムプロンプト、ツール定義、メモリ、会話履歴等で構成される。最大200kトークン。→ <a href="01-basics.html">01_基礎概念</a></p>
 <h3>Context Window（コンテキストウィンドウ）</h3>
 <p>一度に処理できるテキストの最大量。Claude Codeでは200kトークン。</p>
+<p>&lt;a id=&quot;context-saturation&quot;&gt;&lt;/a&gt;</p>
+<h3>コンテキスト飽和（Context Saturation）</h3>
+<p>コンテキストウィンドウ（<strong>トークン</strong>）が会話履歴やツール結果で満杯になり、CCが停止・またはAutocompactが強制発動する状態。バイト数ではなくトークンが上限。</p>
+<ul>
+<li><strong>対策</strong>: <code>/clear</code>（文脈を捨てて完全リセット）・<code>/compact</code>（要約圧縮して継続）・<code>/branch</code>（別トピックへ分岐）</li>
+<li>
+<div class="callout callout-warn"><p>⚠️ <strong>Ctrl+C再起動では解決しない</strong>。Ctrl+Cはプロセスを殺すだけでセッション履歴（jsonl）は残る。再起動で <code>/resume</code>（続きから）を選ぶと履歴が丸ごと再読込され、<strong>同じ飽和状態に即復帰</strong>する。抜けるには新規セッションで始める（resumeしない）か <code>/clear</code>。</p></div>
+</li>
+</ul>
+<p>→ 対比: <a href="#payload-bloat">ペイロード肥大化</a>（byte上限） / 関連: Autocompact・Compact・Context（本ページ内） / 手順: <a href="01-basics.html#autocompact">01_基礎概念 自動コンパクション</a>・<a href="02-commands.html">02_コマンド一覧</a></p>
 <hr />
 <h2>D</h2>
 <h3>Desktop App</h3>
-<p>Windows/Mac用のスタンドアロンアプリケーション。CLIより機能は限定。<strong>エンドポイントを変更できないためLLMはSonnet固定</strong>。GLM/MiniMaxを使う場合はMCPサーバー経由で委譲する。→ <a href="09-integration.html">09_統合</a> / <a href="04-mcp.html#glm">04_MCPサーバー</a></p>
+<p>Windows/Mac用のスタンドアロンアプリケーション。CLIより機能は限定。→ <a href="09-integration.html">09_統合</a></p>
+<h3>Dynamic Workflows（ダイナミックワークフロー）</h3>
+<p>2026-05-28発表（research preview）。Claudeがタスクの段取りをスクリプトとして書き出し、数十〜数百のサブエージェントを並列実行、相互検証してから1つの回答にまとめる仕組み。同時実行最大16エージェント、合計最大1,000。起動方法: プロンプトに「workflow」記述、<code>/deep-research</code>、<code>/effort ultracode</code>（モデル限定）。→ <a href="#">Dynamic Workflows調査</a></p>
 <hr />
 <h2>E</h2>
 <h3>Edit</h3>
@@ -229,13 +232,9 @@
 <h3>Foreground（フォアグラウンド）</h3>
 <p>サブエージェントの実行モード。結果を待ってから次に進む。→ <a href="07-agents.html">07_エージェント</a></p>
 <hr />
-<h2>G</h2>
-<h3>glm-rate-proxy</h3>
-<p><strong>WSL CLI版専用</strong>のローカルプロキシサーバー。<code>ANTHROPIC_BASE_URL</code> を <code>localhost:8787</code> に向けることでClaude Code CLIのLLMをGLMに切り替える。ピーク時間帯の自動モデル切替・レート制限時のMiniMaxフォールバック・Thinking制御を担う。<strong>コンテキスト上限到達時はClaude Code本体がAPIリクエストを送る前にエラー判定するためフォールバックが発動しない点に注意</strong>。→ <a href="13-glm-rate-proxy.html">13_GLM Rate Proxy</a></p>
-<hr />
 <h2>H</h2>
 <h3>Hook（フック）</h3>
-<p>特定のイベント発生時に自動実行されるシェルスクリプト。SessionStart, PreToolUse, PostToolUse, SessionEndの4種類。→ <a href="05-hooks.html">05_フック</a></p>
+<p>特定のイベント発生時に自動実行されるシェルスクリプト。SessionStart, PreToolUse, PostToolUse, Stopの4種類。→ <a href="05-hooks.html">05_フック</a></p>
 <hr />
 <h2>I</h2>
 <h3>IDE Integration（IDE連携）</h3>
@@ -245,7 +244,7 @@
 <h3>LLM（Large Language Model）</h3>
 <p>大規模言語モデル。Claude等。</p>
 <h3>LLM Routing（LLMルーティング）</h3>
-<p>タスクに応じて最適なLLMを選択する仕組み。モデルは /model コマンドで切替可能。</p>
+<p>タスクに応じて最適なLLMを選択する仕組み。 GLM-5.2 → MiniMax → Sonnet。</p>
 <hr />
 <h2>M</h2>
 <h3>Matcher（マッチャー）</h3>
@@ -257,7 +256,7 @@
 <hr />
 <h2>O</h2>
 <h3>Opus</h3>
-<p>Claude最上位モデル。複雑な推論・高品質な出力。Anthropic APIまたは代替プロバイダー経由で利用可能。</p>
+<p>Claude最上位モデル。複雑な推論・高品質な出力。GLM-5.2にルーティング。</p>
 <hr />
 <h2>P</h2>
 <h3>Plan Mode（プランモード）</h3>
@@ -268,6 +267,29 @@
 <p>ツール実行前に発火するフック。セキュリティチェック等に使用。→ <a href="05-hooks.html#pretooluse">05_フック</a></p>
 <h3>Project Memory（プロジェクトメモリ）</h3>
 <p>各リポジトリのCLAUDE.mdに記述されたルール。そのプロジェクト内でのみ有効。→ <a href="06-memory.html#project-memory">06_メモリ</a></p>
+<p>&lt;a id=&quot;payload-bloat&quot;&gt;&lt;/a&gt;</p>
+<h3>ペイロード肥大化（Payload Bloat）</h3>
+<p>APIへ送る<strong>リクエスト1回あたりのデータサイズ（バイト）<strong>が32MB上限を超え、「Request too large (max 32MB)」エラーで即座に弾かれる状態。トークンではなく</strong>バイト</strong>が原因。</p>
+<ul>
+<li><strong>主な引き金</strong>: 大きな画像の添付・巨大ファイルの一括Read・ツール結果の山積み</li>
+<li><strong>対策</strong>: 大きな添付や巨大Readを分割・<code>/clear</code> で会話を切り詰める</li>
+<li><strong>測定</strong>: 正確なbyteサイズを出すコマンドはない。ただしテキスト単独では到達しない上限（32MB ≒ 約800万トークン）。<strong>発生＝ほぼ確実に画像・PDF等の添付が原因</strong>。トークン傾向は <code>/context</code> で間接確認</li>
+</ul>
+<h4>画像パス貼り付けの罠（実証済・2026-06-16）</h4>
+<p>CC CLIは「<code>.png</code>/<code>.jpg</code>等で終わるパス文字」を貼ると、<strong>強制的に画像添付に変換</strong>する。これがペイロード肥大化の主要因。</p>
+<ul>
+<li><strong>❌ 効かない回避策（実験で否定）</strong>: バッククォート <code>`</code> で囲む / 通常引用 / 「パスとしてコピー」で文字として貼る / Ctrl+Shift+C → <strong>どれも添付される</strong>（CCが拡張子で判定、バッククォート無視）</li>
+<li><strong>❌ ドラッグ＆ドロップ</strong>: 当然添付される</li>
+<li><strong>⭕ 確実な回避 = 画像パスを「1文字も」貼らない</strong>:
+<ol>
+<li><strong>ディレクトリだけ指定</strong>（拡張子なし）→ CCに LS させ自分で探させる。例: <code>/mnt/c/.../Screenshots/ の最新を LS して Read して</code></li>
+<li><strong>ファイル名を言葉で</strong>（拡張子 <code>.png</code> を書かない）</li>
+<li><strong>そもそも見せない</strong> → 文章だけで指示。スクショ無しでも大半の質問は成立する</li>
+</ol>
+</li>
+<li><strong>大原則</strong>: 画像を見せたい時だけ添付。それ以外はCCに Read/LS させる</li>
+</ul>
+<p>→ 対比: <a href="#context-saturation">コンテキスト飽和</a>（トークン上限） / 関連: Read・Context（本ページ内） / 詳細: <a href="#">01_DECISIONS/claude-code/2026-06-16_image-path-auto-attach.md</a></p>
 <hr />
 <h2>R</h2>
 <h3>Read</h3>

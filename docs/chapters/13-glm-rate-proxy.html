@@ -118,7 +118,7 @@
         <a href="14-ssot-search.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
-            SSOT
+            SSOTから探して
         </a>
         
         <a href="15-cost-optimization.html"
@@ -172,26 +172,17 @@
             <a href="12-dev-cycle.html" class="nav-prev">← dev-cycle</a>
             
             
-            <a href="14-ssot-search.html" class="nav-next">SSOT →</a>
+            <a href="14-ssot-search.html" class="nav-next">SSOTから探して →</a>
             
         </div>
 
         <article class="chapter-body">
             <h1>13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用</h1>
-<aside class="tldr">
-<p><strong>3行で分かる</strong></p>
-<ol>
-<li>Claude Code CLI の接続先を Anthropic から GLM 等に切り替えるローカルプロキシの仕組み</li>
-<li>ANTHROPIC_BASE_URL を互換プロバイダへ差し替えるだけで API コストを大幅に抑えられる</li>
-<li>失敗時は MiniMax 等に自動フォールバックし・レート制限(429)も回避する</li>
-</ol>
-</aside>
-<hr />
 <div class="callout callout-warn"><p><strong>⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。</strong>
 Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_MCPサーバー</a> のglm/minimax MCPを参照してください。</p></div>
 <p>Claude Code CLIのバックエンドをAnthropicからZAI（Claude）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
 <hr />
-<h2 id="overview">概要：なぜプロキシが必要か</h2>
+<h2>&lt;a id=&quot;overview&quot;&gt;&lt;/a&gt;概要：なぜプロキシが必要か</h2>
 <p>Claude Codeは通常、Anthropic APIに直接接続する。しかし <code>ANTHROPIC_BASE_URL</code> を差し替えることで、<strong>Anthropic互換APIを持つ別プロバイダ</strong>に向けられる。</p>
 <pre><code>通常:
 Claude Code ────→ api.anthropic.com (Sonnet/Opus)
@@ -241,7 +232,7 @@ Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (Claude
 </table></div>
 <div class="callout callout-info"><p><strong>ポイント</strong>: ZAI Max（$160/月）でClaude Max（$200/月）の<strong>約3倍</strong>の利用量を使える。ZAIは月額サブスク制で、5時間・週単位のローリング制限あり（従量課金ではない）。</p></div>
 <hr />
-<h2 id="architecture">アーキテクチャ</h2>
+<h2>&lt;a id=&quot;architecture&quot;&gt;&lt;/a&gt;アーキテクチャ</h2>
 <pre><code>settings.json
   └─ ANTHROPIC_BASE_URL: &quot;http://127.0.0.1:8787&quot;
 
@@ -255,7 +246,11 @@ Claude Code（CLI）
 │  2. thinking制御を注入                  │
 │  3. 使用量に応じてモデルをダウングレード   │
 │  4. ピーク時間帯はMiniMaxに強制切替       │
-│  5. 429/502エラー時はMiniMaxにフォールバック│
+│  5. MiniMaxフォールバック(2アカウント)    │
+│     - keys[0]=MINIMAX_API_KEY(Pro優先・大量消費) │
+│     - keys[1]=MINIMAX_API_KEY_FALLBACK(旧・5h制限) │
+│     - 429/401/403で次キーへ連鎖           │
+│     - 起動ログでkeys=2確認                 │
 └─────────────────────────────────────────┘
   │                        │
   ▼                        ▼
@@ -276,7 +271,7 @@ api.z.ai              api.minimax.io
     └── glm-rate-proxy.service  # systemdサービス定義
 </code></pre>
 <hr />
-<h2 id="model-routing">モデルルーティング</h2>
+<h2>&lt;a id=&quot;model-routing&quot;&gt;&lt;/a&gt;モデルルーティング</h2>
 <p>使用量（<code>usage_pct</code>）に応じて自動でモデルが切り替わる。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -316,9 +311,17 @@ api.z.ai              api.minimax.io
 </table></div>
 <div class="callout callout-info"><p><strong>ピーク時間帯の理由</strong>: ZAI公式ドキュメントによるとClaudeはピーク時に<strong>3倍の消費レート</strong>で計算される。MiniMaxに逃がすことでZAIクォータを温存する。</p></div>
 <h3>フォールバックチェーン</h3>
-<pre><code>ZAI 429 → Claude-Flash（emergency）→ MiniMax → 503エラー
-ZAI 5xx → MiniMax → 503エラー
+<pre><code>ZAI 429 → Claude-Flash（emergency）→ MiniMax keys[0] → MiniMax keys[1] → 503
+ZAI 5xx → MiniMax keys[0] → MiniMax keys[1] → 503
+
+MiniMax 429/401/403 → 次キーへ連鎖（Pro→旧）
+MiniMax 2キー両方 429/401/403 → 503
 </code></pre>
+<div class="callout callout-info"><p><strong>✅ MiniMax 2アカウント対応（2026-07-27追加）</strong>
+Pro（大量消費）と旧（安全網）の2アカウント運用。起動ログ <code>keys=2</code> で確認。
+フォールバック連鎖: <code>request_minimax</code> 内で Pro(MINIMAX_API_KEY)→旧(MINIMAX_API_KEY_FALLBACK) の429/401/403で次キーへ。状態管理不要・自動復帰。詳細: <a href="#">01_DECISIONS/2026-07-27_glm-rate-proxy-MiniMax2アカウント-Pro優先フォールバック</a></p></div>
+<div class="callout callout-info"><p><strong>✅ 週間制限時のフォールバック実機確認済（2026-07-11）</strong>
+ZAIの<strong>週間</strong>制限到達で429が返っても、上記チェーン通りMiniMax-M3へ自動フォールバックすることを仕様+実機で確認（MiniMax API単体疎通テスト HTTP 200・<code>proxy.py:115-173</code>）。<code>usage_pct</code>は5時間窓の値で、週間累計（ZAIダッシュボード）とは別物。詳細: <a href="#">01_DECISIONS/2026-07-11_glm-rate-proxy週間制限時フォールバック実機確認</a></p></div>
 <div class="callout callout-warn"><p><strong>⚠️ 重要な制限: コンテキスト上限到達時はフォールバックが発動しない</strong></p>
 <p>Claude Codeのコンテキストウィンドウが上限に達した場合、<strong>APIリクエストを送る前にClaude Code本体が判定してエラーを返す</strong>。そのためglm-rate-proxyにリクエストが届かず、MiniMaxへのフォールバックも発動しない。</p>
 <pre><code>通常時: Claude Code → glm-rate-proxy → GLM（→ エラー時MiniMax）
@@ -326,7 +329,7 @@ ZAI 5xx → MiniMax → 503エラー
 </code></pre>
 <p><strong>対策</strong>: コンテキストが溜まってきたら早めに <code>/compact</code> または <code>/new-session</code> で切り替える。80%を超えたら <code>/new-session</code> 推奨。</p></div>
 <hr />
-<h2 id="thinking">Thinking（思考）モードの動的制御</h2>
+<h2>&lt;a id=&quot;thinking&quot;&gt;&lt;/a&gt;Thinking（思考）モードの動的制御</h2>
 <p>Claudeはデフォルトで「思考モード」が有効で、内部推論トークンを大量消費する。</p>
 <h3>問題</h3>
 <ul>
@@ -374,7 +377,7 @@ ZAI 5xx → MiniMax → 503エラー
 </table></div>
 <div class="callout callout-warn"><p><strong>budget_tokensの注意</strong>: これは上限であり、モデルが必ず使い切るわけではない。ただしClaudeが上限を守るかは未検証。16,000以上は暴走リスクあり。</p></div>
 <hr />
-<h2 id="status">ステータス確認</h2>
+<h2>&lt;a id=&quot;status&quot;&gt;&lt;/a&gt;ステータス確認</h2>
 <pre><code class="language-bash"># プロキシの状態確認
 curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
 </code></pre>
@@ -418,7 +421,7 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
 </tbody>
 </table></div>
 <hr />
-<h2 id="start-stop">起動・停止</h2>
+<h2>&lt;a id=&quot;start-stop&quot;&gt;&lt;/a&gt;起動・停止</h2>
 <pre><code class="language-bash"># 起動（SessionStart hookで自動実行されるが、手動でも可）
 bash ~/.claude/scripts/llm/start-glm-proxy.sh
 
@@ -436,150 +439,7 @@ tail -f /tmp/glm-proxy.log
 GLM_PEAK_BLOCK=false bash ~/.claude/scripts/llm/start-glm-proxy.sh
 </code></pre>
 <hr />
-<h2 id="switch-backend">🚨 自救ツール: switch-backend.sh（プロキシ死亡時の確実な回避）</h2>
-<p>プロキシが完全に死亡した時、<code>.bashrc</code> の自動判定（プロキシ不可ならZAI直結）に頼らず、<strong>settings.json を直接書換えて確実に接続先を切替える</strong>ツール。並行セッション含む全CLIが停止した場合の最終手段。</p>
-<pre><code class="language-bash"># 現在の設定確認（変更なし）
-bash ~/.claude/scripts/switch-backend.sh status
-
-# 通常運用（プロキシ経由）に戻す
-bash ~/.claude/scripts/switch-backend.sh normal
-
-# ZAI直結（推奨自救・GLM直接・課金増なし・即効）
-bash ~/.claude/scripts/switch-backend.sh zai
-
-# MiniMax直結（※認証方式の実機検証が未完・動かなければ zai で確実）
-bash ~/.claude/scripts/switch-backend.sh minimax
-
-# Anthropic公式（月額サブスクのOAuth・sk-ant従量課金不要・/loginで認証）
-bash ~/.claude/scripts/switch-backend.sh anthropic
-</code></pre>
-<p><strong>仕組みと安全装置</strong>:</p>
-<ul>
-<li>モード別に <code>BASE_URL</code> + 認証キーを <strong>両方</strong> 書換（キー汚染防止）
-<ul>
-<li><code>normal</code>/<code>zai</code> → <code>ANTHROPIC_AUTH_TOKEN</code>（<code>Authorization: Bearer</code> 送信）</li>
-<li><code>minimax</code> → <code>ANTHROPIC_API_KEY</code>（<code>x-api-key</code> 送信・プロキシと同じ方式）</li>
-</ul>
-</li>
-<li>キー供給元: <code>~/.claude/.env</code>（<code>ANTHROPIC_AUTH_TOKEN</code> / <code>MINIMAX_API_KEY</code>）</li>
-<li>atomic置換（tmp→mv・中断でも破損しない）+ 3世代バックアップ（<code>settings.json.bak.1/2/3</code>）</li>
-</ul>
-<div class="callout callout-warn"><p>⚠️ <strong>書換後は Claude Code CLI の再起動が必須</strong>（環境変数は起動時読込・実行中プロセスには反映されない）</p></div>
-<h3>いつ使うか（症状別）</h3>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>症状</th>
-<th>使うモード</th>
-<th>理由</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>「API Error: ConnectionRefused」で全CLI停止</td>
-<td><strong><code>zai</code></strong></td>
-<td>プロキシ死亡・ZAI直結で確実復帰</td>
-</tr>
-<tr>
-<td>プロキシ応答が極端に遅い・ハング</td>
-<td><strong><code>zai</code></strong></td>
-<td>プロキシ経由をバイパス</td>
-</tr>
-<tr>
-<td>プロキシ復旧して通常運用に戻したい</td>
-<td><strong><code>normal</code></strong></td>
-<td>プロキシ経由に復帰</td>
-</tr>
-<tr>
-<td>ZAI側も不調・MiniMaxに逃げたい</td>
-<td><strong><code>minimax</code></strong></td>
-<td>※実機検証未・動かなければ <code>zai</code></td>
-</tr>
-<tr>
-<td>現状を確認したいだけ</td>
-<td><strong><code>status</code></strong></td>
-<td>変更なし・dry-run</td>
-</tr>
-</tbody>
-</table></div>
-<h3>使い方ステップ（完全手順・非エンジニア向け）</h3>
-<p><strong>Step 1: 現状確認（変更なし）</strong></p>
-<pre><code class="language-bash">bash ~/.claude/scripts/switch-backend.sh status
-</code></pre>
-<p>→ 現在のモード（normal/zai/minimax）とプロキシ生死が表示される。</p>
-<p><strong>Step 2: モードを選んで切替</strong></p>
-<pre><code class="language-bash"># 推奨: ZAI直結（プロキシ死亡時の確実な自救）
-bash ~/.claude/scripts/switch-backend.sh zai
-</code></pre>
-<p>→ <code>✅ 切替完了: zai モード</code> と表示・バックアップも作成される。</p>
-<p><strong>Step 3: Claude Code CLI を再起動（必須）</strong>
-環境変数は起動時にしか読み込まれないため、<strong>実行中のCLIには反映されない</strong>。再起動方法:</p>
-<pre><code class="language-bash"># (a) 一番簡単: ターミナルを閉じて、新しいターミナルで claude を起動し直す
-# (b) プロセスを明示的に終了してから再起動:
-pkill -f &quot;claude&quot;
-#    → その後、新しいターミナルで claude を起動
-</code></pre>
-<div class="callout callout-info"><p>※ 複数セッションを開いている場合は<strong>全て閉じて</strong>から再起動（切替前の旧設定で動き続けるのを防ぐ）。</p></div>
-<p><strong>Step 4: 復旧確認</strong></p>
-<pre><code class="language-bash"># 再起動後、status で確認
-bash ~/.claude/scripts/switch-backend.sh status
-# → 「モード: zai (ZAI直結)」になっていれば成功
-</code></pre>
-<p>Claude Code CLI が正常に応答すれば復旧完了。</p>
-<p><strong>Step 5: 通常運用に戻す（プロキシ復旧後）</strong></p>
-<pre><code class="language-bash">bash ~/.claude/scripts/switch-backend.sh normal
-# → 再度 Claude Code CLI を再起動
-</code></pre>
-<h3>minimax モードが動かない時</h3>
-<p><code>minimax</code> モードは <code>ANTHROPIC_API_KEY</code> 設定時の CLI 挙動が未検証のため、動かない可能性があります。その場合:</p>
-<pre><code class="language-bash"># zai モードに切り替えれば確実に自救可
-bash ~/.claude/scripts/switch-backend.sh zai
-</code></pre>
-<h3>バックアップから戻す（設定を書換えすぎて壊した時）</h3>
-<p>3世代のバックアップが <code>~/.claude/settings.json.bak.1</code>（最新）<code>.bak.2</code> <code>.bak.3</code> に保存されています。壊した時:</p>
-<pre><code class="language-bash"># 最新バックアップから復元
-cp ~/.claude/settings.json.bak.1 ~/.claude/settings.json
-# → Claude Code CLI を再起動
-</code></pre>
-<h3>B案（Anthropic OAuth）実装済み</h3>
-<p><code>anthropic</code> モードは <strong>月額サブスクのOAuth認証</strong> を使います（<code>sk-ant</code> 従量課金キーは不要）。</p>
-<pre><code class="language-bash">bash ~/.claude/scripts/switch-backend.sh anthropic
-# → BASE_URL/AUTH_TOKEN/API_KEY を全削除
-# → Claude Code CLI 再起動 → /login でブラウザ認証（未ログイン時）
-# → 既存の Claude 月額サブスクで Sonnet が動く（追加課金なし）
-</code></pre>
-<p>Windows Desktop版と同じ OAuth 認証。WSL CLI版でも同じサブスクを共用できます。ZAI/MiniMax の両方不調時の最終手段として、<strong>既存サブスクで Sonnet が即使える</strong>のが最大の利点。</p>
-<h3>再発防止の3層防御（全体像）</h3>
-<p>プロキシは全CLIセッションのLLM通信の喉瓣であり、停止＝即・全セッション通信不能。2026-07-03 の全セッション8分停止事故を契機に、<strong>3層の補完防御</strong>を整備しました（障害パターンを全カバー）。</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>層</th>
-<th>仕組み</th>
-<th>効く場面</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>層1: systemd自動復帰</strong></td>
-<td><code>Restart=always</code>・kill/クラッシュ後自動再起動（実測約10〜20秒復帰）</td>
-<td>プロセス自発クラッシュ・kill・既存セッション救済</td>
-</tr>
-<tr>
-<td><strong>層2: 警告ゲート</strong></td>
-<td>プロキシ操作前に必ず「全セッション停止します」と承認取得（CLAUDE.md+memory）</td>
-<td>人為的kill事故の予防</td>
-</tr>
-<tr>
-<td><strong>層3: 自救ツール</strong></td>
-<td><code>switch-backend.sh</code>（本セクション）・CLI直結に退避</td>
-<td>プロキシ完全死亡</td>
-</tr>
-</tbody>
-</table></div>
-<p>普段は層1（自動）が稼働。事故は層2（警告）で予防。最悪は層3（自救）で復旧。詳細は <code>01_DECISIONS/claude-code/2026-07-03_プロキシ3層防御整備.md</code>。</p>
-<hr />
-<h2 id="troubleshooting">トラブルシューティング</h2>
+<h2>&lt;a id=&quot;troubleshooting&quot;&gt;&lt;/a&gt;トラブルシューティング</h2>
 <h3>❌ Claude Codeが「API error」を返す</h3>
 <p><strong>確認手順:</strong></p>
 <pre><code class="language-bash"># 1. プロキシが起動しているか
@@ -677,7 +537,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 <p>ZAIの <code>enabled</code> モードはモデルが「自動判断」して思考量を決める。<code>budget_tokens</code>を上げても体感が変わらない場合、モデル自身が「不要」と判断している可能性がある。</p>
 <p><code>always_on</code> + <code>budget_tokens: 16000</code> を試すことで強制的に思考を増やせるが、<strong>トークン暴走リスクが上がる</strong>。</p>
 <hr />
-<h2 id="config-reference">設定リファレンス</h2>
+<h2>&lt;a id=&quot;config-reference&quot;&gt;&lt;/a&gt;設定リファレンス</h2>
 <p><code>config/config.json</code> の全項目：</p>
 <pre><code class="language-json">{
   &quot;zai_base_url&quot;: &quot;https://api.z.ai/api/anthropic&quot;,
@@ -713,7 +573,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 }
 </code></pre>
 <hr />
-<h2 id="proxy-doctor">proxy-doctor スキル — 診断を自動化する</h2>
+<h2>&lt;a id=&quot;proxy-doctor&quot;&gt;&lt;/a&gt;proxy-doctor スキル — 診断を自動化する</h2>
 <p>プロキシが壊れた時の原因調査を自動化する Claude Code スキル。</p>
 <h3>できること</h3>
 <ul>
@@ -757,6 +617,14 @@ ZAI使用率     : 0.0%
 <li><strong>意識しなくてOK</strong>: 普段は裏で自動で動いている。トラブル時だけこの章を見る</li>
 </ul>
 <hr />
+<h2>&lt;a id=&quot;related&quot;&gt;&lt;/a&gt;関連リンク</h2>
+<ul>
+<li><a href="https://docs.z.ai/guides/capabilities/thinking">ZAI公式ドキュメント - Deep Thinking</a></li>
+<li><a href="https://docs.z.ai/guides/llm/glm-5.1">ZAI公式ドキュメント - Claudeモデル概要</a></li>
+<li><a href="https://artificialanalysis.ai/models/glm-5-1">Artificial Analysis - Claudeベンチマーク</a></li>
+<li><a href="04-mcp.html">04 MCPサーバー</a></li>
+<li><a href="11-tips.html">11 現場の知見</a></li>
+</ul>
 
         </article>
 
@@ -770,7 +638,7 @@ ZAI使用率     : 0.0%
             
             <a href="14-ssot-search.html" class="nav-card next">
                 <span class="nav-label">次の章 →</span>
-                <span class="nav-title">📄 SSOT</span>
+                <span class="nav-title">📄 SSOTから探して</span>
             </a>
             
         </nav>

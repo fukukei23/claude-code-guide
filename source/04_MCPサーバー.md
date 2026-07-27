@@ -1,12 +1,5 @@
 # 04 MCPサーバー — 外部ツールの統合
 
-> **3行で分かる**
-> 1. MCP（Model Context Protocol）は Claude Code に外部ツールを繋ぐ仕組み
-> 2. Brave検索・GitHub・ブラウザ操作・ドキュメント取得等を MCP 経由で呼べる
-> 3. 設定は settings.json の mcpServers・用途別にサーバーを使い分ける
-
----
-
 ## MCPとは
 
 **MCP（Model Context Protocol）** は、Claude Codeから外部ツールを利用するための仕組み。
@@ -82,6 +75,19 @@ MCPサーバー数が多いため、**4つのカテゴリ**に整理していま
 
 > **実装**: `~/.claude/scripts/mcp/minimax-mcp-server.py` — 自作Pythonスクリプト（**MiniMax-M3**使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては**別ファイル**。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。
 
+### `MiniMax-M3` の context_window 設定（2026-07-12追加）
+
+**MINIMAX M3は1Mトークン対応**だが `minimax-mcp-server.py` に `CONTEXT_WINDOW` 設定が存在しない場合、llm-status.sh が正しい context_window を認識できない。ステータスライン（/tmp/llm-last-used.txt）への書き込みを `🟠 MiniMax-M3|ctx:1000000` に変更することで1M認識を実現する。
+
+```python
+MINIMAX_KEY = _load_key()
+MINIMAX_URL = 'https://api.minimax.io/anthropic/v1/messages'
+MODEL = 'MiniMax-M3'
+CONTEXT_WINDOW = 1_000_000
+```
+
+トリガー: minimax-mcp-server.py 起動時・コンテキスト%表示
+
 ---
 
 ### minimax-official（公式 / 画像・音楽・動画・10ツール） {#minimax-official}
@@ -144,15 +150,11 @@ MCPサーバー数が多いため、**4つのカテゴリ**に整理していま
 
 | ツール | 用途 |
 |---|---|
-| `review_with_gemini` | コード断片をGeminiに投げてレビュー（focus: bug / security / performance / readability / all(省略時) を指定可能） |
+| `review_with_gemini` | コード断片をGeminiに投げてレビュー（focus: bug / logic / boundary 等を指定可能） |
 
 **使いどころ**: GLM自身のレビューで不安がある時・設計判断を別モデルの視点で検証したい時。「このコードをGeminiにレビューして」等。GLM/Sonnetとは異なるモデルの目を通すことで、見落としを拾う。
 
-> **実装**: `~/.claude/scripts/mcp/gemini-mcp-server.py`（自作Python・`review_with_gemini` の1ツール）。launcher `start-gemini-mcp.sh` が `set -a; source ~/.secrets.env` で `GEMINI_API_KEY` をエクスポート→ `exec python3 -u` で起動（`-u` で null byte問題を回避）。safety filter / 429バックオフ / 入力長上限（24,000 chars・約8kトークン相当）/ key未設定メッセージのエラー処理付き。
-
-**モデル陳腐化耐性（層①設定外部化・2026-07-10追加）**: `lib/api_base.py` の `_load_candidates` を経由し、`config/gemini-models.json` の `text` 候補先頭を `DEFAULT_MODEL` として自動選択。config 不在時は `gemini-2.5-pro` にフォールバック（起動は維持）。`review` は品質重視で有料込み（`paid_ok=True`）。完全フォールバック統合（`run_api_with_fallback`）は別タスクで保留中。
-
-**モデル健診ツール**: `~/.claude/scripts/api/gemini-models-health.py` で月1の能動的健診。`--invalidate`（ListModelsキャッシュ強制更新）/ `--report`（statsログ集計）/ `--ping`（候補生存確認・4系統 vision/audio/video/text 別）。
+> **実装**: `~/.claude/scripts/mcp/gemini-mcp-server.py`（自作Python・`review_with_gemini` の1ツール）。launcher `start-gemini-mcp.sh` が `set -a; source ~/.secrets.env` で `GEMINI_API_KEY` をエクスポート→ `exec python3 -u` で起動（`-u` で null byte問題を回避）。safety filter / 429バックオフ / 入力長上限 / key未設定メッセージのエラー処理付き。
 
 **セットアップ**:
 - サーバー登録は `claude mcp add -s user` で `~/.claude.json`（userスコープ）へ。**`settings.json` の `mcpServers` は読まれない**（minimax系と同じ注意点・上記「2層問題」参照）。
@@ -161,6 +163,7 @@ MCPサーバー数が多いため、**4つのカテゴリ**に整理していま
   ```
 - 鍵管理: `~/.secrets.env` の `GEMINI_API_KEY`（launcher が source するため `env` ブロック不要）
 - **認証の落とし穴**: Gemini REST API は `x-goog-api-key` ヘッダー（or `?key=`）が必須。欠けると 403 Forbidden。
+- **Windows Desktop版の場合**: 2026-07-06実測時点では`~/.claude/settings.json`を編集しても**反映されなかった**（実際に読まれていたのは`AppData\Local\Packages\<Claudeのパッケージフォルダ>\LocalCache\Roaming\Claude\claude_desktop_config.json`＝サンドボックス化パッケージキャッシュ内、`command: "wsl"`, `args: ["-d", "Ubuntu", "--", "bash", "/home/yn4416/.claude/scripts/mcp/start-gemini-mcp.sh"]`の形式）。⚠️ただしこれは2026-05時点の調査では別ファイルが有効に見えていた実績もあり、アプリ更新で今後また変わりうるため「ここが正解」と決め打ちしない。追加・変更のたびに下記「トラブルシューティング」節の確認手順で都度検証すること。事例は`01_DECISIONS/claude-code/2026-07-06_Windows-Desktop版Gemini-MCP真因確定-MSIXconfig特定.md`参照。
 
 ---
 
@@ -472,11 +475,15 @@ Windows Desktop版（特に**Microsoft Store版 / サンドボックス化され
 
 1. `C:\Users\<user>\.claude\settings.json` — CLI/共通設定用
 2. `C:\Users\<user>\AppData\Roaming\Claude\claude_desktop_config.json` — 通常版チャットアプリ用
-3. `C:\Users\<user>\AppData\Local\Packages\<Claudeのパッケージフォルダ>\LocalCache\Roaming\Claude\claude_desktop_config.json` — **サンドボックス化パッケージキャッシュ内**（Microsoft Store版で実際に使われるのはここ）
+3. `C:\Users\<user>\AppData\Local\Packages\<Claudeのパッケージフォルダ>\LocalCache\Roaming\Claude\claude_desktop_config.json` — **サンドボックス化パッケージキャッシュ内**（2026-06・2026-07の2回の実測ではMicrosoft Store版で使われるのはここだった）
+
+> ⚠️ 上記「候補3が本物」は2回の実測に基づく現時点の知見であり、アプリのバージョンアップや配布形態変更で今後も同じとは限らない。次に同じ問題が起きた時も、この記述を鵜呑みにせず必ず下記「判別方法」で都度再確認すること。
 
 **判別方法**: 既に動いている他のMCPサーバーのエントリの `args`（`wsl -d Ubuntu -- bash <path>` のようなコマンド形式）が、UI上の接続ログ（`/mcp` → サーバー詳細）に表示される実際の起動コマンドと一致しているファイルが「本物」。3つの候補に同名・類似のサーバーエントリがあっても、起動コマンドが実際のログと食い違っていれば、それは使われていない古いコピーである。
 
-詳細な調査の経緯: `01_DECISIONS/claude-code/2026-06-07_minimax-official-MCP接続トラブル解決と動画生成成功.md`
+最も手軽な確認手順は、**設定画面（設定 → 開発者 → ローカルMCPサーバー）で「設定を編集」ボタンを押し、開いたエクスプローラーが指すファイルパスをそのまま使う**こと（2026-07-06のgemini追加でこの手順に気づくまで、無関係な古い`claude_desktop_config.json`を編集し続けて2回再起動しても直らない、という事故を繰り返した）。
+
+詳細な調査の経緯: `01_DECISIONS/claude-code/2026-06-07_minimax-official-MCP接続トラブル解決と動画生成成功.md`（初出・minimax-official）、`01_DECISIONS/claude-code/2026-07-06_Windows-Desktop版Gemini-MCP真因確定-MSIXconfig特定.md`（再発・gemini・「設定を編集」ボタンでの特定手順を確立）
 
 ### トラブルシューティング: 「設定ファイルの2層問題」（WSL CLI版）
 

@@ -118,7 +118,7 @@
         <a href="14-ssot-search.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
-            SSOT
+            SSOTから探して
         </a>
         
         <a href="15-cost-optimization.html"
@@ -178,15 +178,6 @@
 
         <article class="chapter-body">
             <h1>01 基礎概念 — Claude Code とは</h1>
-<aside class="tldr">
-<p><strong>3行で分かる</strong></p>
-<ol>
-<li>Claude Code は Claude（Anthropic 製）が動かす AI コーディングアシスタント・CLI・デスクトップ・IDE・Web の4形態がある</li>
-<li>ターミナルで <code>claude</code> と打つだけで起動・コードの読み書きから実行までこなす</li>
-<li>会話の履歴を覚える「コンテキスト」で長い作業も途切れず進む（最大1Mトークン）</li>
-</ol>
-</aside>
-<hr />
 <h2>Claude Code の4つの形態</h2>
 <p>Claude Code は Anthropic が提供する AI コーディングアシスタント。4つの形態で利用できる。</p>
 <div class="table-wrapper"><table>
@@ -256,8 +247,8 @@
 </tr>
 <tr>
 <td><strong>コンテキスト上限</strong></td>
-<td>モデル依存（Sonnet 5は1M自動・他は<code>[1m]</code>選択）</td>
-<td>モデル依存（同じ）</td>
+<td>200k（Code タブ）</td>
+<td>最大1M（プランによる）</td>
 </tr>
 <tr>
 <td><strong>スクリプト連携</strong></td>
@@ -266,18 +257,8 @@
 </tr>
 <tr>
 <td><strong>対応OS</strong></td>
-<td>Windows / macOS / Linux(beta)</td>
+<td>Windows / macOS のみ</td>
 <td>全OS（Linux/WSL2/Mac/Windows）</td>
-</tr>
-<tr>
-<td><strong>Desktop固有機能</strong></td>
-<td>ビジュアルdiff・アプリプレビュー(組込ブラウザ)・Computer Use(GUI操作)・Dispatch・サイドチャット</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>CLI固有機能</strong></td>
-<td>—</td>
-<td><code>--print</code>/Agent SDK(スクリプト自動化)・エージェントチーム・dontAskモード・ターミナル系コマンド</td>
 </tr>
 <tr>
 <td><strong>設定ファイル</strong></td>
@@ -318,14 +299,6 @@
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-warn"><p>⚠️ <strong>Windows Desktop App(MSIX版)のMCP設定ファイルについて（2026-07-06実測）</strong>
-Windows Desktop App（ストア配布のMSIXパッケージ版）は、MCPサーバー設定を <code>AppData\Local\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\claude_desktop_config.json</code>（MSIX仮想化パス）から読み込みます。<strong><code>~/.claude/settings.json</code> にMCPを書いても反映されません。</strong></p>
-<ul>
-<li><strong>変更の反映確認</strong>: アプリ内「設定 → 開発者 → ローカルMCPサーバー」パネルで <code>running</code> 表示を直接確認するのが確実</li>
-<li><strong>注意</strong>: このパスは2026-07-06時点の実測で、アプリ更新で変わりうります。一度確定した対応関係を恒久前提にしないこと（2026-05時点は別ファイルが有効に見えた時期もあり）</li>
-<li>詳細: <a href="#">Windows Desktop版Gemini-MCP真因確定 — MSIXconfig特定</a></li>
-</ul>
-</blockquote>
 <h3>どちらを選ぶか</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -357,8 +330,41 @@ Windows Desktop App（ストア配布のMSIXパッケージ版）は、MCPサー
 </tr>
 </tbody>
 </table></div>
-<blockquote>
-<p>詳細: <a href="#">自作MCPサーバー構造メモ</a></p></div>
+<div class="callout callout-info"><p>詳細: <a href="#">自作MCPサーバー構造メモ</a></p></div>
+<h3>⚠️ Windows Desktop版とWSL2版は「別のホームディレクトリを持つ別OS」</h3>
+<p>両者は同じPC上で動いていても、<strong>ファイルシステム的には完全に別人格</strong>である点に注意。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>Windows Desktop版</th>
+<th>WSL2版（CLI）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bashツールの実体</td>
+<td>Git Bash（MINGW64・Windows上で動作）</td>
+<td>Linux bash（WSL2仮想マシン）</td>
+</tr>
+<tr>
+<td>ホームディレクトリ</td>
+<td><code>C:\Users\&lt;user&gt;</code></td>
+<td><code>/home/&lt;user&gt;</code></td>
+</tr>
+<tr>
+<td>互いのファイルの見え方</td>
+<td><code>\\wsl.localhost\Ubuntu\home\&lt;user&gt;\...</code> 経由でのみ見える</td>
+<td>通常はWindows側を直接見ない</td>
+</tr>
+</tbody>
+</table></div>
+<p>この構造の違いが、<strong>handoff（セッション引き継ぎ）を介した環境またぎ</strong>で具体的な不具合として表面化する。WSL2版で書かれたhandoff/SKILL.md/SSOTには<code>~/projects/...</code>のようなWSL基準のパスが書かれており、これをWindows Desktop版が読むと:</p>
+<ol>
+<li><strong>パス解決の失敗</strong>: <code>~/projects/...</code>がWindows側の<code>C:\Users\...</code>に誤解決され、ファイルが見つからない → <a href="05-hooks.html#pretooluse%E3%81%A7%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E6%9B%B8%E3%81%8D%E6%8F%9B%E3%81%88updatedinput%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3">05_フック「PreToolUseでのコマンド書き換え」</a>で自動変換するフックを導入済み</li>
+<li><strong>GitHub認証の失敗</strong>: SSH鍵がWSL側のホームにしか存在せず、Windows側からは<code>git push</code>が<code>Permission denied</code>になる → <a href="08-config.html">08_設定ファイル</a>でHTTPS+gh CLI方式により解決済み</li>
+</ol>
+<p>詳細: <a href="#">2026-06-30_Windows-Desktop版WSLパス変換フック実装</a> / <a href="#">2026-06-30_Windows-Desktop版GitHub認証問題解決</a></p>
 <hr />
 <div class="mermaid-wrapper"><div class="mermaid">
 graph TD
@@ -376,7 +382,7 @@ graph TD
     LLM --> Resp["💬 レスポンス"]
     Resp --> User
 </div></div><h2>アーキテクチャ</h2>
-<pre><code>ユーザー
+<pre><code>ユーザー（あなた）
   │
   ▼
 Claude Code CLI（ターミナル）
@@ -412,9 +418,9 @@ graph LR
         E["空き容量<br/>~70%"]
     end
 </div></div><h2>コンテキストの仕組み</h2>
-<p>Claude Code は <strong>コンテキストウィンドウ</strong>（最大1Mトークン・モデル依存。標準は200k、Sonnet 5/Fable 5/Opus 4.6以降/Sonnet 4.6は1M窓に対応）の中で動作する。セッション開始時に以下がロードされる。</p>
+<p>Claude Code は <strong>コンテキストウィンドウ</strong>（最大200kトークン）の中で動作する。セッション開始時に以下がロードされる。</p>
 <h3>コンテキストの構成要素</h3>
-<pre><code>200k トークン（標準窓の例・1M対応モデルなら空きが約5倍に拡大）
+<pre><code>200k トークン（コンテキストウィンドウ上限）
 ├── システムプロンプト      ~5.7k  (2.8%)   ← Claude Codeの基本ルール
 ├── システムツール定義     ~18.1k  (9.0%)   ← Read, Edit, Bash等のツール説明
 ├── MCPツール定義          ~21.4k (10.7%)   ← 83個のMCPツール説明
@@ -432,7 +438,7 @@ graph LR
 <li>会話が進むとメッセージ部分が増加し、空きが減る</li>
 <li><code>/context</code> コマンドで現在の内訳を確認できる</li>
 </ul>
-<h3 id="autocompact">自動コンパクション</h3>
+<h3>&lt;a id=&quot;autocompact&quot;&gt;&lt;/a&gt;自動コンパクション</h3>
 <p>空きが少なくなると、古い会話が<strong>自動的に要約</strong>される。これをオートコンパクションと呼ぶ。</p>
 <ul>
 <li><code>/clear</code> は<strong>完全リセット</strong>（会話全破棄）</li>
@@ -445,7 +451,7 @@ graph LR
 <div class="callout callout-tip"><p>詳解: <a href="11-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
 <p>Claude Codeでは<strong>入力トークン &gt;&gt; 出力トークン</strong>になるのが普通（比率は約13:1）。</p>
 <p>理由は毎ターンで「システムプロンプト + MCP定義 + メモリ + 過去会話すべて」を再送するため。チャットAI（ChatGPT等）では出力が多くなりがちだが、コーディングアシスタントでは逆転する。</p>
-<p>また、<strong>実質使える量は窓サイズ依存</strong>: 標準200K窓なら約160K、1M窓なら約960K（いずれもシステム・MCP・メモリで約40Kが固定消費される）。</p>
+<p>また、<strong>200Kの実質使える量は約160K</strong>。システム・MCP・メモリで約40Kが固定消費される。</p>
 <hr />
 <h2>トークンとは</h2>
 <p>トークンはテキストの最小単位。日本語1文字 ≒ 1〜2トークン、英単語1語 ≒ 1トークン。</p>
@@ -455,73 +461,14 @@ graph LR
 <li>コストは入力 + 出力のトークン数で計算される</li>
 </ul>
 <hr />
-<h2>環境の特記事項</h2>
-<ul>
-<li><strong>コスト最適化</strong>: 公式のSonnet/Opus/Haikuではなく、GLM-5.2とMiniMaxにルーティングする独自構成 → <a href="15-cost-optimization.html">15_コスト最適化構成</a></li>
-<li><strong>コンテキスト最適化済み</strong>: 以前9サーバー→11サーバーに最適化</li>
-<li><strong>セキュリティフック</strong>: PreToolUseで危険コマンドを自動ブロック</li>
-</ul>
-<hr />
-<h2>セッション管理</h2>
-<p>Claude Code のセッション開始・再開・引き継ぎを支える3つの仕組み。</p>
-<h3>SessionStart Hook — SSOT日記の自動ロード</h3>
-<p><code>~/.claude/settings.json</code> の <code>SessionStart</code> に登録された <code>load-obsidian-log.sh</code> が、セッション開始時に以下を自動的にコンテキストへ流す：</p>
-<ul>
-<li><strong>今日のSSOT日記</strong>（直近3セッション分）</li>
-<li><strong>昨日〜直近のセッションサマリー</strong>（1行ずつ）</li>
-<li><strong>バックログのP0+P1タスク</strong></li>
-<li><strong>本日セッション数</strong>（複数セッション運用の可視化）</li>
-</ul>
-<p>軽量版で自動表示されるため、ユーザーが手動で handoff を読み込む必要はない（初回・作業中断後の再開時に文脈を即座に復元できる）。</p>
-<h3>resume-session / new-session — セッション区切りのスキル</h3>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>スキル</th>
-<th>タイミング</th>
-<th>役割</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>resume-session</code></td>
-<td>セッション開始時「おはよう」「再開」「/resume-session」</td>
-<td>最新5件のhandoff（<code>00★SYSTEM/handoff/</code>）を読み込み文脈を復元（new-sessionの対・読込側）</td>
-</tr>
-<tr>
-<td><code>new-session</code></td>
-<td>コンテキスト満杯時「新セッション」「/new-session」</td>
-<td>現在の状態を収集→GLMで引き継ぎプロンプト生成→<code>00★SYSTEM/handoff/YYYY-MM-DD_HHMM.md</code> に保存→3行サマリー出力</td>
-</tr>
-</tbody>
-</table></div>
-<ul>
-<li>引き継ぎは <strong>日時付きファイル</strong> に蓄積されるため、過去の引き継ぎも <code>ls</code> で参照可能（旧: <code>/tmp/new-session-prompt.md</code> は2026-05-31に廃止）</li>
-<li><code>new-session</code> 実行時、active-sessionsボードの自分エントリを <code>✅終了</code> に更新（即commit+push）</li>
-</ul>
-<h3>タスク占有ボード — 並行セッションの競合防止</h3>
-<p>複数セッションを並行運用する場合、共通ファイル（settings.json / CLAUDE.md / hook群 / 共通スキル等）を<strong>逆向きに変更する競合</strong>を防ぐための作業宣言ボード。</p>
-<ul>
-<li>場所: <code>knowledge-base/00★SYSTEM/active-sessions.md</code></li>
-<li><strong>🟢現在進行中タスク表</strong>: 着手中のセッションがタスク名・窓・開始時刻・方針を記入</li>
-<li><strong>ルール</strong>:
-<ul>
-<li><strong>開始時</strong>（resume-session）: タスク選択時に🟢表へ追加 → 即push</li>
-<li><strong>終了時</strong>（new-session）: 🟢表から削除 → 即push（タスクはバックログに戻る）</li>
-<li><strong>着手前</strong>: 他セッションの🟢タスクに着手する時はユーザーにsoft警告（重複の旨・ブロックはしない）</li>
-</ul>
-</li>
-<li><strong>逆方向の変更</strong>（修正 vs 削除 等）は勝手に進めず必ずユーザー判断</li>
-</ul>
-<hr />
 <h2>💡 やさしい補足（初心者向け）</h2>
 <p>この章に出てくる言葉を、できるだけ平たく言い直します。</p>
 <ul>
-<li><strong>Claude Codeって？</strong>: ChatGPTのようなチャットAIですが、<strong>手元のパソコンのファイルを直接見たり・書き換えたり・動かしたりできる</strong>のが最大の違い。「話しながら一緒に作業してくれる助手」です。</li>
+<li><strong>Claude Codeって？</strong>: ChatGPTのようなチャットAIですが、<strong>あなたのパソコンの中のファイルを直接見たり・書き換えたり・動かしたりできる</strong>のが最大の違い。「話しながら一緒に作業してくれる助手」です。</li>
 <li><strong>「コンテキスト」= 作業机の広さ</strong>: Claudeは一度に覚えていられる量に限りがあります。上の図のとおり、<strong>会話を始める前から既に机の3割くらいは埋まっています</strong>（基本ルールや追加機能の説明書で埋まっている）。だから長く使うとすぐいっぱいになります。</li>
 <li><strong>「トークン」= 文字数の単位</strong>: ざっくり「日本語1文字=1〜2トークン」と思ってください。これが<strong>お金の計算単位</strong>です。机に積める量も、請求される金額も、全部このトークンで決まります。</li>
 <li><strong>「毎ターン全部読み直している」</strong>: 1回やり取りするたびに、<strong>それまでの会話すべてを最初から読み直して</strong>返事を作ります。だから会話が長くなるほど1回あたり重く（高く）なります。これが「雪だるま式にコストが増える」理由です。</li>
-<li><strong>この環境は「お得な構成」</strong>: 公式の高価なAIではなく、GLM・MiniMaxという別のAIに切り替える設定にしてあって、コストを大幅に抑えています（詳しくは <a href="15-cost-optimization.html">15章</a>）。</li>
+<li><strong>あなたの環境は「お得な構成」</strong>: 公式の高価なAIではなく、GLM・MiniMaxという別のAIに切り替える設定にしてあって、コストを大幅に抑えています（詳しくは <a href="15-cost-optimization.html">15章</a>）。</li>
 </ul>
 
         </article>

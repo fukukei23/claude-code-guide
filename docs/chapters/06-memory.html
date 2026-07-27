@@ -118,7 +118,7 @@
         <a href="14-ssot-search.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
-            SSOT
+            SSOTから探して
         </a>
         
         <a href="15-cost-optimization.html"
@@ -178,15 +178,6 @@
 
         <article class="chapter-body">
             <h1>06 メモリ — セッションを超えた記憶</h1>
-<aside class="tldr">
-<p><strong>3行で分かる</strong></p>
-<ol>
-<li>セッションをまたいで記憶を保持する仕組み・前回の文脈の一部を引き継げる</li>
-<li>自動メモリ（プロジェクト単位で自動保存）と CLAUDE.md（手書きルール）の2種類</li>
-<li>次回起動時に自動で読み込まれる・「また説明し直す」が不要になる</li>
-</ol>
-</aside>
-<hr />
 <h2>メモリとは</h2>
 <p>Claude Codeは<strong>セッションを超えて記憶を保持する</strong>仕組みを持つ。新しいセッションを開始しても、前回の文脈の一部を引き継げる。</p>
 <hr />
@@ -204,7 +195,7 @@ graph TD
     AUTO --> T4["reference: 外部参照"]
     IDX --> AUTO
 </div></div><h2>メモリの種類</h2>
-<h3 id="auto-memory">Auto Memory（自動メモリ）</h3>
+<h3>&lt;a id=&quot;auto-memory&quot;&gt;&lt;/a&gt;Auto Memory（自動メモリ）</h3>
 <p>Claude Codeが<strong>自動的に</strong>保存するプロジェクト単位の記憶。</p>
 <ul>
 <li><strong>場所</strong>: <code>~/.claude/projects/&lt;path&gt;/memory/</code></li>
@@ -219,7 +210,7 @@ graph TD
 <li>フィードバック（「この方法はやめて」等）</li>
 <li>外部システムへの参照（Linear, Grafana等）</li>
 </ul>
-<h3 id="user-memory">User Memory（ユーザーメモリ）</h3>
+<h3>&lt;a id=&quot;user-memory&quot;&gt;&lt;/a&gt;User Memory（ユーザーメモリ）</h3>
 <p><code>~/.claude/CLAUDE.md</code> に記述されたルール。</p>
 <ul>
 <li><strong>場所</strong>: <code>~/.claude/CLAUDE.md</code></li>
@@ -227,7 +218,7 @@ graph TD
 <li><strong>スコープ</strong>: 全プロジェクト共通</li>
 <li><strong>内容</strong>: 基本ルール、LLM利用ポリシー、コーディング原則等</li>
 </ul>
-<h3 id="project-memory">Project Memory（プロジェクトメモリ）</h3>
+<h3>&lt;a id=&quot;project-memory&quot;&gt;&lt;/a&gt;Project Memory（プロジェクトメモリ）</h3>
 <p>各リポジトリの <code>CLAUDE.md</code> に記述されたルール。</p>
 <ul>
 <li><strong>場所</strong>: <code>&lt;repo&gt;/CLAUDE.md</code></li>
@@ -235,7 +226,7 @@ graph TD
 <li><strong>スコープ</strong>: そのプロジェクト内のみ</li>
 <li><strong>内容</strong>: プロジェクト固有の構造・ルール・コマンド</li>
 </ul>
-<h3 id="memory-md">MEMORY.md（インデックス）</h3>
+<h3>&lt;a id=&quot;memory-md&quot;&gt;&lt;/a&gt;MEMORY.md（インデックス）</h3>
 <p>Auto Memoryの<strong>目次ファイル</strong>。</p>
 <ul>
 <li><strong>場所</strong>: <code>memory/MEMORY.md</code></li>
@@ -369,6 +360,7 @@ graph TD
 <li><strong>パス指定ロード</strong> — 言語別ルールは層2（必要時だけ）</li>
 <li><strong>Instruction vs Learning分離</strong> — CLAUDE.md（人間が書く）と <code>memory/</code>（AI蓄積）を混在させない</li>
 </ol>
+<p>詳細: <a href="#">3層メモリ構造</a>・<a href="#">3層メモリ再設計</a></p>
 <hr />
 <h2>💡 やさしい補足（初心者向け）</h2>
 <ul>
