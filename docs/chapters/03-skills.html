@@ -190,7 +190,7 @@ Claude Code がその指示に従って動作
 </code></pre>
 <p><strong>重要</strong>: スキルは「コード」ではなく「指示書」。実行後にClaude Codeがどう振る舞うかを定義する。</p>
 <hr />
-<h2>スキルの3つの来源</h2>
+<h2>スキルの4つの来源</h2>
 <h3>1. ビルトインスキル（Claude Code本体に内蔵）</h3>
 <p>Claude Codeに最初から入っているスキル。追加インストール不要。</p>
 <div class="table-wrapper"><table>
@@ -317,7 +317,7 @@ Claude Code がその指示に従って動作
 </table></div>
 <h3>3. カスタムスキル（ユーザーが自作）</h3>
 <p><code>skill-creator</code> スキルや手動で作成可能。<code>.claude/skills/</code> ディレクトリに配置。</p>
-<div class="callout callout-danger"><p><strong>自作スキルの例（楽曲系ウィザード3種）</strong></p>
+<div class="callout callout-warn"><p><strong>自作スキルの例（楽曲系ウィザード3種）</strong></p>
 <ul>
 <li><code>sangoku-song</code> — 三国志武将のHIPHOP楽曲を、武将選択から曲+歌詞+画像+動画まで質問ドリブンで制作。7フェーズ・<code>AskUserQuestion</code> 選択式・人間判断ポイント5箇所。トリガー: 「武将で曲作って」「/sangoku-song」</li>
 <li><code>cyber-wa-song</code> — サイバー和モダン3作品（原点廻帰/電子参拝/百鬼夜行）の楽曲+映像を、作品選択から曲+歌詞+画像+動画まで質問ドリブンで制作。<code>sangoku-song</code> の構造を複製し世界観を差し替え。Phase 5 動画をタイムライン分析で強化。トリガー: 「サイバー和モダン」「原点廻帰」「/cyber-wa-song」</li>
@@ -343,6 +343,22 @@ Claude Code がその指示に従って動作
 <li><code>fable-advisor</code> — Fable5を相談役として呼び出す軽量スキル。大規模リファクタ計画・行き詰まったデバッグ・完了前の最終確認など、本当に難しい判断の時だけ手動発動。トリガー: 「Fableに相談して」「Fable5に聞いて」「advisorに相談」</li>
 </ul>
 </blockquote>
+<h3>4. 外部スキル（GitHubから導入・第三者製）</h3>
+<p>自作でも公式プラグインでもない、<strong>第三者が公開しているSKILL.mdをGitHubから直接取得して配置</strong>したスキル。物理的には「カスタムスキル」と同じ <code>.claude/skills/</code> 配下に置かれるが、<strong>中身は自作していない</strong>点が異なる。</p>
+<p>配置方法: 対象リポジトリを <code>git clone</code> し、<code>SKILL.md</code> を含むディレクトリ（多くは <code>skills/&lt;name&gt;/</code> または <code>.claude/skills/&lt;name&gt;/</code>）をそのまま <code>~/.claude/skills/&lt;name&gt;/</code> にコピーするだけ（npm/npx等の専用インストーラを使う配布もある）。</p>
+<blockquote>
+<p><strong>⚠️ 環境同期の注意</strong>: <code>skills/</code> フォルダは WSL CLI版とWindows Desktop版で自動同期されない。両環境で使いたい場合は両方に個別コピーが必要（詳細: <a href="01-basics.html">01_基礎概念</a>）。</p>
+<p><strong>導入前チェック</strong>: 誤検知が多いため過信は禁物だが、SkillSpector等の静的スキャンで事前チェックしてから導入するのも一つの手（詳細: <a href="#">2026-07-29_SkillSpector外部スキル事前チェックの限界と導入判断</a>）。</p></div>
+<div class="callout callout-info"><p><strong>導入例（デザイン・アニメーション・動画・マーケティング系）</strong></p>
+<ul>
+<li><code>impeccable</code>（<a href="https://github.com/pbakaus/impeccable">pbakaus/impeccable</a>） — フロントエンドデザインの品質を底上げする多機能スキル。「AI丸出し」な没個性デザインを避ける方向へ導く</li>
+<li><code>taste-skill</code>（<a href="https://github.com/Leonxlnx/taste-skill">Leonxlnx/taste-skill</a>） — ランディングページ・ポートフォリオ等のデザイン「センス」を強化する反slopスキル</li>
+<li><code>emil-design-eng</code>（<a href="https://github.com/emilkowalski/skills">emilkowalski/skills</a>） — Emil Kowalski氏のアニメーション・UI磨き込みの流儀を組み込むスキル</li>
+<li><code>gsap-*</code>（<a href="https://github.com/greensock/gsap-skills">greensock/gsap-skills</a>・8モジュール） — GreenSock公式のGSAPアニメーションライブラリ用スキル群（core/timeline/scrolltrigger/plugins/react/performance/frameworks/utils）</li>
+<li><code>hyperframes</code> 系（<a href="https://github.com/heygen-com/hyperframes">heygen-com/hyperframes</a>・19モジュール） — HeyGen製、HTML/CSSから動画（MP4）を生成するフレームワーク用スキル群</li>
+<li><code>marketingskills</code> 系（<a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a>・49モジュール） — CRO・コピーライティング・SEO・広告等マーケティング全般のスキル群</li>
+</ul>
+<p>単一の代表スキルを持つリポジトリ（impeccable/taste-skill/emil）はメインスキルのみ採用し亜種・周辺スキルは除外、モジュール集合型（gsap/hyperframes/marketingskills）は全モジュールを採用（公式インストーラのデフォルト動作に準拠）。詳細: <a href="#">2026-07-30_外部Claude-Skill6件インストール完了</a></p></div>
 <hr />
 <h2>スキル呼び出しの仕組み</h2>
 <ol>
@@ -376,8 +392,7 @@ Claude Code がその指示に従って動作
 </tr>
 </tbody>
 </table></div>
-<blockquote>
-<p><strong>トラブル時の確認</strong>: 「スキルが発火しない」場合、まず ① プラグインか自作か ② システムプロンプト冒頭に <code>EXTREMELY_IMPORTANT</code> ブロック（using-superpowers）があるか を確認。</p></div>
+<div class="callout callout-info"><p><strong>トラブル時の確認</strong>: 「スキルが発火しない」場合、まず ① プラグインか自作か ② システムプロンプト冒頭に <code>EXTREMELY_IMPORTANT</code> ブロック（using-superpowers）があるか を確認。</p></div>
 <hr />
 <h2>主要スキルの使い方</h2>
 <p>スキル数が多いため、<strong>5つのカテゴリ</strong>に整理しています。目的のスキルを探す場合は<a href="#toc">📑 目次</a>からジャンプしてください。</p>
