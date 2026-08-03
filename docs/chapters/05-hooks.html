@@ -521,11 +521,6 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
-<td><code>guard-settings-write.sh</code></td>
-<td><strong>settings.json への TOKEN 書込防御</strong>（4層判定+Pre/Post二段・2026-07-31実装・<strong>テスト: bash test_guard_settings_write.sh (60/60 PASS・2026-07-31時点)</strong>・<a href="#">SSOT</a>）</td>
-</tr>
-<tr>
-<td></td>
 <td><code>track-tool-usage.sh</code></td>
 <td>ツール使用ログ記録（2026-07-24拡張: Skill発動時はスキル名を4列目に記録・<code>claude-cost</code>でスキル別集計）</td>
 </tr>
@@ -700,6 +695,60 @@ print('停止しました')
 <li><strong><code>/config</code> で設定確認</strong> — hooks セクションの内容を確認</li>
 <li><strong>一時的に無効化</strong> — settings.json で該当フックをコメントアウト</li>
 </ol>
+<hr />
+<h2><code>guard-settings-write</code>（Task6 α C'案・✅実装済 2026-07-31）</h2>
+<p><code>settings.json</code> への TOKEN 書込を PostToolUse 内容ベース差分検知で防御する hook。Bash 経由（jq / sed / リダイレクト / <code>python3 -c</code> / MCP / hooks 設定）の本体 settings.json 書換も完全スルーする <code>guard-config-secrets.sh</code> の盲点を塞ぐ。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>タイミング</td>
+<td>PreToolUse(Bash) + PostToolUse(Bash|Edit|Write|MultiEdit|NotebookEdit)</td>
+</tr>
+<tr>
+<td>役割</td>
+<td><strong>主防御</strong>: PostToolUse で実行前スナップショットと実行後を比較し、監視対象パスに TOKEN 風文字列の<strong>新規追加</strong>を検出 → cp -p 復元 + exit2 + ログ + 通知。<strong>補助</strong>: PreToolUse で Bash 同チェイン内「書込操作 + ネットワーク送信」を事前ブロック（ベストエフォート）</td>
+</tr>
+<tr>
+<td>4層判定ルール</td>
+<td>① prefix辞書 + gitleaks厳選（バイナリなし・python re.search）/ ② 長文字列32字+文字種混在+URL/パス/<code>Bash(</code>等のツール呼出スキーマ除外 / ③ キー名+実値で <code>${ENV}</code> 厳密判定（<code>^\$\{[A-Z_][A-Z0-9_]*\}$</code> のみ許可）/ ④ 値ブロードスキャン（JSONツリー全値を再帰走査・キー名無関係）</td>
+</tr>
+<tr>
+<td>監視対象</td>
+<td><code>permissions.{allow,deny,ask,default}</code> / <code>env</code> / <code>mcpServers.*.{env, headers, args, command, url}</code> / <code>hooks.*.{env, command}</code>、settings.local.json は全 JSON 値走査</td>
+</tr>
+<tr>
+<td>復元失敗フォールバック</td>
+<td>cp -p 戻り値 + ファイルサイズ一致 + JSON parse 成功 + sha256 一致 の <strong>AND</strong>。失敗時 <code>chmod 400</code>（所有者のみRead可・CC本体が読める）で読み取り専用化（<strong>chmod 000 は使わない</strong> — DoS回避）</td>
+</tr>
+<tr>
+<td>TTL付き bypass</td>
+<td><code>~/.claude/guard-bypass-&lt;TIMESTAMP&gt;</code> ファイル（中身は空）が存在すれば 5分間だけ hook bypass（hook 起動不能時の手動編集→漏洩経路拡大を防ぐ）</td>
+</tr>
+<tr>
+<td>ログ</td>
+<td><code>~/.claude/logs/guard-settings-write.log</code>（JSON Lines・100MB×10世代 gzip・<strong>chmod 0600</strong>・※spec 0444→0600 乖離: 追記型ログで 0444 だと2回目以降書けないため・所有者rwで spec意図達成）。<strong>TOKEN 原値は絶対に書かない</strong>（マッチ箇所は <code>[REDACTED:hk:&lt;sha256-prefix&gt;]</code> ハッシュ化）</td>
+</tr>
+<tr>
+<td>設定例</td>
+<td><code>~/.claude/settings.json</code> の <code>hooks.PreToolUse</code> に Bash matcher で1行 + <code>hooks.PostToolUse</code> に `Bash</td>
+</tr>
+<tr>
+<td>仕様詳細</td>
+<td><a href="#">docs/superpowers/specs/2026-07-30-guard-settings-write-post-detection-design.md</a></td>
+</tr>
+<tr>
+<td>経緯</td>
+<td>[<a href="#">2026-07-30_Task6α-guard-settings-Bash書込検知-設計C案転換</a>]（4層ルール確定 + multi-llm-review Gemini+MiniMax 直交指摘統合・chmod 000 → 400・TTL bypass 採用・過剰提案 YAGNI 却下）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>やさしい補足</strong>: 通常のセキュリティ hook が「Edit や Write で設定ファイルを編集する時」だけ反応するのに対し、guard-settings-write は <strong>Bash コマンドで直接ファイルを書き換える経路も含めて全部見る</strong>番人です。さらに「書き換えた後すぐ外部に送る」という連続技も、実行前に「書込 + 送信」が同じコマンドにないか軽くチェックして止めます。</p></div>
 <hr />
 <h2>💡 やさしい補足（初心者向け）</h2>
 <ul>
