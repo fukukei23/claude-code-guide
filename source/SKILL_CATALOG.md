@@ -20,7 +20,7 @@
 | Skill | 説明 | トリガー |
 |---|---|---|
 | `ssot-record` | SSOTへの記録・振り分け自動化。タグマッピングからプロジェクト側docs更新も自動検出 | 「記録して」「書き留めて」「SSOTに入れて」 |
-| `record-decision` | ⚠️ 非推奨（ssot-record に統合済み）。`/record-decision` は ssot-record に委譲 | `/record-decision` |
+| `record-decision` | ⚠️ 非推奨・**OFF中**（ssot-record に統合済・2026-08-14 /doctor で無効化）。`/record-decision` は ssot-record に委譲 | `/record-decision` |
 | `ssot-search` | 個人ナレッジベース（obsidian-ssot）をRAG検索。1,900件超から関連5件表示 | 「SSOTから探して」「SSOT検索」 |
 | `ssot-check` | SSOTと実ファイル/設定の整合性チェック。乖離があれば自動修正・修正提案 | 「SSOT整合性チェックして」「SSOT整理して」「乖離を修正して」 |
 | `record-new-feature` | Claude Code新バージョンのリリースノートを調査しSSOTとガイドに追記 | SessionStart hookで自動発動 |
@@ -54,6 +54,32 @@
 | `sentaku` | 選択肢(A/B/C)の深掘り比較→淘汰→推奨。teian(浅)とbrainstorming(深)の間 | 「比較して」「深掘りして」「メリデメ教えて」「徹底的に」`/sentaku` |
 | `remove-huadian` | AI生成の古代中国女性画像に強制付加される花鈿（眉間の赤点）を画像処理で除去 | 「花鈿除去」「赤点消して」`/remove-huadian` |
 | `demo-site-sales` | ホームページない店舗向けデモサイト(HTML)+営業文面を自動生成（送信は手動） | 「デモサイト作って」「Web制作の新規開拓」`/demo-site-sales` |
+
+---
+
+## 🔌 無効化済み・予備のスキル・MCP（再オン手順）
+
+> `/doctor`（2026-08-14）で「未使用のため一時OFF」にしたもの。ファイルは残してあるのでいつでも再オンできます。自分が何を持っているか忘れた時はここを見る。
+
+### 現在OFF中
+
+| 項目 | 種別 | 理由 | 再オン方法 |
+|---|---|---|---|
+| `record-decision` | スキル | ssot-record に統合済（廃止） | `settings.json` の `skillOverrides.record-decision` を削除 |
+| `minimax-official` | MCP | `minimax` と機能重複 | `/mcp enable minimax-official`（または `disabledMcpServers` から削除） |
+| `minimax-video` | MCP | `minimax` と機能重複 | `/mcp enable minimax-video` |
+| `mermaid` | MCP | 0使用 | `/mcp enable mermaid` |
+| `agent-sdk-dev` / `claude-code-setup` / `claude-md-management` / `code-review` / `code-simplifier` / `pr-review-toolkit` | プラグイン | 0使用（導入時からOFF設定） | `settings.json` の `enabledPlugins` 該当キーを `true` に |
+
+### 未使用だが有効（外部パック・いつでも使える）
+
+インストール済だが未使用の外部プラグインスキル群。使う日に備えた一覧（個別OFFも可能: `skillOverrides` で `"off"`）。
+
+- **マーケティング／成長（54）**: `ab-testing` `ads` `analytics` `cro` `emails` `social` `seo-audit` `schema` `content-strategy` `copywriting` `pricing` `churn-prevention` `influencer-marketing` `launch` `onboarding` `paywalls` `popups` `referrals` `prospecting` `public-relations` ほか — SaaS・コンテンツ成長向け一式
+- **GSAP／Hyperframes（15）**: `gsap-core` `gsap-react` `gsap-timeline` `gsap-scrolltrigger` `gsap-plugins` `gsap-performance` `gsap-frameworks` `gsap-utils` / `hyperframes-core` `hyperframes-animation` `hyperframes-creative` `hyperframes-cli` `hyperframes-registry` `hyperframes-keyframes` — Webアニメーション・HTML動画合成
+- **動画／デザイン（12）**: `video` `motion-graphics` `figma` `image` `faceless-explainer` `music-to-video` `embedded-captions` `emil-design-eng` `impeccable` `taste-skill` `general-video` `remotion-to-hyperframes` — 動画制作・UIデザイン
+
+> **使い方**: 会話中にその分野の言葉（「A/Bテスト」「スクロールアニメーション」「顔出しなし動画」等）を出せばスキルが反応します。
 
 ---
 

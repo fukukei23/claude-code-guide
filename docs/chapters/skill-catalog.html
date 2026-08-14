@@ -237,7 +237,7 @@
 </tr>
 <tr>
 <td><code>record-decision</code></td>
-<td>⚠️ 非推奨（ssot-record に統合済み）。<code>/record-decision</code> は ssot-record に委譲</td>
+<td>⚠️ 非推奨・<strong>OFF中</strong>（ssot-record に統合済・2026-08-14 /doctor で無効化）。<code>/record-decision</code> は ssot-record に委譲</td>
 <td><code>/record-decision</code></td>
 </tr>
 <tr>
@@ -381,6 +381,60 @@
 </tr>
 </tbody>
 </table></div>
+<hr />
+<h2>🔌 無効化済み・予備のスキル・MCP（再オン手順）</h2>
+<div class="callout callout-info"><p><code>/doctor</code>（2026-08-14）で「未使用のため一時OFF」にしたもの。ファイルは残してあるのでいつでも再オンできます。自分が何を持っているか忘れた時はここを見る。</p></div>
+<h3>現在OFF中</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>種別</th>
+<th>理由</th>
+<th>再オン方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>record-decision</code></td>
+<td>スキル</td>
+<td>ssot-record に統合済（廃止）</td>
+<td><code>settings.json</code> の <code>skillOverrides.record-decision</code> を削除</td>
+</tr>
+<tr>
+<td><code>minimax-official</code></td>
+<td>MCP</td>
+<td><code>minimax</code> と機能重複</td>
+<td><code>/mcp enable minimax-official</code>（または <code>disabledMcpServers</code> から削除）</td>
+</tr>
+<tr>
+<td><code>minimax-video</code></td>
+<td>MCP</td>
+<td><code>minimax</code> と機能重複</td>
+<td><code>/mcp enable minimax-video</code></td>
+</tr>
+<tr>
+<td><code>mermaid</code></td>
+<td>MCP</td>
+<td>0使用</td>
+<td><code>/mcp enable mermaid</code></td>
+</tr>
+<tr>
+<td><code>agent-sdk-dev</code> / <code>claude-code-setup</code> / <code>claude-md-management</code> / <code>code-review</code> / <code>code-simplifier</code> / <code>pr-review-toolkit</code></td>
+<td>プラグイン</td>
+<td>0使用（導入時からOFF設定）</td>
+<td><code>settings.json</code> の <code>enabledPlugins</code> 該当キーを <code>true</code> に</td>
+</tr>
+</tbody>
+</table></div>
+<h3>未使用だが有効（外部パック・いつでも使える）</h3>
+<p>インストール済だが未使用の外部プラグインスキル群。使う日に備えた一覧（個別OFFも可能: <code>skillOverrides</code> で <code>&quot;off&quot;</code>）。</p>
+<ul>
+<li><strong>マーケティング／成長（54）</strong>: <code>ab-testing</code> <code>ads</code> <code>analytics</code> <code>cro</code> <code>emails</code> <code>social</code> <code>seo-audit</code> <code>schema</code> <code>content-strategy</code> <code>copywriting</code> <code>pricing</code> <code>churn-prevention</code> <code>influencer-marketing</code> <code>launch</code> <code>onboarding</code> <code>paywalls</code> <code>popups</code> <code>referrals</code> <code>prospecting</code> <code>public-relations</code> ほか — SaaS・コンテンツ成長向け一式</li>
+<li><strong>GSAP／Hyperframes（15）</strong>: <code>gsap-core</code> <code>gsap-react</code> <code>gsap-timeline</code> <code>gsap-scrolltrigger</code> <code>gsap-plugins</code> <code>gsap-performance</code> <code>gsap-frameworks</code> <code>gsap-utils</code> / <code>hyperframes-core</code> <code>hyperframes-animation</code> <code>hyperframes-creative</code> <code>hyperframes-cli</code> <code>hyperframes-registry</code> <code>hyperframes-keyframes</code> — Webアニメーション・HTML動画合成</li>
+<li><strong>動画／デザイン（12）</strong>: <code>video</code> <code>motion-graphics</code> <code>figma</code> <code>image</code> <code>faceless-explainer</code> <code>music-to-video</code> <code>embedded-captions</code> <code>emil-design-eng</code> <code>impeccable</code> <code>taste-skill</code> <code>general-video</code> <code>remotion-to-hyperframes</code> — 動画制作・UIデザイン</li>
+</ul>
+<div class="callout callout-info"><p><strong>使い方</strong>: 会話中にその分野の言葉（「A/Bテスト」「スクロールアニメーション」「顔出しなし動画」等）を出せばスキルが反応します。</p></div>
 <hr />
 <h2>Built-in / Plugin Skills</h2>
 <p>ビルトイン（<code>init</code> / <code>review</code> / <code>security-review</code> / <code>simplify</code> / <code>update-config</code> / <code>claude-api</code> / <code>loop</code> / <code>verify</code> / <code>run</code> 等）とプラグイン（<code>superpowers</code> / <code>pr-review-toolkit</code> / <code>code-review</code> / <code>feature-dev</code> / <code>skill-creator</code> 等）の全一覧は <a href="03-skills.html">03_スキルシステム</a> 参照。</p>
