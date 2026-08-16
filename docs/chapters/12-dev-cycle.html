@@ -213,11 +213,11 @@
 </tr>
 <tr>
 <td>チェック内容</td>
-<td>セキュリティ問題・巨大関数（50行超）・重複ロジック・未使用import</td>
+<td>セキュリティ問題・巨大<span class="term" tabindex="0">関数<span class="term-popup">一連の処理をまとめて名前を付けたもの。呼び出すたびに同じ処理が実行される。プログラムの基本単位</span></span>（50行超）・重複ロジック・未使用import</td>
 </tr>
 <tr>
 <td>出力先</td>
-<td><code>01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/&lt;project&gt;/YYYY-MM-DD_<span class="term" tabindex="0">リファクタリング<span class="term-popup">動きを変えずにコードの中身を読みやすく整理すること。機能追加でなく「掃除」の作業</span></span>調査_&lt;area&gt;.md</code></td>
+<td><code>01_DECISIONS/&lt;project&gt;/YYYY-MM-DD_リファクタリング調査_&lt;area&gt;.md</code></td>
 </tr>
 <tr>
 <td>いつ使う</td>
@@ -235,10 +235,10 @@
     結果をSSOTに保存。コード変更は一切しない。
 </code></pre>
 <hr />
-<h2>フェーズ2: コードレビュー v3</h2>
+<h2>フェーズ2: <span class="term" tabindex="0">コードレビュー<span class="term-popup">書かれたコードを、書いた本人以外の視点で読んで問題を指摘する作業。バグ・読みにくさ・危険な書き方を見つけるのに有効</span></span> v3</h2>
 <p>重要ファイルを深く読み、<strong>★スコア + P1/P2 改善提案</strong>を出力する。</p>
 <h3>実行手順</h3>
-<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>"># Step 0: ファイルの重要度スコアリング
+<pre><code class="language-bash"># Step 0: ファイルの重要度スコアリング
 python score-files.py &lt;project_path&gt; --top 20 --json
 
 # Step 1: 行数実測（スコアと照合）
@@ -288,7 +288,7 @@ priority: P1（except限定化）、P2（関数分割）
 </table></div>
 <p>タイトル例:</p>
 <pre><code>test: [A] test_xxx.py に scope=&quot;function&quot; を明示
-fix:  [B] except Exception を具体的な<span class="term" tabindex="0">例外<span class="term-popup">プログラムの実行中に起きた異常のこと、とその知らせ。例外を捕まえて処理（ハンドリング）しないと、その場でプログラムが止まる</span></span>型に限定
+fix:  [B] except Exception を具体的な例外型に限定
 refactor: [D] test_routes_coverage.py を6ファイルに分割
 </code></pre>
 <h3>GitHub <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span> 一括作成</h3>
@@ -318,7 +318,7 @@ for issue in issues:
     print(f&quot;Created #{res['number']}: {res['title']}&quot;)
 </code></pre>
 <hr />
-<h2>フェーズ4: 自律実装ループ</h2>
+<h2>フェーズ4: 自律<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span><span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span></h2>
 <p>GitHub Issues を <strong>高→中→低の順に自動実装</strong>する Stop <span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> 連鎖方式。</p>
 <h3>アーキテクチャ</h3>
 <pre><code>start.sh --auto &lt;repo&gt;
@@ -328,7 +328,7 @@ state.json: active=true / pending=[76,77,78]
     │
     ▼
 claude --print &quot;Issue #76 を実装して...&quot;
-    │ <span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>終了
+    │ セッション終了
     ▼
 [Stop Hook 発火] → next-issue.py
     │ completed=[76] / pending=[77,78]
@@ -348,7 +348,7 @@ pending=[] → active=false → 完了通知
   &quot;completed&quot;: []
 }
 </code></pre>
-<h3>起動コマンド</h3>
+<h3>起動<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></h3>
 <pre><code class="language-bash"># Issue番号を指定して実行
 bash ~/.claude/scripts/auto-dev/start.sh 76 77 78
 
@@ -407,7 +407,7 @@ print('停止:', s)
 </code></pre>
 <hr />
 <h2>フェーズ4.5: Daily Triage &amp; Stale検知（2026-07-24追加）</h2>
-<p>並行セッションの stale🟢検知と、staleタスクの自動除外ロジックを実装。</p>
+<p>並行<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の stale🟢検知と、staleタスクの自動除外ロジックを実装。</p>
 <h3>stale判定（⚠staleマーク）</h3>
 <p><code>daily_triage.py</code> で実装:</p>
 <ul>
@@ -456,12 +456,12 @@ def parse_task_date(text: str) -&gt; date | None:
     stale（30日超）には⚠staleマークを付与。
     結果を 10_DAILY/2026-07-27.md に追記。
 </code></pre>
-<p><strong>Cron管理</strong>: <code>apply_<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>s.py</code> で管理・crons.shで再登録</p>
+<p><strong>Cron管理</strong>: <code>apply_crons.py</code> で管理・<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>s.shで再登録</p>
 <hr />
 <h2>フェーズ5: 完了通知（自動）</h2>
 <p><code>pending=[]</code> を検知したら自動実行:</p>
 <ul>
-<li>ターミナルベル音</li>
+<li><span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>ベル音</li>
 <li>OS通知（macOS: <code>osascript</code> / Windows: PowerShell toast）</li>
 </ul>
 <pre><code class="language-python"># macOS 例
@@ -497,7 +497,7 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <tr>
 <td>Issue 化</td>
 <td>任意</td>
-<td>テンプレート変換</td>
+<td><span class="term" tabindex="0">テンプレート<span class="term-popup">雛形。穴埋め部分だけ差し替えて、同じ形の文書やコードを量産する元になるもの</span></span>変換</td>
 </tr>
 <tr>
 <td>コード生成（実装）</td>
@@ -505,7 +505,7 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <td>繰り返し生成</td>
 </tr>
 <tr>
-<td>テスト・CI 確認</td>
+<td>テスト・<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span> 確認</td>
 <td>Claude 直接</td>
 <td>ツール呼び出し</td>
 </tr>
@@ -569,7 +569,7 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <td>3件全自動完了・テスト全件パス</td>
 </tr>
 <tr>
-<td>自律型AIフレームワーク</td>
+<td>自律型AI<span class="term" tabindex="0">フレームワーク<span class="term-popup">アプリを作るための骨組み部品のセット。土台が用意されているので、中身の作り込みに集中できる</span></span></td>
 <td>テスト<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span> 83.81% 達成</td>
 <td>4,602 テスト通過・0 失敗</td>
 </tr>

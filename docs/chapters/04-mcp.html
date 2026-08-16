@@ -182,7 +182,7 @@
 <p><strong>MCP（Model Context Protocol）</strong> は、Claude Codeから外部ツールを利用するための仕組み。</p>
 <pre><code>Claude Code
   │
-  ├─ brave-search MCP ──→ Brave検索<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span> ──→ Web検索結果
+  ├─ brave-search MCP ──→ Brave検索API ──→ Web検索結果
   ├─ github MCP ────────→ GitHub API ──→ PR・Issue・ファイル
   ├─ playwright MCP ────→ Chromium ──────→ ブラウザ操作
   ├─ context7 MCP ──────→ Docs API ─────→ ライブラリドキュメント
@@ -291,7 +291,7 @@
 </tr>
 <tr>
 <td><code>minimax_diff_releases</code></td>
-<td>リリース差分比較</td>
+<td><span class="term" tabindex="0">リリース<span class="term-popup">完成したものを外に出すこと。公開・出荷の意味</span></span><span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>比較</td>
 </tr>
 <tr>
 <td><code>minimax_batch_process</code></td>
@@ -302,13 +302,13 @@
 <td>環境チェック</td>
 </tr>
 <tr>
-<td><code>minimax_<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>_helper</code></td>
-<td>cron設定補助</td>
+<td><code>minimax_cron_helper</code></td>
+<td><span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>設定補助</td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。</p>
-<div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/minimax-mcp-server.py</code> — 自作Pythonスクリプト（<strong>MiniMax-M3</strong>使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p></div>
+<div class="callout callout-info"><p><strong><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span></strong>: <code>~/.claude/scripts/mcp/minimax-mcp-server.py</code> — 自作Python<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>（<strong>MiniMax-M3</strong>使用）。glm-rate-proxyの<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p></div>
 <h3><code>MiniMax-M3</code> の context_window 設定（2026-07-12追加）</h3>
 <p><strong>MINIMAX M3は1Mトークン対応</strong>だが <code>minimax-mcp-server.py</code> に <code>CONTEXT_WINDOW</code> 設定が存在しない場合、llm-status.sh が正しい context_window を認識できない。ステータスライン（/tmp/llm-last-used.txt）への書き込みを <code>🟠 MiniMax-M3|ctx:1000000</code> に変更することで1M認識を実現する。</p>
 <pre><code class="language-python">MINIMAX_KEY = _load_key()
@@ -374,7 +374,7 @@ CONTEXT_WINDOW = 1_000_000
 <strong>出力先</strong>: <code>~/minimax-output/</code>（WSL内）に自動保存される。</p>
 <hr />
 <h3 id="minimax-video">minimax-video（公式 / 動画生成専用・従量課金）</h3>
-<p><strong>MiniMax公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）</strong>。<code>minimax-official</code> と<strong>同じバイナリ</strong>（公式パッケージ <code>minimax-mcp</code>）だが、<strong>APIキー（従量課金アカウント）と出力先を分離</strong>した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。</p>
+<p><strong>MiniMax公式MCPサーバー（動画生成専用・従量 Cash$ アカウント）</strong>。<code>minimax-official</code> と<strong>同じバイナリ</strong>（公式<span class="term" tabindex="0">パッケージ<span class="term-popup">配布・インストール可能な形にまとめたソフトウェアの単位。Pythonではpipで入れる部品のこと</span></span> <code>minimax-mcp</code>）だが、<strong><span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キー（従量課金アカウント）と出力先を分離</strong>した別サーバー。official（無料枠）と使い分けることで、動画生成を大量利用しても無料枠を消費しない。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -412,7 +412,7 @@ CONTEXT_WINDOW = 1_000_000
 <p>同一の <code>minimax-mcp</code> バイナリを2本起動し、<span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>でAPIキーとアカウントを切り替えて<strong>コスト分離</strong>する構成。</p>
 <p><strong>使い分けのポイント</strong>: 同一バイナリのため <code>generate_video</code> 等が両サーバーに生える。<strong>動画生成時は必ず <code>mcp__minimax-video__generate_video</code></strong> を使う（<code>minimax-official</code> は Token Plan の動画 quota が枯渇するため）。</p>
 <ul>
-<li><strong>サーバー登録は <code>claude mcp add -s user</code> で <code>~/.claude.json</code>（userスコープ）へ。<code>settings.json</code> の <code>mcpServers</code> は読まれないので注意</strong>（2026-06-15検証済み・下記トラブルシューティング「2層問題」参照）。<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>">claude mcp add minimax-video -s user -- bash ~/.claude/scripts/mcp/start-minimax-video-mcp.sh
+<li><strong>サーバー登録は <code>claude mcp add -s user</code> で <code>~/.claude.json</code>（userスコープ）へ。<code>settings.json</code> の <code>mcpServers</code> は読まれないので注意</strong>（2026-06-15検証済み・下記トラブルシューティング「2層問題」参照）。<pre><code class="language-bash">claude mcp add minimax-video -s user -- bash ~/.claude/scripts/mcp/start-minimax-video-mcp.sh
 </code></pre>
 </li>
 <li>起動スクリプト: <code>~/.claude/scripts/mcp/start-minimax-official-mcp.sh</code> / <code>start-minimax-video-mcp.sh</code></li>
@@ -421,7 +421,7 @@ CONTEXT_WINDOW = 1_000_000
 <p><strong>注意</strong>: MCP接続は起動時確立のため、設定変更後は Claude Code の再起動が必要。</p>
 <hr />
 <h3 id="gemini">gemini（自作 / レビュー第2オピニオン / 1ツール）</h3>
-<p><strong>Gemini（無料枠）をコードレビュー・<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>の第2オピニオンとして呼び出す自作MCPサーバー</strong>。GLM/Sonnetとは異なるモデルの視点でコードのバグ・論理エラー・境界ケースを指摘させる用途。</p>
+<p><strong>Gemini（無料枠）を<span class="term" tabindex="0">コードレビュー<span class="term-popup">書かれたコードを、書いた本人以外の視点で読んで問題を指摘する作業。バグ・読みにくさ・危険な書き方を見つけるのに有効</span></span>・<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>の第2オピニオンとして呼び出す自作MCPサーバー</strong>。GLM/Sonnetとは異なるモデルの視点でコードの<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>・論理エラー・境界ケースを指摘させる用途。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -443,9 +443,9 @@ CONTEXT_WINDOW = 1_000_000
 <li>サーバー登録は <code>claude mcp add -s user</code> で <code>~/.claude.json</code>（userスコープ）へ。<strong><code>settings.json</code> の <code>mcpServers</code> は読まれない</strong>（minimax系と同じ注意点・上記「2層問題」参照）。<pre><code class="language-bash">claude mcp add gemini -s user -- bash ~/.claude/scripts/mcp/start-gemini-mcp.sh
 </code></pre>
 </li>
-<li>鍵管理: <code>~/.secrets.env</code> の <code>GEMINI_API_KEY</code>（launcher が source するため <code>env</code> ブロック不要）</li>
+<li>鍵管理: <code>~/.secrets.env</code> の <code>GEMINI_API_KEY</code>（launcher が source するため <code>env</code> ブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>不要）</li>
 <li><strong><span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span>の落とし穴</strong>: Gemini REST API は <code>x-goog-api-key</code> ヘッダー（or <code>?key=</code>）が必須。欠けると 403 Forbidden。</li>
-<li><strong>Windows Desktop版の場合</strong>: 2026-07-06実測時点では<code>~/.claude/settings.json</code>を編集しても<strong>反映されなかった</strong>（実際に読まれていたのは<code>AppData\Local\Packages\&lt;Claudeのパッケージフォルダ&gt;\LocalCache\Roaming\Claude\claude_desktop_config.json</code>＝サンドボックス化パッケージ<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>内、<code>command: &quot;wsl&quot;</code>, <code>args: [&quot;-d&quot;, &quot;Ubuntu&quot;, &quot;--&quot;, &quot;bash&quot;, &quot;/home/&lt;USER&gt;/.claude/scripts/mcp/start-gemini-mcp.sh&quot;]</code>の形式）。⚠️ただしこれは2026-05時点の調査では別ファイルが有効に見えていた実績もあり、アプリ更新で今後また変わりうるため「ここが正解」と決め打ちしない。追加・変更のたびに下記「トラブルシューティング」節の確認手順で都度検証すること。事例は<code>01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/2026-07-06_Windows-Desktop版Gemini-MCP真因確定-MSIXconfig特定.md</code>参照。</li>
+<li><strong>Windows Desktop版の場合</strong>: 2026-07-06実測時点では<code>~/.claude/settings.json</code>を編集しても<strong>反映されなかった</strong>（実際に読まれていたのは<code>AppData\Local\Packages\&lt;Claudeのパッケージフォルダ&gt;\LocalCache\Roaming\Claude\claude_desktop_config.json</code>＝サンドボックス化パッケージ<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>内、<code>command: &quot;wsl&quot;</code>, <code>args: [&quot;-d&quot;, &quot;Ubuntu&quot;, &quot;--&quot;, &quot;bash&quot;, &quot;/home/&lt;USER&gt;/.claude/scripts/mcp/start-gemini-mcp.sh&quot;]</code>の形式）。⚠️ただしこれは2026-05時点の調査では別ファイルが有効に見えていた実績もあり、アプリ更新で今後また変わりうるため「ここが正解」と決め打ちしない。追加・変更のたびに下記「トラブルシューティング」節の確認手順で都度検証すること。事例は<code>01_DECISIONS/claude-code/2026-07-06_Windows-Desktop版Gemini-MCP真因確定-MSIXconfig特定.md</code>参照。</li>
 </ul>
 <hr />
 <h2 id="search">🔍 検索・情報取得系（4サーバー）</h2>
@@ -511,7 +511,7 @@ CONTEXT_WINDOW = 1_000_000
 <p><strong>使いどころ</strong>: 技術記事の深掘り調査、コード検索</p>
 <hr />
 <h3 id="context7">context7（2ツール / ~1.2kトークン）</h3>
-<p>ライブラリの公式ドキュメント検索。</p>
+<p><span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span>の公式ドキュメント検索。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -544,7 +544,7 @@ CONTEXT_WINDOW = 1_000_000
 <tbody>
 <tr>
 <td><code>webReader</code></td>
-<td>URLをMarkdownに変換（画像保持オプション付き）</td>
+<td>URLをMarkdownに変換（画像保持<span class="term" tabindex="0">オプション<span class="term-popup">コマンドの動作を変えるスイッチ。-x や --verbose のような指定。引数の一種</span></span>付き）</td>
 </tr>
 </tbody>
 </table></div>
@@ -679,7 +679,7 @@ CONTEXT_WINDOW = 1_000_000
 <tbody>
 <tr>
 <td><code>get_diagram</code></td>
-<td>図のテンプレート取得</td>
+<td>図の<span class="term" tabindex="0">テンプレート<span class="term-popup">雛形。穴埋め部分だけ差し替えて、同じ形の文書やコードを量産する元になるもの</span></span>取得</td>
 </tr>
 <tr>
 <td><code>get_diagram_examples</code></td>
@@ -695,7 +695,7 @@ CONTEXT_WINDOW = 1_000_000
 </tr>
 </tbody>
 </table></div>
-<p><strong>使いどころ</strong>: フローチャート、シーケンス図、クラス図の生成</p>
+<p><strong>使いどころ</strong>: フローチャート、シーケンス図、<span class="term" tabindex="0">クラス<span class="term-popup">データとその操作をひとまとめにした設計図。オブジェクト指向の基本単位</span></span>図の生成</p>
 <hr />
 <h2 id="image">📊 画像分析系（1サーバー）</h2>
 <h3 id="4-5v-mcp">4_5v_mcp（画像分析 / ~0.8kトークン）</h3>
@@ -897,7 +897,7 @@ CONTEXT_WINDOW = 1_000_000
 </tr>
 <tr>
 <td><code>glm_optimize_sql</code></td>
-<td>SQL最適化</td>
+<td>SQL<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span></td>
 </tr>
 <tr>
 <td><code>glm_generate_regex</code></td>
@@ -960,7 +960,7 @@ CONTEXT_WINDOW = 1_000_000
 </table></div>
 <p><strong>使いどころ</strong>: TikTok/Instagram等への自動投稿、SNS分析、投稿スケジュール管理</p>
 <p><strong>料金</strong>: 最初2アカウント無料 → 3つ目以降 $6/月</p>
-<p><strong>セットアップ</strong>: 公式プラグイン方式で導入（手動の <code>url</code> + <code>headers</code> + <code>env</code> 設定は非推奨 — <code>${VAR}</code> 変数展開が動作しない場合あり）</p>
+<p><strong>セットアップ</strong>: 公式<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>方式で導入（手動の <code>url</code> + <code>headers</code> + <code>env</code> 設定は非推奨 — <code>${VAR}</code> <span class="term" tabindex="0">変数展開<span class="term-popup">$HOME のように変数名が書かれた場所を、実際の値に置き換えること</span></span>が動作しない場合あり）</p>
 <pre><code class="language-bash">/plugin marketplace add zernio-dev/zernio-claude-plugin
 /plugin install zernio@zernio
 # APIキー入力 → システムキーチェーンに保存
@@ -968,7 +968,7 @@ CONTEXT_WINDOW = 1_000_000
 <p><strong>投稿テスト結果</strong>（2026-06-13）: 4プラットフォーム（Discord / Instagram / TikTok / YouTube）の下書き投稿・クロス投稿・一覧取得・削除まで全て正常動作を確認。即時投稿（<code>publish_now=True</code>）も利用可能。</p>
 <hr />
 <h2>セキュリティ: APIキーの管理</h2>
-<p>全MCPサーバーは <code>~/.secrets.env</code> からAPIキーを読み込むラッパースクリプト経由で起動する。<strong>settings.jsonにAPIキーを直接記載しない。</strong></p>
+<p>全MCPサーバーは <code>~/.secrets.env</code> からAPIキーを読み込むラッ<span class="term" tabindex="0">パース<span class="term-popup">文字で書かれたデータを、プログラムが扱える構造に変換すること。JSONパース＝JSON文字列→データ構造</span></span>クリプト経由で起動する。<strong>settings.jsonにAPIキーを直接記載しない。</strong></p>
 <pre><code>settings.json
   └ command: &quot;bash ~/.claude/scripts/mcp/start-&lt;name&gt;.sh&quot;
        │
@@ -1093,8 +1093,8 @@ start-&lt;name&gt;.sh
 <li><code>C:\Users\&lt;user&gt;\AppData\Roaming\Claude\claude_desktop_config.json</code> — 通常版チャットアプリ用</li>
 <li><code>C:\Users\&lt;user&gt;\AppData\Local\Packages\&lt;Claudeのパッケージフォルダ&gt;\LocalCache\Roaming\Claude\claude_desktop_config.json</code> — <strong>サンドボックス化パッケージキャッシュ内</strong>（2026-06・2026-07の2回の実測ではMicrosoft Store版で使われるのはここだった）</li>
 </ol>
-<div class="callout callout-warn"><p>⚠️ 上記「候補3が本物」は2回の実測に基づく現時点の知見であり、アプリのバージョンアップや配布形態変更で今後も同じとは限らない。次に同じ問題が起きた時も、この記述を鵜呑みにせず必ず下記「判別方法」で都度再確認すること。</p></div>
-<p><strong>判別方法</strong>: 既に動いている他のMCPサーバーのエントリの <code>args</code>（<code>wsl -d Ubuntu -- bash &lt;path&gt;</code> のようなコマンド形式）が、UI上の接続ログ（<code>/mcp</code> → サーバー詳細）に表示される実際の起動コマンドと一致しているファイルが「本物」。3つの候補に同名・類似のサーバーエントリがあっても、起動コマンドが実際のログと食い違っていれば、それは使われていない古いコピーである。</p>
+<div class="callout callout-warn"><p>⚠️ 上記「候補3が本物」は2回の実測に基づく現時点の知見であり、アプリの<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>アップや配布形態変更で今後も同じとは限らない。次に同じ問題が起きた時も、この記述を鵜呑みにせず必ず下記「判別方法」で都度再確認すること。</p></div>
+<p><strong>判別方法</strong>: 既に動いている他のMCPサーバーのエントリの <code>args</code>（<code>wsl -d Ubuntu -- bash &lt;path&gt;</code> のような<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>形式）が、UI上の接続ログ（<code>/mcp</code> → サーバー詳細）に表示される実際の起動コマンドと一致しているファイルが「本物」。3つの候補に同名・類似のサーバーエントリがあっても、起動コマンドが実際のログと食い違っていれば、それは使われていない古いコピーである。</p>
 <p>最も手軽な確認手順は、<strong>設定画面（設定 → 開発者 → ローカルMCPサーバー）で「設定を編集」ボタンを押し、開いたエクスプローラーが指すファイルパスをそのまま使う</strong>こと（2026-07-06のgemini追加でこの手順に気づくまで、無関係な古い<code>claude_desktop_config.json</code>を編集し続けて2回再起動しても直らない、という事故を繰り返した）。</p>
 <p>詳細な調査の経緯: <code>01_DECISIONS/claude-code/2026-06-07_minimax-official-MCP接続トラブル解決と動画生成成功.md</code>（初出・minimax-official）、<code>01_DECISIONS/claude-code/2026-07-06_Windows-Desktop版Gemini-MCP真因確定-MSIXconfig特定.md</code>（再発・gemini・「設定を編集」ボタンでの特定手順を確立）</p>
 <h3>トラブルシューティング: 「設定ファイルの2層問題」（WSL CLI版）</h3>
@@ -1168,7 +1168,7 @@ for path in ['.claude/settings.json', '.claude.json']:
 <td>gh CLI で完結</td>
 </tr>
 <tr>
-<td>CI結果確認</td>
+<td><span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>結果確認</td>
 <td><code>gh run watch</code></td>
 <td>gh CLI で完結</td>
 </tr>

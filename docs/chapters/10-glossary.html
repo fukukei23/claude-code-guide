@@ -190,13 +190,13 @@
 <hr />
 <h2>B</h2>
 <h3>Bash</h3>
-<p>Claude Codeの基本ツールの一つ。<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>コマンドを実行する。</p>
+<p>Claude Codeの基本ツールの一つ。<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span><span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>を実行する。</p>
 <hr />
 <h2>C</h2>
 <h3>CLAUDE.md</h3>
-<p>Claude Codeに読み込ませる指示書（Markdown形式）。3層構造: グローバル、プロジェクト、ディレクトリ。→ <a href="08-config.html">08_設定ファイル</a></p>
+<p>Claude Codeに読み込ませる指示書（Markdown形式）。3層構造: グローバル、プロジェクト、<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>。→ <a href="08-config.html">08_<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span></a></p>
 <h3>CLI（Command Line Interface）</h3>
-<p>ターミナル上で動作するClaude Codeの形態。最も高機能。→ <a href="01-basics.html">01_基礎概念</a></p>
+<p><span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>上で動作するClaude Codeの形態。最も高機能。→ <a href="01-basics.html">01_基礎概念</a></p>
 <h3>Compact（コンパクション）</h3>
 <p>会話を要約して圧縮する処理。<code>/compact</code>で手動実行、または自動（Autocompact）で実行される。→ <a href="02-commands.html#compact">02_コマンド一覧</a></p>
 <h3>Context（コンテキスト）</h3>
@@ -209,7 +209,7 @@
 <ul>
 <li><strong>対策</strong>: <code>/clear</code>（文脈を捨てて完全リセット）・<code>/compact</code>（要約圧縮して継続）・<code>/branch</code>（別トピックへ分岐）</li>
 <li>
-<div class="callout callout-warn"><p>⚠️ <strong>Ctrl+C再起動では解決しない</strong>。Ctrl+Cはプロセスを殺すだけで<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>履歴（jsonl）は残る。再起動で <code>/resume</code>（続きから）を選ぶと履歴が丸ごと再読込され、<strong>同じ飽和状態に即復帰</strong>する。抜けるには新規セッションで始める（resumeしない）か <code>/clear</code>。</p></div>
+<div class="callout callout-warn"><p>⚠️ <strong>Ctrl+C再起動では解決しない</strong>。Ctrl+Cは<span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>を殺すだけで<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>履歴（jsonl）は残る。再起動で <code>/resume</code>（続きから）を選ぶと履歴が丸ごと再読込され、<strong>同じ飽和状態に即復帰</strong>する。抜けるには新規セッションで始める（resumeしない）か <code>/clear</code>。</p></div>
 </li>
 </ul>
 <p>→ 対比: <a href="#payload-bloat">ペイロード肥大化</a>（byte上限） / 関連: Autocompact・Compact・Context（本ページ内） / 手順: <a href="01-basics.html#autocompact">01_基礎概念 自動コンパクション</a>・<a href="02-commands.html">02_コマンド一覧</a></p>
@@ -217,8 +217,8 @@
 <h2>D</h2>
 <h3>Desktop App</h3>
 <p>Windows/Mac用のスタンドアロンアプリケーション。CLIより機能は限定。→ <a href="09-integration.html">09_統合</a></p>
-<h3>Dynamic Workflows（ダイナミックワークフロー）</h3>
-<p>2026-05-28発表（research preview）。Claudeがタスクの段取りをスクリプトとして書き出し、数十〜数百のサブエージェントを並列実行、相互検証してから1つの回答にまとめる仕組み。同時実行最大16エージェント、合計最大1,000。起動方法: <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>に「workflow」記述、<code>/deep-research</code>、<code>/effort ultracode</code>（モデル限定）。→ <a href="#">Dynamic Workflows調査</a></p>
+<h3>Dynamic Workflows（ダイナミック<span class="term" tabindex="0">ワークフロー<span class="term-popup">一連の作業の流れ・手順の定義。GitHub Actionsでは自動実行の手順をこう呼ぶ</span></span>）</h3>
+<p>2026-05-28発表（research preview）。Claudeがタスクの段取りを<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>として書き出し、数十〜数百のサブエージェントを<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>実行、相互検証してから1つの回答にまとめる仕組み。同時実行最大16エージェント、合計最大1,000。起動方法: <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>に「workflow」記述、<code>/deep-research</code>、<code>/effort ultracode</code>（モデル限定）。→ <a href="#">Dynamic Workflows調査</a></p>
 <hr />
 <h2>E</h2>
 <h3>Edit</h3>
@@ -260,9 +260,9 @@
 <hr />
 <h2>P</h2>
 <h3>Plan Mode（プランモード）</h3>
-<p>Claude Codeがコードを書かずに計画だけを立てるモード。ユーザー承認後に実装開始。→ <a href="02-commands.html#plan-mode">02_コマンド一覧</a></p>
-<h3>Plugin（プラグイン）</h3>
-<p>Claude Codeに<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>やエージェントを追加する拡張パッケージ。superpowers, pr-review-toolkit等。</p>
+<p>Claude Codeがコードを書かずに計画だけを立てるモード。ユーザー承認後に<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>開始。→ <a href="02-commands.html#plan-mode">02_コマンド一覧</a></p>
+<h3>Plugin（<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>）</h3>
+<p>Claude Codeに<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>やエージェントを追加する拡張<span class="term" tabindex="0">パッケージ<span class="term-popup">配布・インストール可能な形にまとめたソフトウェアの単位。Pythonではpipで入れる部品のこと</span></span>。superpowers, pr-review-toolkit等。</p>
 <h3>PreToolUse（プリツールユース）</h3>
 <p>ツール実行前に発火するフック。セキュリティチェック等に使用。→ <a href="05-hooks.html#pretooluse">05_フック</a></p>
 <h3>Project Memory（プロジェクトメモリ）</h3>
@@ -278,7 +278,7 @@
 <h4>画像パス貼り付けの罠（実証済・2026-06-16）</h4>
 <p>CC CLIは「<code>.png</code>/<code>.jpg</code>等で終わるパス文字」を貼ると、<strong>強制的に画像添付に変換</strong>する。これがペイロード肥大化の主要因。</p>
 <ul>
-<li><strong>❌ 効かない回避策（実験で否定）</strong>: バッククォート <code>`</code> で囲む / 通常引用 / 「パスとしてコピー」で文字として貼る / Ctrl+Shift+C → <strong>どれも添付される</strong>（CCが拡張子で判定、バッククォート無視）</li>
+<li><strong>❌ 効かない回避策（実験で否定）</strong>: バッククォート <code>`</code> で囲む / 通常引用 / 「パスとしてコピー」で文字として貼る / Ctrl+Shift+C → <strong>どれも添付される</strong>（CCが<span class="term" tabindex="0">拡張子<span class="term-popup">ファイル名の末尾の「.md」「.py」等の部分。ファイルの種類を示す目印</span></span>で判定、バッククォート無視）</li>
 <li><strong>❌ ドラッグ＆ドロップ</strong>: 当然添付される</li>
 <li><strong>⭕ 確実な回避 = 画像パスを「1文字も」貼らない</strong>:
 <ol>
@@ -299,9 +299,9 @@
 <h3>SessionStart（セッションスタート）</h3>
 <p>セッション開始時に発火するフック。<span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の読み込み等に使用。→ <a href="05-hooks.html#sessionstart">05_フック</a></p>
 <h3>settings.json</h3>
-<p>Claude Codeのメイン設定ファイル。MCP・権限・フック・環境変数を定義。→ <a href="08-config.html#settings-json">08_設定ファイル</a></p>
+<p>Claude Codeのメイン設定ファイル。MCP・権限・フック・環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span>を定義。→ <a href="08-config.html#settings-json">08_設定ファイル</a></p>
 <h3>Skill（スキル）</h3>
-<p>プロンプトテンプレートのライブラリ。<code>/コマンド名</code>で呼び出す。ビルトイン、プラグイン、カスタムの3種類。→ <a href="03-skills.html">03_スキルシステム</a></p>
+<p>プロンプト<span class="term" tabindex="0">テンプレート<span class="term-popup">雛形。穴埋め部分だけ差し替えて、同じ形の文書やコードを量産する元になるもの</span></span>の<span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span>。<code>/コマンド名</code>で呼び出す。ビルトイン、プラグイン、カスタムの3種類。→ <a href="03-skills.html">03_スキルシステム</a></p>
 <h3>Sonnet</h3>
 <p>Claude中位モデル。バランス型。Anthropic APIまたは代替プロバイダー経由で利用可能。</p>
 <h3>SSOT（Single Source of Truth）</h3>

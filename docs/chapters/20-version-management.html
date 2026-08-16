@@ -180,7 +180,7 @@
             <hr />
 <h2>icon: 🔧
 slug: 20-version-management</h2>
-<h1>20 バージョン管理 — Claude Codeの更新・ダウングレード・<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>環境の注意</h1>
+<h1>20 <span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>管理 — Claude Codeの更新・ダウングレード・<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>環境の注意</h1>
 <aside class="tldr">
 <p><strong>3行で分かる</strong></p>
 <ol>
@@ -194,7 +194,7 @@ slug: 20-version-management</h2>
 <p>Claude Codeは頻繁に細かいバージョンアップを繰り返す（2.1.19x〜2.1.20x帯）。更新で新機能が入る一方で、<strong>まれに不具合や互換性問題</strong>が起きる。本ページでは「<strong>更新の方法</strong>」「<strong>旧版に戻す方法</strong>」「<strong>GLMプロキシを使っている時の注意</strong>」を1箇所にまとめる。</p>
 <hr />
 <h2 id="check">バージョン確認方法</h2>
-<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>"># コマンド1発（最も簡単）
+<pre><code class="language-bash"># コマンド1発（最も簡単）
 claude --version
 
 # インストール方式別の確認
@@ -286,13 +286,13 @@ curl -fsSL https://claude.ai/install.sh | bash -s 2.1.194
 </table></div>
 <hr />
 <h2 id="proxy">⭐️ GLMプロキシ環境での注意</h2>
-<h3>設定ファイルは勝手に書き換わらない（安心）</h3>
+<h3><span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>は勝手に書き換わらない（安心）</h3>
 <p>Claude Codeは<strong>ユーザー設定を上書きしない</strong>。<code>claude update</code> で以下が壊れることはない：</p>
 <ul>
 <li><code>settings.json</code> の <code>env</code>（<code>ANTHROPIC_BASE_URL</code> / <code>ANTHROPIC_AUTH_TOKEN</code> 等）</li>
 <li>プロキシ（glm-rate-proxy）への接続設定</li>
 </ul>
-<div class="callout callout-info"><p>インストール方式をnpm→ネイティブに変えても、これらは <strong>shell/configレベルの環境変数</strong> なので引き継がれる（<a href="https://code.claude.com/docs/en/setup">公式setup docs</a>）。</p></div>
+<div class="callout callout-info"><p>インストール方式をnpm→ネイティブに変えても、これらは <strong>shell/configレベルの環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span></strong> なので引き継がれる（<a href="https://code.claude.com/docs/en/setup">公式setup docs</a>）。</p></div>
 <h3>本当のリスクは「新機能 × 非公式プロキシ互換性」だけ</h3>
 <p>GLMプロキシは、ZAI/MiniMaxを<strong>Anthropic <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>互換に非公式ラップ</strong>している。Claude Code新Verが<strong>新しいAPI機能</strong>（拡張tool use・新ストリーミング形式等）を使うようになると、<strong>プロキシ側の変換が追いつかず動作不全</strong>を起こす可能性がある。これがプロキシ環境での唯一の実リスク。</p>
 <h3>プロキシ互換性の実績</h3>
@@ -332,9 +332,9 @@ curl -fsSL https://claude.ai/install.sh | bash -s 2.1.194
 <p>完全自動更新（ネイティブ版＋auto-updater ON）への移行は、以下2要素が整ってからが安全：</p>
 <ol>
 <li><strong>ダウングレード手順の確証</strong>（本ページで整理済・npm版は確実・ネイティブ版は実証推奨）</li>
-<li><strong>プロキシ互換性の自動チェック</strong> ✅（更新後にGLM応答を自動検証する<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>・実装済・<code>check-proxy-compat.sh</code>・2026-07-09 Phase2本番登録）</li>
+<li><strong>プロキシ互換性の自動チェック</strong> ✅（更新後にGLM応答を自動検証する<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>・<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>済・<code>check-proxy-compat.sh</code>・2026-07-09 Phase2本番登録）</li>
 </ol>
-<p>要素2は整いました（同版省略・警告のみでブロックしない設計）。残るはネイティブ版ダウングレードの実証のみなので、それまでは<strong>npm版（確実に戻れる）＋手動 <code>claude update</code></strong> が最も安全な運用。</p>
+<p>要素2は整いました（同版省略・警告のみでブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>しない設計）。残るはネイティブ版ダウングレードの実証のみなので、それまでは<strong>npm版（確実に戻れる）＋手動 <code>claude update</code></strong> が最も安全な運用。</p>
 <hr />
 
         </article>

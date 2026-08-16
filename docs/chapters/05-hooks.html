@@ -179,7 +179,7 @@
         <article class="chapter-body">
             <h1>05 フック — イベント駆動の自動実行</h1>
 <h2>フックとは</h2>
-<p>フックは <strong>特定のイベント発生時に自動実行される<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>スクリプト</strong>。Claude Codeの動作を拡張・制御する。</p>
+<p>フックは <strong>特定のイベント発生時に自動実行される<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span><span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span></strong>。Claude Codeの動作を拡張・制御する。</p>
 <pre><code>ユーザーがツールを実行
   │
   ▼
@@ -233,7 +233,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td>用途</td>
-<td>セキュリティチェック、危険コマンドのブロック、入力検証</td>
+<td>セキュリティチェック、危険<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>のブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>、入力検証</td>
 </tr>
 <tr>
 <td>備考</td>
@@ -253,7 +253,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <li><code>bash -x</code>（<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>出力でシークレット露出の恐れ）</li>
 <li><code>cat -A</code>（特殊文字表示でシークレット露出の恐れ）</li>
 <li>マスクなしの <code>grep</code>（<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キーを含むファイルの検索）</li>
-<li>フィルタなしの <code>env</code>（全環境変数の表示）</li>
+<li>フィルタなしの <code>env</code>（全環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span>の表示）</li>
 </ul>
 <h3>&lt;a id=&quot;posttooluse&quot;&gt;&lt;/a&gt;PostToolUse</h3>
 <p><strong>ツール実行後</strong>に実行。</p>
@@ -382,12 +382,12 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-cwd.sh</code></td>
-<td>作業ディレクトリチェック</td>
+<td>作業<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>チェック</td>
 </tr>
 <tr>
 <td></td>
 <td><code>check-version.sh</code></td>
-<td>バージョン確認・新機能検知</td>
+<td><span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>確認・新機能検知</td>
 </tr>
 <tr>
 <td></td>
@@ -427,7 +427,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-submodule-sync.sh</code></td>
-<td>サブモジュール同期チェック</td>
+<td>サブ<span class="term" tabindex="0">モジュール<span class="term-popup">コードを機能ごとに分けたファイル単位。他のファイルから読み込んで使える</span></span>同期チェック</td>
 </tr>
 <tr>
 <td></td>
@@ -442,7 +442,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-mcp-guide-sync.sh</code></td>
-<td>MCPガイドとの差分検知</td>
+<td>MCPガイドとの<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>検知</td>
 </tr>
 <tr>
 <td></td>
@@ -527,7 +527,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>post-tool-settings-sync.sh</code></td>
-<td>settings.json変更後のSSOT設定ファイルへの同期</td>
+<td>settings.json変更後のSSOT<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>への同期</td>
 </tr>
 <tr>
 <td></td>
@@ -567,7 +567,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>queue-guide-updates.sh</code></td>
-<td>claude-code-guideの更新キュー記録</td>
+<td>claude-code-guideの更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>記録</td>
 </tr>
 <tr>
 <td></td>
@@ -582,7 +582,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>next-issue.py</code></td>
-<td>自律開発ループの継続判定</td>
+<td>自律開発<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>の継続判定</td>
 </tr>
 <tr>
 <td></td>
@@ -603,7 +603,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </table></div>
 <div class="callout callout-info"><p>SessionStartは19コマンド構成。初期化・セキュリティ・SSOT同期・設定チェック・日次自動発動の5カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
 <h3>state日付管理による日次自動発動パターン（再利用可能）</h3>
-<p><code>check-ssot-sync-staleness.sh</code> が実装する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
+<p><code>check-ssot-sync-staleness.sh</code> が<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
 <pre><code class="language-bash">STATE=&quot;$HOME/.claude/state/&lt;task&gt;-last-run&quot;
 TODAY=$(date +%Y-%m-%d)
 LAST=$(cat &quot;$STATE&quot; 2&gt;/dev/null)
@@ -618,11 +618,11 @@ fi
 <p>Windows側でフックコマンド文字列をスクリプト経由（例: python の <code>json.dump</code>）で新規追加する際、<code>path-rewrite.py</code> が Bash ツールに送るコマンド文字列内の <code>/home/&lt;USER&gt;</code> を検知してUNC形式に書き換えてしまうため、文字列を <code>&quot;/&quot; + &quot;home/&lt;USER&gt;&quot;</code> のように分割して結合し検知パターンを回避する必要がある。</p>
 <p>実行側スキルは完了後 <code>date +%Y-%m-%d &gt; &quot;$STATE&quot;</code> で再発火を抑制する。 → <a href="#">ssot-sync定期実行化</a></p>
 <h3>WSL側settings.jsonのフックはWindows Desktopでも発火する（uname判定分岐パターン・2026-07-11）</h3>
-<p>Windows Desktop版のセッションは作業ディレクトリがWSLホーム（<code>\\wsl.<span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>\Ubuntu\home\&lt;USER&gt;</code>）のため、WSL側 <code>~/.claude/settings.json</code> を<strong>プロジェクト設定として読み込み、そのフックがGit Bash上で発火する</strong>。<code>python3 /home/&lt;USER&gt;/bin/xxx.py</code> のようなWSLパス直書きコマンドは Git Bash が <code>/home/&lt;USER&gt;</code> を <code>C:\Program Files\Git\home\&lt;USER&gt;</code> に解決して毎回エラーになる（archive-backlog-done.py で実例あり）。</p>
+<p>Windows Desktop版のセッションは作業ディレクトリがWSLホーム（<code>\\wsl.localhost\Ubuntu\home\&lt;USER&gt;</code>）のため、WSL側 <code>~/.claude/settings.json</code> を<strong>プロジェクト設定として読み込み、そのフックがGit Bash上で発火する</strong>。<code>python3 /home/&lt;USER&gt;/bin/xxx.py</code> のようなWSLパス直書きコマンドは Git Bash が <code>/home/&lt;USER&gt;</code> を <code>C:\Program Files\Git\home\&lt;USER&gt;</code> に解決して毎回エラーになる（archive-backlog-done.py で実例あり）。</p>
 <p>共有されるフックコマンドは <code>uname -s</code> 判定で両環境に分岐させる:</p>
 <pre><code class="language-bash">if [ &quot;$(uname -s)&quot; = &quot;Linux&quot; ]; then python3 /home/&lt;USER&gt;/bin/xxx.py; else wsl bash -c &quot;python3 /home/&lt;USER&gt;/bin/xxx.py&quot;; fi
 </code></pre>
-<p>なお、フック設定はセッション起動時にスナップショット取込されるため、settings.json修正後も<strong>既存セッションでは旧コマンドが発火し続ける</strong>（反映には再起動が必要）。 → <a href="#">バックログhookのWindows環境判定分岐修正</a></p>
+<p>なお、フック設定はセッション起動時に<span class="term" tabindex="0">スナップショット<span class="term-popup">ある瞬間の状態のコピー。後で比較・復元するために取っておくもの</span></span>取込されるため、settings.json修正後も<strong>既存セッションでは旧コマンドが発火し続ける</strong>（反映には再起動が必要）。 → <a href="#">バックログhookのWindows環境判定分岐修正</a></p>
 <hr />
 <h2>自律タスクループ（Stop <span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> 応用）</h2>
 <h3>概要</h3>
@@ -691,7 +691,7 @@ print('停止しました')
 <p>フックが期待通りに動かない場合:</p>
 <ol>
 <li><strong>フックのログを確認</strong> — エラーメッセージが表示される</li>
-<li><strong>手動でスクリプトを実行</strong> — ターミナルで直接実行して動作確認</li>
+<li><strong>手動でスクリプトを実行</strong> — <span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>で直接実行して動作確認</li>
 <li><strong><code>/config</code> で設定確認</strong> — hooks セクションの内容を確認</li>
 <li><strong>一時的に無効化</strong> — settings.json で該当フックをコメントアウト</li>
 </ol>
@@ -716,7 +716,7 @@ print('停止しました')
 </tr>
 <tr>
 <td>4層判定ルール</td>
-<td>① prefix辞書 + gitleaks厳選（バイナリなし・python re.search）/ ② 長文字列32字+文字種混在+URL/パス/<code>Bash(</code>等のツール呼出<span class="term" tabindex="0">スキーマ<span class="term-popup">データの型・形の決まり。「このファイルには何の項目が必須か」等の定義。決まりに合っているか機械で検査できる</span></span>除外 / ③ キー名+実値で <code>${ENV}</code> 厳密判定（<code>^\$\{[A-Z_][A-Z0-9_]*\}$</code> のみ許可）/ ④ 値ブロードスキャン（JSONツリー全値を再帰走査・キー名無関係）</td>
+<td>① prefix辞書 + gitleaks厳選（バイナリなし・python re.search）/ ② 長文字列32字+文字種混在+URL/パス/<code>Bash(</code>等のツール呼出<span class="term" tabindex="0">スキーマ<span class="term-popup">データの型・形の決まり。「このファイルには何の項目が必須か」等の定義。決まりに合っているか機械で検査できる</span></span>除外 / ③ キー名+実値で <code>${ENV}</code> 厳密判定（<code>^\$\{[A-Z_][A-Z0-9_]*\}$</code> のみ許可）/ ④ 値ブロードスキャン（JSONツリー全値を<span class="term" tabindex="0">再帰<span class="term-popup">関数が自分自身を呼び出す構造。入れ子の問題を扱う時に使うが、終了条件を忘れると無限ループになる</span></span>走査・キー名無関係）</td>
 </tr>
 <tr>
 <td>監視対象</td>
@@ -739,7 +739,7 @@ print('停止しました')
 <td><code>~/.claude/settings.json</code> の <code>hooks.PreToolUse</code> に Bash matcher で1行 + <code>hooks.PostToolUse</code> に `Bash</td>
 </tr>
 <tr>
-<td>仕様詳細</td>
+<td><span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>詳細</td>
 <td><a href="#">docs/superpowers/specs/2026-07-30-guard-settings-write-post-detection-design.md</a></td>
 </tr>
 <tr>

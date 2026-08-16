@@ -181,11 +181,11 @@
 <h2>icon: 🔁
 slug: 18-loop-system
 card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と、外部LLMレビューを組み込む理由</h2>
-<h1>ループシステム（Loop Engineering） — 自律開発ループの全体像</h1>
+<h1><span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>システム（Loop Engineering） — 自律開発ループの全体像</h1>
 <aside class="tldr">
 <p><strong>3行で分かる</strong></p>
 <ol>
-<li>毎朝タスク候補を自動生成し、人間が承認すると「実装→検証→次タスク」が自律的に回る仕組み</li>
+<li>毎朝タスク候補を自動生成し、人間が承認すると「<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>→検証→次タスク」が自律的に回る仕組み</li>
 <li>全自動なのは候補生成と実行連鎖。<strong>承認だけは意図的に人間の仕事</strong>として残している</li>
 <li>設計・監査の成果物には<strong>別のLLMによるレビュー</strong>を挟む——モデルが賢くても作者バイアスの死角は自己レビューでは消えないため</li>
 </ol>
@@ -198,7 +198,7 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
                 バックログ + 前回の引き継ぎ + 進行中タスクを収集
                 → LLMが優先度判定 → today-tasks.md 生成 → Discord通知
        ↓
-<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>開始   候補が自動表示される
+セッション開始   候補が自動表示される
        ↓
 人間の承認      approve.py で番号選択（ここだけ手動・意図的なゲート）
        ↓
@@ -219,7 +219,7 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
 <tbody>
 <tr>
 <td>全自動</td>
-<td>候補生成（毎朝）・通知・実装→検証の連鎖・次タスク起動・完了/停止通知・cronの失効対策（6日毎の自己再登録）・記録の引き継ぎ（handoff生成→次セッション復元）</td>
+<td>候補生成（毎朝）・通知・実装→検証の連鎖・次タスク起動・完了/停止通知・cronの失効対策（6日毎の自己再登録）・記録の引き継ぎ（handoff生成→次<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>復元）</td>
 </tr>
 <tr>
 <td>手動（意図的）</td>
@@ -244,11 +244,11 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
 </tr>
 <tr>
 <td><code>approve.py</code></td>
-<td>人間承認ゲート。選択されたタスクをキュー（state.json）に登録し最初のタスクを起動</td>
+<td>人間承認ゲート。選択されたタスクを<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>（state.json）に登録し最初のタスクを起動</td>
 </tr>
 <tr>
 <td><code>run-task.sh</code></td>
-<td>検証付き実行。実装と検証を<strong>別のLLMプロセス</strong>に分離（自己採点を防ぐ）。currentなし起動時は即exit（REPO<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>によるHOME repo誤動作防止）・起動時に <code>current.started=True</code> + <code>running=True</code> を設定</td>
+<td>検証付き実行。実装と検証を<strong>別のLLM<span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span></strong>に分離（自己採点を防ぐ）。currentなし起動時は即exit（REPO<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>によるHOME repo誤動作防止）・起動時に <code>current.started=True</code> + <code>running=True</code> を設定</td>
 </tr>
 <tr>
 <td><code>next_issue.py</code></td>
@@ -266,7 +266,7 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
 <p>得られた教訓は2つ。</p>
 <ol>
 <li><strong>仕組みの完成と運用の定着は別物。</strong> 実行連鎖は実装・検証済みなのに、実運用の完走は1件だけだった。「承認して流す」という毎朝30秒の習慣が最後のピースになる。</li>
-<li><strong>ドキュメントは書いた瞬間から腐り始める。</strong> 「hookとして稼働中」と台帳に書かれた同期スクリプトが、実際は11日前から<strong>どこからも呼ばれていなかった</strong>（設定整理の際に登録が消え、それを検知するはずの検知器も同時に消えていた）。台帳は手書きせず、実登録から自動生成する方向へ移行中。</li>
+<li><strong>ドキュメントは書いた瞬間から腐り始める。</strong> 「hookとして稼働中」と台帳に書かれた同期<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>が、実際は11日前から<strong>どこからも呼ばれていなかった</strong>（設定整理の際に登録が消え、それを検知するはずの検知器も同時に消えていた）。台帳は手書きせず、実登録から自動生成する方向へ移行中。</li>
 </ol>
 <hr />
 <h2>外部LLMレビューの組み込み（実証済みの知見）</h2>
@@ -331,7 +331,7 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
 </tr>
 <tr>
 <td>設計判断の記録</td>
-<td><code>01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/</code>（日付付き決定ログ）</td>
+<td><code>01_DECISIONS/</code>（日付付き決定ログ）</td>
 </tr>
 <tr>
 <td>実装本体</td>

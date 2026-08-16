@@ -177,7 +177,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>07 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span> — <span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>と並列実行</h1>
+            <h1>07 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span> — <span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>と<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>実行</h1>
 <h2>エージェントとは</h2>
 <p>Claude Codeは <strong>Agent ツール</strong>を使って、サブエージェント（別のAIインスタンス）を起動できる。サブエージェントは独立したコンテキストで動作し、結果をメイン<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>に返す。</p>
 <pre><code>メインセッション（あなたとの会話）
@@ -200,7 +200,7 @@
 <p>指定なしで呼び出すと、汎用のサブエージェントが起動。</p>
 <pre><code>Agent({
   description: &quot;コードの調査&quot;,
-  prompt: &quot;NexusCoreのテスト<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>を確認して報告して&quot;
+  prompt: &quot;NexusCoreのテストカバレッジを確認して報告して&quot;
 })
 </code></pre>
 <h3>&lt;a id=&quot;specialized-agents&quot;&gt;&lt;/a&gt;特殊エージェント（subagent_type指定）</h3>
@@ -233,7 +233,7 @@
 </tr>
 <tr>
 <td><code>pr-review-toolkit:pr-test-analyzer</code></td>
-<td>テストカバレッジの品質分析</td>
+<td>テスト<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>の品質分析</td>
 <td>360</td>
 </tr>
 <tr>
@@ -260,7 +260,7 @@
 <tbody>
 <tr>
 <td><code>superpowers:code-reviewer</code></td>
-<td>実装が計画・基準に合致しているかのレビュー</td>
+<td><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>が計画・基準に合致しているかのレビュー</td>
 <td>243</td>
 </tr>
 </tbody>
@@ -277,7 +277,7 @@
 <tbody>
 <tr>
 <td><code>feature-dev:code-architect</code></td>
-<td>機能設計のブループリント作成</td>
+<td>機能設計のブ<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>リント作成</td>
 <td>47</td>
 </tr>
 <tr>
@@ -287,7 +287,7 @@
 </tr>
 <tr>
 <td><code>feature-dev:code-reviewer</code></td>
-<td>バグ・セキュリティ・品質のレビュー</td>
+<td><span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>・セキュリティ・品質のレビュー</td>
 <td>46</td>
 </tr>
 </tbody>
@@ -321,7 +321,7 @@
 </table></div>
 <hr />
 <h2>エージェントの使い方</h2>
-<h3>フォアグラウンド（デフォルト）</h3>
+<h3>フォアグラウンド（<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>）</h3>
 <p>結果を待ってから次に進む。調査・分析など、結果が必要な場合に使う。</p>
 <pre><code>Agent({
   description: &quot;調査&quot;,
@@ -386,8 +386,8 @@ model: fable
 </code></pre>
 <p><strong>注意点:</strong></p>
 <ul>
-<li><code>.claude/agents/</code>が新規ディレクトリの場合、そのセッション内では認識されない。Claude Codeの<strong>再起動後</strong>に初めて<code>subagent_type</code>として使えるようになる</li>
-<li>CLAUDE.md・メモリ階層は<code>Explore</code>/<code>Plan</code>以外の全サブエージェントが読み込む仕様のため、<code>tools</code>を絞ってもゼロコストにはならない</li>
+<li><code>.claude/agents/</code>が新規<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>の場合、そのセッション内では認識されない。Claude Codeの<strong>再起動後</strong>に初めて<code>subagent_type</code>として使えるようになる</li>
+<li>CLAUDE.md・メモリ階層は<code>Explore</code>/<code>Plan</code>以外の全サブエージェントが読み込む<span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>のため、<code>tools</code>を絞ってもゼロコストにはならない</li>
 <li>詳細: <a href="#">2026-07-10_fable-advisor-skill設計とカスタムサブエージェント作成.md</a></li>
 </ul>
 <hr />

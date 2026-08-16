@@ -178,7 +178,7 @@
             <h1>00 早見表 — Claude Code 全機能チートシート</h1>
 <div class="callout callout-info"><p>各項目の「→」リンク先で詳解を読めます。</p></div>
 <hr />
-<h2>1. ビルトインコマンド</h2>
+<h2>1. ビルトイン<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></h2>
 <h3><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>管理</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -287,7 +287,7 @@
 </tr>
 <tr>
 <td><code>/review</code></td>
-<td>コードレビューを実行</td>
+<td><span class="term" tabindex="0">コードレビュー<span class="term-popup">書かれたコードを、書いた本人以外の視点で読んで問題を指摘する作業。バグ・読みにくさ・危険な書き方を見つけるのに有効</span></span>を実行</td>
 <td><a href="02-commands.html#review">02_コマンド</a></td>
 </tr>
 <tr>
@@ -317,7 +317,7 @@
 </tr>
 <tr>
 <td><code>/plan</code></td>
-<td>計画モード（承認後に実装）</td>
+<td>計画モード（承認後に<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>）</td>
 <td><a href="02-commands.html#plan">02_コマンド</a></td>
 </tr>
 </tbody>
@@ -355,7 +355,7 @@
 <tr>
 <td><code>superpowers:systematic-debugging</code></td>
 <td>Plugin</td>
-<td>バグ・テスト失敗の体系的調査</td>
+<td><span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>・テスト失敗の体系的調査</td>
 <td><a href="03-skills.html#systematic-debugging">03_スキル</a></td>
 </tr>
 <tr>
@@ -482,7 +482,7 @@
 <td>context7</td>
 <td>2</td>
 <td>~1.2k</td>
-<td>ライブラリ公式ドキュメント検索</td>
+<td><span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span>公式ドキュメント検索</td>
 <td><a href="04-mcp.html#context7">04_MCP</a></td>
 </tr>
 <tr>
@@ -496,7 +496,7 @@
 <td>mermaid</td>
 <td>4</td>
 <td>~0.4k</td>
-<td>図表生成（フローチャート・シーケンス・クラス図等）</td>
+<td>図表生成（フローチャート・シーケンス・<span class="term" tabindex="0">クラス<span class="term-popup">データとその操作をひとまとめにした設計図。オブジェクト指向の基本単位</span></span>図等）</td>
 <td><a href="04-mcp.html#mermaid">04_MCP</a></td>
 </tr>
 </tbody>
@@ -523,7 +523,7 @@
 <tr>
 <td><code>PreToolUse</code></td>
 <td>ツール実行前</td>
-<td>セキュリティチェック・ブロック</td>
+<td>セキュリティチェック・ブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span></td>
 <td><a href="05-hooks.html#pretooluse">05_フック</a></td>
 </tr>
 <tr>
@@ -541,7 +541,7 @@
 </tbody>
 </table></div>
 <hr />
-<h2>5. 設定ファイル</h2>
+<h2>5. <span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span></h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -584,7 +584,7 @@
 </tr>
 <tr>
 <td><code>~/.secrets.env</code></td>
-<td>ホームディレクトリ</td>
+<td>ホーム<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span></td>
 <td><span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キー一元管理</td>
 <td><a href="08-config.html#secrets">08_設定</a></td>
 </tr>
@@ -733,7 +733,7 @@
 </tr>
 <tr>
 <td><strong>Dynamic Workflows</strong></td>
-<td><strong>数十〜数百<span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>の並列実行</strong>（research preview）</td>
+<td><strong>数十〜数百<span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>の<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>実行</strong>（research preview）</td>
 <td><a href="#">Dynamic Workflows調査</a></td>
 </tr>
 </tbody>
@@ -771,7 +771,7 @@
 </tr>
 <tr>
 <td>フックがツールをブロック</td>
-<td>PreToolUseのスクリプトエラー = ツール実行キャンセル</td>
+<td>PreToolUseの<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>エラー = ツール実行キャンセル</td>
 </tr>
 <tr>
 <td><code>/clear</code>してもMCP・メモリは残る</td>

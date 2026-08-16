@@ -227,7 +227,7 @@ slug: 16-external-references</h2>
 </tr>
 <tr>
 <td>7</td>
-<td>ワークフロー自動化</td>
+<td><span class="term" tabindex="0">ワークフロー<span class="term-popup">一連の作業の流れ・手順の定義。GitHub Actionsでは自動実行の手順をこう呼ぶ</span></span>自動化</td>
 <td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>、フック</td>
 </tr>
 <tr>
@@ -247,7 +247,7 @@ slug: 16-external-references</h2>
 </tr>
 </tbody>
 </table></div>
-<p><code>/powerup</code> コマンド自体は試していないが、まだ触ったことのない機能（<code>/teleport</code>・<code>/effort</code>等）の存在を知る一覧として有用。</p>
+<p><code>/powerup</code> <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>自体は試していないが、まだ触ったことのない機能（<code>/teleport</code>・<code>/effort</code>等）の存在を知る一覧として有用。</p>
 <h3><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>管理と1Mコンテキスト（Thariq氏の知見・翻訳）</h3>
 <p>各ターン後に取れる選択肢は5つ:</p>
 <ol>
@@ -277,9 +277,9 @@ slug: 16-external-references</h2>
 <li><strong>検証メカニズムの確保</strong> — モデルが強力なほど「バックエンドはサーバテスト・フロントエンドはブラウザ制御」のようなタスク別の検証手段が重要になる</li>
 </ol>
 <h2>gstack（リポジトリ概要）</h2>
-<p><a href="https://github.com/garrytan/gstack">gstack</a> は、Garry Tan氏（Y Combinator CEO）が開発したClaude Code拡張フレームワーク（116k star・MIT・作成3.5ヶ月で急成長）。「個人が大規模チームのように生産性を発揮する」がコンセプト。</p>
+<p><a href="https://github.com/garrytan/gstack">gstack</a> は、Garry Tan氏（Y Combinator CEO）が開発したClaude Code拡張<span class="term" tabindex="0">フレームワーク<span class="term-popup">アプリを作るための骨組み部品のセット。土台が用意されているので、中身の作り込みに集中できる</span></span>（116k star・MIT・作成3.5ヶ月で急成長）。「個人が大規模チームのように生産性を発揮する」がコンセプト。</p>
 <h3>導入（30秒）</h3>
-<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>">git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack &amp;&amp; cd ~/.claude/skills/gstack &amp;&amp; ./setup
+<pre><code class="language-bash">git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack &amp;&amp; cd ~/.claude/skills/gstack &amp;&amp; ./setup
 </code></pre>
 <p>必要環境: Claude Code・Git・Bun v1.0+（Windowsのみ Node.js も）</p>
 <h3>主要スキル（23の専門家ロール）</h3>
@@ -303,17 +303,17 @@ slug: 16-external-references</h2>
 <td>CEO→デザイン→エンジニアのレビューを自動で一通り実行</td>
 </tr>
 <tr>
-<td>実装</td>
+<td><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span></td>
 <td><code>/review</code></td>
-<td>スタッフエンジニア役。本番で落ちそうなバグを検出・自動修正</td>
+<td>スタッフエンジニア役。本番で落ちそうな<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>を検出・自動修正</td>
 </tr>
 <tr>
 <td>実装</td>
 <td><code>/qa</code></td>
-<td>QAリード役。実ブラウザでテスト実行・回帰テスト自動生成</td>
+<td>QAリード役。実ブラウザでテスト実行・<span class="term" tabindex="0">回帰テスト<span class="term-popup">変更後に「以前動いていた機能が壊れていないか」を確認するテスト。直したつもりが別の場所を壊す事故の防止</span></span>自動生成</td>
 </tr>
 <tr>
-<td>リリース</td>
+<td><span class="term" tabindex="0">リリース<span class="term-popup">完成したものを外に出すこと。公開・出荷の意味</span></span></td>
 <td><code>/ship</code></td>
 <td>リリースエンジニア役。テスト実行・<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>監査・PR作成まで一括</td>
 </tr>
@@ -325,7 +325,7 @@ slug: 16-external-references</h2>
 <tr>
 <td>デザイン</td>
 <td><code>/design-shotgun</code></td>
-<td>モックアップ案を4〜6個生成・比較・反復</td>
+<td><span class="term" tabindex="0">モック<span class="term-popup">テスト用の「偽物」。本物の代わりに決まった値を返すようにして、テスト対象だけを確実に検査できるようにする</span></span>アップ案を4〜6個生成・比較・反復</td>
 </tr>
 <tr>
 <td>セキュリティ</td>
@@ -340,7 +340,7 @@ slug: 16-external-references</h2>
 <tr>
 <td>その他</td>
 <td><code>/careful</code>/<code>/freeze</code>/<code>/guard</code></td>
-<td>破壊的コマンド警告・編集範囲ロックの安全ガード</td>
+<td>破壊的コマンド警告・編集範囲<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>の安全ガード</td>
 </tr>
 <tr>
 <td>その他</td>
@@ -359,12 +359,12 @@ slug: 16-external-references</h2>
 <p><code>/setup-gbrain</code> でセットアップ。4つの選択肢（Supabaseクラウド共有・Supabase自動構築・PGLiteローカル・リモートGBrain参照）。<code>/sync-gbrain</code>でコードをインデックス化し、<code>gbrain search</code>等で呼び出す。<strong>セッションを超えた知識保持という点で、このSSOT運用の発想と一致する部分</strong>。</p>
 <h3>留意点</h3>
 <ul>
-<li>テレメトリはデフォルトオフ（送信内容はスキル名・実行時間・成否のみ、コード・ファイルパス・プロンプトは送信しない）</li>
-<li>アンインストールスクリプト（<code>gstack-uninstall</code>）あり、手動削除も明文化されている</li>
+<li>テレメトリは<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>オフ（送信内容はスキル名・実行時間・成否のみ、コード・ファイルパス・プロンプトは送信しない）</li>
+<li>アンインストール<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>（<code>gstack-uninstall</code>）あり、手動削除も明文化されている</li>
 <li>既存の自作スキル群（resume-session/ssot-record等）・agent-skills（<code>/review</code>/<code>/ship</code>等）と<strong>コマンド名が重複する可能性</strong>があるため、実導入する場合は名前衝突の確認が先</li>
 </ul>
 <h2>Anthropic-Cybersecurity-Skills（リポジトリ概要）</h2>
-<p><a href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">Anthropic-Cybersecurity-Skills</a> は、AIエージェント向けセキュリティスキルライブラリ（817スキル・21.4k star・Apache 2.0）。Anthropic非公式の独立コミュニティプロジェクト。</p>
+<p><a href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">Anthropic-Cybersecurity-Skills</a> は、AIエージェント向けセキュリティスキル<span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span>（817スキル・21.4k star・Apache 2.0）。Anthropic非公式の独立コミュニティプロジェクト。</p>
 <h3>フレームワークマッピング（6種）</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -404,7 +404,7 @@ slug: 16-external-references</h2>
 <p>クラウドセキュリティ（66スキル）・脅威ハンティング（58）・脅威インテリジェンス（52）・ネットワークセキュリティ（43）・Webアプリケーションセキュリティ（42・OWASP Top 10対応）・デジタルフォレンジクス（41）・マルウェア分析（39）他21領域。</p>
 <h3>スキルの構造</h3>
 <pre><code>skills/skill-name/
-├── SKILL.md           ← <span class="term" tabindex="0">YAML<span class="term-popup">ヤムル。階層構造を字下げで表す、人間が読みやすい設定ファイルの書式。frontmatter（文書冒頭の---で囲んだ設定塊）で使われる</span></span><span class="term" tabindex="0">フロントマター<span class="term-popup">Markdownファイルの冒頭に「---」で囲んで置く設定データの塊。タイトルやタグ等を本文と分離して書ける</span></span> + Markdown本体
+├── SKILL.md           ← YAMLフロントマター + Markdown本体
 ├── references/        ← フレームワークマッピング・技術手順
 ├── scripts/            ← ヘルパースクリプト
 └── assets/             ← テンプレート・チェックリスト
@@ -416,7 +416,7 @@ slug: 16-external-references</h2>
 <p>Claude Code・GitHub Copilot・Cursor等26+プラットフォーム対応（agentskills.io標準互換）。</p>
 <h3>留意点</h3>
 <ul>
-<li><strong>817件は明らかに過剰</strong>。AIエージェント側は「スキャン段階(~30トークン)でフロントマターだけ検索→トップ3だけ完全ロード」という設計なので大量にあっても通常運用のコストは低いが、実際にセキュリティレビュー作業が発生した時に該当ドメインだけ拾う運用が現実的</li>
+<li><strong>817件は明らかに過剰</strong>。AIエージェント側は「スキャン段階(~30トークン)で<span class="term" tabindex="0">フロントマター<span class="term-popup">Markdownファイルの冒頭に「---」で囲んで置く設定データの塊。タイトルやタグ等を本文と分離して書ける</span></span>だけ検索→トップ3だけ完全ロード」という設計なので大量にあっても通常運用のコストは低いが、実際にセキュリティレビュー作業が発生した時に該当ドメインだけ拾う運用が現実的</li>
 <li>既存のセキュリティ設定ハブ（<code>run-security-check.sh</code>等）と重複しない領域（クラウド/脅威ハンティング/フォレンジクス等）を補完する位置づけが良さそう</li>
 </ul>
 

@@ -182,10 +182,10 @@
 <hr />
 <h2>&lt;a id=&quot;overview&quot;&gt;&lt;/a&gt;概要：これは何か</h2>
 <p>「SSOTから探して: glm-rate-proxy」と話しかけると、1,900件超のMarkdownファイルを横断検索して関連ドキュメントを5件表示するスキルです。</p>
-<pre><code>あなた: SSOTから探して: MiniMaxの<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>設定
+<pre><code>あなた: SSOTから探して: MiniMaxのフォールバック設定
 
 Claude: 🔍 SSOT検索: 「MiniMax フォールバック 設定」— 5件ヒット
-  1. 📋 DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS  01_DECISIONS/claude-code/2026-05-11_...
+  1. 📋 DECISIONS  01_DECISIONS/claude-code/2026-05-11_...
   2. 📅 DAILY      10_DAILY/2026-05-11.md
   ...
 </code></pre>
@@ -198,7 +198,7 @@ Claude: 🔍 SSOT検索: 「MiniMax フォールバック 設定」— 5件ヒ�
     ▼
 ① ripgrep 全文検索（~0.5秒）
    ├─ フェーズ1: フレーズ完全一致
-   └─ フェーズ2: ヒット不足 → <span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>OR検索（日本語対応）
+   └─ フェーズ2: ヒット不足 → トークンOR検索（日本語対応）
     │
     ▼
 ② sentence-transformers rerank（~1秒）
@@ -238,15 +238,15 @@ Claude: 🔍 SSOT検索: 「MiniMax フォールバック 設定」— 5件ヒ�
 <hr />
 <h2>&lt;a id=&quot;setup&quot;&gt;&lt;/a&gt;セットアップ</h2>
 <h3>1. ripgrep インストール</h3>
-<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>">sudo apt-get install -y ripgrep
+<pre><code class="language-bash">sudo apt-get install -y ripgrep
 </code></pre>
 <h3>2. Python <span class="term" tabindex="0">venv<span class="term-popup">ブイエンブ。Python標準の仮想環境を作るコマンド/仕組み。プロジェクトごとにライブラリを分けてインストールできるようにする</span></span> 作成</h3>
 <pre><code class="language-bash">sudo apt-get install -y python3.12-venv
 python3 -m venv ~/.claude/venv/ssot-search
-~/.claude/venv/ssot-search/bin/<span class="term" tabindex="0">pip<span class="term-popup">ピップ。Pythonのライブラリ（部品）をインストールするコマンド。Pythonの買い物カートのようなもの</span></span> install sentence-transformers
+~/.claude/venv/ssot-search/bin/pip install sentence-transformers
 </code></pre>
-<div class="callout callout-warn"><p><strong>注意</strong>: Python 3.12以降はシステムへの直接 <code>pip install</code> がブロックされます（PEP 668）。必ずvenvを使うこと。</p></div>
-<h3>3. スクリプト配置</h3>
+<div class="callout callout-warn"><p><strong>注意</strong>: Python 3.12以降はシステムへの直接 <code>pip install</code> がブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>されます（PEP 668）。必ずvenvを使うこと。</p></div>
+<h3>3. <span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>配置</h3>
 <p><code>~/projects/claude-config/scripts/ssot/search.py</code> が<br />
 <code>~/.claude/scripts/ssot/search.py</code> に<span class="term" tabindex="0">シンボリックリンク<span class="term-popup">ファイルやフォルダの「ショートカット」のようなもの。リンクを辿ると実体の場所として扱える。1つの実体を複数の場所から参照したい時に使う</span></span>されていることを確認:</p>
 <pre><code class="language-bash">ls -la ~/.claude/scripts/ssot/
@@ -268,7 +268,7 @@ SSOTから探して: Zenn記事 LLMルーティング
 SSOTから探して: MiniMax フォールバック
 </code></pre>
 <h3>件数を増やす</h3>
-<p>ClaudeにBashコマンドを直接実行させる場合:</p>
+<p>ClaudeにBash<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>を直接実行させる場合:</p>
 <pre><code class="language-bash">~/.claude/venv/ssot-search/bin/python3 ~/.claude/scripts/ssot/search.py &quot;クエリ&quot; --top 10
 </code></pre>
 <hr />
@@ -280,7 +280,7 @@ SSOTから探して: MiniMax フォールバック 設定
 # 動くが精度が落ちる場合も
 SSOTから探して: MiniMaxのフォールバック設定方法
 </code></pre>
-<p>スペースなしでも内部でトークン分割（助詞・英数字境界で分割）するため多くの場合動作します。</p>
+<p>スペースなしでも内部で<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>分割（助詞・英数字境界で分割）するため多くの場合動作します。</p>
 <hr />
 <h2>&lt;a id=&quot;internals&quot;&gt;&lt;/a&gt;内部動作の詳細</h2>
 <h3>search.py の処理フロー</h3>
@@ -298,7 +298,7 @@ results = rerank(query, hits, top_n=5)
 <h3>日本語トークナイザ</h3>
 <pre><code class="language-python">DELIMITERS = r&quot;[\s　のをがはにでもとからまでよりへ、。・]+&quot;
 # さらに英数字↔日本語境界でも分割
-# 例: &quot;MiniMaxの<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>&quot; → [&quot;MiniMax&quot;, &quot;API&quot;]
+# 例: &quot;MiniMaxのAPI&quot; → [&quot;MiniMax&quot;, &quot;API&quot;]
 </code></pre>
 <h3>使用モデル</h3>
 <div class="table-wrapper"><table>
@@ -340,7 +340,7 @@ results = rerank(query, hits, top_n=5)
 <h3>検索結果が0件</h3>
 <p>クエリが長すぎてripgrepが完全一致できない場合。スペース区切りで短いキーワードに分割してください。</p>
 <h3><code>apt-get install</code> が数十分ハング</h3>
-<p>バックグラウンドでのsudoコマンドはaptロック競合で止まることがあります。WSLターミナルで直接実行してください。</p>
+<p>バックグラウンドでのsudoコマンドはaptロック<span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>で止まることがあります。WSL<span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>で直接実行してください。</p>
 <hr />
 <h2>💡 やさしい補足（初心者向け）</h2>
 <ul>

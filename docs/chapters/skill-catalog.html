@@ -204,8 +204,8 @@
 </tr>
 <tr>
 <td><code>reverse-engineer-song</code></td>
-<td>YouTube楽曲をリバースエンジニアリングし音楽/画像/動画の3モダリティ <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>仕様書を出力</td>
-<td>「逆コンパイルして」「YouTubeから分析して」<code>/reverse-engineer-song</code></td>
+<td>YouTube楽曲をリバースエンジニアリングし音楽/画像/動画の3モダリティ <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span><span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>書を出力</td>
+<td>「逆<span class="term" tabindex="0">コンパイル<span class="term-popup">人が読むソースコードを、コンピュータが実行できる形式に変換すること</span></span>して」「YouTubeから分析して」<code>/reverse-engineer-song</code></td>
 </tr>
 <tr>
 <td><code>video-prompt-spec</code></td>
@@ -252,7 +252,7 @@
 </tr>
 <tr>
 <td><code>record-new-feature</code></td>
-<td>Claude Code新バージョンのリリースノートを調査しSSOTとガイドに追記</td>
+<td>Claude Code新<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>の<span class="term" tabindex="0">リリース<span class="term-popup">完成したものを外に出すこと。公開・出荷の意味</span></span>ノートを調査しSSOTとガイドに追記</td>
 <td>SessionStart <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>で自動発動</td>
 </tr>
 <tr>
@@ -298,7 +298,7 @@
 <td>「ツールチップ追加して」「用語に解説つけて」</td>
 </tr>
 <tr>
-<td><code>zenn-article-<span class="term" tabindex="0">pip<span class="term-popup">ピップ。Pythonのライブラリ（部品）をインストールするコマンド。Pythonの買い物カートのようなもの</span></span>eline</code></td>
+<td><code>zenn-article-pipeline</code></td>
 <td>Zenn記事の作成〜公開前チェックを6ステップで実行する<span class="term" tabindex="0">パイプ<span class="term-popup">コマンドの結果を次のコマンドへ流し込む「｜」記号の仕組み。「検索する → 結果を数える」のように処理をつなげられる</span></span>ライン</td>
 <td><code>/zenn-article-pipeline</code></td>
 </tr>
@@ -326,8 +326,8 @@
 <tbody>
 <tr>
 <td><code>dev-cycle</code></td>
-<td>コード品質改善の全サイクル（品質スイープ→レビュー→Issue化→自律実装→通知）を自律実行</td>
-<td>「dev-cycle」「品質改善」「自律ループ」<code>/dev-cycle</code></td>
+<td>コード品質改善の全サイクル（品質スイープ→レビュー→Issue化→自律<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>→通知）を自律実行</td>
+<td>「dev-cycle」「品質改善」「自律<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>」<code>/dev-cycle</code></td>
 </tr>
 <tr>
 <td><code>gas-autopilot</code></td>
@@ -336,8 +336,8 @@
 </tr>
 <tr>
 <td><code>skill-test</code></td>
-<td>スキル定義（SKILL.md）を静的点検・ドライランで検証。<code>/debug</code>（コード向け）と使い分け</td>
-<td>「スキルを点検して」「スキルのバグ確認」<code>/skill-test</code></td>
+<td>スキル定義（SKILL.md）を静的点検・<span class="term" tabindex="0">ドライラン<span class="term-popup">本番の処理はせずに「何をしたはずか」だけ確認する実行モード（Dry Run）。影響を与える前に動作予定の確認ができる</span></span>で検証。<code>/debug</code>（コード向け）と使い分け</td>
+<td>「スキルを点検して」「スキルの<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>確認」<code>/skill-test</code></td>
 </tr>
 <tr>
 <td><code>new-session</code></td>
@@ -346,7 +346,7 @@
 </tr>
 <tr>
 <td><code>update-guide</code></td>
-<td>claude-code-guideの更新キューを処理しHTMLを最新化</td>
+<td>claude-code-guideの更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>を処理しHTMLを最新化</td>
 <td><code>/update-guide</code></td>
 </tr>
 <tr>
@@ -421,7 +421,7 @@
 </tr>
 <tr>
 <td><code>agent-sdk-dev</code> / <code>claude-code-setup</code> / <code>claude-md-management</code> / <code>code-review</code> / <code>code-simplifier</code> / <code>pr-review-toolkit</code></td>
-<td>プラグイン</td>
+<td><span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span></td>
 <td>0使用（導入時からOFF設定）</td>
 <td><code>settings.json</code> の <code>enabledPlugins</code> 該当キーを <code>true</code> に</td>
 </tr>

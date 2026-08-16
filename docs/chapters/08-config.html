@@ -177,7 +177,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>08 設定ファイル — 全設定の解説</h1>
+            <h1>08 <span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span> — 全設定の解説</h1>
 <div class="mermaid-wrapper"><div class="mermaid">
 graph BT
     L1["Layer 1: グローバル<br/>~/.claude/CLAUDE.md<br/>全プロジェクト共通"]
@@ -218,19 +218,19 @@ Layer 1: グローバル（全プロジェクト共通）
 <li>コーディング原則</li>
 <li>SSOT（共通知識ベース）の参照</li>
 <li><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>タイトルの日本語生成ルール</li>
-<li>実行環境の注意（Windows + WSL2の2層構造 — Cron等は <code>wsl <span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span> -c</code> 経由必須）</li>
+<li>実行環境の注意（Windows + WSL2の2層構造 — Cron等は <code>wsl bash -c</code> 経由必須）</li>
 </ul>
 <div class="callout callout-info"><p><strong>補足: デスクトップアプリのUI言語について</strong><br />
-Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できない（アプリ側の仕様）。<br />
+Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できない（アプリ側の<span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>）。<br />
 制御できるのはAIが生成するテキスト（セッションタイトル・返答など）のみ。</p></div>
 <h3>&lt;a id=&quot;claude-md-project&quot;&gt;&lt;/a&gt;Layer 2: プロジェクトCLAUDE.md</h3>
 <p><strong>プロジェクト固有のルール</strong>を記述。</p>
 <ul>
 <li><strong>場所</strong>: <code>&lt;repo&gt;/CLAUDE.md</code></li>
-<li><strong>内容</strong>: プロジェクトの構造、使用技術、テスト方法、ビルドコマンド</li>
+<li><strong>内容</strong>: プロジェクトの構造、使用技術、テスト方法、<span class="term" tabindex="0">ビルド<span class="term-popup">ソースコードから、実行可能な完成品を組み立てること</span></span><span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></li>
 <li><strong>作成方法</strong>: <code>/init</code> コマンドで自動生成、または手動作成</li>
 </ul>
-<h3>Layer 3: ディレクトリCLAUDE.md</h3>
+<h3>Layer 3: <span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>CLAUDE.md</h3>
 <p><strong>特定ディレクトリのルール</strong>。必要な場合のみ使用。</p>
 <ul>
 <li><strong>場所</strong>: <code>&lt;repo&gt;/&lt;dir&gt;/CLAUDE.md</code></li>
@@ -247,7 +247,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
     &quot;deny&quot;: [&quot;Bash(rm -rf)&quot;],
     &quot;ask&quot;: [&quot;Bash(git worktree add:*)&quot;]
   },
-  &quot;<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s&quot;: {
+  &quot;hooks&quot;: {
     &quot;PreToolUse&quot;: [...],
     &quot;PostToolUse&quot;: [...],
     &quot;PostToolUseFailure&quot;: [...],
@@ -286,7 +286,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td>PreToolUse</td>
 <td>ツール実行前</td>
-<td>危険コマンドのブロック・安全確認</td>
+<td>危険コマンドのブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>・安全確認</td>
 </tr>
 <tr>
 <td>PostToolUse</td>
@@ -304,14 +304,14 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示・設定ファイル同期・INDEX自動更新・SKILL_CATALOG自動生成（generate-skill-catalog.py）</td>
 </tr>
 <tr>
-<td>SessionStart hook圧縮</td>
+<td>SessionStart <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>圧縮</td>
 <td>2026-07-12追加</td>
 <td>トレンド・候補・bkは「指示がある時のみ展開」に変更（常時15KB相当=6K〜10Kトークン圧迫を解消・コンテキストリミット多発対策）</td>
 </tr>
 <tr>
 <td>Stop</td>
 <td>セッション終了時</td>
-<td>セッションログの保存・ハンドオフ生成・ガイド更新キューの記録・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>同期・クリーンアップ</td>
+<td>セッションログの保存・ハンドオフ生成・ガイド更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>の記録・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>同期・クリーンアップ</td>
 </tr>
 <tr>
 <td>Notification</td>
@@ -331,7 +331,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tbody>
 <tr>
 <td><code>model</code></td>
-<td>デフォルトモデル（<code>opus</code>, <code>sonnet</code>, <code>haiku</code>）。glm-5.2運用では各階層に割当</td>
+<td><span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>モデル（<code>opus</code>, <code>sonnet</code>, <code>haiku</code>）。glm-5.2運用では各階層に割当</td>
 </tr>
 <tr>
 <td><code>effortLevel</code></td>
@@ -343,7 +343,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 <tr>
 <td><code>statusLine</code></td>
-<td>ターミナルのステータスバーに表示する内容（コマンド実行結果を表示）。以下に詳細説明あり</td>
+<td><span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>のステータスバーに表示する内容（コマンド実行結果を表示）。以下に詳細説明あり</td>
 </tr>
 <tr>
 <td><code>autoDream</code></td>
@@ -351,7 +351,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 <tr>
 <td><code>enabledPlugins</code></td>
-<td>有効なプラグインの一覧</td>
+<td>有効な<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>の一覧</td>
 </tr>
 <tr>
 <td><code>language</code></td>
@@ -367,7 +367,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <p>画面下部にLLM名・コスト・作業量・コンテキスト残量・会話サイズを表示する。glm-rate-proxy の実動作状態を反映し、peak時間帯の<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>もバッジで示す。</p>
 <ul>
 <li><strong>設定</strong>: <code>{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;bash ~/.claude/scripts/llm/llm-status.sh&quot;}</code></li>
-<li><strong>スクリプト</strong>: <code>~/.claude/scripts/llm/llm-status.sh</code></li>
+<li><strong><span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span></strong>: <code>~/.claude/scripts/llm/llm-status.sh</code></li>
 <li><strong>表示例（通常）</strong>: <code>🟡[GLM] GLM-5.2 | Ctx 45% (90k/200k) | Req 8.5MB/32 | +100 -50 | 🪟e36d</code></li>
 <li><strong>表示例（peak帯フォールバック）</strong>: <code>🟠[peak→minimax] GLM-5.2→MiniMax-M3 | ... | 🪟e36d</code></li>
 <li><strong>並び順（2026-08-16改）</strong>: LLM名 → Ctx → Req → 作業量 → タブID。コスト（$表示）は削除（<code>claude-cost</code>コマンドで確認）。※スマホ表示で末尾が見切れるため、モデル・コンテキストを先頭に変更（旧: タブID先頭・2026-07-23〜）</li>
@@ -403,8 +403,8 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tbody>
 </table></div>
 <div class="callout callout-warn"><p><strong>注意</strong>: コンテキスト使用率が高くなったら早めに <code>/compact</code> すること。100%に達すると <code>/compact</code> 自体も失敗し、新セッションが必要になる。会話サイズ（<code>Req</code>）は32MB API上限に縛られるため context窓とは別管理。</p></div>
-<h3>&lt;a id=&quot;env-settings&quot;&gt;&lt;/a&gt;env（環境変数の注入）</h3>
-<p><code>env</code> セクションで Claude Code プロセスに環境変数を追加できる。APIキーは <code>~/.secrets.env</code> で管理するため、ここには非機密の制御変数のみ記載する（シークレットは SessionStart フックで自動注入）。</p>
+<h3>&lt;a id=&quot;env-settings&quot;&gt;&lt;/a&gt;env（環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span>の注入）</h3>
+<p><code>env</code> セクションで Claude Code <span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>に環境変数を追加できる。APIキーは <code>~/.secrets.env</code> で管理するため、ここには非機密の制御変数のみ記載する（シークレットは SessionStart フックで自動注入）。</p>
 <p><strong>代表的な制御変数（非機密）</strong>:</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -418,12 +418,12 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td><code>API_TIMEOUT_MS</code></td>
 <td><code>1200000</code></td>
-<td>Claude API呼び出しタイムアウト（20分）</td>
+<td>Claude API呼び出し<span class="term" tabindex="0">タイムアウト<span class="term-popup">待ち時間の上限。指定時間内に応答が無ければ「失敗」とみなして打ち切る仕組み</span></span>（20分）</td>
 </tr>
 <tr>
-<td><code><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>_TOOL_TIMEOUT</code></td>
+<td><code>MCP_TOOL_TIMEOUT</code></td>
 <td><code>300000</code></td>
-<td>MCPツール実行タイムアウト（既定60秒→5分に延長）</td>
+<td><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ツール実行タイムアウト（既定60秒→5分に延長）</td>
 </tr>
 <tr>
 <td><code>DISABLE_AUTO_COMPACT</code></td>
@@ -492,7 +492,7 @@ GITHUB_TOKEN=ghp_xxx...
 </tr>
 <tr>
 <td><strong>確認時はマスク必須</strong></td>
-<td><code><span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span> -E &quot;^[A-Z_]+=&quot; &lt;file&gt; | sed &quot;s/=.*/=&lt;REDACTED&gt;/&quot;</code></td>
+<td><code>grep -E &quot;^[A-Z_]+=&quot; &lt;file&gt; | sed &quot;s/=.*/=&lt;REDACTED&gt;/&quot;</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -573,7 +573,7 @@ backup-*/
 <hr />
 <h2>&lt;a id=&quot;windows-vs-wsl&quot;&gt;&lt;/a&gt;Windows Desktop vs WSL CLI — 設定の違い</h2>
 <p>WSL2環境では <strong>Windows Desktopアプリ</strong> と <strong>WSL CLI</strong> の2つのClaude Codeが共存する。設定ファイル・管理系統・ツール定義のシリアライズに重要な違いがある。</p>
-<div class="callout callout-warn"><p>💡 <strong>WSL CLI版（2026-07-02統合）</strong>: 2026-06-30に「cc-musicプロファイル分離」で minimax-official/video を日常settings.jsonから除外していたが、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため分離撤回。現在は minimax-official/video は日常 mcpServers で常時読込（画像/動画/音楽生成を即呼び可能）。cc-music エイリアス・cc-music-mcp.json・PreToolUse hookブロックは完全撤去（バックアップは <code>01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/設定ファイル/</code> に温存）。未使用agents 8プラグイン無効化は継続。</p>
+<div class="callout callout-warn"><p>💡 <strong>WSL CLI版（2026-07-02統合）</strong>: 2026-06-30に「cc-musicプロファイル分離」で minimax-official/video を日常settings.jsonから除外していたが、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため分離撤回。現在は minimax-official/video は日常 mcpServers で常時読込（画像/動画/音楽生成を即呼び可能）。cc-music エイリアス・cc-music-mcp.json・PreToolUse hookブロックは完全撤去（バックアップは <code>01_DECISIONS/claude-code/設定ファイル/</code> に温存）。未使用agents 8プラグイン無効化は継続。</p>
 <ul>
 <li>効果: 日常側 約7,060tok削減（実測確認済・minimax分離分。agents 1,926tokは想定過大で実際は微小・8プラグインはagents非提供型だった）・32MBエラー（画像起因）は運用規約で予防。</li>
 <li>※ <code>cc</code> は <code>/usr/bin/cc</code>（C compiler）でClaude起動エイリアスではない。日常起動は <code>claude</code> 直。</li>
@@ -612,23 +612,23 @@ backup-*/
 <tr>
 <td><strong>Desktop config（候補①）</strong></td>
 <td><code>C:\Users\&lt;user&gt;\AppData\Roaming\Claude\claude_desktop_config.json</code></td>
-<td>⚠️2026-07-06実測時点では中身が実プロセスの起動引数と食い違っており使われていないように見えた（ただし2026-05時点では他候補と内容一致・有効に見えていた。下記「注意」参照）</td>
+<td>⚠️2026-07-06実測時点では中身が実プロセスの起動<span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>と食い違っており使われていないように見えた（ただし2026-05時点では他候補と内容一致・有効に見えていた。下記「注意」参照）</td>
 </tr>
 <tr>
 <td><strong>Desktop config（候補②・2026-07-06時点で実測と一致）</strong></td>
 <td><code>C:\Users\&lt;user&gt;\AppData\Local\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\claude_desktop_config.json</code></td>
-<td>2026-07-06実測では、Windows Desktopアプリが実際に読むmcpServers設定はここだった（MSIXパッケージの仮想化パス）。ただしこれも将来のアプリ更新で変わりうるため「今後もここ」と決め打ちしない</td>
+<td>2026-07-06実測では、Windows Desktopアプリが実際に読むmcpServers設定はここだった（MSIX<span class="term" tabindex="0">パッケージ<span class="term-popup">配布・インストール可能な形にまとめたソフトウェアの単位。Pythonではpipで入れる部品のこと</span></span>の仮想化パス）。ただしこれも将来のアプリ更新で変わりうるため「今後もここ」と決め打ちしない</td>
 </tr>
 <tr>
 <td><strong>Desktop Extensions</strong></td>
 <td><code>C:\Users\&lt;user&gt;\AppData\Local\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\Claude Extensions\</code></td>
-<td>拡張機能（MCP serverとは別の独立管理系統）</td>
+<td><span class="term" tabindex="0">拡張機能<span class="term-popup">ソフト本体に後から足して機能を増やす追加部品。プラグインとほぼ同義</span></span>（MCP serverとは別の独立管理系統）</td>
 </tr>
 </tbody>
 </table></div>
 <blockquote>
 <p><strong>注意</strong>: Desktop Extensionsの場所はWindows Storeアプリパッケージの内部にあり、通常の設定フォルダからは見えない。MCP serverやplugin設定とは<strong>完全に別の管理系統</strong>。</p>
-<p>⚠️ <strong>候補ファイルが複数あり、しかも「どれが本物か」は時期によって変わりうる（決め打ち禁止）</strong>: 2026-05時点の調査（<a href="#">2026-05-20_デスクトップアプリMCP-223k問題調査</a>）では<code>settings.json</code>と<code>AppData\Roaming\Claude\claude_desktop_config.json</code>(候補①)の内容が一致しており、当時はどちらも「有効」に見えていた。おそらく当時は複数の候補ファイルを手動で同時に編集していたため、どれが真の読み込み元か区別する必要が一度もなかった。2026-07-06に<code>gemini</code>を候補①相当(settings.json)にだけ追加したことで初めて食い違いが表面化し、候補②(MSIXパッケージ内)が本物だと判明した。<strong>Windows Desktopアプリの内部実装（配布形態・設定読み込みロジック）はアプリ更新で今後も変わりうる</strong>ため、上表の「候補②が本物」という記述も恒久的な前提にしない。</p>
+<p>⚠️ <strong>候補ファイルが複数あり、しかも「どれが本物か」は時期によって変わりうる（決め打ち禁止）</strong>: 2026-05時点の調査（<a href="#">2026-05-20_デスクトップアプリMCP-223k問題調査</a>）では<code>settings.json</code>と<code>AppData\Roaming\Claude\claude_desktop_config.json</code>(候補①)の内容が一致しており、当時はどちらも「有効」に見えていた。おそらく当時は複数の候補ファイルを手動で同時に編集していたため、どれが真の読み込み元か区別する必要が一度もなかった。2026-07-06に<code>gemini</code>を候補①相当(settings.json)にだけ追加したことで初めて食い違いが表面化し、候補②(MSIXパッケージ内)が本物だと判明した。<strong>Windows Desktopアプリの内部<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>（配布形態・設定読み込みロジック）はアプリ更新で今後も変わりうる</strong>ため、上表の「候補②が本物」という記述も恒久的な前提にしない。</p>
 <p>⚠️ <strong>「設定したのに接続されない」時の確認手順（推測で編集しない・都度確認）</strong>: <strong>アプリ内「設定 → 開発者 → ローカルMCPサーバー」パネルの「設定を編集」ボタンを押し、その時点でエクスプローラーが開く実際のファイルパスをそのまま使う</strong>のが、時期によらず通用する最も確実な方法（2026-07-06 gemini追加時に確立した手順）。詳細: <a href="04-mcp.html">04_MCPサーバー</a> の「設定したのに接続されない」トラブルシューティング節、事例は <a href="#">2026-07-06_Windows-Desktop版Gemini-MCP真因確定-MSIXconfig特定</a> 参照。</p></div>
 <h3>設定の独立性</h3>
 <p>WSL側とWindows側の設定は<strong>独立</strong>している:</p>
@@ -657,7 +657,7 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 <li>リポジトリ本体（<code>.git/config</code>のremote URL）も変更不要。Windows側のgit実行時にだけURL解釈が書き換わる</li>
 <li>WSL側は従来通りSSH鍵で動作し続ける（双方の動作確認済み）</li>
 </ul>
-<div class="callout callout-info"><p>当初はWSL側の鍵をUNCパス経由（<code>\\wsl.<span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>\...</code>）で直接参照する案を実機検証し動作も確認したが、OpenSSHの権限チェックを迂回している懸念・侵害時の被害範囲拡大・将来のWindows Update等での破綻リスクをレビューで指摘され、HTTPS+gh CLI方式に切り替えた。詳細: <a href="#">2026-06-30_Windows-Desktop版GitHub認証問題解決</a></p></div>
+<div class="callout callout-info"><p>当初はWSL側の鍵をUNCパス経由（<code>\\wsl.localhost\...</code>）で直接参照する案を実機検証し動作も確認したが、OpenSSHの権限チェックを迂回している懸念・侵害時の被害範囲拡大・将来のWindows Update等での破綻リスクをレビューで指摘され、HTTPS+gh CLI方式に切り替えた。詳細: <a href="#">2026-06-30_Windows-Desktop版GitHub認証問題解決</a></p></div>
 <h3>ツール定義のシリアライズ差異（重要）</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -715,7 +715,7 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 </table></div>
 <ul>
 <li><strong>原因</strong>: <code>google-genai</code> は <code>.venv</code> にのみ導入。システム <code>python3</code>（<code>~/.local</code> の namespace <code>google</code>）には <code>genai</code> が無い</li>
-<li><strong>対策</strong>: 常に <code>.venv/bin/python</code> を使用。<code><span class="term" tabindex="0">pip<span class="term-popup">ピップ。Pythonのライブラリ（部品）をインストールするコマンド。Pythonの買い物カートのようなもの</span></span> install --user</code> でシステム側へ入れるのは<strong>誤り</strong>（.venvに既存）</li>
+<li><strong>対策</strong>: 常に <code>.venv/bin/python</code> を使用。<code>pip install --user</code> でシステム側へ入れるのは<strong>誤り</strong>（.venvに既存）</li>
 <li>シークレット読込を前置: <code>set -a; source ~/.secrets.env; set +a</code></li>
 </ul>
 <pre><code>Claude Extensions/

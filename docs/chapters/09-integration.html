@@ -182,7 +182,7 @@
 <p>Claude Codeは主要IDEと連携できる。</p>
 <h3>VS Code拡張</h3>
 <ul>
-<li><strong>機能</strong>: サイドバーパネル、ターミナル統合、ネイティブdiff表示</li>
+<li><strong>機能</strong>: サイドバーパネル、<span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>統合、ネイティブdiff表示</li>
 <li><strong>インストール</strong>: VS Code Marketplace から「Claude Code」を検索</li>
 <li><strong>特徴</strong>: CLIと同じ機能がIDE内で利用可能</li>
 </ul>
@@ -218,7 +218,7 @@
 <h2>&lt;a id=&quot;remote&quot;&gt;&lt;/a&gt;リモートモード</h2>
 <p>Claude Codeを<strong>ヘッドレス（非対話）モード</strong>で実行できる。</p>
 <h3>使い方</h3>
-<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>"># ヘッドレス実行（結果をファイルに出力）
+<pre><code class="language-bash"># ヘッドレス実行（結果をファイルに出力）
 claude -p &quot;テストを実行して結果を報告して&quot; --output result.md
 
 # CI/CDでの利用
@@ -245,7 +245,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
   │
   ├─ .claude/worktrees/ に新しいディレクトリが作成される
   ├─ 新しいブランチが自動作成される
-  └─ <span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の作業ディレクトリが切り替わる
+  └─ セッションの作業ディレクトリが切り替わる
 </code></pre>
 <h3>Worktreeの利点</h3>
 <div class="table-wrapper"><table>
@@ -261,7 +261,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <td>メインブランチに影響しない</td>
 </tr>
 <tr>
-<td>並列作業</td>
+<td><span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>作業</td>
 <td>複数のworktreeで別々のタスクを同時進行</td>
 </tr>
 <tr>
@@ -270,7 +270,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 </tr>
 <tr>
 <td>安全な破棄</td>
-<td>変更を破棄して元のディレクトリに戻れる</td>
+<td>変更を破棄して元の<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>に戻れる</td>
 </tr>
 </tbody>
 </table></div>
@@ -280,7 +280,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <li><code>remove</code>: worktreeとブランチを削除（完全に破棄）</li>
 </ul>
 <h3><span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>との連携</h3>
-<p><span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>を <code>isolation: &quot;worktree&quot;</code> で起動すると、エージェントが独立したworktreeで作業する。メインセッションのコードに影響なし。</p>
+<p><span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>を <code>isolation: &quot;worktree&quot;</code> で起動すると、エージェントが独立したworktreeで作業する。メイン<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>のコードに影響なし。</p>
 <hr />
 <h2>&lt;a id=&quot;model-switch&quot;&gt;&lt;/a&gt;モデル切替</h2>
 <p>Claude Codeは複数のモデルを切り替えて使用できる。</p>
@@ -313,7 +313,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 </table></div>
 <h3>切替方法</h3>
 <ul>
-<li><code>/model</code> コマンド</li>
+<li><code>/model</code> <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></li>
 <li><code>/fast</code> で高速モード切替（Opusの高速出力）</li>
 <li><code>model</code> パラメータでサブエージェントのモデル指定</li>
 </ul>
@@ -373,7 +373,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <hr />
 <h2>💡 やさしい補足（初心者向け）</h2>
 <ul>
-<li><strong>エディタと連携できる</strong>: VS Code等のエディタ内でClaude Codeを動かせる。コードを書きながら質問、等</li>
+<li><strong><span class="term" tabindex="0">エディタ<span class="term-popup">テキストファイルを編集するソフト。VS CodeやVim等</span></span>と連携できる</strong>: VS Code等のエディタ内でClaude Codeを動かせる。コードを書きながら質問、等</li>
 <li><strong>AIを切り替えられる</strong>: <code>/model</code> で用途に応じたAIに変更可能</li>
 <li><strong>Desktop Appとの違い</strong>: Desktop Appは操作が分かりやすい（GUI）。CLIは自動化・連携が強い</li>
 <li><strong>リモート実行も</strong>: プログラムから呼び出して自動処理に組み込める</li>

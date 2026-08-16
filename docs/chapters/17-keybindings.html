@@ -181,7 +181,7 @@
 <aside class="tldr">
 <p><strong>3行で分かる</strong></p>
 <ol>
-<li>ターミナル版 Claude Code のプロンプト入力欄のキーバインド・編集操作を網羅</li>
+<li><span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>版 Claude Code のプロンプト入力欄のキーバインド・編集操作を網羅</li>
 <li>全選択・全消去・履歴検索・Vim/Emacs モード等・入力欄を使い倒す</li>
 <li>Windows PowerShell / Windows Terminal のハマりどころも解説</li>
 </ol>
@@ -198,13 +198,13 @@
 <li><strong><a href="#sec-e">E. 複数行入力・改行</a></strong> — Shift+Enter / <code>\</code>+Enter / Ctrl+J</li>
 <li><strong><a href="#sec-f">F. コピー&amp;ペースト</a></strong> — Windows Terminal では Ctrl+Shift+V</li>
 <li><strong><a href="#sec-g">G. 中断・終了・バックグラウンド化</a></strong> — Ctrl+C / Ctrl+D / Esc / Ctrl+B</li>
-<li><strong><a href="#sec-h">H. その他便利ショートカット</a></strong> — モデル切替・権限モード・外部エディタ</li>
-<li><strong><a href="#sec-i">I. Windows PowerShell / Windows Terminal のハマりどころ</a></strong> — 競合・優先順位・設定推奨</li>
+<li><strong><a href="#sec-h">H. その他便利ショートカット</a></strong> — モデル切替・権限モード・外部<span class="term" tabindex="0">エディタ<span class="term-popup">テキストファイルを編集するソフト。VS CodeやVim等</span></span></li>
+<li><strong><a href="#sec-i">I. Windows PowerShell / Windows Terminal のハマりどころ</a></strong> — <span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>・優先順位・設定推奨</li>
 <li><strong><a href="#sec-j">J. キーバインドのカスタマイズ</a></strong> — <code>~/.claude/keybindings.json</code></li>
 </ul>
 <hr />
 <h2 id="sec-a">A. 行編集の基本</h2>
-<p>デフォルトは <strong>Emacs風キーバインド</strong>。Ctrl キーの組み合わせでカーソル移動と削除を行う。</p>
+<p><span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>は <strong>Emacs風キーバインド</strong>。Ctrl キーの組み合わせでカーソル移動と削除を行う。</p>
 <h3>カーソル移動</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -337,9 +337,9 @@
 </thead>
 <tbody>
 <tr>
-<td>前/次のコマンド</td>
+<td>前/次の<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></td>
 <td><code>↑</code> / <code>↓</code> または <code>Ctrl+P</code> / <code>Ctrl+N</code></td>
-<td>現在のワーキングディレクトリ単位で履歴を保持</td>
+<td>現在のワーキング<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>単位で履歴を保持</td>
 </tr>
 <tr>
 <td><strong>履歴の逆検索</strong></td>
@@ -492,7 +492,7 @@
 </tr>
 <tr>
 <td>直接ペースト</td>
-<td>コードブロック/ログを貼り付け</td>
+<td>コードブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>/ログを貼り付け</td>
 <td>—</td>
 </tr>
 </tbody>
@@ -572,7 +572,7 @@
 </thead>
 <tbody>
 <tr>
-<td>トランスクリプト表示</td>
+<td>トラン<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>表示</td>
 <td><code>Ctrl+O</code></td>
 <td>ツール使用 / <span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>呼び出しを展開表示</td>
 </tr>

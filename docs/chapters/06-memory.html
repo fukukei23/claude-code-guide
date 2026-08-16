@@ -224,7 +224,7 @@ graph TD
 <li><strong>場所</strong>: <code>&lt;repo&gt;/CLAUDE.md</code></li>
 <li><strong>形式</strong>: Markdown</li>
 <li><strong>スコープ</strong>: そのプロジェクト内のみ</li>
-<li><strong>内容</strong>: プロジェクト固有の構造・ルール・コマンド</li>
+<li><strong>内容</strong>: プロジェクト固有の構造・ルール・<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></li>
 </ul>
 <h3>&lt;a id=&quot;memory-md&quot;&gt;&lt;/a&gt;MEMORY.md（インデックス）</h3>
 <p>Auto Memoryの<strong>目次ファイル</strong>。</p>
@@ -332,7 +332,7 @@ graph TD
 </tr>
 <tr>
 <td><strong>層2</strong> パススコープ</td>
-<td><code>rules/*.md</code>（frontmatter <code><span class="term" tabindex="0">glob<span class="term-popup">グロブ。ファイル名を「＊（任意の文字列）」等のワイルドカードで指定する書き方。「*.md」＝すべてのmdファイル、のような使い方</span></span>s</code>）</td>
+<td><code>rules/*.md</code>（frontmatter <code>globs</code>）</td>
 <td>該当ファイル操作時に自動</td>
 <td>言語/作業別ルール</td>
 </tr>
@@ -351,8 +351,8 @@ graph TD
 <li><strong>各プロジェクトのCLAUDE.mdは固有内容だけ</strong>（重複ゼロ）</li>
 <li><strong>グローバルで1回importすれば全プロジェクトに自動で届く</strong></li>
 </ul>
-<h3>層2のパススコープ（globs）</h3>
-<p><code>rules/*.md</code> のfrontmatterに <code>globs: [&quot;**/*.py&quot;]</code> のように指定すると、該当拡張子のファイル操作時にだけ読み込まれる。Python・Dart・TypeScript等、言語別ルールを必要な時だけ自動ロードできる。</p>
+<h3>層2のパススコープ（<span class="term" tabindex="0">glob<span class="term-popup">グロブ。ファイル名を「＊（任意の文字列）」等のワイルドカードで指定する書き方。「*.md」＝すべてのmdファイル、のような使い方</span></span>s）</h3>
+<p><code>rules/*.md</code> のfrontmatterに <code>globs: [&quot;**/*.py&quot;]</code> のように指定すると、該当<span class="term" tabindex="0">拡張子<span class="term-popup">ファイル名の末尾の「.md」「.py」等の部分。ファイルの種類を示す目印</span></span>のファイル操作時にだけ読み込まれる。Python・Dart・TypeScript等、言語別ルールを必要な時だけ自動ロードできる。</p>
 <h3>設計原則</h3>
 <ol>
 <li><strong>200行以下</strong> — メインCLAUDE.mdは核心のみ（展開後も維持）</li>

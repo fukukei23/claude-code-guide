@@ -177,11 +177,11 @@
         </div>
 
         <article class="chapter-body">
-            <h1>02 コマンド一覧 — ビルトインコマンド全解説</h1>
+            <h1>02 <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>一覧 — ビルトインコマンド全解説</h1>
 <div class="callout callout-info"><p>スラッシュ（<code>/</code>）で始まるコマンド。Claude Code本体に組み込まれている。
-プラグイン由来の<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>（<code>/brainstorming</code>等）は <a href="03-skills.html">03_スキルシステム</a> を参照。</p>
+<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>由来の<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>（<code>/brainstorming</code>等）は <a href="03-skills.html">03_スキルシステム</a> を参照。</p>
 <p><strong>クイックリファレンス版</strong>: <a href="https://fukukei23.github.io/guides/claude-code-commands/">ガイドサイト - コマンド＆スキル集</a>
-<strong>2026年5月時点</strong>。バージョンにより利用可能なコマンドが異なる場合あり。<code>/help</code> で最新一覧を確認。</p></div>
+<strong>2026年5月時点</strong>。<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>により利用可能なコマンドが異なる場合あり。<code>/help</code> で最新一覧を確認。</p></div>
 <hr />
 <h2>主要コマンド深掘り</h2>
 <p>よく使う・挙動を正確に把握すべきコマンドの詳解。全一覧は後述の網羅表へ。</p>
@@ -216,21 +216,21 @@
 </code></pre>
 <h3>&lt;a id=&quot;model&quot;&gt;&lt;/a&gt;<code>/model</code> — モデルの表示・切替</h3>
 <ul>
-<li>引数なし: 現在のモデルを表示</li>
+<li><span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>なし: 現在のモデルを表示</li>
 <li>モデル名指定: そのモデルに切り替え（例: <code>/model sonnet</code>）</li>
-<li>GLM-5.2 がデフォルト（glm-rate-proxy経由）</li>
+<li>GLM-5.2 が<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>（glm-rate-proxy経由）</li>
 </ul>
 <h3>&lt;a id=&quot;plan-mode&quot;&gt;&lt;/a&gt;Plan Mode（<code>/plan</code>・<code>EnterPlanMode</code>）</h3>
 <p>コマンドではないが、重要な機能モード。</p>
 <ul>
-<li>Claude Codeが「計画を立ててから実装する」モードに入る</li>
+<li>Claude Codeが「計画を立ててから<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>する」モードに入る</li>
 <li>実際のコード変更は行わず、設計だけを提示</li>
 <li>ユーザーが承認（<code>ExitPlanMode</code>）してから実装開始</li>
 <li><strong>使いどころ</strong>: 新機能追加・大規模<span class="term" tabindex="0">リファクタリング<span class="term-popup">動きを変えずにコードの中身を読みやすく整理すること。機能追加でなく「掃除」の作業</span></span>等</li>
 </ul>
 <h3><code>/goal</code> の詳細</h3>
 <p>セッションに対する<strong>ゴール条件</strong>を設定する。設定すると、セッション中に「ゴール達成に近づいたか」を意識した振る舞いをする。</p>
-<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>">/goal &quot;CettireとItalistのスクレイパーを実装し、利益SKUを1件でも確認する&quot;
+<pre><code class="language-bash">/goal &quot;CettireとItalistのスクレイパーを実装し、利益SKUを1件でも確認する&quot;
 /goal &quot;このタスクをコミットしてpushしたら完了&quot;
 /goal &quot;Claude CodeのMCP設定の仕組みを理解できたら完了&quot;
 </code></pre>
@@ -270,7 +270,7 @@
 <tr>
 <td><code>/add-dir &lt;path&gt;</code></td>
 <td>—</td>
-<td>作業ディレクトリを追加</td>
+<td>作業<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>を追加</td>
 </tr>
 <tr>
 <td><code>/branch [name]</code></td>
@@ -391,7 +391,7 @@
 <tr>
 <td><code>/tui [mode]</code></td>
 <td>—</td>
-<td>ターミナルUI切替（default/fullscreen）</td>
+<td><span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>UI切替（default/fullscreen）</td>
 </tr>
 <tr>
 <td><code>/statusline</code></td>
@@ -458,7 +458,7 @@
 </tr>
 <tr>
 <td><code>/batch &lt;inst&gt;</code></td>
-<td>大規模変更をコードベース全体に並列適用</td>
+<td>大規模変更をコードベース全体に<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>適用</td>
 </tr>
 <tr>
 <td><code>/run</code></td>
@@ -466,7 +466,7 @@
 </tr>
 <tr>
 <td><code>/verify</code></td>
-<td>ビルド＋テストで変更が動くか検証</td>
+<td><span class="term" tabindex="0">ビルド<span class="term-popup">ソースコードから、実行可能な完成品を組み立てること</span></span>＋テストで変更が動くか検証</td>
 </tr>
 <tr>
 <td><code>/tasks</code></td>
@@ -490,7 +490,7 @@
 <tbody>
 <tr>
 <td><code>/code-review [level]</code></td>
-<td>コードレビュー（low/medium/high/max/ultra）。<code>/ultrareview</code> = ultra相当</td>
+<td><span class="term" tabindex="0">コードレビュー<span class="term-popup">書かれたコードを、書いた本人以外の視点で読んで問題を指摘する作業。バグ・読みにくさ・危険な書き方を見つけるのに有効</span></span>（low/medium/high/max/ultra）。<code>/ultrareview</code> = ultra相当</td>
 </tr>
 <tr>
 <td><code>/review [PR]</code></td>
@@ -535,7 +535,7 @@
 <td>MCPサーバー接続管理</td>
 </tr>
 <tr>
-<td><code>/<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s</code></td>
+<td><code>/hooks</code></td>
 <td>—</td>
 <td>フック設定を表示</td>
 </tr>
@@ -655,11 +655,11 @@
 <td><code>/plan</code></td>
 </tr>
 <tr>
-<td>変更差分を確認</td>
+<td>変更<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を確認</td>
 <td><code>/diff</code></td>
 </tr>
 <tr>
-<td>自動ループ実行</td>
+<td>自動<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>実行</td>
 <td><code>/loop</code></td>
 </tr>
 <tr>

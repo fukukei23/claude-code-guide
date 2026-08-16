@@ -177,7 +177,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>15 コスト最適化構成 — Claude Code を安く使う裏技</h1>
+            <h1>15 コスト<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span>構成 — Claude Code を安く使う裏技</h1>
 <div class="callout callout-warn"><p>⚠️ <strong>この章は <strong>個人の独自カスタマイズ</strong> です。</strong></p>
 <p>公式の Claude Code は Anthropic <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>（Sonnet/Opus/Haiku）をそのまま使います。
 以下は「Anthropic 課金を抑えて GLM/MiniMax にルーティングする」個人のコストカット手法の記録です。</p>
@@ -211,7 +211,7 @@
 <hr />
 <h2>環境別の全体構成</h2>
 <h3>WSL2 CLI 版</h3>
-<pre><code>Claude Code → <span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>:8787（glm-rate-proxy）→ Claude
+<pre><code>Claude Code → localhost:8787（glm-rate-proxy）→ Claude
                                             └ 429 時 → MiniMax API（自動フォールバック）
 </code></pre>
 <ul>
@@ -229,20 +229,20 @@
 <li><strong>minimax MCP</strong>: ✅ <strong>必要</strong>（bulk 処理用）</li>
 </ul>
 <hr />
-<h2>設定ファイルの場所</h2>
+<h2><span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>の場所</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>環境</th>
 <th>ファイル</th>
-<th>MCP 起動コマンド</th>
+<th>MCP 起動<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>WSL CLI</td>
 <td><code>~/.claude/settings.json</code></td>
-<td><code><span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span> ~/.claude/scripts/start-glm-mcp.sh</code></td>
+<td><code>bash ~/.claude/scripts/start-glm-mcp.sh</code></td>
 </tr>
 <tr>
 <td>Windows Desktop</td>
@@ -264,7 +264,7 @@
 </thead>
 <tbody>
 <tr>
-<td>1（デフォルト）</td>
+<td>1（<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>）</td>
 <td>Claude 🟡</td>
 <td>Sonnet 🔵</td>
 </tr>
@@ -289,7 +289,7 @@
 </code></pre>
 <div class="callout callout-info"><p>詳細: <a href="#">LLMルーティング（SSOT）</a></p></div>
 <hr />
-<h2>公式仕様との違いまとめ</h2>
+<h2>公式<span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>との違いまとめ</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>

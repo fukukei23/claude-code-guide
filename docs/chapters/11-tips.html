@@ -183,13 +183,13 @@
 <h2 id="toc">📑 セクション一覧（目次）</h2>
 <ul>
 <li><strong><a href="#sec-a">A. コンテキスト経済学</a></strong> — <span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>消費の実態・雪だるま式コスト</li>
-<li><strong><a href="#sec-b">B. 落とし穴（ハマりポイント）</a></strong> — 2ファイル問題・<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>復活・フックブロック等</li>
+<li><strong><a href="#sec-b">B. 落とし穴（ハマりポイント）</a></strong> — 2ファイル問題・<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>復活・フックブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>等</li>
 <li><strong><a href="#sec-c">C. 効率テクニック</a></strong> — compact・BG<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>・model切替</li>
 <li><strong><a href="#sec-d">D. よくある誤解</a></strong> — コスト/メモリ/clear/compact等の誤解</li>
-<li><strong><a href="#sec-e">E. Cron管理の注意点</a></strong> — 7日失効・膨張バグ・スクリプト化</li>
+<li><strong><a href="#sec-e">E. Cron管理の注意点</a></strong> — 7日失効・膨張<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>・<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>化</li>
 <li><strong><a href="#sec-f">F. <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>スクリプト共通基盤</a></strong> — api_base.py・プロバイダ追加手順</li>
 <li><strong><a href="#sec-g">G. コード行数の正確な計測</a></strong> — 自動生成除外・3層証明</li>
-<li><strong><a href="#sec-h">H. 並行<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の競合回避</a></strong> — active-sessionsボード運用</li>
+<li><strong><a href="#sec-h">H. 並行<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の<span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>回避</a></strong> — active-sessionsボード運用</li>
 </ul>
 <hr />
 <h2 id="sec-a">A. コンテキスト経済学</h2>
@@ -243,7 +243,7 @@
 <li>使わないサーバーは削除するのが最も効果的な節約策</li>
 </ul>
 <h3><code>/context</code> 1回で~4Kトークン消費</h3>
-<p>コンテキスト使用量を確認する <code>/context</code> コマンド自身もトークンを消費する。1回約4K。多用は避け、気になった時だけ使う。</p>
+<p>コンテキスト使用量を確認する <code>/context</code> <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>自身もトークンを消費する。1回約4K。多用は避け、気になった時だけ使う。</p>
 <h3>32MBバイト上限（画像が唯一の犯人）</h3>
 <p>トークンとは別に**リクエストペイロードのバイトサイズ上限（32MB）**がある。<code>Request too large (max 32MB)</code> が出たらこれ。</p>
 <p><strong>2つの上限を混同しないこと</strong>（これが核心）:</p>
@@ -283,14 +283,14 @@
 </ul>
 </blockquote>
 <blockquote>
-<p>🎯 <strong>追訂正（2026-07-01）・真因確定</strong>: 上記（画像が犯人・auto-compact無効下のツール結果蓄積・proxy送信前弾き）は<strong>全て主因誤認</strong>だった。真因は <strong>glm-rate-proxy の <code>aiohttp.web.Application</code> が <code>client_max_size</code> 未設定（デフォルト1MB）</strong> で、画像添付リクエストが1MB超で <strong>413弾き</strong> されていた。proxyログに413記録＝proxy到達済み（「送信前弾き」は誤り）。CCは「max 32MB」と<strong>固定嘘表示</strong>（実効1MB）。「画像2枚1.3MBが通り3枚目で32MBエラー」の25倍跳びがこの乖離の証拠。対策は <code>proxy.py</code> の <code>create_app()</code> に <code>client_max_size=32*1024*1024</code> 追加の1行（commit 9ac5f24fd）で<strong>32MB問題は解消</strong>。デスクトップ版で出ないのはproxy非経由のため。詳細は [[2026-07-01_32MBエラー真因解明-proxy-client_max_size修正]]。
+<p>🎯 <strong>追訂正（2026-07-01）・真因確定</strong>: 上記（画像が犯人・auto-compact無効下のツール結果蓄積・proxy送信前弾き）は<strong>全て主因誤認</strong>だった。真因は <strong>glm-rate-proxy の <code>aiohttp.web.Application</code> が <code>client_max_size</code> 未設定（<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>1MB）</strong> で、画像添付リクエストが1MB超で <strong>413弾き</strong> されていた。proxyログに413記録＝proxy到達済み（「送信前弾き」は誤り）。CCは「max 32MB」と<strong>固定嘘表示</strong>（実効1MB）。「画像2枚1.3MBが通り3枚目で32MBエラー」の25倍跳びがこの乖離の証拠。対策は <code>proxy.py</code> の <code>create_app()</code> に <code>client_max_size=32*1024*1024</code> 追加の1行（commit 9ac5f24fd）で<strong>32MB問題は解消</strong>。デスクトップ版で出ないのはproxy非経由のため。詳細は [[2026-07-01_32MBエラー真因解明-proxy-client_max_size修正]]。
 🔬 <strong>検証（2026-07-02・18枚画像積載）</strong>: 18枚（base64想定41MB ≫ 32MB）でもproxy通過・413ゼロ。JSONL実測で<strong>画像はURL参照（<code>maas-log-prod</code>の短いURL・1行約30KB）で履歴保存されbase64では蓄積しない</strong>ことが判明。→ <strong>6/19「画像履歴累積で雪だるま式32MB到達」は過大評価</strong>。画像では32MB到達は構造的に不可能。残る到達経路は「巨大テキスト（ツール結果の蓄積）」のみ。</p></div>
 <ul>
 <li><strong>statusLineで常時監視</strong>: <code>llm-status.sh</code> がJSONL実サイズを <code>Req X.XMB/32</code> で表示（27MB黄・30MB赤）。色が変わったら画像整理の合図。</li>
 </ul>
 <hr />
 <h2 id="sec-b">B. 落とし穴（ハマりポイント）</h2>
-<h3>設定ファイルが2つ存在する（2ファイル問題）</h3>
+<h3><span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>が2つ存在する（2ファイル問題）</h3>
 <pre><code>~/.claude.json          ← CLI自動生成（隠れファイル）
 ~/.claude/settings.json ← ユーザー編集用
 </code></pre>
@@ -299,7 +299,7 @@
 <h3>MCP削除が「復活」する</h3>
 <p>上記2ファイル問題が原因で、<code>settings.json</code> だけ編集してMCPサーバーを削除しても、<code>~/.claude.json</code> に定義が残っていれば次回起動時に復元される。</p>
 <p><strong>対策</strong>: 削除後は両ファイルを確認:</p>
-<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>">claude mcp list
+<pre><code class="language-bash">claude mcp list
 cat ~/.claude.json | jq '.mcpServers | keys'
 cat ~/.claude/settings.json | jq '.mcpServers | keys'
 </code></pre>
@@ -330,7 +330,7 @@ cat ~/.claude/settings.json | jq '.mcpServers | keys'
 <li><strong>自動コンパクション</strong>: ~167K到達時に自動発動（33Kバッファ）</li>
 </ul>
 <p>手動 <code>/compact</code> を適度に使うのが、最もバランスが良い。</p>
-<h3>バックグラウンドエージェントで並列作業</h3>
+<h3>バックグラウンドエージェントで<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>作業</h3>
 <p><code>Agent</code> ツールを <code>run_in_background: true</code> で使うと、メインコンテキストを消費せずに独立タスクを実行できる。</p>
 <pre><code>メイン: ガイドを書く
   ├── BG Agent: リポジトリAを調査
@@ -413,7 +413,7 @@ N回目実行後: N倍の長さに膨張
 <h3>推奨: スクリプト方式で永続化する</h3>
 <p>Cron定義を外部スクリプトに書き出し、更新専用Cronがそれを読んで再登録する方式が安全。</p>
 <p><strong>構成例:</strong></p>
-<pre><code class="language-bash"># ~/bin/renew-<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>s.sh
+<pre><code class="language-bash"># ~/bin/renew-crons.sh
 # このファイルは実行ではなく、Claudeがcatして読むための定義ファイル
 #
 # 1. Knowledge Lint
@@ -442,7 +442,7 @@ CronCreate(durable=true, recurring=true) で再登録せよ。
 <pre><code>SKILL.md → scripts/api/&lt;provider&gt;.py → lib/api_base.py → 統一JSON
 </code></pre>
 <p>スクリプトは<strong>統一JSON</strong>（<code>status/summary/full_data/error</code>）を返し、CCは<code>summary</code>のみ受け取る。巨大な<code>full_data</code>（生レスポンス）は<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>ファイルに退避するので<strong>トークン膨張を防げる</strong>。</p>
-<h3>api_base.py の中身（4関数のみ）</h3>
+<h3>api_base.py の中身（4<span class="term" tabindex="0">関数<span class="term-popup">一連の処理をまとめて名前を付けたもの。呼び出すたびに同じ処理が実行される。プログラムの基本単位</span></span>のみ）</h3>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -465,7 +465,7 @@ CronCreate(durable=true, recurring=true) で再登録せよ。
 </tr>
 <tr>
 <td><code>_cache_dir()</code></td>
-<td>キャッシュディレクトリ生成</td>
+<td>キャッシュ<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>生成</td>
 </tr>
 </tbody>
 </table></div>
@@ -473,9 +473,9 @@ CronCreate(durable=true, recurring=true) で再登録せよ。
 <h3>新しいAPIを追加する手順（5ステップ）</h3>
 <ol>
 <li><strong>キー取得</strong> — ユーザーが <code>~/.secrets.env</code> に <code>&lt;PROVIDER&gt;_API_KEY</code> 追加（<strong>値は会話・ファイルに書かない</strong>）</li>
-<li><strong><span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span>実装</strong> — <code>scripts/api/&lt;provider&gt;.py</code> を新設。下記雛形の <code>_call</code>/<code>_summarize</code> だけ書き換える。<code>tests/test_&lt;provider&gt;.py</code> でparse系純粋関数を先にテスト</li>
+<li><strong><span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span></strong> — <code>scripts/api/&lt;provider&gt;.py</code> を新設。下記雛形の <code>_call</code>/<code>_summarize</code> だけ書き換える。<code>tests/test_&lt;provider&gt;.py</code> でparse系純粋関数を先にテスト</li>
 <li><strong>スキル統合</strong> — 呼び出し元SKILL.mdにPhase追加（🔷ユーザー確認ポイント付き）</li>
-<li><strong>実URL検証</strong> — 本物の入力でE2Eを通す（モックじゃなく実API）</li>
+<li><strong>実URL検証</strong> — 本物の入力でE2Eを通す（<span class="term" tabindex="0">モック<span class="term-popup">テスト用の「偽物」。本物の代わりに決まった値を返すようにして、テスト対象だけを確実に検査できるようにする</span></span>じゃなく実API）</li>
 <li><strong>完了記録</strong> — SSOT <code>01_DECISIONS/claude-code/</code> に完了ファイル。<code>prev:</code> で前フェーズにリンク</li>
 </ol>
 <h3>雛形（コピペして <code>_call</code>/<code>_summarize</code> だけ書き換え）</h3>
@@ -498,10 +498,10 @@ if __name__ == &quot;__main__&quot;:
 <h3>現場で踏んだ罠</h3>
 <ul>
 <li><strong>Gemini モデル廃止</strong>: <code>gemini-2.0-flash</code> は404。最新GAモデルを都度確認（現 <code>gemini-3.5-flash</code>）</li>
-<li><strong>SDK引数の勘</strong>: <code>Part.from_uri</code> は <code>file_uri=</code>（<code>url=</code> ではない）</li>
+<li><strong>SDK<span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>の勘</strong>: <code>Part.from_uri</code> は <code>file_uri=</code>（<code>url=</code> ではない）</li>
 <li><strong>自動特定の誤認</strong>: Last.fm <code>track.search</code> はYouTube動画タイトルのノイズで誤認しやすい → 🔷ユーザー確認 + 手動指定<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>必須</li>
 <li><strong>片方指定バグ</strong>: <code>--track</code>/<code>--artist</code> の片方だけ指定すると無視される → XORバリデーション</li>
-<li><strong>timeout は今は死にパラメータ</strong>: <span class="term" tabindex="0">docstring<span class="term-popup">ドックストリング。関数等の直後に書く説明文。プログラムの動作を1行で説明し、AIや人間がコードを理解する助けになる</span></span>に「将来signalで適用」と明記（SDK側がタイムアウト保持）</li>
+<li><strong>timeout は今は死にパラメータ</strong>: <span class="term" tabindex="0">docstring<span class="term-popup">ドックストリング。関数等の直後に書く説明文。プログラムの動作を1行で説明し、AIや人間がコードを理解する助けになる</span></span>に「将来signalで適用」と明記（SDK側が<span class="term" tabindex="0">タイムアウト<span class="term-popup">待ち時間の上限。指定時間内に応答が無ければ「失敗」とみなして打ち切る仕組み</span></span>保持）</li>
 </ul>
 <div class="callout callout-info"><p>詳細（アーキテクチャ全体・フェーズ別成果）: SSOT <code>01_DECISIONS/claude-code/2026-06-18_サードパーティAPI統合アーキテクチャ.md</code></p></div>
 <hr />
@@ -524,7 +524,7 @@ if __name__ == &quot;__main__&quot;:
 </tr>
 <tr>
 <td><code>evaluation/</code></td>
-<td>外部評価フレームワーク（evalplus等）</td>
+<td>外部評価<span class="term" tabindex="0">フレームワーク<span class="term-popup">アプリを作るための骨組み部品のセット。土台が用意されているので、中身の作り込みに集中できる</span></span>（evalplus等）</td>
 <td>実コードとは別物</td>
 </tr>
 <tr>
@@ -533,13 +533,13 @@ if __name__ == &quot;__main__&quot;:
 <td>現行プロダクトではない</td>
 </tr>
 <tr>
-<td><code>.<span class="term" tabindex="0">venv<span class="term-popup">ブイエンブ。Python標準の仮想環境を作るコマンド/仕組み。プロジェクトごとにライブラリを分けてインストールできるようにする</span></span>/</code> <code>venv/</code></td>
+<td><code>.venv/</code> <code>venv/</code></td>
 <td>Python<span class="term" tabindex="0">仮想環境<span class="term-popup">プロジェクトごとにインストールするライブラリを分ける独立したPython環境。プロジェクト間のバージョン衝突を防ぐ</span></span></td>
-<td>サードパーティライブラリ</td>
+<td>サードパーティ<span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span></td>
 </tr>
 <tr>
 <td><code>node_modules/</code> <code>dist/</code></td>
-<td>JS依存・ビルド成果物</td>
+<td>JS依存・<span class="term" tabindex="0">ビルド<span class="term-popup">ソースコードから、実行可能な完成品を組み立てること</span></span>成果物</td>
 <td>自分が書いたコードではない</td>
 </tr>
 <tr>
