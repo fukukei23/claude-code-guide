@@ -368,9 +368,9 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <ul>
 <li><strong>設定</strong>: <code>{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;bash ~/.claude/scripts/llm/llm-status.sh&quot;}</code></li>
 <li><strong>スクリプト</strong>: <code>~/.claude/scripts/llm/llm-status.sh</code></li>
-<li><strong>表示例（通常）</strong>: <code>🪟e36d | 🟡[GLM] GLM-5.2 | Ctx 45% (90k/200k) | Req 8.5MB/32 | +100 -50</code></li>
-<li><strong>表示例（peak帯フォールバック）</strong>: <code>🪟e36d | 🟠[peak→minimax] GLM-5.2→MiniMax-M3 | ...</code></li>
-<li><strong>並び順（重要度順・2026-07-23改）</strong>: タブID → LLM名 → Ctx → Req → 作業量。コスト（$表示）は削除（<code>claude-cost</code>コマンドで確認）</li>
+<li><strong>表示例（通常）</strong>: <code>🟡[GLM] GLM-5.2 | Ctx 45% (90k/200k) | Req 8.5MB/32 | +100 -50 | 🪟e36d</code></li>
+<li><strong>表示例（peak帯フォールバック）</strong>: <code>🟠[peak→minimax] GLM-5.2→MiniMax-M3 | ... | 🪟e36d</code></li>
+<li><strong>並び順（2026-08-16改）</strong>: LLM名 → Ctx → Req → 作業量 → タブID。コスト（$表示）は削除（<code>claude-cost</code>コマンドで確認）。※スマホ表示で末尾が見切れるため、モデル・コンテキストを先頭に変更（旧: タブID先頭・2026-07-23〜）</li>
 </ul>
 <div class="table-wrapper"><table>
 <thead>
@@ -381,7 +381,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </thead>
 <tbody>
 <tr>
-<td><code>🪟XXXX</code></td>
+<td><code>🪟XXXX</code>（末尾）</td>
 <td>タブ識別子（WT_SESSION先頭4桁・/clearで不変・4タブ運用での区別。未設定時はsession_id先頭4桁）</td>
 </tr>
 <tr>
