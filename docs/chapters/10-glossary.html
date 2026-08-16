@@ -178,19 +178,19 @@
 
         <article class="chapter-body">
             <h1>10 用語集 — Claude Code 関連の全用語</h1>
-<div class="callout callout-info"><p><strong>プログラミング全般の用語</strong>（TDD, DDD, SOLID, Pydantic等）は <a href="#">用語集</a> を参照。
+<div class="callout callout-info"><p><strong>プログラミング全般の用語</strong>（<span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span>, DDD, SOLID, Pydantic等）は <a href="#">用語集</a> を参照。
 このページはClaude Code固有の用語のみを扱います。</p></div>
 <h2>A</h2>
-<h3>Agent（エージェント）</h3>
-<p>Claude Codeの機能の一つ。サブエージェント（別のAIインスタンス）を起動して、独立したコンテキストでタスクを実行させる。→ <a href="07-agents.html">07_エージェント</a></p>
+<h3>Agent（<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>）</h3>
+<p>Claude Codeの機能の一つ。<span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>（別のAIインスタンス）を起動して、独立したコンテキストでタスクを実行させる。→ <a href="07-agents.html">07_エージェント</a></p>
 <h3>Auto Memory（自動メモリ）</h3>
 <p>Claude Codeが自動的に保存・読み込みするプロジェクト単位の記憶。ユーザーの好み、フィードバック、プロジェクトの状況などを記録。→ <a href="06-memory.html">06_メモリ</a></p>
 <h3>Autocompact（自動コンパクション）</h3>
-<p>コンテキストが上限に近づいたとき、古い会話を自動的に要約して圧縮する機能。バッファとして33kトークンが確保されている。→ <a href="01-basics.html#autocompact">01_基礎概念</a></p>
+<p>コンテキストが上限に近づいたとき、古い会話を自動的に要約して圧縮する機能。バッファとして33k<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>が確保されている。→ <a href="01-basics.html#autocompact">01_基礎概念</a></p>
 <hr />
 <h2>B</h2>
 <h3>Bash</h3>
-<p>Claude Codeの基本ツールの一つ。シェルコマンドを実行する。</p>
+<p>Claude Codeの基本ツールの一つ。<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>コマンドを実行する。</p>
 <hr />
 <h2>C</h2>
 <h3>CLAUDE.md</h3>
@@ -200,8 +200,8 @@
 <h3>Compact（コンパクション）</h3>
 <p>会話を要約して圧縮する処理。<code>/compact</code>で手動実行、または自動（Autocompact）で実行される。→ <a href="02-commands.html#compact">02_コマンド一覧</a></p>
 <h3>Context（コンテキスト）</h3>
-<p>Claude Codeが一度に処理できる情報の総量。システムプロンプト、ツール定義、メモリ、会話履歴等で構成される。最大200kトークン。→ <a href="01-basics.html">01_基礎概念</a></p>
-<h3>Context Window（コンテキストウィンドウ）</h3>
+<p>Claude Codeが一度に処理できる情報の総量。<span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>、ツール定義、メモリ、会話履歴等で構成される。最大200kトークン。→ <a href="01-basics.html">01_基礎概念</a></p>
+<h3>Context Window（<span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span>）</h3>
 <p>一度に処理できるテキストの最大量。Claude Codeでは200kトークン。</p>
 <p>&lt;a id=&quot;context-saturation&quot;&gt;&lt;/a&gt;</p>
 <h3>コンテキスト飽和（Context Saturation）</h3>
@@ -209,7 +209,7 @@
 <ul>
 <li><strong>対策</strong>: <code>/clear</code>（文脈を捨てて完全リセット）・<code>/compact</code>（要約圧縮して継続）・<code>/branch</code>（別トピックへ分岐）</li>
 <li>
-<div class="callout callout-warn"><p>⚠️ <strong>Ctrl+C再起動では解決しない</strong>。Ctrl+Cはプロセスを殺すだけでセッション履歴（jsonl）は残る。再起動で <code>/resume</code>（続きから）を選ぶと履歴が丸ごと再読込され、<strong>同じ飽和状態に即復帰</strong>する。抜けるには新規セッションで始める（resumeしない）か <code>/clear</code>。</p></div>
+<div class="callout callout-warn"><p>⚠️ <strong>Ctrl+C再起動では解決しない</strong>。Ctrl+Cはプロセスを殺すだけで<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>履歴（jsonl）は残る。再起動で <code>/resume</code>（続きから）を選ぶと履歴が丸ごと再読込され、<strong>同じ飽和状態に即復帰</strong>する。抜けるには新規セッションで始める（resumeしない）か <code>/clear</code>。</p></div>
 </li>
 </ul>
 <p>→ 対比: <a href="#payload-bloat">ペイロード肥大化</a>（byte上限） / 関連: Autocompact・Compact・Context（本ページ内） / 手順: <a href="01-basics.html#autocompact">01_基礎概念 自動コンパクション</a>・<a href="02-commands.html">02_コマンド一覧</a></p>
@@ -218,7 +218,7 @@
 <h3>Desktop App</h3>
 <p>Windows/Mac用のスタンドアロンアプリケーション。CLIより機能は限定。→ <a href="09-integration.html">09_統合</a></p>
 <h3>Dynamic Workflows（ダイナミックワークフロー）</h3>
-<p>2026-05-28発表（research preview）。Claudeがタスクの段取りをスクリプトとして書き出し、数十〜数百のサブエージェントを並列実行、相互検証してから1つの回答にまとめる仕組み。同時実行最大16エージェント、合計最大1,000。起動方法: プロンプトに「workflow」記述、<code>/deep-research</code>、<code>/effort ultracode</code>（モデル限定）。→ <a href="#">Dynamic Workflows調査</a></p>
+<p>2026-05-28発表（research preview）。Claudeがタスクの段取りをスクリプトとして書き出し、数十〜数百のサブエージェントを並列実行、相互検証してから1つの回答にまとめる仕組み。同時実行最大16エージェント、合計最大1,000。起動方法: <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>に「workflow」記述、<code>/deep-research</code>、<code>/effort ultracode</code>（モデル限定）。→ <a href="#">Dynamic Workflows調査</a></p>
 <hr />
 <h2>E</h2>
 <h3>Edit</h3>
@@ -233,8 +233,8 @@
 <p>サブエージェントの実行モード。結果を待ってから次に進む。→ <a href="07-agents.html">07_エージェント</a></p>
 <hr />
 <h2>H</h2>
-<h3>Hook（フック）</h3>
-<p>特定のイベント発生時に自動実行されるシェルスクリプト。SessionStart, PreToolUse, PostToolUse, Stopの4種類。→ <a href="05-hooks.html">05_フック</a></p>
+<h3><span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>（フック）</h3>
+<p>特定のイベント発生時に自動実行される<span class="term" tabindex="0">シェルスクリプト<span class="term-popup">コマンドの並びをファイルに書いて、まとめて自動実行できるようにしたもの。定型作業の手順書をプログラム化したもの</span></span>。SessionStart, PreToolUse, PostToolUse, Stopの4種類。→ <a href="05-<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s.html">05_フック</a></p>
 <hr />
 <h2>I</h2>
 <h3>IDE Integration（IDE連携）</h3>
@@ -249,7 +249,7 @@
 <h2>M</h2>
 <h3>Matcher（マッチャー）</h3>
 <p>フック設定で、どのツールに対してフックを適用するかを指定するフィルタ。→ <a href="05-hooks.html">05_フック</a></p>
-<h3>MCP（Model Context Protocol）</h3>
+<h3><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>（Model Context Protocol）</h3>
 <p>外部ツールをClaude Codeから利用するためのプロトコル。サーバー単位でツール群を追加。→ <a href="04-mcp.html">04_MCPサーバー</a></p>
 <h3>MEMORY.md</h3>
 <p>Auto Memoryの目次ファイル。各メモリファイルへのポインタを格納。→ <a href="06-memory.html#memory-md">06_メモリ</a></p>
@@ -262,14 +262,14 @@
 <h3>Plan Mode（プランモード）</h3>
 <p>Claude Codeがコードを書かずに計画だけを立てるモード。ユーザー承認後に実装開始。→ <a href="02-commands.html#plan-mode">02_コマンド一覧</a></p>
 <h3>Plugin（プラグイン）</h3>
-<p>Claude Codeにスキルやエージェントを追加する拡張パッケージ。superpowers, pr-review-toolkit等。</p>
+<p>Claude Codeに<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>やエージェントを追加する拡張パッケージ。superpowers, pr-review-toolkit等。</p>
 <h3>PreToolUse（プリツールユース）</h3>
 <p>ツール実行前に発火するフック。セキュリティチェック等に使用。→ <a href="05-hooks.html#pretooluse">05_フック</a></p>
 <h3>Project Memory（プロジェクトメモリ）</h3>
 <p>各リポジトリのCLAUDE.mdに記述されたルール。そのプロジェクト内でのみ有効。→ <a href="06-memory.html#project-memory">06_メモリ</a></p>
 <p>&lt;a id=&quot;payload-bloat&quot;&gt;&lt;/a&gt;</p>
 <h3>ペイロード肥大化（Payload Bloat）</h3>
-<p>APIへ送る<strong>リクエスト1回あたりのデータサイズ（バイト）<strong>が32MB上限を超え、「Request too large (max 32MB)」エラーで即座に弾かれる状態。トークンではなく</strong>バイト</strong>が原因。</p>
+<p><span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>へ送る<strong>リクエスト1回あたりのデータサイズ（バイト）<strong>が32MB上限を超え、「Request too large (max 32MB)」エラーで即座に弾かれる状態。トークンではなく</strong>バイト</strong>が原因。</p>
 <ul>
 <li><strong>主な引き金</strong>: 大きな画像の添付・巨大ファイルの一括Read・ツール結果の山積み</li>
 <li><strong>対策</strong>: 大きな添付や巨大Readを分割・<code>/clear</code> で会話を切り詰める</li>
@@ -289,7 +289,7 @@
 </li>
 <li><strong>大原則</strong>: 画像を見せたい時だけ添付。それ以外はCCに Read/LS させる</li>
 </ul>
-<p>→ 対比: <a href="#context-saturation">コンテキスト飽和</a>（トークン上限） / 関連: Read・Context（本ページ内） / 詳細: <a href="#">01_DECISIONS/claude-code/2026-06-16_image-path-auto-attach.md</a></p>
+<p>→ 対比: <a href="#context-saturation">コンテキスト飽和</a>（トークン上限） / 関連: Read・Context（本ページ内） / 詳細: <a href="#">01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/2026-06-16_image-path-auto-attach.md</a></p>
 <hr />
 <h2>R</h2>
 <h3>Read</h3>
@@ -297,7 +297,7 @@
 <hr />
 <h2>S</h2>
 <h3>SessionStart（セッションスタート）</h3>
-<p>セッション開始時に発火するフック。環境変数の読み込み等に使用。→ <a href="05-hooks.html#sessionstart">05_フック</a></p>
+<p>セッション開始時に発火するフック。<span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の読み込み等に使用。→ <a href="05-hooks.html#sessionstart">05_フック</a></p>
 <h3>settings.json</h3>
 <p>Claude Codeのメイン設定ファイル。MCP・権限・フック・環境変数を定義。→ <a href="08-config.html#settings-json">08_設定ファイル</a></p>
 <h3>Skill（スキル）</h3>
@@ -319,7 +319,7 @@
 <hr />
 <h2>W</h2>
 <h3>Worktree（ワークツリー）</h3>
-<p>Git Worktreeを使った独立した作業環境。メインブランチを汚さずに開発可能。→ <a href="09-integration.html#worktree">09_統合</a></p>
+<p>Git Worktreeを使った独立した作業環境。メイン<span class="term" tabindex="0">ブランチ<span class="term-popup">Gitで、本体（main）とは別に作業履歴を分けて保管できる「平行世界」。実験的な変更を本体に影響させずに進められる。終わったら本体に合流（マージ）する</span></span>を汚さずに開発可能。→ <a href="09-integration.html#worktree">09_統合</a></p>
 <h3>Write</h3>
 <p>Claude Codeの基本ツール。ファイルに内容を書き込む（新規作成・完全上書き）。</p>
 <hr />

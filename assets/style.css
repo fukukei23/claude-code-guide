@@ -715,3 +715,50 @@ img {
     height: auto;
     border-radius: 8px;
 }
+
+/* --- Term tooltip（用語クリック/ホバーで解説表示・add-term-tooltipパターン） --- */
+.term {
+    position: relative;
+    border-bottom: 2px dotted var(--accent);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+.term::after {
+    content: "？";
+    font-size: 0.7em;
+    color: var(--accent);
+    vertical-align: super;
+    margin-left: 1px;
+}
+.term-popup {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: 130%;
+    z-index: 50;
+    width: min(520px, 80vw);
+    background: var(--bg-card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    padding: 0.75rem 1rem;
+    font-size: 0.85em;
+    line-height: 1.7;
+    font-weight: normal;
+    text-align: left;
+}
+.term-popup::before {
+    content: "📖 解説";
+    display: block;
+    font-weight: 700;
+    color: var(--accent-dark);
+    font-size: 0.9em;
+    margin-bottom: 0.25rem;
+}
+.term:hover .term-popup,
+.term:focus .term-popup,
+.term.open .term-popup {
+    display: block;
+}

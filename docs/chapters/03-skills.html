@@ -177,9 +177,9 @@
         </div>
 
         <article class="chapter-body">
-            <h1>03 スキルシステム — Skills の仕組み</h1>
+            <h1>03 <span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>システム — Skills の仕組み</h1>
 <h2>スキルとは</h2>
-<p>スキルは <strong>プロンプトテンプレートのライブラリ</strong>。<code>/コマンド名</code> で呼び出すと、対応するプロンプトが読み込まれ、Claude Codeの動作をガイドする。</p>
+<p>スキルは <strong><span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>テンプレートのライブラリ</strong>。<code>/コマンド名</code> で呼び出すと、対応するプロンプトが読み込まれ、Claude Codeの動作をガイドする。</p>
 <pre><code>ユーザー: /brainstorming
     ↓
 Skill ツールが起動
@@ -235,7 +235,7 @@ Claude Code がその指示に従って動作
 </tr>
 <tr>
 <td><code>keybindings-help</code></td>
-<td>キーバインドのカスタマイズ</td>
+<td><span class="term" tabindex="0">キーバインド<span class="term-popup">キーボードのキー操作と機能の割り当てのこと。「Ctrl+Sで保存」のような対応関係</span></span>のカスタマイズ</td>
 </tr>
 <tr>
 <td><code>verify</code></td>
@@ -330,21 +330,21 @@ Claude Code がその指示に従って動作
 </ul>
 <p><strong>レビュー・品質保証系</strong></p>
 <ul>
-<li><code>multi-llm-review</code> — 設計・コード・文章を複数の<strong>異なるLLM</strong>（WSL版=MiniMax+Gemini / Win版=GLM+MiniMax+Gemini）に並列独立レビューさせ、ホストLLMが<strong>当初目的を唯一の基準</strong>に取捨統合して<strong>改訂案</strong>を作る。核心は<strong>モデル多様性</strong>。<strong>2026-08-06: <code>disable-model-invocation</code> 削除・自然言語（「各LLMにレビューして」等）で自動発動可</strong>（従来 <code>/multi-llm-review</code> 手動のみ → 調査で作成時7/2からの設定・事故由来でないと判定し削除）。機密確認→2段階ファイル経由で並列送信→文字種ステートマシンJSON抽出→8ステップ統合（Step6 pre-flight中断フェーズ）→改訂案+review_log.md出力。<strong>triple指定（<code>--triple</code> /「3機で」）で3機</strong>: MiniMax+Gemini+OpenRouter無料1機（purpose別選定）でしっかり批評。トリガー: 「マルチLLMレビューして」「複数LLMでレビュー」「各LLMにレビューして」「3つのLLMで」「しっかりレビューして」panel/jury/cross-LLM review/<code>/multi-llm-review</code>。<strong>Step6.5 集団サボりバイアス検知（自動発動）</strong>: 複数レビュアーが「省略/作るな」で一致＋根拠が測定結果依存の時、機械的に反証シナリオ生成＋行動可能警告を改訂案冒頭に挿入（ホスト判断委ねない・承認Phase2事象の再発防止・2026-07-26 C″追加）</li>
+<li><code>multi-llm-review</code> — 設計・コード・文章を複数の<strong>異なるLLM</strong>（WSL版=MiniMax+Gemini / Win版=GLM+MiniMax+Gemini）に並列独立レビューさせ、ホストLLMが<strong>当初目的を唯一の基準</strong>に取捨統合して<strong>改訂案</strong>を作る。核心は<strong>モデル多様性</strong>。<strong>2026-08-06: <code>disable-model-invocation</code> 削除・自然言語（「各LLMにレビューして」等）で自動発動可</strong>（従来 <code>/multi-llm-review</code> 手動のみ → 調査で作成時7/2からの設定・事故由来でないと判定し削除）。機密確認→2段階ファイル経由で並列送信→文字種ステートマシン<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>抽出→8ステップ統合（Step6 pre-flight中断フェーズ）→改訂案+review_log.md出力。<strong>triple指定（<code>--triple</code> /「3機で」）で3機</strong>: MiniMax+Gemini+OpenRouter無料1機（purpose別選定）でしっかり批評。トリガー: 「マルチLLMレビューして」「複数LLMでレビュー」「各LLMにレビューして」「3つのLLMで」「しっかりレビューして」panel/jury/cross-LLM review/<code>/multi-llm-review</code>。<strong>Step6.5 集団サボりバイアス検知（自動発動）</strong>: 複数レビュアーが「省略/作るな」で一致＋根拠が測定結果依存の時、機械的に反証シナリオ生成＋行動可能警告を改訂案冒頭に挿入（ホスト判断委ねない・承認Phase2事象の再発防止・2026-07-26 C″追加）</li>
 <li><code>multi-llm-review-lite</code> — 本式の<strong>軽量版</strong>（50-70行）・<strong>改訂案は作らない</strong>（箇条書きツッコミのみ）。設計・方針・構想を <strong>OpenRouter free 枠</strong>の LLM（用途別自動選定: code=north-mini-code / design=gpt-oss-20b / general=nemotron-3-super-120b）に独立ツッコミさせ、ホストが「重要度高/その他 + 押さえどころ1行」に整理。採用/却下はユーザー判断・会話内完結・ファイル出力なし・箇条書き返却。1機でも効果あり（ホストと別LLMの盲点補完）・複数LLMの確度確認や改訂案が要る時は normal へ。<strong>集団サボりバイアス機械検知</strong>: <code>--mode dual</code>等で複数LLMが省略方向に一致＋測定結果依存の時、警告を機械付与（深検査は normal Step6.5・2026-07-26 C″追加）。トリガー: **「軽く」**ツッコミ/「軽く他LLMでレビュー」/「サクッと方針チェック」/「これで抜けないか軽く聞いて」/<code>/multi-llm-review-lite</code></li>
 </ul>
 <p><strong>两スキルの使い分け（鉄則・2026-07-25）</strong>: 「軽く/サクッと」が入ったら <strong>lite</strong>（ツッコミ・改訂案なし）。「改訂案が欲しい・しっかり・3機」は <strong>normal</strong>。</p>
 <p><strong>影響範囲分析（multi-llm-review impactモード・2026-07-30追加）</strong></p>
 <ul>
-<li><code>multi-llm-review impactモード</code> — LLMの「想像力の欠如」（変更が未来に何を壊すか想像できない）を補う、2層構造の影響範囲分析。<strong>層a（自動）</strong>: PostToolUse で <code>git diff --unified=0</code> 走査 → <code>trigger_keywords</code> 正規化マッチ → category enum 判定 → <code>additionalContext</code> に3択（「起動/無視/何もしない」）を軽量注入。<strong>層b（手動発動）</strong>: 複数LLMにペルソナ分割（P1=ドメイン専門家／P2=破壊的変更検知／P3=時系列変化）で未来シナリオ想像→統合。<strong>静的危険操作カタログ</strong>（DOP-001〜005）に一致時のみルールベース自動発動（M7=A'）。ゴールデンセット5件（#7-9+想定2件）でprecision管理。仕様: <code>docs/superpowers/specs/2026-07-30-multi-llm-review-impact-mode-design.md</code> v0.2。実装: <code>~/.claude/scripts/hooks/impact-a-wrapper.sh</code> + <code>impact_a/*.py</code> 6タスク plan。バトルフェスタ事案（2026-07-29 Livepocket）= 直接動機。トリガー: 「impact」「影響範囲分析」「未来の副作用」「取りこぼしチェック」。<strong>4層防御の層1実装</strong>（LLMサボりバイアス4層弱点の構造的対策）</li>
+<li><code>multi-llm-review impactモード</code> — LLMの「想像力の欠如」（変更が未来に何を壊すか想像できない）を補う、2層構造の影響範囲分析。<strong>層a（自動）</strong>: PostToolUse で <code>git diff --unified=0</code> 走査 → <code>trigger_keywords</code> 正規化マッチ → category enum 判定 → <code>additionalContext</code> に3択（「起動/無視/何もしない」）を軽量注入。<strong>層b（手動発動）</strong>: 複数LLMにペルソナ分割（P1=ドメイン専門家／P2=破壊的変更検知／P3=時系列変化）で未来シナリオ想像→統合。<strong>静的危険操作カタログ</strong>（DOP-001〜005）に一致時のみルールベース自動発動（M7=A'）。ゴールデンセット5件（#7-9+想定2件）でprecision管理。仕様: <code>docs/superpowers/specs/2026-07-30-multi-llm-review-impact-mode-design.md</code> v0.2。実装: <code>~/.claude/scripts/<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s/impact-a-wrapper.sh</code> + <code>impact_a/*.py</code> 6タスク plan。バトルフェスタ事案（2026-07-29 Livepocket）= 直接動機。トリガー: 「impact」「影響範囲分析」「未来の副作用」「取りこぼしチェック」。<strong>4層防御の層1実装</strong>（LLMサボりバイアス4層弱点の構造的対策）</li>
 </ul>
 <p><strong>画像理解系</strong></p>
 <ul>
-<li><code>vision-analyze</code> — GLM-5.2等のvision非対応モデル環境で画像を理解（被写体・OCR・構図・UI構造）。主ルート Gemini 2.5 Flash（<code>scripts/api/gemini_vision.py</code>）・副ルート 4_5v MCP（ReadのCDN URL→analyze_image）。モデル陳腐化耐性5層（config候補外部化＋自動フォールバック＋paid_ok課金防止）。トリガー: 「画像見て」「スクショ見て」「画像分析して」「画像理解」<code>/vision-analyze</code></li>
+<li><code>vision-analyze</code> — GLM-5.2等のvision非対応モデル環境で画像を理解（被写体・OCR・構図・UI構造）。主ルート Gemini 2.5 Flash（<code>scripts/api/gemini_vision.py</code>）・副ルート 4_5v <span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>（ReadのCDN URL→analyze_image）。モデル陳腐化耐性5層（config候補外部化＋自動<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>＋paid_ok課金防止）。トリガー: 「画像見て」「スクショ見て」「画像分析して」「画像理解」<code>/vision-analyze</code></li>
 </ul>
 <p><strong>相談・アドバイザー系</strong></p>
 <ul>
-<li><code>fable-advisor</code> — Fable5を相談役として呼び出す軽量スキル。大規模リファクタ計画・行き詰まったデバッグ・完了前の最終確認など、本当に難しい判断の時だけ手動発動。トリガー: 「Fableに相談して」「Fable5に聞いて」「advisorに相談」</li>
+<li><code>fable-advisor</code> — Fable5を相談役として呼び出す軽量スキル。大規模リファクタ計画・行き詰まった<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>・完了前の最終確認など、本当に難しい判断の時だけ手動発動。トリガー: 「Fableに相談して」「Fable5に聞いて」「advisorに相談」</li>
 </ul>
 </blockquote>
 <hr />
@@ -355,9 +355,9 @@ Claude Code がその指示に従って動作
 <li>スキルの内容がClaude Codeのコンテキストに挿入される</li>
 <li>Claude Codeはその指示に従って動作する</li>
 </ol>
-<p><strong>トークン消費</strong>: スキル呼び出し時に一時的にトークンを消費するが、セッション開始時のスキル一覧（~2.4k）は常にロードされている。</p>
+<p><strong><span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>消費</strong>: スキル呼び出し時に一時的にトークンを消費するが、<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>開始時のスキル一覧（~2.4k）は常にロードされている。</p>
 <h3>プラグインスキルと自作スキルで発火機構が違う（重要）</h3>
-<p><strong>プラグインスキル（superpowers等）は、プラグインを導入するだけで自動発火する。</strong> superpowers プラグインを入れると <code>using-superpowers</code> スキルが SessionStart でシステムプロンプトへ自動ロードされ、このスキルが持つ「1%でも当てはまれば発動せよ」ルールにより、ユーザーが明示的に <code>/brainstorming</code> を打たなくても「ブレストしたい」等の自然発話で発火する。<strong>CLAUDE.md のワード明示は不要。</strong></p>
+<p><strong>プラグインスキル（superpowers等）は、プラグインを導入するだけで自動発火する。</strong> superpowers プラグインを入れると <code>using-superpowers</code> スキルが SessionStart で<span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>へ自動ロードされ、このスキルが持つ「1%でも当てはまれば発動せよ」ルールにより、ユーザーが明示的に <code>/brainstorming</code> を打たなくても「ブレストしたい」等の自然発話で発火する。<strong>CLAUDE.md のワード明示は不要。</strong></p>
 <p><strong>自作スキル（resume-session・teian等）は、自動ロード機構がない。</strong> CLAUDE.md の「スキルトリガー」欄でワード明示しないと、description だけでは確実に発火しない。</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -396,9 +396,9 @@ Claude Code がその指示に従って動作
 <hr />
 <h2 id="builtin">🧩 ビルトインスキル</h2>
 <h3 id="claude-api"><code>claude-api</code>（Built-in）</h3>
-<p><strong>Anthropic SDK関連作業</strong>。Claude APIを使ったアプリの開発・デバッグ。</p>
+<p><strong>Anthropic SDK関連作業</strong>。Claude <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>を使ったアプリの開発・デバッグ。</p>
 <h3 id="update-config"><code>update-config</code>（Built-in）</h3>
-<p><strong>settings.jsonの変更</strong>。権限追加・環境変数設定・フック設定等。</p>
+<p><strong>settings.jsonの変更</strong>。権限追加・<span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>設定・フック設定等。</p>
 <h3 id="init"><code>init</code>（Built-in）</h3>
 <p><strong>プロジェクト初期化</strong>。CLAUDE.mdを自動生成。</p>
 <h3 id="loop"><code>loop</code>（Built-in）</h3>
@@ -433,7 +433,7 @@ Claude Code がその指示に従って動作
 <li>根本原因の特定</li>
 </ul>
 <h3 id="tdd"><code>superpowers:test-driven-development</code></h3>
-<p><strong>TDD（テスト駆動開発）の実践</strong>。</p>
+<p><strong><span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span>（テスト駆動開発）の実践</strong>。</p>
 <ul>
 <li>Red → Green → Refactor のサイクル</li>
 <li>テストを先に書いてから実装</li>
@@ -446,13 +446,13 @@ Claude Code がその指示に従って動作
 <li>証拠（テスト出力等）を確認してから完了宣言</li>
 </ul>
 <h3 id="worktrees"><code>superpowers:using-git-worktrees</code></h3>
-<p><strong>Git Worktree の作成・管理</strong>。機能開発時にメインブランチから分離する。</p>
+<p><strong>Git Worktree の作成・管理</strong>。機能開発時にメイン<span class="term" tabindex="0">ブランチ<span class="term-popup">Gitで、本体（main）とは別に作業履歴を分けて保管できる「平行世界」。実験的な変更を本体に影響させずに進められる。終わったら本体に合流（マージ）する</span></span>から分離する。</p>
 <h2 id="agent-skills">🛠️ agent-skills（開発全工程・26スキル）</h2>
 <p>開発全工程（定義→計画→実装→検証→Ship）をカバーする26スキル。<strong>工程順</strong>に5群に整理しています。</p>
 <p><strong>思いを固める</strong></p>
 <h3 id="doubt-driven"><code>agent-skills:doubt-driven-development</code>（疑い駆動）</h3>
-<p><strong>非自明な決定を、別エージェントに「敵対的レビュー」させてから確定する</strong>。前提は「自信のある答え≠正しい答え」――長いセッションは前提を知らず「事実」に変えてしまうのを防ぐ。</p>
-<p><strong>いつ使う</strong>: 分岐ロジック追加・モジュール/サービス境界を跨ぐ・型システムで検証できない性質（スレッド安全・冪等性・順序）・本番デプロイ等の取り消し困難な決定。リネーム等の機械操作には使わない。</p>
+<p><strong>非自明な決定を、別<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>に「敵対的レビュー」させてから確定する</strong>。前提は「自信のある答え≠正しい答え」――長いセッションは前提を知らず「事実」に変えてしまうのを防ぐ。</p>
+<p><strong>いつ使う</strong>: 分岐ロジック追加・モジュール/サービス境界を跨ぐ・型システムで検証できない性質（スレッド安全・<span class="term" tabindex="0">冪等<span class="term-popup">めいとう。「同じ操作を2回実行しても、1回実行した時と同じ結果になる」性質。再実行時の二重登録等の事故を防ぐ設計</span></span>性・順序）・本番<span class="term" tabindex="0">デプロイ<span class="term-popup">作ったプログラムやサイトを、実際に動く環境へ設置して公開すること</span></span>等の取り消し困難な決定。リネーム等の機械操作には使わない。</p>
 <p><strong>5ステップ（Doubt cycle）</strong>:</p>
 <ol>
 <li><strong>CLAIM</strong> — 決定を2-3行で書く＋なぜ重要か</li>
@@ -464,7 +464,7 @@ Claude Code がその指示に従って動作
 <li>対話時は cross-model（Gemini/Codex）の第2意見もユーザーに提案（毎サイクル必須・silent skip禁止）</li>
 </ul>
 </li>
-<li><strong>RECONCILE</strong> — 指摘を分類: ① contract misread（CONTRACTが不明確）② actionable（直す）③ trade-off（許容・明記）④ noise（誤指摘）。<strong>ゴム印禁止</strong>・自分が依然オーケストレータ</li>
+<li><strong>RECON<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>LE</strong> — 指摘を分類: ① contract misread（CONTRACTが不明確）② actionable（直す）③ trade-off（許容・明記）④ noise（誤指摘）。<strong>ゴム印禁止</strong>・自分が依然オーケストレータ</li>
 <li><strong>STOP</strong> — trivial になるまで / 3サイクル上限 / ユーザー「ship it」</li>
 </ol>
 <div class="callout callout-warn"><p>⚠️ <strong>自分で自分を叩くのは劣化版</strong>（自分のバイアス・結論を引き継ぐ）。本式は<strong>必ず別エージェント</strong>にレビューさせる。CLAIM を渡さない制約が、自問では守れない（自分の結論を知ったまま叩くから）。</p></div>
@@ -507,9 +507,9 @@ Claude Code がその指示に従って動作
 <h3 id="git-workflow"><code>agent-skills:git-workflow-and-versioning</code>（git運用）</h3>
 <p><strong>gitワークフローの構造化</strong>。コミット・ブランチ・コンフリクト解消・並列ストリームの作業管理に（<a href="#worktrees">using-git-worktrees</a> と同系統）。</p>
 <h3 id="code-review-quality"><code>agent-skills:code-review-and-quality</code>（コードレビュー）</h3>
-<p><strong>多軸コードレビュー</strong>。マージ前に。自分/他者/エージェントが書いたコードを複数観点で評価（<a href="#code-review">code-review</a>・<a href="#pr-review">review-pr</a> と同系統）。</p>
+<p><strong>多軸コードレビュー</strong>。<span class="term" tabindex="0">マージ<span class="term-popup">分かれていた変更を1つに統合すること。ブランチで進めた作業を本体（main）に取り込む作業</span></span>前に。自分/他者/エージェントが書いたコードを複数観点で評価（<a href="#code-review">code-review</a>・<a href="#pr-review">review-pr</a> と同系統）。</p>
 <h3 id="code-simplification"><code>agent-skills:code-simplification</code>（コード簡略化）</h3>
-<p><strong>振る舞いを変えずにコードを明確化</strong>。リファクタリング・読みやすさ・保守性向上に。</p>
+<p><strong>振る舞いを変えずにコードを明確化</strong>。<span class="term" tabindex="0">リファクタリング<span class="term-popup">動きを変えずにコードの中身を読みやすく整理すること。機能追加でなく「掃除」の作業</span></span>・読みやすさ・保守性向上に。</p>
 <h3 id="performance"><code>agent-skills:performance-optimization</code>（パフォーマンス）</h3>
 <p><strong>アプリケーション性能の最適化</strong>。性能要件・疑わしい回退・Core Web Vitalsや読込時間の改善に。</p>
 <h3 id="browser-testing"><code>agent-skills:browser-testing-with-devtools</code>（ブラウザテスト）</h3>
@@ -517,9 +517,9 @@ Claude Code がその指示に従って動作
 <h3 id="observability"><code>agent-skills:observability-and-instrumentation</code>（観測性）</h3>
 <p><strong>本番の振る舞いが見えるように計装</strong>。ログ・メトリクス・トレーシング・アラートの追加に。</p>
 <h3 id="security-hardening"><code>agent-skills:security-and-hardening</code>（セキュリティ）</h3>
-<p><strong>脆弱性対策のハードニング</strong>。ユーザー入力・認証・データ保存・外部連携など、信頼できないデータを扱う時に。</p>
+<p><strong>脆弱性対策のハードニング</strong>。ユーザー入力・<span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span>・データ保存・外部連携など、信頼できないデータを扱う時に。</p>
 <h3 id="cicd"><code>agent-skills:ci-cd-and-automation</code>（CI/CD）</h3>
-<p><strong>CI/CDパイプラインの構築・変更</strong>。ビルド/デプロイ自動化・品質ゲート・テストランナー設定に。</p>
+<p><strong>CI/CD<span class="term" tabindex="0">パイプ<span class="term-popup">コマンドの結果を次のコマンドへ流し込む「｜」記号の仕組み。「検索する → 結果を数える」のように処理をつなげられる</span></span>ラインの構築・変更</strong>。ビルド/デプロイ自動化・品質ゲート・テストランナー設定に。</p>
 <h3 id="shipping"><code>agent-skills:shipping-and-launch</code>（本番ローンチ）</h3>
 <p><strong>本番デプロイの準備</strong>。ローンチ前チェックリスト・監視設定・段階的ロールアウト・ロールバック戦略に。</p>
 <h3 id="deprecation"><code>agent-skills:deprecation-and-migration</code>（非推奨化・移行）</h3>
@@ -558,7 +558,7 @@ Claude Code がその指示に従って動作
 </ul>
 <hr />
 <h3 id="guide-builder"><code>guide-builder</code>（カスタムスキル）</h3>
-<p><strong>Markdownソース → モバイル対応GitHub Pagesガイドサイトを構築・更新</strong>（読む系・詳細ガイド向け）。新規リポジトリ立ち上げ（newモード）と既存サイトへの章追加（addモード）の2モード。</p>
+<p><strong>Markdownソース → モバイル対応<span class="term" tabindex="0">GitHub Pages<span class="term-popup">GitHubが無料で提供するWeb公開サービス。リポジトリ内のHTMLファイルをそのままWebサイトとして公開できる。本ガイドもこれで公開されている</span></span>ガイドサイトを構築・更新</strong>（読む系・詳細ガイド向け）。新規リポジトリ立ち上げ（newモード）と既存サイトへの章追加（addモード）の2モード。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「章追加して」「/guide-builder」<code>/guide-builder</code></li>
 <li><strong>新規作成</strong>: <code>make-guide</code> が受け持ち、読む系と判定されてから本スキルに振り分けられる</li>
@@ -587,7 +587,7 @@ Claude Code がその指示に従って動作
 <li><strong>構想モード</strong>: 「これ残して」「決定事項にして」「構想メモ」で発動。<code>01_DECISIONS/</code> ではなく <code>バックログ.md</code> 該当タスク直下に📝WIPメモとして永続化（合意成立・spec未作成の中間状態を保存）。詳細は ssot-guide「05_記録・ドキュメント」の「構想段階の合意の永続化」</li>
 <li><strong>動作フロー</strong>: 情報収集 → 関連ファイル自動検出（フェーズ0.5） → 分類判定 → 確認表示 → SSOT記録 → CCガイド自動追記 → 関連ドキュメント同時更新 → ガイド転記 → git commit &amp; push</li>
 <li><strong>フェーズ0.5（関連ファイル自動検出）</strong>: 2つのマッピング設定（<code>タグマッピング.md</code>=プロジェクト別docs + <code>ハブマッピング.md</code>=00_SYSTEMハブ・2026-07-07新設）に基づき更新対象を自動検出。プロジェクトdocs→フェーズ3-6・00_SYSTEMハブ（セキュリティ設定ハブ/MCPガイド等）→フェーズ3-8（見逃し防止・LLM裁量抜きの機械表照合）</li>
-<li><strong>対応ハブ（12種・2026-07-07）</strong>: セキュリティ設定ハブ/自動化/MCP/リポジトリ索引/リンク運用方針/全体マップ_MOC/CCガイド + プロキシ(glm-rate-proxy運用ハブ)/通知(完了通知設定ハブ)/シークレット台帳/スキル記録ガイドライン/3層メモリ構造・<strong>00_SYSTEM直下=正典・CCガイド=派生</strong>（SSOT思想・5種追加と主従訂正はユーザー指摘で実施）</li>
+<li><strong>対応ハブ（12種・2026-07-07）</strong>: セキュリティ設定ハブ/自動化/MCP/リポジトリ索引/リンク運用方針/全体マップ_MOC/CCガイド + <span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>(glm-rate-proxy運用ハブ)/通知(完了通知設定ハブ)/シークレット台帳/スキル記録ガイドライン/3層メモリ構造・<strong>00_SYSTEM直下=正典・CCガイド=派生</strong>（SSOT思想・5種追加と主従訂正はユーザー指摘で実施）</li>
 <li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM呼び出し不要・不可）、Windows Desktop版はMCP経由で外部LLM呼び出し可</li>
 <li><strong>CCガイド自動同期</strong>: 記録内容がClaude Code機能（スキル/MCP/フック/settings）に関連する場合、対応するガイドページ（03/04/05/08等）への追記を自動判定・実行。SSOT内CCガイドマスターから claude-code-guide（派生物）へ同期</li>
 <li><strong>自動化タグ連動</strong>: tagsに「自動化」が含まれる場合、<code>自動化.md</code> も自動更新</li>
@@ -609,16 +609,16 @@ Claude Code がその指示に従って動作
 </ul>
 <hr />
 <h3 id="ssot-search"><code>ssot-search</code>（カスタムスキル）</h3>
-<p><strong>個人ナレッジベース（knowledge-base）をRAG検索</strong>。ripgrep全文検索 + sentence-transformers によるリランクで、1,900件超のMarkdownから関連ドキュメントを5件表示。</p>
+<p><strong>個人ナレッジベース（knowledge-base）を<span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>検索</strong>。rip<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span>全文検索 + sentence-transformers によるリランクで、1,900件超のMarkdownから関連ドキュメントを5件表示。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「SSOTから探して: &lt;キーワード&gt;」<code>/ssot-search</code></li>
 <li><strong>詳細</strong>: <a href="14-ssot-search.html">14_SSOTから探して</a></li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-search/</code>）</li>
-<li><strong>カバレッジ可視化（False Negative 対策・spec v3）</strong>: 検索結果末尾に母数・フィルタ結果・除外量・次点候補・低抽出率警告🚨(&lt;5%)を表示。「N件ヒット＝全部だ」でなく「未確認領域が残る」と気づける。<code>--no-coverage</code>（表示抑制）・<code>--log-coverage</code>（JSON stderr・計測用途）</li>
+<li><strong><span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>可視化（False Negative 対策・spec v3）</strong>: 検索結果末尾に母数・フィルタ結果・除外量・次点候補・低抽出率警告🚨(&lt;5%)を表示。「N件ヒット＝全部だ」でなく「未確認領域が残る」と気づける。<code>--no-coverage</code>（表示抑制）・<code>--log-coverage</code>（JSON stderr・計測用途）</li>
 </ul>
 <hr />
 <h3 id="new-session"><code>new-session</code>（カスタムスキル）</h3>
-<p><strong>コンテキスト圧縮・セッション引き継ぎ</strong>。コンテキストが溜まってきたときに新セッションへの引き継ぎプロンプトを自動生成する。</p>
+<p><strong><span class="term" tabindex="0">コンテキスト圧縮<span class="term-popup">会話が長くなって容量上限に近づいた時、AIが古い内容を要約にまとめて容量を空ける仕組み。要約された細部は失われるため、重要な経緯はファイルに記録して残す</span></span>・セッション引き継ぎ</strong>。コンテキストが溜まってきたときに新セッションへの引き継ぎプロンプトを自動生成する。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/new-session</code>（または「新セッション」「引き継ぎ」と言う）</li>
 <li><strong>動作フロー</strong>:
@@ -663,7 +663,7 @@ Claude Code がその指示に従って動作
 <li><strong>スキル特定</strong> — 会話コンテキスト優先 → 引数指定 → 一覧から選択</li>
 <li><strong>静的点検</strong> — フェーズ設計の矛盾・条件分岐の抜け・パスの環境依存・LLM名汎用化などを検査</li>
 <li><strong>ドライラン</strong> — 架空インプット2〜3パターンで各フェーズをトレース（実際の書き込みなし）</li>
-<li><strong>レポート出力</strong> — 🔴重大 / 🟡中程度 / 🔵軽微 の重大度別に列挙</li>
+<li><strong>レ<span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>出力</strong> — 🔴重大 / 🟡中程度 / 🔵軽微 の重大度別に列挙</li>
 <li><strong>修正適用</strong> — 全件 / 重大のみ / 個別選択 から選んで SKILL.md を編集</li>
 </ol>
 </li>
@@ -709,7 +709,7 @@ Claude Code がその指示に従って動作
 </ul>
 <hr />
 <h3 id="proxy-doctor"><code>proxy-doctor</code>（カスタムスキル）</h3>
-<p><strong>glm-rate-proxy（localhost:8787）の診断・修復</strong>。Claude Code CLI が GLM/MiniMax へ接続するためのローカルプロキシが止まる・エラーが出る・フォールバックが失敗する等の問題を素早く診断し、対処コマンドを案内する。診断＋案内のみでソースコードの自動書き換えは行わない。</p>
+<p><strong>glm-rate-proxy（<span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>:8787）の診断・修復</strong>。Claude Code CLI が GLM/MiniMax へ接続するためのローカルプロキシが止まる・エラーが出る・フォールバックが失敗する等の問題を素早く診断し、対処コマンドを案内する。診断＋案内のみでソースコードの自動書き換えは行わない。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/proxy-doctor</code>、「プロキシが壊れた」「GLMが使えない」「MiniMaxに切り替わらない」「フォールバックが失敗した」「400エラー」「401エラー」「429が頻発」「proxy止まってる」</li>
 <li><strong>フェーズ構成</strong>:
@@ -719,7 +719,7 @@ Claude Code がその指示に従って動作
 <li><strong>診断レポート</strong> — 検出問題・原因・推奨対処を提示し、ユーザー承認後に実行</li>
 </ol>
 </li>
-<li><strong>重要</strong>: プロキシが止まっても Claude Code は自動で ZAI 直結に切り替わる（<code>.bashrc</code> の <code>claude()</code> 関数）。プロキシ停止＝詰む、ではない</li>
+<li><strong>重要</strong>: プロキシが止まっても Claude Code は自動で ZAI 直結に切り替わる（<code>.<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>rc</code> の <code>claude()</code> 関数）。プロキシ停止＝詰む、ではない</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/proxy-doctor/</code>）</li>
 </ul>
 <h3 id="sentaku"><code>sentaku</code>（カスタムスキル）</h3>
@@ -775,14 +775,14 @@ Claude Code がその指示に従って動作
 <h3 id="vision-analyze"><code>vision-analyze</code>（カスタムスキル）</h3>
 <p><strong>画像を理解（被写体・OCR・構図・UI構造）し構造化して返す</strong>。CC CLIはGLM-5.2等のvision非対応モデルで稼働中のため画像を直接視認できず、外部APIに分析を委任（CCは結果の構造化・比較・保存に専念）。</p>
 <ul>
-<li><strong>Phase1（主ルート）</strong>: <code>cd /home/&lt;USER&gt;/projects/claude-config &amp;&amp; set -a; source ~/.secrets.env; set +a &amp;&amp; .venv/bin/python scripts/api/gemini_vision.py --image &lt;path&gt;</code>（<code>--allow-paid</code> で有料モデル許可）</li>
+<li><strong>Phase1（主ルート）</strong>: <code>cd /home/&lt;USER&gt;/projects/claude-config &amp;&amp; set -a; source ~/.secrets.env; set +a &amp;&amp; .<span class="term" tabindex="0">venv<span class="term-popup">ブイエンブ。Python標準の仮想環境を作るコマンド/仕組み。プロジェクトごとにライブラリを分けてインストールできるようにする</span></span>/bin/python scripts/api/gemini_vision.py --image &lt;path&gt;</code>（<code>--allow-paid</code> で有料モデル許可）</li>
 <li><strong>Phase2（副・フォールバック）</strong>: Read→CDN URL→<code>mcp__4_5v_mcp__analyze_image</code></li>
 <li><strong>モデル陳腐化耐性5層</strong>: <code>config/gemini-models.json</code>（候補外部化）＋<code>lib/api_base.py</code>（resolve_gemini_model/run_api_with_fallback・429=バックオフ/403/404=次候補・paid_ok課金防止）＋<code>gemini-models-health.py</code>（月1健診）</li>
 <li><strong>対象外</strong>: 画像生成（make-song/video-prompt-spec/demo-site-sales）・ピクセル修正（remove-huadian）・楽曲分析（analyze-song）</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/vision-analyze/</code>）</li>
 </ul>
 <h3 id="fable-advisor"><code>fable-advisor</code>（カスタムスキル）</h3>
-<p><strong>Fable5（またはAdvisor Tool相当の強いモデル）を相談役として呼び出すスキル</strong>。ネイティブのAdvisor Tool（<code>/advisor</code>）が使えない環境向けの代替実装。カスタムサブエージェント（<code>tools: Read</code>のみ）を使うことで、<code>general-purpose</code>サブエージェント比で約66%のコスト削減を実測済み（39,032→13,158トークン）。「Fableに相談して」で発動、briefing作成→相談→回答提示→ログ記録の流れで動く。</p>
+<p><strong>Fable5（またはAdvisor Tool相当の強いモデル）を相談役として呼び出すスキル</strong>。ネイティブのAdvisor Tool（<code>/advisor</code>）が使えない環境向けの代替実装。カスタム<span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>（<code>tools: Read</code>のみ）を使うことで、<code>general-purpose</code>サブエージェント比で約66%のコスト削減を実測済み（39,032→13,158トークン）。「Fableに相談して」で発動、briefing作成→相談→回答提示→ログ記録の流れで動く。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「Fableに相談して」「Fable5に聞いて」「advisorに相談」<code>/fable-advisor</code></li>
 <li><strong>いつ使う</strong>: 大規模リファクタ計画・行き詰まったデバッグ・完了前の最終確認など、本当に難しい判断の時だけ手動発動（気軽な質問には使わない・1回の相談で数千〜数万トークン消費）</li>
@@ -868,7 +868,7 @@ Claude Code がその指示に従って動作
 <p><strong>原則</strong>: スキル固有のルール・手順・フェーズ定義は <code>SKILL.md</code> が single source of truth。Cronプロンプト・CLAUDE.md・README 等に重複記載しない。<code>/skill-name</code> 呼び出し時に Skill ツールが SKILL.md を必ずロードするため、二重管理は必然的に乖離リスク（= design_mismatch）を生む。</p>
 <h3>違反パターン（事故事例）</h3>
 <ul>
-<li><code>renew-crons.sh</code> id=4 プロンプトに7ステップ全文を直書き → SKILL.md と二重記述 → 「commit/push」（旧）と「commit のみ・push 委譲」（SKILL.md）が矛盾（2026-06-26 2段階state化と同根の design_mismatch・解消: 2026-07-06_ssot-sync-auto-Cronプロンプト-7ステップ-二重記述解消）</li>
+<li><code>renew-<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>s.sh</code> id=4 プロンプトに7ステップ全文を直書き → SKILL.md と二重記述 → 「commit/push」（旧）と「commit のみ・push 委譲」（SKILL.md）が矛盾（2026-06-26 2段階state化と同根の design_mismatch・解消: 2026-07-06_ssot-sync-auto-Cronプロンプト-7ステップ-二重記述解消）</li>
 <li>CLAUDE.md本文の要約と同一情報を hooks/ガイドで重複記載（2026-07-05 第2回監査で原則確立）</li>
 </ul>
 <h3>適用判断</h3>

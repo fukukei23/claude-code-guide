@@ -191,14 +191,14 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
 </ol>
 </aside>
 <hr />
-<p>Claude Code を「指示待ちの道具」から「毎日自走する開発パートナー」に変えるための仕組み全体を <strong>Loop Engineering</strong> と呼んでいる。個別の部品（cron・hook・スキル）の話は各章に譲り、本章は<strong>全体像と設計思想</strong>をまとめる。</p>
+<p>Claude Code を「指示待ちの道具」から「毎日自走する開発パートナー」に変えるための仕組み全体を <strong>Loop Engineering</strong> と呼んでいる。個別の部品（<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>・<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>）の話は各章に譲り、本章は<strong>全体像と設計思想</strong>をまとめる。</p>
 <hr />
 <h2>全体フロー</h2>
 <pre><code>朝6:07（自動）  Daily Triage 発火
                 バックログ + 前回の引き継ぎ + 進行中タスクを収集
                 → LLMが優先度判定 → today-tasks.md 生成 → Discord通知
        ↓
-セッション開始   候補が自動表示される
+<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>開始   候補が自動表示される
        ↓
 人間の承認      approve.py で番号選択（ここだけ手動・意図的なゲート）
        ↓
@@ -248,7 +248,7 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
 </tr>
 <tr>
 <td><code>run-task.sh</code></td>
-<td>検証付き実行。実装と検証を<strong>別のLLMプロセス</strong>に分離（自己採点を防ぐ）。currentなし起動時は即exit（REPOフォールバックによるHOME repo誤動作防止）・起動時に <code>current.started=True</code> + <code>running=True</code> を設定</td>
+<td>検証付き実行。実装と検証を<strong>別のLLMプロセス</strong>に分離（自己採点を防ぐ）。currentなし起動時は即exit（REPO<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>によるHOME repo誤動作防止）・起動時に <code>current.started=True</code> + <code>running=True</code> を設定</td>
 </tr>
 <tr>
 <td><code>next_issue.py</code></td>
@@ -331,7 +331,7 @@ card_desc: Daily Triage→人間承認→検証付き自律実行の全体像と
 </tr>
 <tr>
 <td>設計判断の記録</td>
-<td><code>01_DECISIONS/</code>（日付付き決定ログ）</td>
+<td><code>01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/</code>（日付付き決定ログ）</td>
 </tr>
 <tr>
 <td>実装本体</td>

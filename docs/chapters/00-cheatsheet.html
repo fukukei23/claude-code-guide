@@ -179,7 +179,7 @@
 <div class="callout callout-info"><p>各項目の「→」リンク先で詳解を読めます。</p></div>
 <hr />
 <h2>1. ビルトインコマンド</h2>
-<h3>セッション管理</h3>
+<h3><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>管理</h3>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -223,7 +223,7 @@
 <tbody>
 <tr>
 <td><code>/context</code></td>
-<td>コンテキスト使用量を表示（トークン消費の内訳）</td>
+<td>コンテキスト使用量を表示（<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>消費の内訳）</td>
 <td><a href="02-commands.html#context">02_コマンド</a></td>
 </tr>
 <tr>
@@ -265,7 +265,7 @@
 </tr>
 <tr>
 <td><code>/mcp</code></td>
-<td>MCPサーバーの状態を表示</td>
+<td><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバーの状態を表示</td>
 <td><a href="02-commands.html#mcp">02_コマンド</a></td>
 </tr>
 </tbody>
@@ -302,12 +302,12 @@
 </tr>
 <tr>
 <td><code>/agents</code></td>
-<td>カスタムエージェントを管理</td>
+<td>カスタム<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>を管理</td>
 <td><a href="02-commands.html#agents">02_コマンド</a></td>
 </tr>
 <tr>
 <td><code>/skills</code></td>
-<td>スキル一覧を表示</td>
+<td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>一覧を表示</td>
 <td><a href="02-commands.html#skills">02_コマンド</a></td>
 </tr>
 <tr>
@@ -361,7 +361,7 @@
 <tr>
 <td><code>superpowers:test-driven-development</code></td>
 <td>Plugin</td>
-<td>TDD実践</td>
+<td><span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span>実践</td>
 <td><a href="03-skills.html#tdd">03_スキル</a></td>
 </tr>
 <tr>
@@ -439,7 +439,7 @@
 <tr>
 <td><code>fewer-permission-prompts</code></td>
 <td>Built-in</td>
-<td>権限プロンプト削減</td>
+<td>権限<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>削減</td>
 <td><a href="03-skills.html#fewer-permission">03_スキル</a></td>
 </tr>
 </tbody>
@@ -503,7 +503,7 @@
 </table></div>
 <p><strong>合計</strong>: 83ツール / 21.4kトークン（コンテキストの10.7%）</p>
 <hr />
-<h2>4. フック（Hooks）</h2>
+<h2>4. フック（<span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s）</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -517,8 +517,8 @@
 <tr>
 <td><code>SessionStart</code></td>
 <td>セッション開始時</td>
-<td>環境変数読み込み・初期化</td>
-<td><a href="05-hooks.html#sessionstart">05_フック</a></td>
+<td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>読み込み・初期化</td>
+<td><a href="05-<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s.html#sessionstart">05_フック</a></td>
 </tr>
 <tr>
 <td><code>PreToolUse</code></td>
@@ -556,7 +556,7 @@
 <td><code>CLAUDE.md</code> (グローバル)</td>
 <td><code>~/.claude/CLAUDE.md</code></td>
 <td>全プロジェクト共通ルール</td>
-<td><a href="08-config.html#claude-md-global">08_設定</a></td>
+<td><a href="08-config.html#claude-md-<span class="term" tabindex="0">glob<span class="term-popup">グロブ。ファイル名を「＊（任意の文字列）」等のワイルドカードで指定する書き方。「*.md」＝すべてのmdファイル、のような使い方</span></span>al">08_設定</a></td>
 </tr>
 <tr>
 <td><code>CLAUDE.md</code> (プロジェクト)</td>
@@ -585,7 +585,7 @@
 <tr>
 <td><code>~/.secrets.env</code></td>
 <td>ホームディレクトリ</td>
-<td>APIキー一元管理</td>
+<td><span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キー一元管理</td>
 <td><a href="08-config.html#secrets">08_設定</a></td>
 </tr>
 </tbody>
@@ -713,7 +713,7 @@
 </tr>
 <tr>
 <td>リモートモード</td>
-<td>ヘッドレス・CI/CD実行</td>
+<td>ヘッドレス・<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>/CD実行</td>
 <td><a href="09-integration.html#remote">09_統合</a></td>
 </tr>
 <tr>
@@ -733,7 +733,7 @@
 </tr>
 <tr>
 <td><strong>Dynamic Workflows</strong></td>
-<td><strong>数十〜数百サブエージェントの並列実行</strong>（research preview）</td>
+<td><strong>数十〜数百<span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>の並列実行</strong>（research preview）</td>
 <td><a href="#">Dynamic Workflows調査</a></td>
 </tr>
 </tbody>
@@ -767,7 +767,7 @@
 </tr>
 <tr>
 <td>設定ファイルが2つ存在</td>
-<td><code>~/.claude.json</code> + <code>~/.claude/settings.json</code> がマージされる</td>
+<td><code>~/.claude.json</code> + <code>~/.claude/settings.json</code> が<span class="term" tabindex="0">マージ<span class="term-popup">分かれていた変更を1つに統合すること。ブランチで進めた作業を本体（main）に取り込む作業</span></span>される</td>
 </tr>
 <tr>
 <td>フックがツールをブロック</td>

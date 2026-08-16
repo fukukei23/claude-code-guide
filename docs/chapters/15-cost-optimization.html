@@ -179,7 +179,7 @@
         <article class="chapter-body">
             <h1>15 コスト最適化構成 — Claude Code を安く使う裏技</h1>
 <div class="callout callout-warn"><p>⚠️ <strong>この章は <strong>個人の独自カスタマイズ</strong> です。</strong></p>
-<p>公式の Claude Code は Anthropic API（Sonnet/Opus/Haiku）をそのまま使います。
+<p>公式の Claude Code は Anthropic <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>（Sonnet/Opus/Haiku）をそのまま使います。
 以下は「Anthropic 課金を抑えて GLM/MiniMax にルーティングする」個人のコストカット手法の記録です。</p>
 <p><strong>📖 先に読む</strong>: 公式の Desktop App vs CLI の違い → <a href="01-basics.html">01_基礎概念</a></p></div>
 <hr />
@@ -203,20 +203,20 @@
 <td>スタータープラン $10 で GLM 失敗時の代替</td>
 </tr>
 <tr>
-<td>レートプロキシ（glm-rate-proxy）</td>
-<td>429 回避＋自動フォールバック</td>
+<td>レート<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>（glm-rate-proxy）</td>
+<td>429 回避＋自動<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span></td>
 </tr>
 </tbody>
 </table></div>
 <hr />
 <h2>環境別の全体構成</h2>
 <h3>WSL2 CLI 版</h3>
-<pre><code>Claude Code → localhost:8787（glm-rate-proxy）→ Claude
+<pre><code>Claude Code → <span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>:8787（glm-rate-proxy）→ Claude
                                             └ 429 時 → MiniMax API（自動フォールバック）
 </code></pre>
 <ul>
 <li><strong>ベースモデル</strong>: Claude（CLI 自体が GLM で動作）</li>
-<li><strong>glm MCP</strong>: ❌ <strong>不要</strong>（二重呼び出しになる）</li>
+<li><strong>glm <span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span></strong>: ❌ <strong>不要</strong>（二重呼び出しになる）</li>
 <li><strong>minimax MCP</strong>: ✅ <strong>必要</strong>（① proxy の自動 fallback 先 ② 明示的呼び出しの 2 役）</li>
 </ul>
 <h3>Windows Desktop App 版</h3>
@@ -242,7 +242,7 @@
 <tr>
 <td>WSL CLI</td>
 <td><code>~/.claude/settings.json</code></td>
-<td><code>bash ~/.claude/scripts/start-glm-mcp.sh</code></td>
+<td><code><span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span> ~/.claude/scripts/start-glm-mcp.sh</code></td>
 </tr>
 <tr>
 <td>Windows Desktop</td>

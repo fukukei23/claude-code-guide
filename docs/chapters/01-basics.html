@@ -236,9 +236,9 @@
 <td>ターミナル（テキストのみ）</td>
 </tr>
 <tr>
-<td><strong>並行セッション</strong></td>
+<td><strong>並行<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span></strong></td>
 <td>タブで視覚的に管理</td>
-<td>バックグラウンドエージェント</td>
+<td>バックグラウンド<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span></td>
 </tr>
 <tr>
 <td><strong>変更差分</strong></td>
@@ -253,7 +253,7 @@
 <tr>
 <td><strong>スクリプト連携</strong></td>
 <td>不可</td>
-<td>可（パイプ・cron・hook）</td>
+<td>可（<span class="term" tabindex="0">パイプ<span class="term-popup">コマンドの結果を次のコマンドへ流し込む「｜」記号の仕組み。「検索する → 結果を数える」のように処理をつなげられる</span></span>・<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>・<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>）</td>
 </tr>
 <tr>
 <td><strong>対応OS</strong></td>
@@ -266,12 +266,12 @@
 <td><code>settings.json</code></td>
 </tr>
 <tr>
-<td><strong>Hook / Skill</strong></td>
+<td><strong><span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> / Skill</strong></td>
 <td>✅ 対応</td>
 <td>✅ 対応</td>
 </tr>
 <tr>
-<td><strong>MCPサーバー</strong></td>
+<td><strong><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバー</strong></td>
 <td>✅ 対応</td>
 <td>✅ 対応</td>
 </tr>
@@ -294,7 +294,7 @@
 </tr>
 <tr>
 <td>MCP起動コマンド</td>
-<td><code>wsl -d Ubuntu -- bash ...</code>（WSL経由）</td>
+<td><code>wsl -d Ubuntu -- <span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span> ...</code>（WSL経由）</td>
 <td><code>bash ...</code>（直接）</td>
 </tr>
 </tbody>
@@ -354,7 +354,7 @@
 </tr>
 <tr>
 <td>互いのファイルの見え方</td>
-<td><code>\\wsl.localhost\Ubuntu\home\&lt;user&gt;\...</code> 経由でのみ見える</td>
+<td><code>\\wsl.<span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>\Ubuntu\home\&lt;user&gt;\...</code> 経由でのみ見える</td>
 <td>通常はWindows側を直接見ない</td>
 </tr>
 </tbody>
@@ -362,23 +362,23 @@
 <p>この構造の違いが、<strong>handoff（セッション引き継ぎ）を介した環境またぎ</strong>で具体的な不具合として表面化する。WSL2版で書かれたhandoff/SKILL.md/SSOTには<code>~/projects/...</code>のようなWSL基準のパスが書かれており、これをWindows Desktop版が読むと:</p>
 <ol>
 <li><strong>パス解決の失敗</strong>: <code>~/projects/...</code>がWindows側の<code>C:\Users\...</code>に誤解決され、ファイルが見つからない → <a href="05-hooks.html#pretooluse%E3%81%A7%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E6%9B%B8%E3%81%8D%E6%8F%9B%E3%81%88updatedinput%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3">05_フック「PreToolUseでのコマンド書き換え」</a>で自動変換するフックを導入済み</li>
-<li><strong>GitHub認証の失敗</strong>: SSH鍵がWSL側のホームにしか存在せず、Windows側からは<code>git push</code>が<code>Permission denied</code>になる → <a href="08-config.html">08_設定ファイル</a>でHTTPS+gh CLI方式により解決済み</li>
+<li><strong>GitHub<span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span>の失敗</strong>: SSH鍵がWSL側のホームにしか存在せず、Windows側からは<code>git push</code>が<code>Permission denied</code>になる → <a href="08-config.html">08_設定ファイル</a>で<span class="term" tabindex="0">HTTP<span class="term-popup">エイチティーティーピー。Webの通信で使われる基本的な約束事（プロトコル）。ブラウザとサーバー、プログラム同士のやり取りの共通言語</span></span>S+gh CLI方式により解決済み</li>
 </ol>
 <p>詳細: <a href="#">2026-06-30_Windows-Desktop版WSLパス変換フック実装</a> / <a href="#">2026-06-30_Windows-Desktop版GitHub認証問題解決</a></p>
 <hr />
 <div class="mermaid-wrapper"><div class="mermaid">
 graph TD
     User["👤 ユーザー"] --> CLI["💻 Claude Code CLI"]
-    CLI --> SP["📋 システムプロンプト"]
+    CLI --> SP["📋 <span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>"]
     CLI --> MCP["🔌 MCPツール定義"]
-    CLI --> SK["🎯 スキル定義"]
+    CLI --> SK["🎯 <span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>定義"]
     CLI --> MEM["🧠 メモリ読込"]
     CLI --> LLM["🤖 LLM"]
     LLM --> Tools["🔧 ツール実行"]
     Tools --> Files["📁 ファイル操作"]
-    Tools --> Shell["💻 シェル実行"]
-    Tools --> API["🌐 API呼出"]
-    Tools --> Agent["🤖 サブエージェント"]
+    Tools --> Shell["💻 <span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>実行"]
+    Tools --> <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>["🌐 API呼出"]
+    Tools --> Agent["🤖 <span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>"]
     LLM --> Resp["💬 レスポンス"]
     Resp --> User
 </div></div><h2>アーキテクチャ</h2>
@@ -387,7 +387,7 @@ graph TD
   ▼
 Claude Code CLI（ターミナル）
   │
-  ├─ システムプロンプトを読み込み（CLAUDE.md等）
+  ├─ システム<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>を読み込み（CLAUDE.md等）
   ├─ MCPツール定義を読み込み（83ツール）
   ├─ スキル定義を読み込み（30+スキル）
   ├─ メモリを読み込み（MEMORY.md等）
@@ -410,7 +410,7 @@ LLM（Claude Sonnet / Opus / Haiku）
 <hr />
 <div class="mermaid-wrapper"><div class="mermaid">
 graph LR
-    subgraph "200K トークン コンテキストウィンドウ"
+    subgraph "200K <span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span> <span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span>"
         A["システムプロンプト<br/>~3%"]
         B["ツール定義<br/>~20%"]
         C["メモリ・スキル<br/>~4%"]

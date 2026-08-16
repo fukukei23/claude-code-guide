@@ -176,7 +176,7 @@
 
         <article class="chapter-body">
             <h1>Skill カタログ</h1>
-<div class="callout callout-info"><p>全スキルのファインダー。仕組み・自作方法は <a href="03-skills.html">03_スキルシステム</a>、フェーズ別選択は <a href="https://fukukei23.github.io/claude-code-guide/chapters/16-skill-map.html">スキルマップ</a> 参照。</p></div>
+<div class="callout callout-info"><p>全<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>のファインダー。仕組み・自作方法は <a href="03-skills.html">03_スキルシステム</a>、フェーズ別選択は <a href="https://fukukei23.github.io/claude-code-guide/chapters/16-skill-map.html">スキルマップ</a> 参照。</p></div>
 <h2>🎵 楽曲・映像制作</h2>
 <div class="table-wrapper"><table>
 <thead>
@@ -204,7 +204,7 @@
 </tr>
 <tr>
 <td><code>reverse-engineer-song</code></td>
-<td>YouTube楽曲をリバースエンジニアリングし音楽/画像/動画の3モダリティ プロンプト仕様書を出力</td>
+<td>YouTube楽曲をリバースエンジニアリングし音楽/画像/動画の3モダリティ <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>仕様書を出力</td>
 <td>「逆コンパイルして」「YouTubeから分析して」<code>/reverse-engineer-song</code></td>
 </tr>
 <tr>
@@ -242,7 +242,7 @@
 </tr>
 <tr>
 <td><code>ssot-search</code></td>
-<td>個人ナレッジベース（knowledge-base）をRAG検索。1,900件超から関連5件表示</td>
+<td>個人ナレッジベース（knowledge-base）を<span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>検索。1,900件超から関連5件表示</td>
 <td>「SSOTから探して」「SSOT検索」</td>
 </tr>
 <tr>
@@ -253,7 +253,7 @@
 <tr>
 <td><code>record-new-feature</code></td>
 <td>Claude Code新バージョンのリリースノートを調査しSSOTとガイドに追記</td>
-<td>SessionStart hookで自動発動</td>
+<td>SessionStart <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>で自動発動</td>
 </tr>
 <tr>
 <td><code>codebase-memory</code></td>
@@ -262,7 +262,7 @@
 </tr>
 <tr>
 <td><code>resume-session</code></td>
-<td>セッション再開時に最新5件のhandoffを読み込み文脈復元。new-sessionの対</td>
+<td><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>再開時に最新5件のhandoffを読み込み文脈復元。new-sessionの対</td>
 <td>「おはよう」「こんにちは」「再開」<code>/resume-session</code></td>
 </tr>
 </tbody>
@@ -279,7 +279,7 @@
 <tbody>
 <tr>
 <td><code>guide-builder</code></td>
-<td>Markdownソース→GitHub Pagesガイドサイト構築・更新（new/add 2モード）</td>
+<td>Markdownソース→<span class="term" tabindex="0">GitHub Pages<span class="term-popup">GitHubが無料で提供するWeb公開サービス。リポジトリ内のHTMLファイルをそのままWebサイトとして公開できる。本ガイドもこれで公開されている</span></span>ガイドサイト構築・更新（new/add 2モード）</td>
 <td>「ガイド作って」「章追加して」<code>/guide-builder</code></td>
 </tr>
 <tr>
@@ -298,8 +298,8 @@
 <td>「ツールチップ追加して」「用語に解説つけて」</td>
 </tr>
 <tr>
-<td><code>zenn-article-pipeline</code></td>
-<td>Zenn記事の作成〜公開前チェックを6ステップで実行するパイプライン</td>
+<td><code>zenn-article-<span class="term" tabindex="0">pip<span class="term-popup">ピップ。Pythonのライブラリ（部品）をインストールするコマンド。Pythonの買い物カートのようなもの</span></span>eline</code></td>
+<td>Zenn記事の作成〜公開前チェックを6ステップで実行する<span class="term" tabindex="0">パイプ<span class="term-popup">コマンドの結果を次のコマンドへ流し込む「｜」記号の仕組み。「検索する → 結果を数える」のように処理をつなげられる</span></span>ライン</td>
 <td><code>/zenn-article-pipeline</code></td>
 </tr>
 <tr>
@@ -331,7 +331,7 @@
 </tr>
 <tr>
 <td><code>gas-autopilot</code></td>
-<td>Google Apps Scriptの自律開発。clasp管理・Web App+gas-run.shで自動デプロイ</td>
+<td>Google Apps Scriptの自律開発。clasp管理・Web App+gas-run.shで自動<span class="term" tabindex="0">デプロイ<span class="term-popup">作ったプログラムやサイトを、実際に動く環境へ設置して公開すること</span></span></td>
 <td>「GAS」「Apps Script」「スプレッドシート自動化」</td>
 </tr>
 <tr>
@@ -341,7 +341,7 @@
 </tr>
 <tr>
 <td><code>new-session</code></td>
-<td>コンテキスト圧縮・セッション引き継ぎプロンプトを生成</td>
+<td><span class="term" tabindex="0">コンテキスト圧縮<span class="term-popup">会話が長くなって容量上限に近づいた時、AIが古い内容を要約にまとめて容量を空ける仕組み。要約された細部は失われるため、重要な経緯はファイルに記録して残す</span></span>・セッション引き継ぎプロンプトを生成</td>
 <td>「新セッション」「引き継ぎ」<code>/new-session</code></td>
 </tr>
 <tr>
@@ -351,8 +351,8 @@
 </tr>
 <tr>
 <td><code>proxy-doctor</code></td>
-<td>glm-rate-proxy（localhost:8787）の診断・修復。症状A〜Jに振り分け対処案内</td>
-<td>「プロキシが壊れた」「GLMが使えない」「proxy止まってる」<code>/proxy-doctor</code></td>
+<td>glm-rate-proxy（<span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>:8787）の診断・修復。症状A〜Jに振り分け対処案内</td>
+<td>「<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>が壊れた」「GLMが使えない」「proxy止まってる」<code>/proxy-doctor</code></td>
 </tr>
 <tr>
 <td><code>send-email</code></td>
@@ -382,7 +382,7 @@
 </tbody>
 </table></div>
 <hr />
-<h2>🔌 無効化済み・予備のスキル・MCP（再オン手順）</h2>
+<h2>🔌 無効化済み・予備のスキル・<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>（再オン手順）</h2>
 <div class="callout callout-info"><p><code>/doctor</code>（2026-08-14）で「未使用のため一時OFF」にしたもの。ファイルは残してあるのでいつでも再オンできます。自分が何を持っているか忘れた時はここを見る。</p></div>
 <h3>現在OFF中</h3>
 <div class="table-wrapper"><table>

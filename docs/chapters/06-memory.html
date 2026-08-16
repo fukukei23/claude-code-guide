@@ -177,7 +177,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>06 メモリ — セッションを超えた記憶</h1>
+            <h1>06 メモリ — <span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>を超えた記憶</h1>
 <h2>メモリとは</h2>
 <p>Claude Codeは<strong>セッションを超えて記憶を保持する</strong>仕組みを持つ。新しいセッションを開始しても、前回の文脈の一部を引き継げる。</p>
 <hr />
@@ -309,7 +309,7 @@ graph TD
 <li>メモリは<strong>古くなる可能性がある</strong> — 鵜呑みにせず、必要に応じて現状を確認</li>
 <li>コードのパターンやファイル構造は<strong>メモリに保存しない</strong>（コードから直接読めるため）</li>
 <li>Git履歴も<strong>メモリに保存しない</strong>（<code>git log</code>が正）</li>
-<li><strong>メモリは無料ではない</strong> — MEMORY.md + 各ファイルが毎ターン読み込まれ、トークンを消費。増えすぎると数千トークン/ターンの固定消費になる → <a href="11-tips.html#d-%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E8%AA%A4%E8%A7%A3">11_現場の知見</a></li>
+<li><strong>メモリは無料ではない</strong> — MEMORY.md + 各ファイルが毎ターン読み込まれ、<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を消費。増えすぎると数千トークン/ターンの固定消費になる → <a href="11-tips.html#d-%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E8%AA%A4%E8%A7%A3">11_現場の知見</a></li>
 </ul>
 <hr />
 <h2>CLAUDE.mdの3層構造（Instruction Memory）</h2>
@@ -332,12 +332,12 @@ graph TD
 </tr>
 <tr>
 <td><strong>層2</strong> パススコープ</td>
-<td><code>rules/*.md</code>（frontmatter <code>globs</code>）</td>
+<td><code>rules/*.md</code>（frontmatter <code><span class="term" tabindex="0">glob<span class="term-popup">グロブ。ファイル名を「＊（任意の文字列）」等のワイルドカードで指定する書き方。「*.md」＝すべてのmdファイル、のような使い方</span></span>s</code>）</td>
 <td>該当ファイル操作時に自動</td>
 <td>言語/作業別ルール</td>
 </tr>
 <tr>
-<td><strong>層3</strong> スキル/参照</td>
+<td><strong>層3</strong> <span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>/参照</td>
 <td><code>skills/</code> + 参照資料</td>
 <td>トリガー/強指示</td>
 <td>スキル・詳細参照</td>

@@ -179,7 +179,7 @@
         <article class="chapter-body">
             <h1>02 コマンド一覧 — ビルトインコマンド全解説</h1>
 <div class="callout callout-info"><p>スラッシュ（<code>/</code>）で始まるコマンド。Claude Code本体に組み込まれている。
-プラグイン由来のスキル（<code>/brainstorming</code>等）は <a href="03-skills.html">03_スキルシステム</a> を参照。</p>
+プラグイン由来の<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>（<code>/brainstorming</code>等）は <a href="03-skills.html">03_スキルシステム</a> を参照。</p>
 <p><strong>クイックリファレンス版</strong>: <a href="https://fukukei23.github.io/guides/claude-code-commands/">ガイドサイト - コマンド＆スキル集</a>
 <strong>2026年5月時点</strong>。バージョンにより利用可能なコマンドが異なる場合あり。<code>/help</code> で最新一覧を確認。</p></div>
 <hr />
@@ -188,9 +188,9 @@
 <h3>&lt;a id=&quot;clear&quot;&gt;&lt;/a&gt;<code>/clear</code> と <code>/compact</code> — コンテキスト管理の両輪</h3>
 <p><strong><code>/clear</code></strong>: 会話履歴を<strong>完全にリセット</strong>する。</p>
 <ul>
-<li>システムプロンプト・MCPツール定義・スキル・メモリは残る</li>
+<li><span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>・<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ツール定義・スキル・メモリは残る</li>
 <li>ユーザーとのやり取り（質問・回答・ツール実行結果）は全て消える</li>
-<li>セッション開始直後と同じ状態になる</li>
+<li><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>開始直後と同じ状態になる</li>
 <li><strong>使いどころ</strong>: 長時間作業後にコンテキストが汚れた時、全く別の話題に切り替える時</li>
 </ul>
 <p><strong><code>/compact</code></strong>: 古い会話を<strong>要約して圧縮</strong>する（手動実行版）。</p>
@@ -203,7 +203,7 @@
 <h3>&lt;a id=&quot;context&quot;&gt;&lt;/a&gt;<code>/context</code> — コンテキスト使用量の確認</h3>
 <p>現在の<strong>コンテキスト使用量</strong>を表示する。</p>
 <ul>
-<li>トークン消費の内訳（システム・MCP・メモリ・メッセージ等）が見える</li>
+<li><span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>消費の内訳（システム・MCP・メモリ・メッセージ等）が見える</li>
 <li>各MCPサーバーのツール数とトークン消費が分かる</li>
 <li><strong>注意</strong>: 1回の実行で約4kトークンを消費する。多用に注意</li>
 </ul>
@@ -226,11 +226,11 @@
 <li>Claude Codeが「計画を立ててから実装する」モードに入る</li>
 <li>実際のコード変更は行わず、設計だけを提示</li>
 <li>ユーザーが承認（<code>ExitPlanMode</code>）してから実装開始</li>
-<li><strong>使いどころ</strong>: 新機能追加・大規模リファクタリング等</li>
+<li><strong>使いどころ</strong>: 新機能追加・大規模<span class="term" tabindex="0">リファクタリング<span class="term-popup">動きを変えずにコードの中身を読みやすく整理すること。機能追加でなく「掃除」の作業</span></span>等</li>
 </ul>
 <h3><code>/goal</code> の詳細</h3>
 <p>セッションに対する<strong>ゴール条件</strong>を設定する。設定すると、セッション中に「ゴール達成に近づいたか」を意識した振る舞いをする。</p>
-<pre><code class="language-bash">/goal &quot;CettireとItalistのスクレイパーを実装し、利益SKUを1件でも確認する&quot;
+<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>">/goal &quot;CettireとItalistのスクレイパーを実装し、利益SKUを1件でも確認する&quot;
 /goal &quot;このタスクをコミットしてpushしたら完了&quot;
 /goal &quot;Claude CodeのMCP設定の仕組みを理解できたら完了&quot;
 </code></pre>
@@ -406,7 +406,7 @@
 <tr>
 <td><code>/color [color]</code></td>
 <td>—</td>
-<td>プロンプトバーの色を変更</td>
+<td><span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>バーの色を変更</td>
 </tr>
 </tbody>
 </table></div>
@@ -510,7 +510,7 @@
 </tr>
 <tr>
 <td><code>/debug</code></td>
-<td>デバッグログを有効化</td>
+<td><span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>ログを有効化</td>
 </tr>
 <tr>
 <td><code>/doctor</code></td>
@@ -535,14 +535,14 @@
 <td>MCPサーバー接続管理</td>
 </tr>
 <tr>
-<td><code>/hooks</code></td>
+<td><code>/<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s</code></td>
 <td>—</td>
 <td>フック設定を表示</td>
 </tr>
 <tr>
 <td><code>/agents</code></td>
 <td>—</td>
-<td>カスタムエージェント管理</td>
+<td>カスタム<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>管理</td>
 </tr>
 <tr>
 <td><code>/plugin</code></td>
@@ -582,12 +582,12 @@
 <tr>
 <td><code>/login</code> <code>/logout</code></td>
 <td>—</td>
-<td>Anthropicアカウント認証</td>
+<td>Anthropicアカウント<span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span></td>
 </tr>
 <tr>
 <td><code>/keybindings</code></td>
 <td>—</td>
-<td>キーバインド設定</td>
+<td><span class="term" tabindex="0">キーバインド<span class="term-popup">キーボードのキー操作と機能の割り当てのこと。「Ctrl+Sで保存」のような対応関係</span></span>設定</td>
 </tr>
 <tr>
 <td><code>/reload-plugins</code></td>
@@ -615,7 +615,7 @@
 <tr>
 <td><code>/insights</code></td>
 <td>—</td>
-<td>セッション分析レポートを生成</td>
+<td>セッション分析レ<span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>を生成</td>
 </tr>
 <tr>
 <td><code>/fewer-permission-prompts</code></td>

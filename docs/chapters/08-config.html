@@ -201,12 +201,12 @@ Layer 1: グローバル（全プロジェクト共通）
 </code></pre>
 <hr />
 <h2>CLAUDE.md</h2>
-<h3>&lt;a id=&quot;claude-md-global&quot;&gt;&lt;/a&gt;Layer 1: グローバルCLAUDE.md</h3>
+<h3>&lt;a id=&quot;claude-md-<span class="term" tabindex="0">glob<span class="term-popup">グロブ。ファイル名を「＊（任意の文字列）」等のワイルドカードで指定する書き方。「*.md」＝すべてのmdファイル、のような使い方</span></span>al&quot;&gt;&lt;/a&gt;Layer 1: グローバルCLAUDE.md</h3>
 <p><strong>全プロジェクトで共通するルール</strong>を記述。</p>
 <ul>
 <li><strong>場所</strong>: <code>~/.claude/CLAUDE.md</code></li>
 <li><strong>内容</strong>: 言語設定、LLM利用ポリシー、セキュリティルール、コーディング原則、SSOT参照</li>
-<li><strong>トークン</strong>: ~2.4k（常にロードされる）</li>
+<li><strong><span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span></strong>: ~2.4k（常にロードされる）</li>
 </ul>
 <p>グローバルCLAUDE.mdに含まれるもの:</p>
 <ul>
@@ -214,11 +214,11 @@ Layer 1: グローバル（全プロジェクト共通）
 <li>モデルルーティング（上位モデル → バランス型 → 軽量型）</li>
 <li>使用モデル表示ルール</li>
 <li>タスク切り替え時の記録ルール</li>
-<li>セキュリティルール（APIキー非表示等）</li>
+<li>セキュリティルール（<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キー非表示等）</li>
 <li>コーディング原則</li>
 <li>SSOT（共通知識ベース）の参照</li>
-<li>セッションタイトルの日本語生成ルール</li>
-<li>実行環境の注意（Windows + WSL2の2層構造 — Cron等は <code>wsl bash -c</code> 経由必須）</li>
+<li><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>タイトルの日本語生成ルール</li>
+<li>実行環境の注意（Windows + WSL2の2層構造 — Cron等は <code>wsl <span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span> -c</code> 経由必須）</li>
 </ul>
 <div class="callout callout-info"><p><strong>補足: デスクトップアプリのUI言語について</strong><br />
 Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できない（アプリ側の仕様）。<br />
@@ -247,7 +247,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
     &quot;deny&quot;: [&quot;Bash(rm -rf)&quot;],
     &quot;ask&quot;: [&quot;Bash(git worktree add:*)&quot;]
   },
-  &quot;hooks&quot;: {
+  &quot;<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s&quot;: {
     &quot;PreToolUse&quot;: [...],
     &quot;PostToolUse&quot;: [...],
     &quot;PostToolUseFailure&quot;: [...],
@@ -301,7 +301,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td>SessionStart</td>
 <td>セッション開始時</td>
-<td>環境変数の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示・設定ファイル同期・INDEX自動更新・SKILL_CATALOG自動生成（generate-skill-catalog.py）</td>
+<td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示・設定ファイル同期・INDEX自動更新・SKILL_CATALOG自動生成（generate-skill-catalog.py）</td>
 </tr>
 <tr>
 <td>SessionStart hook圧縮</td>
@@ -311,7 +311,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td>Stop</td>
 <td>セッション終了時</td>
-<td>セッションログの保存・ハンドオフ生成・ガイド更新キューの記録・スキル同期・クリーンアップ</td>
+<td>セッションログの保存・ハンドオフ生成・ガイド更新キューの記録・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>同期・クリーンアップ</td>
 </tr>
 <tr>
 <td>Notification</td>
@@ -364,7 +364,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tbody>
 </table></div>
 <h5>&lt;a id=&quot;statusline&quot;&gt;&lt;/a&gt;statusLine の詳細</h5>
-<p>画面下部にLLM名・コスト・作業量・コンテキスト残量・会話サイズを表示する。glm-rate-proxy の実動作状態を反映し、peak時間帯のフォールバックもバッジで示す。</p>
+<p>画面下部にLLM名・コスト・作業量・コンテキスト残量・会話サイズを表示する。glm-rate-proxy の実動作状態を反映し、peak時間帯の<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>もバッジで示す。</p>
 <ul>
 <li><strong>設定</strong>: <code>{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;bash ~/.claude/scripts/llm/llm-status.sh&quot;}</code></li>
 <li><strong>スクリプト</strong>: <code>~/.claude/scripts/llm/llm-status.sh</code></li>
@@ -421,7 +421,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <td>Claude API呼び出しタイムアウト（20分）</td>
 </tr>
 <tr>
-<td><code>MCP_TOOL_TIMEOUT</code></td>
+<td><code><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>_TOOL_TIMEOUT</code></td>
 <td><code>300000</code></td>
 <td>MCPツール実行タイムアウト（既定60秒→5分に延長）</td>
 </tr>
@@ -454,7 +454,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <li><strong>用途</strong>: チーム共有可能な設定（<code>.gitignore</code>に含めない場合）</li>
 </ul>
 <h3>&lt;a id=&quot;claude-json&quot;&gt;&lt;/a&gt;<code>~/.claude.json</code>（追加設定ファイル）</h3>
-<p><strong>2ファイル問題</strong>: <code>~/.claude.json</code> と <code>~/.claude/settings.json</code> の両方が存在し、マージされてロードされる。</p>
+<p><strong>2ファイル問題</strong>: <code>~/.claude.json</code> と <code>~/.claude/settings.json</code> の両方が存在し、<span class="term" tabindex="0">マージ<span class="term-popup">分かれていた変更を1つに統合すること。ブランチで進めた作業を本体（main）に取り込む作業</span></span>されてロードされる。</p>
 <ul>
 <li>どちらに書いても効果は同じ</li>
 <li>しかし削除する際は<strong>両方から削除</strong>する必要がある</li>
@@ -492,7 +492,7 @@ GITHUB_TOKEN=ghp_xxx...
 </tr>
 <tr>
 <td><strong>確認時はマスク必須</strong></td>
-<td><code>grep -E &quot;^[A-Z_]+=&quot; &lt;file&gt; | sed &quot;s/=.*/=&lt;REDACTED&gt;/&quot;</code></td>
+<td><code><span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span> -E &quot;^[A-Z_]+=&quot; &lt;file&gt; | sed &quot;s/=.*/=&lt;REDACTED&gt;/&quot;</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -500,7 +500,7 @@ GITHUB_TOKEN=ghp_xxx...
 <p>SessionStartフック <code>sync-secrets-to-settings.sh</code> が起動のたびに <code>~/.secrets.env</code> の値を <code>settings.json</code> へ自動注入する。</p>
 <ul>
 <li><strong>目的</strong>: MCPサーバーへ環境変数を渡すため（<code>mcpServers.xxx.env</code> セクション）</li>
-<li><strong>Claude Code本体</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> 等）はシェル環境変数でも動作するが、同フックで注入する設計に統一</li>
+<li><strong>Claude Code本体</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> 等）は<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>環境変数でも動作するが、同フックで注入する設計に統一</li>
 <li><strong>Git管理</strong>: <code>settings.json</code> は <code>claude-config/.gitignore</code> で除外済み — GitHubには上がらない</li>
 </ul>
 <h3>settings.example.json の自動同期</h3>
@@ -519,7 +519,7 @@ settings.json          ← 実体。バックアップ・出力・表示は禁�
 <h3>危険コマンドのブロック</h3>
 <p>PreToolUseフック（<code>check-command-safety.py</code>）が以下を自動ブロック:</p>
 <ul>
-<li><code>bash -x</code>（デバッグ出力で露出の恐れ）</li>
+<li><code>bash -x</code>（<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>出力で露出の恐れ）</li>
 <li><code>cat -A</code>（特殊文字表示で露出の恐れ）</li>
 <li>マスクなしの <code>grep</code>（APIキー検索）</li>
 <li>フィルタなしの <code>env</code>（全環境変数表示）</li>
@@ -573,7 +573,7 @@ backup-*/
 <hr />
 <h2>&lt;a id=&quot;windows-vs-wsl&quot;&gt;&lt;/a&gt;Windows Desktop vs WSL CLI — 設定の違い</h2>
 <p>WSL2環境では <strong>Windows Desktopアプリ</strong> と <strong>WSL CLI</strong> の2つのClaude Codeが共存する。設定ファイル・管理系統・ツール定義のシリアライズに重要な違いがある。</p>
-<div class="callout callout-warn"><p>💡 <strong>WSL CLI版（2026-07-02統合）</strong>: 2026-06-30に「cc-musicプロファイル分離」で minimax-official/video を日常settings.jsonから除外していたが、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため分離撤回。現在は minimax-official/video は日常 mcpServers で常時読込（画像/動画/音楽生成を即呼び可能）。cc-music エイリアス・cc-music-mcp.json・PreToolUse hookブロックは完全撤去（バックアップは <code>01_DECISIONS/claude-code/設定ファイル/</code> に温存）。未使用agents 8プラグイン無効化は継続。</p>
+<div class="callout callout-warn"><p>💡 <strong>WSL CLI版（2026-07-02統合）</strong>: 2026-06-30に「cc-musicプロファイル分離」で minimax-official/video を日常settings.jsonから除外していたが、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため分離撤回。現在は minimax-official/video は日常 mcpServers で常時読込（画像/動画/音楽生成を即呼び可能）。cc-music エイリアス・cc-music-mcp.json・PreToolUse hookブロックは完全撤去（バックアップは <code>01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/設定ファイル/</code> に温存）。未使用agents 8プラグイン無効化は継続。</p>
 <ul>
 <li>効果: 日常側 約7,060tok削減（実測確認済・minimax分離分。agents 1,926tokは想定過大で実際は微小・8プラグインはagents非提供型だった）・32MBエラー（画像起因）は運用規約で予防。</li>
 <li>※ <code>cc</code> は <code>/usr/bin/cc</code>（C compiler）でClaude起動エイリアスではない。日常起動は <code>claude</code> 直。</li>
@@ -607,7 +607,7 @@ backup-*/
 <tr>
 <td><strong>Windows .claude.json</strong></td>
 <td><code>C:\Users\&lt;user&gt;\.claude.json</code></td>
-<td>Windows側状態（キャッシュ・ユーザー情報等）</td>
+<td>Windows側状態（<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>・ユーザー情報等）</td>
 </tr>
 <tr>
 <td><strong>Desktop config（候補①）</strong></td>
@@ -637,9 +637,9 @@ backup-*/
 <li>Windows側でMCP serverを変更しても、WSL CLIには反映されない</li>
 <li>Desktop Extensionsは両方の設定ファイルとも別管理</li>
 </ul>
-<h3>&lt;a id=&quot;windows-git-auth&quot;&gt;&lt;/a&gt;Windows DesktopのGitHub認証（git push失敗の対処）</h3>
+<h3>&lt;a id=&quot;windows-git-auth&quot;&gt;&lt;/a&gt;Windows DesktopのGitHub<span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span>（git push失敗の対処）</h3>
 <p>WindowsとWSLは<strong>SSH鍵の置き場所も独立</strong>している。WSL側<code>~/.ssh/id_ed25519</code>で運用しているGitHub鍵は、Windows側<code>C:\Users\&lt;user&gt;\.ssh\</code>には存在しないため、Windows Desktop版のBashツール（Git Bash）から<code>git push</code>すると<code>Permission denied (publickey)</code>で失敗する。</p>
-<p><strong>対処（HTTPS + GitHub CLI方式）</strong>: SSH鍵をコピー・共有せず、GitHub CLI (<code>gh</code>) の認証情報をWindows側のみで使う。</p>
+<p><strong>対処（<span class="term" tabindex="0">HTTP<span class="term-popup">エイチティーティーピー。Webの通信で使われる基本的な約束事（プロトコル）。ブラウザとサーバー、プログラム同士のやり取りの共通言語</span></span>S + GitHub CLI方式）</strong>: SSH鍵をコピー・共有せず、GitHub CLI (<code>gh</code>) の認証情報をWindows側のみで使う。</p>
 <pre><code class="language-bash"># 1. インストール
 winget install GitHub.cli
 
@@ -657,7 +657,7 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 <li>リポジトリ本体（<code>.git/config</code>のremote URL）も変更不要。Windows側のgit実行時にだけURL解釈が書き換わる</li>
 <li>WSL側は従来通りSSH鍵で動作し続ける（双方の動作確認済み）</li>
 </ul>
-<div class="callout callout-info"><p>当初はWSL側の鍵をUNCパス経由（<code>\\wsl.localhost\...</code>）で直接参照する案を実機検証し動作も確認したが、OpenSSHの権限チェックを迂回している懸念・侵害時の被害範囲拡大・将来のWindows Update等での破綻リスクをレビューで指摘され、HTTPS+gh CLI方式に切り替えた。詳細: <a href="#">2026-06-30_Windows-Desktop版GitHub認証問題解決</a></p></div>
+<div class="callout callout-info"><p>当初はWSL側の鍵をUNCパス経由（<code>\\wsl.<span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>\...</code>）で直接参照する案を実機検証し動作も確認したが、OpenSSHの権限チェックを迂回している懸念・侵害時の被害範囲拡大・将来のWindows Update等での破綻リスクをレビューで指摘され、HTTPS+gh CLI方式に切り替えた。詳細: <a href="#">2026-06-30_Windows-Desktop版GitHub認証問題解決</a></p></div>
 <h3>ツール定義のシリアライズ差異（重要）</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -693,8 +693,8 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 <p>Windows Desktopアプリは、同一のMCP構成でもCLIより<strong>6倍以上</strong>のトークンを消費する。2026年5月時点では、6回の異なる設定変更（MCP server削除・profiles無効化・plugin cache削除・marketplace削除・plugin個別無効化・Extensions削除）で検証済み。Desktop Extensionsの削除のみ-10.6kの効果があったが、残り213kはアプリ内部で固定。</p>
 <h3>Desktop Extensions</h3>
 <p>Desktopアプリ専用の拡張機能。Windows Storeアプリパッケージ内に配置される。</p>
-<h3>&lt;a id=&quot;claude-config-venv&quot;&gt;&lt;/a&gt;claude-config配下スクリプトのPython実行環境</h3>
-<p><code>claude-config</code> リポジトリ（<code>scripts/api/*.py</code> 等）のPythonスクリプトは <strong>専用仮想環境 <code>.venv</code> で実行</strong> する。</p>
+<h3>&lt;a id=&quot;claude-config-<span class="term" tabindex="0">venv<span class="term-popup">ブイエンブ。Python標準の仮想環境を作るコマンド/仕組み。プロジェクトごとにライブラリを分けてインストールできるようにする</span></span>&quot;&gt;&lt;/a&gt;claude-config配下スクリプトのPython実行環境</h3>
+<p><code>claude-config</code> リポジトリ（<code>scripts/api/*.py</code> 等）のPythonスクリプトは <strong>専用<span class="term" tabindex="0">仮想環境<span class="term-popup">プロジェクトごとにインストールするライブラリを分ける独立したPython環境。プロジェクト間のバージョン衝突を防ぐ</span></span> <code>.venv</code> で実行</strong> する。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -715,7 +715,7 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 </table></div>
 <ul>
 <li><strong>原因</strong>: <code>google-genai</code> は <code>.venv</code> にのみ導入。システム <code>python3</code>（<code>~/.local</code> の namespace <code>google</code>）には <code>genai</code> が無い</li>
-<li><strong>対策</strong>: 常に <code>.venv/bin/python</code> を使用。<code>pip install --user</code> でシステム側へ入れるのは<strong>誤り</strong>（.venvに既存）</li>
+<li><strong>対策</strong>: 常に <code>.venv/bin/python</code> を使用。<code><span class="term" tabindex="0">pip<span class="term-popup">ピップ。Pythonのライブラリ（部品）をインストールするコマンド。Pythonの買い物カートのようなもの</span></span> install --user</code> でシステム側へ入れるのは<strong>誤り</strong>（.venvに既存）</li>
 <li>シークレット読込を前置: <code>set -a; source ~/.secrets.env; set +a</code></li>
 </ul>
 <pre><code>Claude Extensions/
@@ -732,7 +732,7 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 <li>WSL CLIからはアクセス不可</li>
 <li>** filesystemのみ残す推奨**（ファイル操作に有用）</li>
 </ul>
-<h3>OAuth認証トークンの蓄積問題</h3>
+<h3><span class="term" tabindex="0">OAuth<span class="term-popup">オーオースと読む。他のサービスの機能を、IDやパスワードを教えずに安全に使わせるための認可の標準規格。「○○でログイン」ボタンの裏側で動いている仕組み</span></span>認証トークンの蓄積問題</h3>
 <p>Desktopアプリはセッション開始のたびに新しいOAuth認証トークンを作成し、旧トークンを削除しない。長期間使用すると100+個のトークンが蓄積される。</p>
 <h3>推奨運用（2026年5月時点）</h3>
 <div class="table-wrapper"><table>

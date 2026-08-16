@@ -177,7 +177,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>09 統合 — IDE・リモート・CI/CD・Worktree</h1>
+            <h1>09 統合 — IDE・リモート・<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>/CD・Worktree</h1>
 <h2>&lt;a id=&quot;ide&quot;&gt;&lt;/a&gt;IDE連携</h2>
 <p>Claude Codeは主要IDEと連携できる。</p>
 <h3>VS Code拡張</h3>
@@ -218,14 +218,14 @@
 <h2>&lt;a id=&quot;remote&quot;&gt;&lt;/a&gt;リモートモード</h2>
 <p>Claude Codeを<strong>ヘッドレス（非対話）モード</strong>で実行できる。</p>
 <h3>使い方</h3>
-<pre><code class="language-bash"># ヘッドレス実行（結果をファイルに出力）
+<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>"># ヘッドレス実行（結果をファイルに出力）
 claude -p &quot;テストを実行して結果を報告して&quot; --output result.md
 
 # CI/CDでの利用
 claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&quot;
 </code></pre>
 <h3>CI/CD統合</h3>
-<p>GitHub Actions等のCI/CDパイプラインでClaude Codeを利用可能。</p>
+<p><span class="term" tabindex="0">GitHub Actions<span class="term-popup">GitHubが提供する自動実行の仕組み。pushをきっかけにテストやビルドを自動で回せる。「リポジトリに置いておくと動く作業ロボット」</span></span>等のCI/CD<span class="term" tabindex="0">パイプ<span class="term-popup">コマンドの結果を次のコマンドへ流し込む「｜」記号の仕組み。「検索する → 結果を数える」のように処理をつなげられる</span></span>ラインでClaude Codeを利用可能。</p>
 <pre><code class="language-yaml"># GitHub Actionsの例
 - name: Claude Code Review
   run: claude -p &quot;コードレビューをして&quot; --output review.md
@@ -239,13 +239,13 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 </ul>
 <hr />
 <h2>&lt;a id=&quot;worktree&quot;&gt;&lt;/a&gt;Git Worktreeとの連携</h2>
-<p>Git Worktreeを使うと、<strong>メインブランチを汚さずに</strong>独立した作業環境を作れる。</p>
+<p>Git Worktreeを使うと、<strong>メイン<span class="term" tabindex="0">ブランチ<span class="term-popup">Gitで、本体（main）とは別に作業履歴を分けて保管できる「平行世界」。実験的な変更を本体に影響させずに進められる。終わったら本体に合流（マージ）する</span></span>を汚さずに</strong>独立した作業環境を作れる。</p>
 <h3>Worktreeの作成</h3>
 <pre><code>EnterWorktree → 新しいworktreeを作成
   │
   ├─ .claude/worktrees/ に新しいディレクトリが作成される
   ├─ 新しいブランチが自動作成される
-  └─ セッションの作業ディレクトリが切り替わる
+  └─ <span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の作業ディレクトリが切り替わる
 </code></pre>
 <h3>Worktreeの利点</h3>
 <div class="table-wrapper"><table>
@@ -279,8 +279,8 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <li><code>keep</code>: worktreeとブランチを残す（後で戻れる）</li>
 <li><code>remove</code>: worktreeとブランチを削除（完全に破棄）</li>
 </ul>
-<h3>エージェントとの連携</h3>
-<p>サブエージェントを <code>isolation: &quot;worktree&quot;</code> で起動すると、エージェントが独立したworktreeで作業する。メインセッションのコードに影響なし。</p>
+<h3><span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>との連携</h3>
+<p><span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>を <code>isolation: &quot;worktree&quot;</code> で起動すると、エージェントが独立したworktreeで作業する。メインセッションのコードに影響なし。</p>
 <hr />
 <h2>&lt;a id=&quot;model-switch&quot;&gt;&lt;/a&gt;モデル切替</h2>
 <p>Claude Codeは複数のモデルを切り替えて使用できる。</p>
@@ -302,7 +302,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <tr>
 <td>Claude Sonnet 4.6</td>
 <td>バランス型</td>
-<td>API経由で利用可能</td>
+<td><span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>経由で利用可能</td>
 </tr>
 <tr>
 <td>Claude Haiku 4.5</td>
@@ -333,7 +333,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <td>スタンドアロンアプリ</td>
 </tr>
 <tr>
-<td>MCP</td>
+<td><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span></td>
 <td>設定可能</td>
 <td>限定</td>
 </tr>
@@ -343,7 +343,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <td>なし</td>
 </tr>
 <tr>
-<td>スキル</td>
+<td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span></td>
 <td>全て利用可能</td>
 <td>限定</td>
 </tr>

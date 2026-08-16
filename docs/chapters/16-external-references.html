@@ -223,17 +223,17 @@ slug: 16-external-references</h2>
 <tr>
 <td>6</td>
 <td>ツール拡張</td>
-<td>MCP、<code>/mcp</code></td>
+<td><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>、<code>/mcp</code></td>
 </tr>
 <tr>
 <td>7</td>
 <td>ワークフロー自動化</td>
-<td>スキル、フック</td>
+<td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>、フック</td>
 </tr>
 <tr>
 <td>8</td>
 <td>自分を複製</td>
-<td>サブエージェント、<code>/agents</code></td>
+<td><span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>、<code>/agents</code></td>
 </tr>
 <tr>
 <td>9</td>
@@ -248,20 +248,20 @@ slug: 16-external-references</h2>
 </tbody>
 </table></div>
 <p><code>/powerup</code> コマンド自体は試していないが、まだ触ったことのない機能（<code>/teleport</code>・<code>/effort</code>等）の存在を知る一覧として有用。</p>
-<h3>セッション管理と1Mコンテキスト（Thariq氏の知見・翻訳）</h3>
+<h3><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>管理と1Mコンテキスト（Thariq氏の知見・翻訳）</h3>
 <p>各ターン後に取れる選択肢は5つ:</p>
 <ol>
 <li><strong>Continue</strong> — 同じセッションを継続（全コンテキスト保持）</li>
 <li><strong>Rewind</strong>（<code>Esc</code>×2） — 前のメッセージに戻り、それ以降を削除して再開</li>
 <li><strong><code>/compact</code></strong> — 会話を要約して圧縮（情報の損失あり）</li>
 <li><strong><code>/clear</code></strong> — 新規セッション開始（自分で書いたブリーフのみ保持）</li>
-<li><strong>Subagents</strong> — 専用コンテキストを持つ子エージェントに委譲</li>
+<li><strong>Subagents</strong> — 専用コンテキストを持つ子<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>に委譲</li>
 </ol>
 <p>実践的なポイント:</p>
 <ul>
 <li><strong>「新しいタスク＝新規セッション」が原則</strong></li>
-<li><strong>コンテキストロット</strong>（パフォーマンス低下）は約30〜40万トークン付近から目立ち始める</li>
-<li>失敗した試みは修正メッセージで残すより、<strong>Rewindして学んだ内容を含めて再プロンプト</strong>する方がコンテキスト効率が良い</li>
+<li><strong>コンテキストロット</strong>（パフォーマンス低下）は約30〜40万<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>付近から目立ち始める</li>
+<li>失敗した試みは修正メッセージで残すより、<strong>Rewindして学んだ内容を含めて再<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span></strong>する方がコンテキスト効率が良い</li>
 <li><code>/compact</code> は「タスク途中で勢いを保ちたい時」向け（低コストだが要約ロスあり）、新規セッションは「重要な判断ポイント」向け（要約ロスなし）</li>
 <li>モデルが次の方向性を予測できない時にCompactすると重要情報が落ちやすい。<strong>「これから何をするか」のヒントを付けてCompactする</strong>と精度が上がる</li>
 </ul>
@@ -279,7 +279,7 @@ slug: 16-external-references</h2>
 <h2>gstack（リポジトリ概要）</h2>
 <p><a href="https://github.com/garrytan/gstack">gstack</a> は、Garry Tan氏（Y Combinator CEO）が開発したClaude Code拡張フレームワーク（116k star・MIT・作成3.5ヶ月で急成長）。「個人が大規模チームのように生産性を発揮する」がコンセプト。</p>
 <h3>導入（30秒）</h3>
-<pre><code class="language-bash">git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack &amp;&amp; cd ~/.claude/skills/gstack &amp;&amp; ./setup
+<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>">git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack &amp;&amp; cd ~/.claude/skills/gstack &amp;&amp; ./setup
 </code></pre>
 <p>必要環境: Claude Code・Git・Bun v1.0+（Windowsのみ Node.js も）</p>
 <h3>主要スキル（23の専門家ロール）</h3>
@@ -315,12 +315,12 @@ slug: 16-external-references</h2>
 <tr>
 <td>リリース</td>
 <td><code>/ship</code></td>
-<td>リリースエンジニア役。テスト実行・カバレッジ監査・PR作成まで一括</td>
+<td>リリースエンジニア役。テスト実行・<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>監査・PR作成まで一括</td>
 </tr>
 <tr>
 <td>リリース</td>
 <td><code>/canary</code></td>
-<td>デプロイ後監視（コンソールエラー・パフォーマンス低下検知）</td>
+<td><span class="term" tabindex="0">デプロイ<span class="term-popup">作ったプログラムやサイトを、実際に動く環境へ設置して公開すること</span></span>後監視（コンソールエラー・パフォーマンス低下検知）</td>
 </tr>
 <tr>
 <td>デザイン</td>
@@ -404,7 +404,7 @@ slug: 16-external-references</h2>
 <p>クラウドセキュリティ（66スキル）・脅威ハンティング（58）・脅威インテリジェンス（52）・ネットワークセキュリティ（43）・Webアプリケーションセキュリティ（42・OWASP Top 10対応）・デジタルフォレンジクス（41）・マルウェア分析（39）他21領域。</p>
 <h3>スキルの構造</h3>
 <pre><code>skills/skill-name/
-├── SKILL.md           ← YAMLフロントマター + Markdown本体
+├── SKILL.md           ← <span class="term" tabindex="0">YAML<span class="term-popup">ヤムル。階層構造を字下げで表す、人間が読みやすい設定ファイルの書式。frontmatter（文書冒頭の---で囲んだ設定塊）で使われる</span></span><span class="term" tabindex="0">フロントマター<span class="term-popup">Markdownファイルの冒頭に「---」で囲んで置く設定データの塊。タイトルやタグ等を本文と分離して書ける</span></span> + Markdown本体
 ├── references/        ← フレームワークマッピング・技術手順
 ├── scripts/            ← ヘルパースクリプト
 └── assets/             ← テンプレート・チェックリスト

@@ -179,7 +179,7 @@
         <article class="chapter-body">
             <h1>dev-cycle — コード品質改善サイクル</h1>
 <p>Claude Code で<strong>コード品質を継続的に改善するための5フェーズサイクル</strong>。
-スキル <code>/dev-cycle</code> として呼び出す。</p>
+<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span> <code>/dev-cycle</code> として呼び出す。</p>
 <hr />
 <h2>全体フロー</h2>
 <pre><code>【0. 判断】プロジェクト規模で開始フェーズを決める
@@ -217,7 +217,7 @@
 </tr>
 <tr>
 <td>出力先</td>
-<td><code>01_DECISIONS/&lt;project&gt;/YYYY-MM-DD_リファクタリング調査_&lt;area&gt;.md</code></td>
+<td><code>01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/&lt;project&gt;/YYYY-MM-DD_<span class="term" tabindex="0">リファクタリング<span class="term-popup">動きを変えずにコードの中身を読みやすく整理すること。機能追加でなく「掃除」の作業</span></span>調査_&lt;area&gt;.md</code></td>
 </tr>
 <tr>
 <td>いつ使う</td>
@@ -238,7 +238,7 @@
 <h2>フェーズ2: コードレビュー v3</h2>
 <p>重要ファイルを深く読み、<strong>★スコア + P1/P2 改善提案</strong>を出力する。</p>
 <h3>実行手順</h3>
-<pre><code class="language-bash"># Step 0: ファイルの重要度スコアリング
+<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>"># Step 0: ファイルの重要度スコアリング
 python score-files.py &lt;project_path&gt; --top 20 --json
 
 # Step 1: 行数実測（スコアと照合）
@@ -288,10 +288,10 @@ priority: P1（except限定化）、P2（関数分割）
 </table></div>
 <p>タイトル例:</p>
 <pre><code>test: [A] test_xxx.py に scope=&quot;function&quot; を明示
-fix:  [B] except Exception を具体的な例外型に限定
+fix:  [B] except Exception を具体的な<span class="term" tabindex="0">例外<span class="term-popup">プログラムの実行中に起きた異常のこと、とその知らせ。例外を捕まえて処理（ハンドリング）しないと、その場でプログラムが止まる</span></span>型に限定
 refactor: [D] test_routes_coverage.py を6ファイルに分割
 </code></pre>
-<h3>GitHub API 一括作成</h3>
+<h3>GitHub <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span> 一括作成</h3>
 <pre><code class="language-python">import json, urllib.request
 
 TOKEN = &quot;your_github_token&quot;
@@ -319,7 +319,7 @@ for issue in issues:
 </code></pre>
 <hr />
 <h2>フェーズ4: 自律実装ループ</h2>
-<p>GitHub Issues を <strong>高→中→低の順に自動実装</strong>する Stop Hook 連鎖方式。</p>
+<p>GitHub Issues を <strong>高→中→低の順に自動実装</strong>する Stop <span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> 連鎖方式。</p>
 <h3>アーキテクチャ</h3>
 <pre><code>start.sh --auto &lt;repo&gt;
     │
@@ -328,7 +328,7 @@ state.json: active=true / pending=[76,77,78]
     │
     ▼
 claude --print &quot;Issue #76 を実装して...&quot;
-    │ セッション終了
+    │ <span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>終了
     ▼
 [Stop Hook 発火] → next-issue.py
     │ completed=[76] / pending=[77,78]
@@ -427,7 +427,7 @@ def parse_task_date(text: str) -&gt; date | None:
 <h3>heartbeat機構</h3>
 <p><code>resume-session</code> スキル + <code>check-stale-sessions.sh</code> で実装:</p>
 <ul>
-<li><strong>trigger</strong>: SessionStart hook で自動発火</li>
+<li><strong>trigger</strong>: SessionStart <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> で自動発火</li>
 <li><strong>検知条件</strong>:
 <ul>
 <li><code>heartbeat_timeout</code>: 12h超の無活動</li>
@@ -456,7 +456,7 @@ def parse_task_date(text: str) -&gt; date | None:
     stale（30日超）には⚠staleマークを付与。
     結果を 10_DAILY/2026-07-27.md に追記。
 </code></pre>
-<p><strong>Cron管理</strong>: <code>apply_crons.py</code> で管理・crons.shで再登録</p>
+<p><strong>Cron管理</strong>: <code>apply_<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>s.py</code> で管理・crons.shで再登録</p>
 <hr />
 <h2>フェーズ5: 完了通知（自動）</h2>
 <p><code>pending=[]</code> を検知したら自動実行:</p>
@@ -540,7 +540,7 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <tr>
 <td>完了通知が来ない</td>
 <td>OS 通知の設定</td>
-<td><code>notify-done.sh</code> をデバッグ</td>
+<td><code>notify-done.sh</code> を<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span></td>
 </tr>
 </tbody>
 </table></div>
@@ -570,7 +570,7 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 </tr>
 <tr>
 <td>自律型AIフレームワーク</td>
-<td>テストカバレッジ 83.81% 達成</td>
+<td>テスト<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span> 83.81% 達成</td>
 <td>4,602 テスト通過・0 失敗</td>
 </tr>
 </tbody>

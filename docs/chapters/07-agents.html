@@ -177,9 +177,9 @@
         </div>
 
         <article class="chapter-body">
-            <h1>07 エージェント — サブエージェントと並列実行</h1>
+            <h1>07 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span> — <span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>と並列実行</h1>
 <h2>エージェントとは</h2>
-<p>Claude Codeは <strong>Agent ツール</strong>を使って、サブエージェント（別のAIインスタンス）を起動できる。サブエージェントは独立したコンテキストで動作し、結果をメインセッションに返す。</p>
+<p>Claude Codeは <strong>Agent ツール</strong>を使って、サブエージェント（別のAIインスタンス）を起動できる。サブエージェントは独立したコンテキストで動作し、結果をメイン<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>に返す。</p>
 <pre><code>メインセッション（あなたとの会話）
   │
   ├─ Agent ツールでサブエージェント起動
@@ -200,7 +200,7 @@
 <p>指定なしで呼び出すと、汎用のサブエージェントが起動。</p>
 <pre><code>Agent({
   description: &quot;コードの調査&quot;,
-  prompt: &quot;NexusCoreのテストカバレッジを確認して報告して&quot;
+  prompt: &quot;NexusCoreのテスト<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>を確認して報告して&quot;
 })
 </code></pre>
 <h3>&lt;a id=&quot;specialized-agents&quot;&gt;&lt;/a&gt;特殊エージェント（subagent_type指定）</h3>
@@ -212,7 +212,7 @@
 <tr>
 <th>エージェント</th>
 <th>用途</th>
-<th>トークン</th>
+<th><span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span></th>
 </tr>
 </thead>
 <tbody>
@@ -338,7 +338,7 @@
 })
 </code></pre>
 <h3>Worktree分離（isolation: &quot;worktree&quot;**</h3>
-<p>別のGit worktreeで作業する。コードの変更がメインブランチに影響しない。</p>
+<p>別のGit worktreeで作業する。コードの変更がメイン<span class="term" tabindex="0">ブランチ<span class="term-popup">Gitで、本体（main）とは別に作業履歴を分けて保管できる「平行世界」。実験的な変更を本体に影響させずに進められる。終わったら本体に合流（マージ）する</span></span>に影響しない。</p>
 <pre><code>Agent({
   description: &quot;機能実装&quot;,
   prompt: &quot;...&quot;,
@@ -375,7 +375,7 @@ Agent({ description: &quot;テスト分析&quot;, prompt: &quot;...&quot; subage
 </ul>
 <h3><code>tools</code>を絞ったカスタムサブエージェントでコスト削減（2026-07-10実証）</h3>
 <p><code>.claude/agents/*.md</code>にfrontmatterで<code>name</code>・<code>description</code>・<code>tools</code>・<code>model</code>等を定義すると、独自のサブエージェント種別を作れる（<code>tools</code>省略時は全ツールを継承）。</p>
-<p><strong>実証例（fable-advisor）:</strong> Fable5を相談役として呼ぶサブエージェントを作成する際、<code>subagent_type: &quot;general-purpose&quot;</code>（全ツール継承）で呼ぶと、ツールを1つも使わない単純な質問でも約39,000トークンを消費した（<code>tool_uses: 0</code>）。原因は、環境に登録された数十個のMCPツール定義を無条件に継承するため。</p>
+<p><strong>実証例（fable-advisor）:</strong> Fable5を相談役として呼ぶサブエージェントを作成する際、<code>subagent_type: &quot;general-purpose&quot;</code>（全ツール継承）で呼ぶと、ツールを1つも使わない単純な質問でも約39,000トークンを消費した（<code>tool_uses: 0</code>）。原因は、環境に登録された数十個の<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ツール定義を無条件に継承するため。</p>
 <p>対策として<code>tools: Read</code>のみに絞ったカスタムサブエージェントを新規作成したところ、同じ質問で**約13,158トークン（約66%削減）**になった。</p>
 <pre><code class="language-yaml">---
 name: fable-advisor

@@ -182,28 +182,28 @@
 <hr />
 <h2 id="toc">📑 セクション一覧（目次）</h2>
 <ul>
-<li><strong><a href="#sec-a">A. コンテキスト経済学</a></strong> — トークン消費の実態・雪だるま式コスト</li>
-<li><strong><a href="#sec-b">B. 落とし穴（ハマりポイント）</a></strong> — 2ファイル問題・MCP復活・フックブロック等</li>
-<li><strong><a href="#sec-c">C. 効率テクニック</a></strong> — compact・BGエージェント・model切替</li>
+<li><strong><a href="#sec-a">A. コンテキスト経済学</a></strong> — <span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>消費の実態・雪だるま式コスト</li>
+<li><strong><a href="#sec-b">B. 落とし穴（ハマりポイント）</a></strong> — 2ファイル問題・<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>復活・フックブロック等</li>
+<li><strong><a href="#sec-c">C. 効率テクニック</a></strong> — compact・BG<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>・model切替</li>
 <li><strong><a href="#sec-d">D. よくある誤解</a></strong> — コスト/メモリ/clear/compact等の誤解</li>
 <li><strong><a href="#sec-e">E. Cron管理の注意点</a></strong> — 7日失効・膨張バグ・スクリプト化</li>
-<li><strong><a href="#sec-f">F. APIスクリプト共通基盤</a></strong> — api_base.py・プロバイダ追加手順</li>
+<li><strong><a href="#sec-f">F. <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>スクリプト共通基盤</a></strong> — api_base.py・プロバイダ追加手順</li>
 <li><strong><a href="#sec-g">G. コード行数の正確な計測</a></strong> — 自動生成除外・3層証明</li>
-<li><strong><a href="#sec-h">H. 並行セッションの競合回避</a></strong> — active-sessionsボード運用</li>
+<li><strong><a href="#sec-h">H. 並行<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の競合回避</a></strong> — active-sessionsボード運用</li>
 </ul>
 <hr />
 <h2 id="sec-a">A. コンテキスト経済学</h2>
 <p>トークンがどう消費されているかを理解することが、効率的な使い方の第一歩。</p>
 <h3>入力:出力 = 13:1 は正常</h3>
 <p>ChatGPT等のチャットAIでは「短い質問 → 長い回答」なので出力の方が多くなりがち。しかし<strong>Claude Codeでは逆転</strong>する。</p>
-<p><strong>理由</strong>: 毎ターンで「システムプロンプト + MCP定義 + メモリ + 過去の会話すべて + ツール結果」を丸ごと再送しているため。</p>
+<p><strong>理由</strong>: 毎ターンで「<span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span> + MCP定義 + メモリ + 過去の会話すべて + ツール結果」を丸ごと再送しているため。</p>
 <pre><code>ターン1: [システム + MCP + メモリ] = ~40K入力 → 回答 = ~1K出力
 ターン5: [システム + MCP + メモリ + 過去4回] = ~60K入力 → 回答 = ~1K出力
 ターン10: [システム + MCP + メモリ + 過去9回] = ~100K入力 → 回答 = ~1K出力
 </code></pre>
 <p>→ セッションが長くなるほど、1ターンあたりのコストが雪だるま式に増加。</p>
 <h3>200Kの実質使える量は〜160K</h3>
-<p>コンテキストウィンドウは最大200Kトークンだが、<strong>ユーザーが自由に使えるのは約160K</strong>。</p>
+<p><span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span>は最大200Kトークンだが、<strong>ユーザーが自由に使えるのは約160K</strong>。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -217,7 +217,7 @@
 <td>~21K</td>
 </tr>
 <tr>
-<td>システムプロンプト（CLAUDE.md等）</td>
+<td>システム<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>（CLAUDE.md等）</td>
 <td>~15K</td>
 </tr>
 <tr>
@@ -270,8 +270,8 @@
 </table></div>
 <ul>
 <li><strong>犯人は画像</strong>。テキストだけで32MBには<strong>絶対届かない</strong>（1M窓を使い切っても3-4MB）。32MB到達の<strong>唯一の経路は画像のbase64蓄積</strong>。画像1枚は数百KB〜1MBだが、履歴に残って毎ターン再送され雪だるま式に積もる。画像1枚追加が「最後の1滴」で弾かれる。</li>
-<li><strong>テキスト定義（MCP/スキル等）は無罪</strong>。全部で0.3MB。MCP削減は1M窓の節約には効くが32MB問題には無意味。<code>/context</code>実測で全体110kトークン=0.5MB。</li>
-<li><strong>curl(proxy/status)では測れない</strong>。<code>last_request_mb</code> は proxy→GLM 送信後のCDN化サイズ（常に0.4MB前後）。32MBチェックは Claude Code 側が proxy 送信前に弾くので proxy に届かず反映されない。正しく測るなら <strong>JSONLファイルサイズ</strong>（画像base64含む実会話サイズ）。</li>
+<li><strong>テキスト定義（MCP/<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>等）は無罪</strong>。全部で0.3MB。MCP削減は1M窓の節約には効くが32MB問題には無意味。<code>/context</code>実測で全体110kトークン=0.5MB。</li>
+<li><strong>curl(proxy/status)では測れない</strong>。<code>last_request_mb</code> は proxy→GLM 送信後のCDN化サイズ（常に0.4MB前後）。32MBチェックは Claude Code 側が proxy 送信前に弾くので proxy に届かず反映されない。正しく測るなら <strong><span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>Lファイルサイズ</strong>（画像base64含む実会話サイズ）。</li>
 <li><strong>対策</strong>: 画像セッションは短く（=/clear惜しまない）・<code>/compact</code>で画像を履歴から消す・同じ画像を何度もReadしない。画像分析は<strong>subagentに委任</strong>（テキスト結果だけメインに戻せばメイン履歴に画像が残らない）。</li>
 </ul>
 <div class="callout callout-warn"><p>⚠️ <strong>訂正・補足（2026-06-30）</strong>: 上記「テキストだけで32MBには絶対届かない・唯一の経路は画像」は <strong>auto-compact 有効前提</strong>の記述だった。実際は環境・条件により経路が変わる:</p>
@@ -279,7 +279,7 @@
 <li><strong>auto-compact 無効（<code>DISABLE_AUTO_COMPACT</code> 設定環境＝本環境）の場合</strong>: 履歴が圧縮されず、画像を使わなくても<strong>ツール結果（ファイルRead・コマンド出力等の巨大テキスト）の蓄積で20-30往復で32MB到達し得る</strong>。純会話テキスト（1M tok ≈ 3-4MB）では届かないが、ツール結果込みなら別。</li>
 <li><strong>auto-compact 有効の場合</strong>: 1M窓到達で圧縮されるため、純テキストでは32MB届かず画像が主因（従来記述の通り）。</li>
 <li><strong>MCP/スキル定義（0.3MB）は無罪</strong>なのは変わらない。テキスト削減（柱2-A等）は1M窓節約には効くが、32MB対策としては auto-compact 無効下の「ツール結果蓄積」に対してのみ寄与し得る。</li>
-<li>詳細・継続課題は [[2026-06-30_32MB問題の基礎知見と対策現況]]（01_DECISIONS/claude-code/）を参照。</li>
+<li>詳細・継続課題は [[2026-06-30_32MB問題の基礎知見と対策現況]]（01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/）を参照。</li>
 </ul>
 </blockquote>
 <blockquote>
@@ -294,12 +294,12 @@
 <pre><code>~/.claude.json          ← CLI自動生成（隠れファイル）
 ~/.claude/settings.json ← ユーザー編集用
 </code></pre>
-<p>Claude Codeは<strong>両方をマージして読み込む</strong>。片方だけ編集してもう片方に古い設定が残っていると、変更が反映されない。</p>
+<p>Claude Codeは<strong>両方を<span class="term" tabindex="0">マージ<span class="term-popup">分かれていた変更を1つに統合すること。ブランチで進めた作業を本体（main）に取り込む作業</span></span>して読み込む</strong>。片方だけ編集してもう片方に古い設定が残っていると、変更が反映されない。</p>
 <p><strong>対策</strong>: MCPサーバーの追加・削除は手動編集ではなく <code>claude mcp add/remove</code> コマンドを使う。このコマンドは両ファイルを正しく更新する。</p>
 <h3>MCP削除が「復活」する</h3>
 <p>上記2ファイル問題が原因で、<code>settings.json</code> だけ編集してMCPサーバーを削除しても、<code>~/.claude.json</code> に定義が残っていれば次回起動時に復元される。</p>
 <p><strong>対策</strong>: 削除後は両ファイルを確認:</p>
-<pre><code class="language-bash">claude mcp list
+<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>">claude mcp list
 cat ~/.claude.json | jq '.mcpServers | keys'
 cat ~/.claude/settings.json | jq '.mcpServers | keys'
 </code></pre>
@@ -312,7 +312,7 @@ cat ~/.claude/settings.json | jq '.mcpServers | keys'
 <li>システムプロンプト（CLAUDE.md）</li>
 <li>MCPツール定義</li>
 <li>Auto Memory</li>
-<li>設定（permissions, hooks）</li>
+<li>設定（permissions, <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s）</li>
 </ul>
 <p>完全リセットしたい場合は <code>/clear</code> → セッション再起動。</p>
 <h3>Read ツールで巨大ファイルを読むとコンテキスト爆発</h3>
@@ -413,7 +413,7 @@ N回目実行後: N倍の長さに膨張
 <h3>推奨: スクリプト方式で永続化する</h3>
 <p>Cron定義を外部スクリプトに書き出し、更新専用Cronがそれを読んで再登録する方式が安全。</p>
 <p><strong>構成例:</strong></p>
-<pre><code class="language-bash"># ~/bin/renew-crons.sh
+<pre><code class="language-bash"># ~/bin/renew-<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>s.sh
 # このファイルは実行ではなく、Claudeがcatして読むための定義ファイル
 #
 # 1. Knowledge Lint
@@ -441,7 +441,7 @@ CronCreate(durable=true, recurring=true) で再登録せよ。
 <h3>設計思想：CCはAPIを直接叩かない</h3>
 <pre><code>SKILL.md → scripts/api/&lt;provider&gt;.py → lib/api_base.py → 統一JSON
 </code></pre>
-<p>スクリプトは<strong>統一JSON</strong>（<code>status/summary/full_data/error</code>）を返し、CCは<code>summary</code>のみ受け取る。巨大な<code>full_data</code>（生レスポンス）はキャッシュファイルに退避するので<strong>トークン膨張を防げる</strong>。</p>
+<p>スクリプトは<strong>統一JSON</strong>（<code>status/summary/full_data/error</code>）を返し、CCは<code>summary</code>のみ受け取る。巨大な<code>full_data</code>（生レスポンス）は<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>ファイルに退避するので<strong>トークン膨張を防げる</strong>。</p>
 <h3>api_base.py の中身（4関数のみ）</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -453,7 +453,7 @@ CronCreate(durable=true, recurring=true) で再登録せよ。
 <tbody>
 <tr>
 <td><code>run_api(call_fn, summary_fn, cache_key)</code></td>
-<td>API呼び出しをラップし<strong>全例外を統一JSONへ</strong>捕捉</td>
+<td>API呼び出しをラップし<strong>全<span class="term" tabindex="0">例外<span class="term-popup">プログラムの実行中に起きた異常のこと、とその知らせ。例外を捕まえて処理（ハンドリング）しないと、その場でプログラムが止まる</span></span>を統一JSONへ</strong>捕捉</td>
 </tr>
 <tr>
 <td><code>make_error_result(error)</code></td>
@@ -473,7 +473,7 @@ CronCreate(durable=true, recurring=true) で再登録せよ。
 <h3>新しいAPIを追加する手順（5ステップ）</h3>
 <ol>
 <li><strong>キー取得</strong> — ユーザーが <code>~/.secrets.env</code> に <code>&lt;PROVIDER&gt;_API_KEY</code> 追加（<strong>値は会話・ファイルに書かない</strong>）</li>
-<li><strong>TDD実装</strong> — <code>scripts/api/&lt;provider&gt;.py</code> を新設。下記雛形の <code>_call</code>/<code>_summarize</code> だけ書き換える。<code>tests/test_&lt;provider&gt;.py</code> でparse系純粋関数を先にテスト</li>
+<li><strong><span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span>実装</strong> — <code>scripts/api/&lt;provider&gt;.py</code> を新設。下記雛形の <code>_call</code>/<code>_summarize</code> だけ書き換える。<code>tests/test_&lt;provider&gt;.py</code> でparse系純粋関数を先にテスト</li>
 <li><strong>スキル統合</strong> — 呼び出し元SKILL.mdにPhase追加（🔷ユーザー確認ポイント付き）</li>
 <li><strong>実URL検証</strong> — 本物の入力でE2Eを通す（モックじゃなく実API）</li>
 <li><strong>完了記録</strong> — SSOT <code>01_DECISIONS/claude-code/</code> に完了ファイル。<code>prev:</code> で前フェーズにリンク</li>
@@ -499,14 +499,14 @@ if __name__ == &quot;__main__&quot;:
 <ul>
 <li><strong>Gemini モデル廃止</strong>: <code>gemini-2.0-flash</code> は404。最新GAモデルを都度確認（現 <code>gemini-3.5-flash</code>）</li>
 <li><strong>SDK引数の勘</strong>: <code>Part.from_uri</code> は <code>file_uri=</code>（<code>url=</code> ではない）</li>
-<li><strong>自動特定の誤認</strong>: Last.fm <code>track.search</code> はYouTube動画タイトルのノイズで誤認しやすい → 🔷ユーザー確認 + 手動指定フォールバック必須</li>
+<li><strong>自動特定の誤認</strong>: Last.fm <code>track.search</code> はYouTube動画タイトルのノイズで誤認しやすい → 🔷ユーザー確認 + 手動指定<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>必須</li>
 <li><strong>片方指定バグ</strong>: <code>--track</code>/<code>--artist</code> の片方だけ指定すると無視される → XORバリデーション</li>
-<li><strong>timeout は今は死にパラメータ</strong>: docstringに「将来signalで適用」と明記（SDK側がタイムアウト保持）</li>
+<li><strong>timeout は今は死にパラメータ</strong>: <span class="term" tabindex="0">docstring<span class="term-popup">ドックストリング。関数等の直後に書く説明文。プログラムの動作を1行で説明し、AIや人間がコードを理解する助けになる</span></span>に「将来signalで適用」と明記（SDK側がタイムアウト保持）</li>
 </ul>
 <div class="callout callout-info"><p>詳細（アーキテクチャ全体・フェーズ別成果）: SSOT <code>01_DECISIONS/claude-code/2026-06-18_サードパーティAPI統合アーキテクチャ.md</code></p></div>
 <hr />
 <h2 id="sec-g">G. コード行数の正確な計測</h2>
-<p>ポートフォリオや経歴書に「コード行数」を記載する際、<strong>自動生成ファイルを除外しないと数字が大きく狂う</strong>。</p>
+<p><span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>フォリオや経歴書に「コード行数」を記載する際、<strong>自動生成ファイルを除外しないと数字が大きく狂う</strong>。</p>
 <h3>必ず除外すべきディレクトリ</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -533,8 +533,8 @@ if __name__ == &quot;__main__&quot;:
 <td>現行プロダクトではない</td>
 </tr>
 <tr>
-<td><code>.venv/</code> <code>venv/</code></td>
-<td>Python仮想環境</td>
+<td><code>.<span class="term" tabindex="0">venv<span class="term-popup">ブイエンブ。Python標準の仮想環境を作るコマンド/仕組み。プロジェクトごとにライブラリを分けてインストールできるようにする</span></span>/</code> <code>venv/</code></td>
+<td>Python<span class="term" tabindex="0">仮想環境<span class="term-popup">プロジェクトごとにインストールするライブラリを分ける独立したPython環境。プロジェクト間のバージョン衝突を防ぐ</span></span></td>
 <td>サードパーティライブラリ</td>
 </tr>
 <tr>

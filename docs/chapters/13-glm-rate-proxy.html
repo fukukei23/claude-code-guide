@@ -179,17 +179,17 @@
         <article class="chapter-body">
             <h1>13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用</h1>
 <div class="callout callout-warn"><p><strong>⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。</strong>
-Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_MCPサーバー</a> のglm/minimax MCPを参照してください。</p></div>
+Windows Desktopアプリ版はエンドポイントを変更できないため、この<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>は使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバー</a> のglm/minimax MCPを参照してください。</p></div>
 <p>Claude Code CLIのバックエンドをAnthropicからZAI（Claude）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
 <hr />
 <h2>&lt;a id=&quot;overview&quot;&gt;&lt;/a&gt;概要：なぜプロキシが必要か</h2>
-<p>Claude Codeは通常、Anthropic APIに直接接続する。しかし <code>ANTHROPIC_BASE_URL</code> を差し替えることで、<strong>Anthropic互換APIを持つ別プロバイダ</strong>に向けられる。</p>
+<p>Claude Codeは通常、Anthropic <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>に直接接続する。しかし <code>ANTHROPIC_BASE_URL</code> を差し替えることで、<strong>Anthropic互換APIを持つ別プロバイダ</strong>に向けられる。</p>
 <pre><code>通常:
 Claude Code ────→ api.anthropic.com (Sonnet/Opus)
 
 プロキシ経由:
-Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (Claude)
-                                                 └──→ api.minimax.io (MiniMax, フォールバック)
+Claude Code ──→ <span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>:8787 (glm-rate-proxy) ──→ api.z.ai (Claude)
+                                                 └──→ api.minimax.io (MiniMax, <span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>)
 </code></pre>
 <h3>コスト比較</h3>
 <div class="table-wrapper"><table>
@@ -263,7 +263,7 @@ api.z.ai              api.minimax.io
 │   ├── proxy.py          # メインプロキシ処理・thinking制御
 │   ├── config.py         # 設定読み込み（DEFAULTS + config.json）
 │   ├── model_router.py   # モデル選択ロジック（使用量・ピーク判定）
-│   ├── upstream.py       # ZAI/MiniMaxへのHTTP通信
+│   ├── upstream.py       # ZAI/MiniMaxへの<span class="term" tabindex="0">HTTP<span class="term-popup">エイチティーティーピー。Webの通信で使われる基本的な約束事（プロトコル）。ブラウザとサーバー、プログラム同士のやり取りの共通言語</span></span>通信
 │   └── usage_tracker.py  # 使用量トラッキング
 ├── config/
 │   └── config.json       # ユーザー設定（DEFAULTSを上書き）
@@ -319,18 +319,18 @@ MiniMax 2キー両方 429/401/403 → 503
 </code></pre>
 <div class="callout callout-info"><p><strong>✅ MiniMax 2アカウント対応（2026-07-27追加）</strong>
 Pro（大量消費）と旧（安全網）の2アカウント運用。起動ログ <code>keys=2</code> で確認。
-フォールバック連鎖: <code>request_minimax</code> 内で Pro(MINIMAX_API_KEY)→旧(MINIMAX_API_KEY_FALLBACK) の429/401/403で次キーへ。状態管理不要・自動復帰。詳細: <a href="#">01_DECISIONS/2026-07-27_glm-rate-proxy-MiniMax2アカウント-Pro優先フォールバック</a></p></div>
+フォールバック連鎖: <code>request_minimax</code> 内で Pro(MINIMAX_API_KEY)→旧(MINIMAX_API_KEY_FALLBACK) の429/401/403で次キーへ。状態管理不要・自動復帰。詳細: <a href="#">01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/2026-07-27_glm-rate-proxy-MiniMax2アカウント-Pro優先フォールバック</a></p></div>
 <div class="callout callout-info"><p><strong>✅ 週間制限時のフォールバック実機確認済（2026-07-11）</strong>
 ZAIの<strong>週間</strong>制限到達で429が返っても、上記チェーン通りMiniMax-M3へ自動フォールバックすることを仕様+実機で確認（MiniMax API単体疎通テスト HTTP 200・<code>proxy.py:115-173</code>）。<code>usage_pct</code>は5時間窓の値で、週間累計（ZAIダッシュボード）とは別物。詳細: <a href="#">01_DECISIONS/2026-07-11_glm-rate-proxy週間制限時フォールバック実機確認</a></p></div>
 <div class="callout callout-warn"><p><strong>⚠️ 重要な制限: コンテキスト上限到達時はフォールバックが発動しない</strong></p>
-<p>Claude Codeのコンテキストウィンドウが上限に達した場合、<strong>APIリクエストを送る前にClaude Code本体が判定してエラーを返す</strong>。そのためglm-rate-proxyにリクエストが届かず、MiniMaxへのフォールバックも発動しない。</p>
+<p>Claude Codeの<span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span>が上限に達した場合、<strong>APIリクエストを送る前にClaude Code本体が判定してエラーを返す</strong>。そのためglm-rate-proxyにリクエストが届かず、MiniMaxへのフォールバックも発動しない。</p>
 <pre><code>通常時: Claude Code → glm-rate-proxy → GLM（→ エラー時MiniMax）
 上限時: Claude Code → （本体がAPIリクエストを送らずエラー）← プロキシに届かない
 </code></pre>
 <p><strong>対策</strong>: コンテキストが溜まってきたら早めに <code>/compact</code> または <code>/new-session</code> で切り替える。80%を超えたら <code>/new-session</code> 推奨。</p></div>
 <hr />
 <h2>&lt;a id=&quot;thinking&quot;&gt;&lt;/a&gt;Thinking（思考）モードの動的制御</h2>
-<p>Claudeはデフォルトで「思考モード」が有効で、内部推論トークンを大量消費する。</p>
+<p>Claudeはデフォルトで「思考モード」が有効で、内部推論<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を大量消費する。</p>
 <h3>問題</h3>
 <ul>
 <li>「このファイルも確認が必要」という1行のために <strong>16,000トークンの内部思考</strong>を消費した例あり</li>
@@ -378,7 +378,7 @@ ZAIの<strong>週間</strong>制限到達で429が返っても、上記チェー
 <div class="callout callout-warn"><p><strong>budget_tokensの注意</strong>: これは上限であり、モデルが必ず使い切るわけではない。ただしClaudeが上限を守るかは未検証。16,000以上は暴走リスクあり。</p></div>
 <hr />
 <h2>&lt;a id=&quot;status&quot;&gt;&lt;/a&gt;ステータス確認</h2>
-<pre><code class="language-bash"># プロキシの状態確認
+<pre><code class="language-<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>"># プロキシの状態確認
 curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
 </code></pre>
 <pre><code class="language-json">{
@@ -422,11 +422,11 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
 </table></div>
 <hr />
 <h2>&lt;a id=&quot;start-stop&quot;&gt;&lt;/a&gt;起動・停止</h2>
-<pre><code class="language-bash"># 起動（SessionStart hookで自動実行されるが、手動でも可）
+<pre><code class="language-bash"># 起動（SessionStart <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>で自動実行されるが、手動でも可）
 bash ~/.claude/scripts/llm/start-glm-proxy.sh
 
 # プロセス確認
-pgrep -a -f glm_rate_proxy
+p<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span> -a -f glm_rate_proxy
 
 # 停止
 pkill -f glm_rate_proxy
@@ -435,7 +435,7 @@ pkill -f glm_rate_proxy
 tail -f /tmp/glm-proxy.log
 </code></pre>
 <h3>ピークブロックを一時的に無効化</h3>
-<pre><code class="language-bash"># 環境変数でピークブロック無効化
+<pre><code class="language-bash"># <span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>でピークブロック無効化
 GLM_PEAK_BLOCK=false bash ~/.claude/scripts/llm/start-glm-proxy.sh
 </code></pre>
 <hr />
@@ -445,7 +445,7 @@ GLM_PEAK_BLOCK=false bash ~/.claude/scripts/llm/start-glm-proxy.sh
 <pre><code class="language-bash"># 1. プロキシが起動しているか
 pgrep -a -f glm_rate_proxy
 
-# 2. ポートが開いているか
+# 2. <span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>が開いているか
 curl -s http://127.0.0.1:8787/proxy/status
 
 # 3. settings.jsonのBASE_URLが正しいか
@@ -461,7 +461,7 @@ bash ~/.claude/scripts/llm/start-glm-proxy.sh
 <p><strong>原因候補:</strong></p>
 <ol>
 <li>Thinkingモードが暴走している（<code>budget_tokens</code>を超えている）</li>
-<li>ZAIのレート制限に引っかかっている</li>
+<li>ZAIの<span class="term" tabindex="0">レート制限<span class="term-popup">短時間の利用回数にかけられる上限。API等で一定時間内のリクエスト数が制限されること。超えると一時的にエラーになる</span></span>に引っかかっている</li>
 </ol>
 <p><strong>確認:</strong></p>
 <pre><code class="language-bash"># ログでthinking状況を確認（DEBUGレベル要設定）
@@ -573,7 +573,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 }
 </code></pre>
 <hr />
-<h2>&lt;a id=&quot;proxy-doctor&quot;&gt;&lt;/a&gt;proxy-doctor スキル — 診断を自動化する</h2>
+<h2>&lt;a id=&quot;proxy-doctor&quot;&gt;&lt;/a&gt;proxy-doctor <span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span> — 診断を自動化する</h2>
 <p>プロキシが壊れた時の原因調査を自動化する Claude Code スキル。</p>
 <h3>できること</h3>
 <ul>
@@ -585,7 +585,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
 <h3>いつ使うか</h3>
 <p>「なんか遅い・エラーが出る・フォールバックしない」と思ったら、原因を自分で追わずこのスキルを最初に使う。</p>
 <h3>使い方</h3>
-<p>CLIセッション内で以下のいずれかを言うとトリガーされる：</p>
+<p>CLI<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>内で以下のいずれかを言うとトリガーされる：</p>
 <pre><code>/proxy-doctor
 プロキシ直して
 GLMが使えない

@@ -179,7 +179,7 @@
         <article class="chapter-body">
             <h1>05 フック — イベント駆動の自動実行</h1>
 <h2>フックとは</h2>
-<p>フックは <strong>特定のイベント発生時に自動実行されるシェルスクリプト</strong>。Claude Codeの動作を拡張・制御する。</p>
+<p>フックは <strong>特定のイベント発生時に自動実行される<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>スクリプト</strong>。Claude Codeの動作を拡張・制御する。</p>
 <pre><code>ユーザーがツールを実行
   │
   ▼
@@ -194,7 +194,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <hr />
 <h2>主要4種のフック</h2>
 <h3>&lt;a id=&quot;sessionstart&quot;&gt;&lt;/a&gt;SessionStart</h3>
-<p><strong>セッション開始時</strong>に実行。</p>
+<p><strong><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>開始時</strong>に実行。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -209,7 +209,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td>用途</td>
-<td>環境変数の読み込み、初期化処理、設定の検証、ハンドオフ読込</td>
+<td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の読み込み、初期化処理、設定の検証、ハンドオフ読込</td>
 </tr>
 <tr>
 <td>備考</td>
@@ -245,14 +245,14 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-tip"><p>💡 ※2026-07-02統合撤去: 2026-06-30に追加していた minimax系MCPブロック（matcher <code>mcp__minimax-(official|video)__.*</code>・<code>exit 2</code>）は、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため PreToolUse hook を削除し撤去。minimax-official/video は日常セッションで即呼び可能。</p></div>
+<div class="callout callout-tip"><p>💡 ※2026-07-02統合撤去: 2026-06-30に追加していた minimax系<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ブロック（matcher <code>mcp__minimax-(official|video)__.*</code>・<code>exit 2</code>）は、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため PreToolUse <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> を削除し撤去。minimax-official/video は日常セッションで即呼び可能。</p></div>
 <div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="11-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
-<div class="callout callout-info"><p><strong>クロスプラットフォーム対応</strong>: フックスクリプトで <code>python3</code> を直接呼ぶとWindows Git Bashで動作しない。<code>run-security-check.sh</code> ラッパーが python3 / python / wsl を自動検出する。Bashフックは純bash（grep/sed）でJSON解析しpython3に依存しない。</p></div>
+<div class="callout callout-info"><p><strong>クロスプラットフォーム対応</strong>: フックスクリプトで <code>python3</code> を直接呼ぶとWindows Git Bashで動作しない。<code>run-security-check.sh</code> ラッパーが python3 / python / wsl を自動検出する。Bashフックは純<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>（<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span>/sed）で<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>解析しpython3に依存しない。</p></div>
 <p>ブロックされるコマンドの例:</p>
 <ul>
-<li><code>bash -x</code>（デバッグ出力でシークレット露出の恐れ）</li>
+<li><code>bash -x</code>（<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>出力でシークレット露出の恐れ）</li>
 <li><code>cat -A</code>（特殊文字表示でシークレット露出の恐れ）</li>
-<li>マスクなしの <code>grep</code>（APIキーを含むファイルの検索）</li>
+<li>マスクなしの <code>grep</code>（<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キーを含むファイルの検索）</li>
 <li>フィルタなしの <code>env</code>（全環境変数の表示）</li>
 </ul>
 <h3>&lt;a id=&quot;posttooluse&quot;&gt;&lt;/a&gt;PostToolUse</h3>
@@ -397,7 +397,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>load-obsidian-log.sh</code></td>
-<td>SSOT日記読み込み（今日・昨日のセッションログ＋🟢進行中タスク（他セッション占有・着手前確認）＋バックログ＋7日以上経過タスクの自動確認プロンプト・セッション数カウント付きサマリー）</td>
+<td>SSOT日記読み込み（今日・昨日のセッションログ＋🟢進行中タスク（他セッション占有・着手前確認）＋バックログ＋7日以上経過タスクの自動確認<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>・セッション数カウント付きサマリー）</td>
 </tr>
 <tr>
 <td></td>
@@ -447,7 +447,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-knowledge-lint.sh</code></td>
-<td>Knowledge Lint cron設定確認</td>
+<td>Knowledge Lint <span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>設定確認</td>
 </tr>
 <tr>
 <td></td>
@@ -457,7 +457,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-proxy-compat.sh</code></td>
-<td>CC版変化時にプロキシ互換性（GLM応答のtool_use）を自動検証・同版かつ前回okは省略・警告のみでブロックしない（2026-07-09 追加）</td>
+<td>CC版変化時に<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>互換性（GLM応答のtool_use）を自動検証・同版かつ前回okは省略・警告のみでブロックしない（2026-07-09 追加）</td>
 </tr>
 <tr>
 <td></td>
@@ -482,7 +482,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>skill-guard.sh</code></td>
-<td>スキル定義の整合性ガード</td>
+<td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>定義の整合性ガード</td>
 </tr>
 <tr>
 <td></td>
@@ -507,7 +507,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>guard-destructive-commands.sh</code></td>
-<td>破壊的コマンドのガード（python3不要・純bash動作・27パターン）・<code>test_guard_destructive_commands.sh</code>でカバレッジテスト済（26テスト・監査⑧部分）</td>
+<td>破壊的コマンドのガード（python3不要・純bash動作・27パターン）・<code>test_guard_destructive_commands.sh</code>で<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>テスト済（26テスト・監査⑧部分）</td>
 </tr>
 <tr>
 <td></td>
@@ -618,13 +618,13 @@ fi
 <p>Windows側でフックコマンド文字列をスクリプト経由（例: python の <code>json.dump</code>）で新規追加する際、<code>path-rewrite.py</code> が Bash ツールに送るコマンド文字列内の <code>/home/&lt;USER&gt;</code> を検知してUNC形式に書き換えてしまうため、文字列を <code>&quot;/&quot; + &quot;home/&lt;USER&gt;&quot;</code> のように分割して結合し検知パターンを回避する必要がある。</p>
 <p>実行側スキルは完了後 <code>date +%Y-%m-%d &gt; &quot;$STATE&quot;</code> で再発火を抑制する。 → <a href="#">ssot-sync定期実行化</a></p>
 <h3>WSL側settings.jsonのフックはWindows Desktopでも発火する（uname判定分岐パターン・2026-07-11）</h3>
-<p>Windows Desktop版のセッションは作業ディレクトリがWSLホーム（<code>\\wsl.localhost\Ubuntu\home\&lt;USER&gt;</code>）のため、WSL側 <code>~/.claude/settings.json</code> を<strong>プロジェクト設定として読み込み、そのフックがGit Bash上で発火する</strong>。<code>python3 /home/&lt;USER&gt;/bin/xxx.py</code> のようなWSLパス直書きコマンドは Git Bash が <code>/home/&lt;USER&gt;</code> を <code>C:\Program Files\Git\home\&lt;USER&gt;</code> に解決して毎回エラーになる（archive-backlog-done.py で実例あり）。</p>
+<p>Windows Desktop版のセッションは作業ディレクトリがWSLホーム（<code>\\wsl.<span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>\Ubuntu\home\&lt;USER&gt;</code>）のため、WSL側 <code>~/.claude/settings.json</code> を<strong>プロジェクト設定として読み込み、そのフックがGit Bash上で発火する</strong>。<code>python3 /home/&lt;USER&gt;/bin/xxx.py</code> のようなWSLパス直書きコマンドは Git Bash が <code>/home/&lt;USER&gt;</code> を <code>C:\Program Files\Git\home\&lt;USER&gt;</code> に解決して毎回エラーになる（archive-backlog-done.py で実例あり）。</p>
 <p>共有されるフックコマンドは <code>uname -s</code> 判定で両環境に分岐させる:</p>
 <pre><code class="language-bash">if [ &quot;$(uname -s)&quot; = &quot;Linux&quot; ]; then python3 /home/&lt;USER&gt;/bin/xxx.py; else wsl bash -c &quot;python3 /home/&lt;USER&gt;/bin/xxx.py&quot;; fi
 </code></pre>
 <p>なお、フック設定はセッション起動時にスナップショット取込されるため、settings.json修正後も<strong>既存セッションでは旧コマンドが発火し続ける</strong>（反映には再起動が必要）。 → <a href="#">バックログhookのWindows環境判定分岐修正</a></p>
 <hr />
-<h2>自律タスクループ（Stop Hook 応用）</h2>
+<h2>自律タスクループ（Stop <span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> 応用）</h2>
 <h3>概要</h3>
 <p>GitHub Issue を順番に自動実装するイベント駆動ループ。<br />
 CronCreate が時間トリガーのみなのに対し、Stop Hook を使うことで「前のタスク完了後に次を起動」が実現できる。</p>
@@ -675,7 +675,7 @@ print('停止しました')
 <div class="callout callout-info"><p>詳細: <a href="#">2026-05-30_自律タスクループ実装</a></p></div>
 <hr />
 <h2>PreToolUseでのコマンド書き換え（<code>updatedInput</code>パターン）</h2>
-<p>PreToolUseフックはブロック（<code>{&quot;decision&quot;: &quot;block&quot;, ...}</code>）だけでなく、<strong>ツールの実行直前にその入力を書き換える</strong>こともできる。以下のJSONをexit code 0で標準出力に書くと、<code>updatedInput</code>で指定した内容が実際の実行に反映される（セッション再起動不要・live反映）。</p>
+<p>PreToolUseフックはブロック（<code>{&quot;decision&quot;: &quot;block&quot;, ...}</code>）だけでなく、<strong>ツールの実行直前にその入力を書き換える</strong>こともできる。以下のJSONをexit code 0で<span class="term" tabindex="0">標準出力<span class="term-popup">プログラムが結果を書き出す標準的な出口。画面表示や次のプログラムへの受け渡しに使われる。ちなみにエラー情報は「標準エラー出力」という別の出口に出る</span></span>に書くと、<code>updatedInput</code>で指定した内容が実際の実行に反映される（セッション再起動不要・live反映）。</p>
 <pre><code class="language-json">{
   &quot;hookSpecificOutput&quot;: {
     &quot;hookEventName&quot;: &quot;PreToolUse&quot;,
@@ -716,14 +716,14 @@ print('停止しました')
 </tr>
 <tr>
 <td>4層判定ルール</td>
-<td>① prefix辞書 + gitleaks厳選（バイナリなし・python re.search）/ ② 長文字列32字+文字種混在+URL/パス/<code>Bash(</code>等のツール呼出スキーマ除外 / ③ キー名+実値で <code>${ENV}</code> 厳密判定（<code>^\$\{[A-Z_][A-Z0-9_]*\}$</code> のみ許可）/ ④ 値ブロードスキャン（JSONツリー全値を再帰走査・キー名無関係）</td>
+<td>① prefix辞書 + gitleaks厳選（バイナリなし・python re.search）/ ② 長文字列32字+文字種混在+URL/パス/<code>Bash(</code>等のツール呼出<span class="term" tabindex="0">スキーマ<span class="term-popup">データの型・形の決まり。「このファイルには何の項目が必須か」等の定義。決まりに合っているか機械で検査できる</span></span>除外 / ③ キー名+実値で <code>${ENV}</code> 厳密判定（<code>^\$\{[A-Z_][A-Z0-9_]*\}$</code> のみ許可）/ ④ 値ブロードスキャン（JSONツリー全値を再帰走査・キー名無関係）</td>
 </tr>
 <tr>
 <td>監視対象</td>
 <td><code>permissions.{allow,deny,ask,default}</code> / <code>env</code> / <code>mcpServers.*.{env, headers, args, command, url}</code> / <code>hooks.*.{env, command}</code>、settings.local.json は全 JSON 値走査</td>
 </tr>
 <tr>
-<td>復元失敗フォールバック</td>
+<td>復元失敗<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span></td>
 <td>cp -p 戻り値 + ファイルサイズ一致 + JSON parse 成功 + sha256 一致 の <strong>AND</strong>。失敗時 <code>chmod 400</code>（所有者のみRead可・CC本体が読める）で読み取り専用化（<strong>chmod 000 は使わない</strong> — DoS回避）</td>
 </tr>
 <tr>

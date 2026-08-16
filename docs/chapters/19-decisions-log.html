@@ -183,7 +183,7 @@
 <h2>🧩 sentaku に「L1.5 Diverge（案拡張）」を追加した話</h2>
 <h3>🎯 TL;DR（3行）</h3>
 <ul>
-<li>比較スキル <code>sentaku</code> に <strong>L1.5 Diverge</strong>（案拡張・軽量・毎回自動）を追加</li>
+<li>比較<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span> <code>sentaku</code> に <strong>L1.5 Diverge</strong>（案拡張・軽量・毎回自動）を追加</li>
 <li>比較の直後に「他の軸はないか？」と自問し、<strong>新案を1-2個提示</strong></li>
 <li>「もっと広げて」で6技法（逆転/類推/統合/極端化/制約解除/次元追加）フルへ昇格</li>
 </ul>
@@ -231,7 +231,7 @@
 <td>40</td>
 </tr>
 <tr>
-<td>5: プロンプト集</td>
+<td>5: <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>集</td>
 <td>6技法を文書化</td>
 <td>41</td>
 </tr>
@@ -262,7 +262,7 @@
 <hr />
 <h2>🎨 図解の3種類比較（PoC）</h2>
 <p>同じ「sentaku L1.5 の流れ」を3種類の絵で描き比べ。</p>
-<h3>1. ASCII図（文字の絵・無料・現状）</h3>
+<h3>1. AS<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>I図（文字の絵・無料・現状）</h3>
 <pre><code>[L1:比較] → [L1.5:Diverge] → [L2:マトリクス]
                 ↓
          新案1-2個
@@ -271,7 +271,7 @@
 </code></pre>
 <h3>2. SVG（本物の図・無料）</h3>
 <p><img src="/claude-code-guide/assets/images/flow-l1-5.svg" alt="sentaku L1.5 Divergeのフロー図：L1比較→L1.5 Diverge（新案生成）→L2マトリクス" /></p>
-<h3>3. 画像イラスト（写真みたいな絵・有料・minimax MCP生成）</h3>
+<h3>3. 画像イラスト（写真みたいな絵・有料・minimax <span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>生成）</h3>
 <p><img src="/claude-code-guide/assets/images/decision-l1-5.jpeg" alt="sentaku L1.5 Divergeの概念イラスト：比較中に新たな視点が分岐して現れる" /></p>
 <div class="callout callout-info"><p>比較の途中で「他に切り口はないか？」と立ち止まり、新しい道（新案）が分岐して現れる様子をイラスト化。</p></div>
 
