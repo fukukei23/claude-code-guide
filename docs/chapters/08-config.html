@@ -331,7 +331,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tbody>
 <tr>
 <td><code>model</code></td>
-<td><span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>モデル（<code>opus</code>, <code>sonnet</code>, <code>haiku</code>）。glm-5.2運用では各階層に割当</td>
+<td><span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>モデル（<code>opus</code>, <code>sonnet</code>, <code>haiku</code>）。glm-5.3運用では各階層に割当</td>
 </tr>
 <tr>
 <td><code>effortLevel</code></td>
@@ -368,8 +368,8 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <ul>
 <li><strong>設定</strong>: <code>{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;bash ~/.claude/scripts/llm/llm-status.sh&quot;}</code></li>
 <li><strong><span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span></strong>: <code>~/.claude/scripts/llm/llm-status.sh</code></li>
-<li><strong>表示例（通常）</strong>: <code>🟡[GLM] GLM-5.2 | Ctx 45% (90k/200k) | Req 8.5MB/32 | +100 -50 | 🪟e36d</code></li>
-<li><strong>表示例（peak帯フォールバック）</strong>: <code>🟠[peak→minimax] GLM-5.2→MiniMax-M3 | ... | 🪟e36d</code></li>
+<li><strong>表示例（通常）</strong>: <code>🟡[GLM] GLM-5.3 | Ctx 45% (90k/200k) | Req 8.5MB/32 | +100 -50 | 🪟e36d</code></li>
+<li><strong>表示例（peak帯フォールバック）</strong>: <code>🟠[peak→minimax] GLM-5.3→MiniMax-M3 | ... | 🪟e36d</code></li>
 <li><strong>並び順（2026-08-16改）</strong>: LLM名 → Ctx → Req → 作業量 → タブID。コスト（$表示）は削除（<code>claude-cost</code>コマンドで確認）。※スマホ表示で末尾が見切れるため、モデル・コンテキストを先頭に変更（旧: タブID先頭・2026-07-23〜）</li>
 </ul>
 <div class="table-wrapper"><table>
@@ -443,8 +443,8 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tbody>
 </table></div>
 <p><strong>glm-rate-proxy経由のルーティング変数</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> / <code>ANTHROPIC_BASE_URL</code> / <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 等）→ <a href="13-glm-rate-proxy.html">13_glm-rate-proxy</a> で詳述。</p>
-<div class="callout callout-info"><p><strong>auto-compact制御の罠（パターンB運用）</strong>: glm-5.2等のカスタムモデルは Claude Code で <strong>200K認識</strong>される。<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000</code> を設定しても200Kに <strong>cap</strong> されるため無意味（statusLine表示と本体判定がズレて「1% until auto-compact」が異常早発動）。auto-compact を止めるには <code>DISABLE_AUTO_COMPACT=1</code>。glm-5.2 を真に1M認識させるには <code>DISABLE_COMPACT=1</code> + <code>CLAUDE_CODE_MAX_CONTEXT_TOKENS=1000000</code>（ただし手動<code>/compact</code>も不可）。→ <a href="#">AUTO_COMPACT_WINDOW訂正・パターンB運用移行</a></p></div>
-<div class="callout callout-warn"><p><strong>MCP_TOOL_TIMEOUT を設定する理由</strong>: GLM-5.2等の思考型モデルは長い生成に60秒以上かかることがある。未設定だと <code>MCP error -32001 (Request timed out)</code> が連続発生する。glm-mcp-server.py は直列処理なので1件目のタイムアウトが2件目を巻き込む連鎖に注意。値はミリ秒単位（300000 = 5分）。→ <a href="#">GLM MCPタイムアウト修正</a></p></div>
+<div class="callout callout-info"><p><strong>auto-compact制御の罠（パターンB運用）</strong>: glm-5.3等のカスタムモデルは Claude Code で <strong>200K認識</strong>される。<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000</code> を設定しても200Kに <strong>cap</strong> されるため無意味（statusLine表示と本体判定がズレて「1% until auto-compact」が異常早発動）。auto-compact を止めるには <code>DISABLE_AUTO_COMPACT=1</code>。glm-5.3 を真に1M認識させるには <code>DISABLE_COMPACT=1</code> + <code>CLAUDE_CODE_MAX_CONTEXT_TOKENS=1000000</code>（ただし手動<code>/compact</code>も不可）。→ <a href="#">AUTO_COMPACT_WINDOW訂正・パターンB運用移行</a></p></div>
+<div class="callout callout-warn"><p><strong>MCP_TOOL_TIMEOUT を設定する理由</strong>: GLM-5.3等の思考型モデルは長い生成に60秒以上かかることがある。未設定だと <code>MCP error -32001 (Request timed out)</code> が連続発生する。glm-mcp-server.py は直列処理なので1件目のタイムアウトが2件目を巻き込む連鎖に注意。値はミリ秒単位（300000 = 5分）。→ <a href="#">GLM MCPタイムアウト修正</a></p></div>
 <div class="callout callout-info"><p><strong>WSL CLI版でglm MCPをdisabledにする理由</strong>: WSL CLI版ではCLI本体がGLMで動作するためglm MCPは二重呼び出しになり不要。<code>command</code>/<code>url</code> を省略すると「設定不備」警告が出るため、<code>disabled: true</code> を設定して警告を抑制。Desktop App版では <code>false</code> に戻すだけで再利用可。</p></div>
 <h3>&lt;a id=&quot;settings-local&quot;&gt;&lt;/a&gt;プロジェクト設定: <code>&lt;repo&gt;/.claude/settings.json</code></h3>
 <p>プロジェクト固有の設定。</p>

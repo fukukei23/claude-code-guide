@@ -340,7 +340,7 @@ AI画像分析。
 
 ## glm（Windows Desktop版用 / WSL CLI版では不要・自作 / ~1kトークン） {#glm}
 
-**LLM委譲用MCPサーバー（自作・GLM-5.2/Z.AI API）**。**WSL CLI版では不要のため「現在の構成（実態12サーバー）」には含まれない**。Windows Desktop版でのみ有効。
+**LLM委譲用MCPサーバー（自作・GLM-5.3/Z.AI API）**。**WSL CLI版では不要のため「現在の構成（実態12サーバー）」には含まれない**。Windows Desktop版でのみ有効。
 
 | 環境 | 役割 |
 |---|---|

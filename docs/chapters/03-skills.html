@@ -340,7 +340,7 @@ Claude Code がその指示に従って動作
 </ul>
 <p><strong>画像理解系</strong></p>
 <ul>
-<li><code>vision-analyze</code> — GLM-5.2等のvision非対応モデル環境で画像を理解（被写体・OCR・構図・UI構造）。主ルート Gemini 2.5 Flash（<code>scripts/api/gemini_vision.py</code>）・副ルート 4_5v <span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>（ReadのCDN URL→analyze_image）。モデル陳腐化耐性5層（config候補外部化＋自動<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>＋paid_ok課金防止）。トリガー: 「画像見て」「スクショ見て」「画像分析して」「画像理解」<code>/vision-analyze</code></li>
+<li><code>vision-analyze</code> — GLM-5.3等のvision非対応モデル環境で画像を理解（被写体・OCR・構図・UI構造）。主ルート Gemini 2.5 Flash（<code>scripts/api/gemini_vision.py</code>）・副ルート 4_5v <span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>（ReadのCDN URL→analyze_image）。モデル陳腐化耐性5層（config候補外部化＋自動<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>＋paid_ok課金防止）。トリガー: 「画像見て」「スクショ見て」「画像分析して」「画像理解」<code>/vision-analyze</code></li>
 </ul>
 <p><strong>相談・アドバイザー系</strong></p>
 <ul>
@@ -775,7 +775,7 @@ Claude Code がその指示に従って動作
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/delegate-to-minimax/</code>・両層同期）</li>
 </ul>
 <h3 id="vision-analyze"><code>vision-analyze</code>（カスタムスキル）</h3>
-<p><strong>画像を理解（被写体・OCR・構図・UI構造）し構造化して返す</strong>。CC CLIはGLM-5.2等のvision非対応モデルで稼働中のため画像を直接視認できず、外部APIに分析を委任（CCは結果の構造化・比較・保存に専念）。</p>
+<p><strong>画像を理解（被写体・OCR・構図・UI構造）し構造化して返す</strong>。CC CLIはGLM-5.3等のvision非対応モデルで稼働中のため画像を直接視認できず、外部APIに分析を委任（CCは結果の構造化・比較・保存に専念）。</p>
 <ul>
 <li><strong>Phase1（主ルート）</strong>: <code>cd /home/&lt;USER&gt;/projects/claude-config &amp;&amp; set -a; source ~/.secrets.env; set +a &amp;&amp; .venv/bin/python scripts/api/gemini_vision.py --image &lt;path&gt;</code>（<code>--allow-paid</code> で有料モデル許可）</li>
 <li><strong>Phase2（副・フォールバック）</strong>: Read→CDN URL→<code>mcp__4_5v_mcp__analyze_image</code></li>
