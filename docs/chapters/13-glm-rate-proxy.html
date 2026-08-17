@@ -180,7 +180,7 @@
             <h1>13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用</h1>
 <div class="callout callout-warn"><p><strong>⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。</strong>
 Windows Desktopアプリ版はエンドポイントを変更できないため、この<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>は使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバー</a> のglm/minimax MCPを参照してください。</p></div>
-<p>Claude Code CLIのバックエンドをAnthropicからZAI（Claude）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
+<p>Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.3）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
 <hr />
 <h2>&lt;a id=&quot;overview&quot;&gt;&lt;/a&gt;概要：なぜプロキシが必要か</h2>
 <p>Claude Codeは通常、Anthropic <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>に直接接続する。しかし <code>ANTHROPIC_BASE_URL</code> を差し替えることで、<strong>Anthropic互換APIを持つ別プロバイダ</strong>に向けられる。</p>
@@ -188,7 +188,7 @@ Windows Desktopアプリ版はエンドポイントを変更できないため�
 Claude Code ────→ api.anthropic.com (Sonnet/Opus)
 
 プロキシ経由:
-Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (Claude)
+Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (GLM-5.3)
                                                  └──→ api.minimax.io (MiniMax, フォールバック)
 </code></pre>
 <h3>コスト比較</h3>
@@ -242,7 +242,7 @@ Claude Code（CLI）
 ┌─────────────────────────────────────────┐
 │         glm-rate-proxy (port 8787)      │
 │                                         │
-│  1. モデル名を書き換え（claude → Claude） │
+│  1. モデル名を書き換え（claude → GLM-5.3） │
 │  2. thinking制御を注入                  │
 │  3. 使用量に応じてモデルをダウングレード   │
 │  4. ピーク時間帯はMiniMaxに強制切替       │
@@ -255,7 +255,7 @@ Claude Code（CLI）
   │                        │
   ▼                        ▼
 api.z.ai              api.minimax.io
-(Claude)             (MiniMax-M2.7)
+(GLM-5.3)             (MiniMax-M3)
 </code></pre>
 <h3>ファイル構成</h3>
 <pre><code>~/.claude/scripts/glm-rate-proxy/
@@ -286,7 +286,7 @@ api.z.ai              api.minimax.io
 <tr>
 <td><code>normal</code></td>
 <td>usage &lt; 80%</td>
-<td>Claude</td>
+<td>GLM-5.3</td>
 <td>ZAI</td>
 </tr>
 <tr>
@@ -309,7 +309,7 @@ api.z.ai              api.minimax.io
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p><strong>ピーク時間帯の理由</strong>: ZAI公式ドキュメントによるとClaudeはピーク時に<strong>3倍の消費レート</strong>で計算される。MiniMaxに逃がすことでZAIクォータを温存する。</p></div>
+<div class="callout callout-info"><p><strong>ピーク時間帯の理由</strong>: ZAI公式ドキュメント（<a href="https://docs.z.ai/devpack/notice/usage-revision">usage-revision</a>・2026-08-17確認）によるとGLM-5.3はピーク時に<strong>3倍の消費レート</strong>（オフピークは1倍・ピーク=月〜金 14:00-18:00 UTC+8）で計算される。MiniMaxに逃がすことでZAIクォータを温存する。</p></div>
 <h3><span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>チェーン</h3>
 <pre><code>ZAI 429 → Claude-Flash（emergency）→ MiniMax keys[0] → MiniMax keys[1] → 503
 ZAI 5xx → MiniMax keys[0] → MiniMax keys[1] → 503
@@ -330,7 +330,7 @@ ZAIの<strong>週間</strong>制限到達で429が返っても、上記チェー
 <p><strong>対策</strong>: コンテキストが溜まってきたら早めに <code>/compact</code> または <code>/new-session</code> で切り替える。80%を超えたら <code>/new-session</code> 推奨。</p></div>
 <hr />
 <h2>&lt;a id=&quot;thinking&quot;&gt;&lt;/a&gt;Thinking（思考）モードの動的制御</h2>
-<p>Claudeは<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>で「思考モード」が有効で、内部推論<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を大量消費する。</p>
+<p>GLM-5.3は<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>で「思考モード」が有効で、内部推論<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を大量消費する。</p>
 <h3>問題</h3>
 <ul>
 <li>「このファイルも確認が必要」という1行のために <strong>16,000トークンの内部思考</strong>を消費した例あり</li>
@@ -375,7 +375,7 @@ ZAIの<strong>週間</strong>制限到達で429が返っても、上記チェー
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-warn"><p><strong>budget_tokensの注意</strong>: これは上限であり、モデルが必ず使い切るわけではない。ただしClaudeが上限を守るかは未検証。16,000以上は暴走リスクあり。</p></div>
+<div class="callout callout-warn"><p><strong>budget_tokensの注意</strong>: これは上限であり、モデルが必ず使い切るわけではない。ただしGLM-5.3が上限を守るかは未検証。16,000以上は暴走リスクあり。</p></div>
 <hr />
 <h2>&lt;a id=&quot;status&quot;&gt;&lt;/a&gt;ステータス確認</h2>
 <pre><code class="language-bash"># プロキシの状態確認
@@ -387,7 +387,7 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
   &quot;mode&quot;: &quot;normal&quot;,
   &quot;provider&quot;: &quot;zai&quot;,
   &quot;peak_block&quot;: false,
-  &quot;last_actual_model&quot;: &quot;glm-5.1&quot;
+  &quot;last_actual_model&quot;: &quot;glm-5.3&quot;
 }
 </code></pre>
 <div class="table-wrapper"><table>
@@ -546,7 +546,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
   &quot;listen_port&quot;: 8787,
   &quot;upstream_timeout&quot;: 1200,
   &quot;log_level&quot;: &quot;INFO&quot;,
-  &quot;default_model&quot;: &quot;Claude&quot;,
+  &quot;default_model&quot;: &quot;GLM-5.3&quot;,
   &quot;thresholds&quot;: {
     &quot;normal&quot;:    {&quot;max_pct&quot;: 80,  &quot;model&quot;: null},
     &quot;economy&quot;:   {&quot;max_pct&quot;: 95,  &quot;model&quot;: &quot;Claude&quot;},
@@ -554,7 +554,7 @@ PYTHONPATH=src python3 -m glm_rate_proxy
   },
   &quot;fallback&quot;: {
     &quot;provider&quot;: &quot;minimax&quot;,
-    &quot;model&quot;: &quot;MiniMax-M2.7&quot;
+    &quot;model&quot;: &quot;MiniMax-M3&quot;
   },
   &quot;peak_hours&quot;: {
     &quot;enabled&quot;: true,
@@ -620,8 +620,8 @@ ZAI使用率     : 0.0%
 <h2>&lt;a id=&quot;related&quot;&gt;&lt;/a&gt;関連リンク</h2>
 <ul>
 <li><a href="https://docs.z.ai/guides/capabilities/thinking">ZAI公式ドキュメント - Deep Thinking</a></li>
-<li><a href="https://docs.z.ai/guides/llm/glm-5.1">ZAI公式ドキュメント - Claudeモデル概要</a></li>
-<li><a href="https://artificialanalysis.ai/models/glm-5-1">Artificial Analysis - Claudeベンチマーク</a></li>
+<li><a href="https://docs.z.ai/guides/llm/glm-5.3">ZAI公式ドキュメント - GLM-5.3モデル概要</a></li>
+<li><a href="https://artificialanalysis.ai/models/glm-5-2">Artificial Analysis - GLM-5.2ベンチマーク</a>（※GLM-5.3版ページは2026-08-17時点で未掲載・404確認済み。5.2が直近の計測対象）</li>
 <li><a href="04-mcp.html">04 MCPサーバー</a></li>
 <li><a href="11-tips.html">11 現場の知見</a></li>
 </ul>

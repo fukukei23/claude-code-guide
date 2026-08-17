@@ -3,7 +3,7 @@
 > **⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。**
 > Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は [04_MCPサーバー](04-mcp.html#glm) のglm/minimax MCPを参照してください。
 
-Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.1）に切り替えるローカルプロキシの仕組みと運用ガイド。
+Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.3）に切り替えるローカルプロキシの仕組みと運用ガイド。
 
 ---
 
@@ -16,7 +16,7 @@ Claude Codeは通常、Anthropic APIに直接接続する。しかし `ANTHROPIC
 Claude Code ────→ api.anthropic.com (Sonnet/Opus)
 
 プロキシ経由:
-Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (GLM-5.1)
+Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (GLM-5.3)
                                                  └──→ api.minimax.io (MiniMax, フォールバック)
 ```
 
@@ -44,7 +44,7 @@ Claude Code（CLI）
 ┌─────────────────────────────────────────┐
 │         glm-rate-proxy (port 8787)      │
 │                                         │
-│  1. モデル名を書き換え（claude → GLM-5.1） │
+│  1. モデル名を書き換え（claude → GLM-5.3） │
 │  2. thinking制御を注入                  │
 │  3. 使用量に応じてモデルをダウングレード   │
 │  4. ピーク時間帯はMiniMaxに強制切替       │
@@ -57,7 +57,7 @@ Claude Code（CLI）
   │                        │
   ▼                        ▼
 api.z.ai              api.minimax.io
-(GLM-5.1)             (MiniMax-M2.7)
+(GLM-5.3)             (MiniMax-M3)
 ```
 
 ### ファイル構成
@@ -84,12 +84,12 @@ api.z.ai              api.minimax.io
 
 | モード | 条件 | 使用モデル | プロバイダ |
 |---|---|---|---|
-| `normal` | usage < 80% | GLM-5.1 | ZAI |
+| `normal` | usage < 80% | GLM-5.3 | ZAI |
 | `economy` | 80% ≤ usage < 95% | GLM-4.7 | ZAI |
 | `emergency` | usage ≥ 95% | GLM-4.7-Flash | ZAI |
 | `peak_block` | JST 15:00〜18:59（15時台〜18時台・`15≦hour<19`） | MiniMax-M3 | MiniMax |
 
-> **ピーク時間帯の理由**: ZAI公式ドキュメントによるとGLM-5.1はピーク時に**3倍の消費レート**で計算される。MiniMaxに逃がすことでZAIクォータを温存する。
+> **ピーク時間帯の理由**: ZAI公式ドキュメント（[usage-revision](https://docs.z.ai/devpack/notice/usage-revision)・2026-08-17確認）によるとGLM-5.3はピーク時に**3倍の消費レート**（オフピークは1倍・ピーク=月〜金 14:00-18:00 UTC+8）で計算される。MiniMaxに逃がすことでZAIクォータを温存する。
 
 ### フォールバックチェーン
 
@@ -123,7 +123,7 @@ MiniMax 2キー両方 429/401/403 → 503
 
 ## <a id="thinking"></a>Thinking（思考）モードの動的制御
 
-GLM-5.1はデフォルトで「思考モード」が有効で、内部推論トークンを大量消費する。
+GLM-5.3はデフォルトで「思考モード」が有効で、内部推論トークンを大量消費する。
 
 ### 問題
 
@@ -162,7 +162,7 @@ GLM-5.1はデフォルトで「思考モード」が有効で、内部推論ト�
 | `"always_on"` | 全リクエストでThinking ON |
 | `"always_off"` | 全リクエストでThinking OFF |
 
-> **budget_tokensの注意**: これは上限であり、モデルが必ず使い切るわけではない。ただしGLM-5.1が上限を守るかは未検証。16,000以上は暴走リスクあり。
+> **budget_tokensの注意**: これは上限であり、モデルが必ず使い切るわけではない。ただしGLM-5.3が上限を守るかは未検証。16,000以上は暴走リスクあり。
 
 ---
 
@@ -180,7 +180,7 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
   "mode": "normal",
   "provider": "zai",
   "peak_block": false,
-  "last_actual_model": "glm-5.1"
+  "last_actual_model": "glm-5.3"
 }
 ```
 
@@ -369,7 +369,7 @@ ZAIの `enabled` モードはモデルが「自動判断」して思考量を決
   "listen_port": 8787,
   "upstream_timeout": 1200,
   "log_level": "INFO",
-  "default_model": "GLM-5.1",
+  "default_model": "GLM-5.3",
   "thresholds": {
     "normal":    {"max_pct": 80,  "model": null},
     "economy":   {"max_pct": 95,  "model": "GLM-4.7"},
@@ -377,7 +377,7 @@ ZAIの `enabled` モードはモデルが「自動判断」して思考量を決
   },
   "fallback": {
     "provider": "minimax",
-    "model": "MiniMax-M2.7"
+    "model": "MiniMax-M3"
   },
   "peak_hours": {
     "enabled": true,
@@ -458,7 +458,7 @@ ZAI使用率     : 0.0%
 ## <a id="related"></a>関連リンク
 
 - [ZAI公式ドキュメント - Deep Thinking](https://docs.z.ai/guides/capabilities/thinking)
-- [ZAI公式ドキュメント - GLM-5.1モデル概要](https://docs.z.ai/guides/llm/glm-5.1)
-- [Artificial Analysis - GLM-5.1ベンチマーク](https://artificialanalysis.ai/models/glm-5-1)
+- [ZAI公式ドキュメント - GLM-5.3モデル概要](https://docs.z.ai/guides/llm/glm-5.3)
+- [Artificial Analysis - GLM-5.2ベンチマーク](https://artificialanalysis.ai/models/glm-5-2)（※GLM-5.3版ページは2026-08-17時点で未掲載・404確認済み。5.2が直近の計測対象）
 - [04 MCPサーバー](04_MCPサーバー.md)
 - [11 現場の知見](11_現場の知見.md)
