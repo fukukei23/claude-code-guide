@@ -144,7 +144,8 @@ GLM-5.1はデフォルトで「思考モード」が有効で、内部推論ト�
 
 ### thinking設定のパラメータ
 
-`config/config.json` で制御可能：
+`config/config.json` で制御可能（2026-08-15時点の現行構成: **glm-5.3 をprimary**に切替・MiniMaxにM3追加・`last_actual_model`等の実測ラベルは自動記録）：
+
 
 ```json
 {

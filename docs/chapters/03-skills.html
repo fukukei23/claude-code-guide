@@ -391,7 +391,7 @@ Claude Code がその指示に従って動作
 <li><strong><a href="#superpowers">⚡ superpowers（開発ワークフロー）</a></strong> — brainstorming / writing-plans / executing-plans / systematic-debugging / test-driven-development / verification-before-completion / using-git-worktrees</li>
 <li><strong><a href="#agent-skills">🛠️ agent-skills（開発全工程・26スキル）</a></strong> — 思いを固める / 計画・設計 / 実装 / 品質・検証 / 守る・届ける / スラッシュ<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>群</li>
 <li><strong><a href="#other-plugins">🔌 その他プラグイン</a></strong> — code-review / review-pr / feature-dev</li>
-<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku / teian / demo-site-sales / resume-session / codebase-memory / multi-llm-review / multi-llm-review-lite / delegate-to-minimax / vision-analyze / fable-advisor</li>
+<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku / teian / demo-site-sales / resume-session / codebase-memory / multi-llm-review / multi-llm-review-lite / delegate-to-minimax / vision-analyze / fable-advisor / outward-reply / reflection</li>
 </ul>
 <hr />
 <h2 id="builtin">🧩 ビルトインスキル</h2>
@@ -586,6 +586,8 @@ Claude Code がその指示に従って動作
 <li><strong>呼び出し</strong>: 「記録して」「書き留めて」「保存して」「メモして」「残しておいて」「SSOTに入れて」「ガイドに追加して」<code>/ssot-record</code></li>
 <li><strong>構想モード</strong>: 「これ残して」「決定事項にして」「構想メモ」で発動。<code>01_DECISIONS/</code> ではなく <code>バックログ.md</code> 該当タスク直下に📝WIPメモとして永続化（合意成立・spec未作成の中間状態を保存）。詳細は ssot-guide「05_記録・ドキュメント」の「構想段階の合意の永続化」</li>
 <li><strong>動作フロー</strong>: 情報収集 → 関連ファイル自動検出（フェーズ0.5） → 分類判定 → 確認表示 → SSOT記録 → CCガイド自動追記 → 関連ドキュメント同時更新 → ガイド転記 → git commit &amp; push</li>
+<li><strong>フェーズ2確認ゲート省略特例</strong>: 記録先が低リスク場所（LLMサボりバイアス実例集）なら確認を省略し即記録（記録ハードルを下げ実例蓄積を促進・2026-08-12）</li>
+<li><strong>INDEX自動整備</strong>: <code>check-decision-indexes.sh</code> が未INDEXエントリに【要更新】マーカーを自動付与（2026-08-11）</li>
 <li><strong>フェーズ0.5（関連ファイル自動検出）</strong>: 2つのマッピング設定（<code>タグマッピング.md</code>=プロジェクト別docs + <code>ハブマッピング.md</code>=00_SYSTEMハブ・2026-07-07新設）に基づき更新対象を自動検出。プロジェクトdocs→フェーズ3-6・00_SYSTEMハブ（セキュリティ設定ハブ/MCPガイド等）→フェーズ3-8（見逃し防止・LLM裁量抜きの機械表照合）</li>
 <li><strong>対応ハブ（12種・2026-07-07）</strong>: セキュリティ設定ハブ/自動化/MCP/リポジトリ索引/リンク運用方針/全体マップ_MOC/CCガイド + <span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>(glm-rate-proxy運用ハブ)/通知(完了通知設定ハブ)/シークレット台帳/スキル記録ガイドライン/3層メモリ構造・<strong>00_SYSTEM直下=正典・CCガイド=派生</strong>（SSOT思想・5種追加と主従訂正はユーザー指摘で実施）</li>
 <li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM呼び出し不要・不可）、Windows Desktop版はMCP経由で外部LLM呼び出し可</li>

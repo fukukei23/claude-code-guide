@@ -474,6 +474,14 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
     '$n=New-Object System.Windows.Forms.NotifyIcon; ...'])
 </code></pre>
 <hr />
+<h2>Phase 5: 別LLMレビュー（実装済み・2026-08-12）</h2>
+<p><code>review_lib.py</code> に <code>run_multi_llm_review()</code> を<span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span>で実装（設計は3機レビューで確定済み）:</p>
+<ul>
+<li><strong>レビュアー</strong>: Gemini 3.1-pro + MiniMax-M3 を <span class="term" tabindex="0">HTTP<span class="term-popup">エイチティーティーピー。Webの通信で使われる基本的な約束事（プロトコル）。ブラウザとサーバー、プログラム同士のやり取りの共通言語</span></span>直接呼出（<code>backend_kind</code> 必須<span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>で区別）</li>
+<li><strong>判定3値</strong>: critical / pass / warning・<code>verify-result.txt</code> への拒否権（critical≥1でNG）</li>
+<li><strong>早期abort</strong>: 両ベンダーcriticalで即中止・ベンダー数&lt;2で警告（モデル数でなくベンダー数判定）</li>
+<li><strong>縮退戦略</strong>: 片系障害→残り1ベンダーで警告付き続行／両系→pending-retry退避</li>
+</ul>
 <h2>LLM 割り当て</h2>
 <div class="table-wrapper"><table>
 <thead>

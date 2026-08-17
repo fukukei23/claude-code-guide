@@ -307,6 +307,15 @@ subprocess.Popen(["powershell.exe", "-c",
 
 ---
 
+## Phase 5: 別LLMレビュー（実装済み・2026-08-12）
+
+`review_lib.py` に `run_multi_llm_review()` をTDDで実装（設計は3機レビューで確定済み）:
+
+- **レビュアー**: Gemini 3.1-pro + MiniMax-M3 を HTTP直接呼出（`backend_kind` 必須引数で区別）
+- **判定3値**: critical / pass / warning・`verify-result.txt` への拒否権（critical≥1でNG）
+- **早期abort**: 両ベンダーcriticalで即中止・ベンダー数<2で警告（モデル数でなくベンダー数判定）
+- **縮退戦略**: 片系障害→残り1ベンダーで警告付き続行／両系→pending-retry退避
+
 ## LLM 割り当て
 
 | フェーズ | 推奨LLM | 理由 |
