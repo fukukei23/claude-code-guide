@@ -391,7 +391,7 @@ Claude Code がその指示に従って動作
 <li><strong><a href="#superpowers">⚡ superpowers（開発ワークフロー）</a></strong> — brainstorming / writing-plans / executing-plans / systematic-debugging / test-driven-development / verification-before-completion / using-git-worktrees</li>
 <li><strong><a href="#agent-skills">🛠️ agent-skills（開発全工程・26スキル）</a></strong> — 思いを固める / 計画・設計 / 実装 / 品質・検証 / 守る・届ける / スラッシュ<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>群</li>
 <li><strong><a href="#other-plugins">🔌 その他プラグイン</a></strong> — code-review / review-pr / feature-dev</li>
-<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku / teian / demo-site-sales / resume-session / codebase-memory / multi-llm-review / multi-llm-review-lite / delegate-to-minimax / vision-analyze / fable-advisor / outward-reply / reflection</li>
+<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / tech-clip / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku / teian / demo-site-sales / resume-session / codebase-memory / multi-llm-review / multi-llm-review-lite / delegate-to-minimax / vision-analyze / fable-advisor / outward-reply / reflection</li>
 </ul>
 <hr />
 <h2 id="builtin">🧩 ビルトインスキル</h2>
@@ -547,6 +547,22 @@ Claude Code がその指示に従って動作
 <ul>
 <li><strong>呼び出し</strong>: 「GAS」「Apps Script」「スプレッドシート自動化」「clasp」</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/gas-autopilot/</code>）</li>
+</ul>
+<hr />
+<h3 id="tech-clip"><code>tech-clip</code>（カスタムスキル）</h3>
+<p><strong>X等の「気になり」を解析・蓄積→ガイド化するパイプライン</strong>。X・GitHub・Webで見つけたワード・URL・OSSリンクを貼ると解析して <code>30_RESEARCH/気になりクリップ.md</code>（インボックス）に1エントリ追記（日付・出典・1行サマリ・タグ）し、テーマが固まったら（≥5件目安）<code>make-guide</code> へ連携する。解析は最小限（1取得+1行）で深掘りはガイド化時。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「これクリップ」「あとで調べて」「気になりメモ」「/tech-clip」（材料の貼り付けを伴う時）</li>
+<li><strong>役割</strong>: 断片の取り込み側。ガイド化は make-guide が担当（被りチェックもそちら）</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/tech-clip/</code>・2026-08-20新設）</li>
+</ul>
+<hr />
+<h3 id="oss-first"><code>oss-first</code>（カスタムスキル）</h3>
+<p><strong>自作前の既存OSS探索ゲート（車輪の再発明防止）</strong>。新ツール・機能をゼロから作る前に、①SSOT内探索（既存実装・過去判断）→②課題を抽象化キーワードでGitHub/Web探索→③評価（活発性/ライセンス/改造容易性/適合度）→④「そのまま使う/fork改良/自作」の判定提示（自作は検索証跡必須）→⑤ssot-recordで証跡、を強制する。curl_cffi事例（既存実装の見落とし）の機構化。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「これ作りたい」「新しいツール作る」「/oss-first」（新規制作意図・設計着手前）</li>
+<li><strong>役割</strong>: ゲート専任。判定後の設計はbrainstorming等の既存フローへ。小ツールで明らかに探索不要なら「省略理由1行」で簡略可</li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/oss-first/</code>・2026-08-20新設）</li>
 </ul>
 <hr />
 <h3 id="make-guide"><code>make-guide</code>（カスタムスキル）</h3>
