@@ -550,10 +550,10 @@ Claude Code がその指示に従って動作
 </ul>
 <hr />
 <h3 id="make-guide"><code>make-guide</code>（カスタムスキル）</h3>
-<p><strong>ガイド系スキル作成のディスパッチャ（振り分け）</strong>。作りたい内容から「読む系（詳細ガイド）」「引く系（チートシート/語彙帳）」をLLMが判定し、ユーザーに確認してから <code>guide-builder</code> か <code>textbook-guide</code> に分岐する。<strong>ユーザーは種別を覚えなくてよい</strong>のが導入の動機。</p>
+<p><strong>ガイド系スキル作成のディスパッチャ（振り分け）</strong>。まず<strong>STEP 1.5 既存ガイドスキャン</strong>（guides/index.html href一覧+ls実ディレクトリ+全体マップMOC+内容<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span>・日英キーワード）で「既存ガイドへの追記（add）」か「新規作成（new）」かを機械的に判定（テーマ完全一致=add優先 / 部分被り=new+相互リンク / 「被りはなさそう」等の楽観判断でのスキップ禁止・2026-08-20追加）。次に作りたい内容から「読む系（詳細ガイド）」「引く系（チートシート/語彙帳）」をLLMが判定し、ユーザーに確認（add/new×読む系/引く系を1回で）してから <code>guide-builder</code> か <code>textbook-guide</code> に分岐する。<strong>ユーザーは種別もadd/newも覚えなくてよい</strong>のが導入の動機。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「ガイド作って」「教科書作って」「チートシート作って」「語彙帳作って」「チュートリアル作って」<code>/make-guide</code></li>
-<li><strong>役割</strong>: 新規ガイド作成の入口。既存サイトへの章追加は各スキル（<code>guide-builder</code>/<code>textbook-guide</code>）が直接受け持つ</li>
+<li><strong>役割</strong>: ガイド作成の入口。add判定時は既存ガイド名・章追加内容を分岐先に引き渡し、new判定時は新規作成文脈を引き渡す</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/make-guide/</code>）</li>
 </ul>
 <hr />
@@ -611,7 +611,7 @@ Claude Code がその指示に従って動作
 </ul>
 <hr />
 <h3 id="ssot-search"><code>ssot-search</code>（カスタムスキル）</h3>
-<p><strong>個人ナレッジベース（knowledge-base）を<span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>検索</strong>。rip<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span>全文検索 + sentence-transformers によるリランクで、1,900件超のMarkdownから関連ドキュメントを5件表示。</p>
+<p><strong>個人ナレッジベース（knowledge-base）を<span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>検索</strong>。ripgrep全文検索 + sentence-transformers によるリランクで、1,900件超のMarkdownから関連ドキュメントを5件表示。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「SSOTから探して: &lt;キーワード&gt;」<code>/ssot-search</code></li>
 <li><strong>詳細</strong>: <a href="14-ssot-search.html">14_SSOTから探して</a></li>
