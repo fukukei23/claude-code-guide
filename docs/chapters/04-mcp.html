@@ -1186,6 +1186,36 @@ for path in ['.claude/settings.json', '.claude.json']:
 </ul>
 <p>→ GitHub の基本概念・gh コマンドの詳細は <strong><a href="https://fukukei23.github.io/github-basics/">GitHub 基礎ガイド</a></strong> を参照</p>
 <hr />
+<h2>MCPサーバーのユニットテスト（gemini / glm / MiniMax）</h2>
+<p>自作MCPサーバー3本（<code>gemini-mcp-server.py</code> / <code>glm-mcp-server.py</code> / <code>minimax-mcp-server.py</code>）には <strong>常駐サーバーの契約を固定するユニットテスト</strong> が併設されている（2026-08-18 gemini版に倣って glm / MiniMax版を追加）。これらは <strong>urllib を<span class="term" tabindex="0">モック<span class="term-popup">テスト用の「偽物」。本物の代わりに決まった値を返すようにして、テスト対象だけを確実に検査できるようにする</span></span>し実API不要</strong> で、glm MCP / MiniMax MCP に依存する<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>が全滅しないよう契約（<span class="term" tabindex="0">関数<span class="term-popup">一連の処理をまとめて名前を付けたもの。呼び出すたびに同じ処理が実行される。プログラムの基本単位</span></span>名・<span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>・戻り値の型）を担保する。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>サーバー</th>
+<th>テストファイル</th>
+<th>実行コマンド</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gemini</td>
+<td><code>~/.claude/scripts/mcp/test_gemini_mcp_server.py</code></td>
+<td><code>cd ~/projects/claude-config &amp;&amp; python3 -m pytest scripts/mcp/test_gemini_mcp_server.py -q</code></td>
+</tr>
+<tr>
+<td>glm</td>
+<td><code>~/.claude/scripts/mcp/test_glm_mcp_server.py</code></td>
+<td><code>cd ~/projects/claude-config &amp;&amp; python3 -m pytest scripts/mcp/test_glm_mcp_server.py -q</code></td>
+</tr>
+<tr>
+<td>MiniMax</td>
+<td><code>~/.claude/scripts/mcp/test_minimax_mcp_server.py</code></td>
+<td><code>cd ~/projects/claude-config &amp;&amp; python3 -m pytest scripts/mcp/test_minimax_mcp_server.py -q</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>使いどころ</strong>: 自作MCPのサーバー実装を改修した時の回帰検知、<code>.secrets.env</code> のキー追加で <code>_load_key</code> の探索経路が変わった時の確認（<code>01_DECISIONS/claude-code/2026-08-22__load_secret本番経路Windows側で鍵を読めない</code> の修正と同種の検証基盤）。</p>
+<hr />
 <h2>MCPツール使い分けガイド</h2>
 <p>詳細な使い分け基準は別ドキュメントを参照:</p>
 <hr />

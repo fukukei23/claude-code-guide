@@ -537,6 +537,20 @@ MCPサーバーは便利だが、**常時起動するだけでコンテキスト
 
 ---
 
+## MCPサーバーのユニットテスト（gemini / glm / MiniMax）
+
+自作MCPサーバー3本（`gemini-mcp-server.py` / `glm-mcp-server.py` / `minimax-mcp-server.py`）には **常駐サーバーの契約を固定するユニットテスト** が併設されている（2026-08-18 gemini版に倣って glm / MiniMax版を追加）。これらは **urllib をモックし実API不要** で、glm MCP / MiniMax MCP に依存するスキルが全滅しないよう契約（関数名・引数・戻り値の型）を担保する。
+
+| サーバー | テストファイル | 実行コマンド |
+|---|---|---|
+| gemini | `~/.claude/scripts/mcp/test_gemini_mcp_server.py` | `cd ~/projects/claude-config && python3 -m pytest scripts/mcp/test_gemini_mcp_server.py -q` |
+| glm | `~/.claude/scripts/mcp/test_glm_mcp_server.py` | `cd ~/projects/claude-config && python3 -m pytest scripts/mcp/test_glm_mcp_server.py -q` |
+| MiniMax | `~/.claude/scripts/mcp/test_minimax_mcp_server.py` | `cd ~/projects/claude-config && python3 -m pytest scripts/mcp/test_minimax_mcp_server.py -q` |
+
+**使いどころ**: 自作MCPのサーバー実装を改修した時の回帰検知、`.secrets.env` のキー追加で `_load_key` の探索経路が変わった時の確認（`01_DECISIONS/claude-code/2026-08-22__load_secret本番経路Windows側で鍵を読めない` の修正と同種の検証基盤）。
+
+---
+
 ## MCPツール使い分けガイド
 
 詳細な使い分け基準は別ドキュメントを参照:
@@ -564,3 +578,4 @@ MCPサーバーは便利だが、**常時起動するだけでコンテキスト
 - [Claude-Code完全ガイド作成](../../01_DECISIONS/claude-code/2026-05-20_Claude-Code完全ガイド作成.md) — ガイド全体の設計と作成
 - [MCP設定削減2回目](../../01_DECISIONS/claude-code/2026-05-20_MCP設定削減2回目.md) — MCP使用頻度分析に基づく削減
 - [MCP-10ツール一括追加](../../01_DECISIONS/claude-code/2026-04-30_MCP-10ツール一括追加.md) — MCPツールの大規模追加
+- [MCPテスト基盤整備](../../01_DECISIONS/claude-code/2026-08-18_MCPサーバーglm-MiniMaxユニットテスト追加-gemini版の写経.md) — テストファイル追加の経緯（該当する場合）
