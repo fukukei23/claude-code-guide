@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エージェント工学の階層 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI エージェント工学の階層の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="エージェント工学の階層 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI エージェント工学の階層の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/21-agent-engineering-layers.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="13-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="14-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="15-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="16-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="17-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="18-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="19-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="20-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
+        </a>
+        
+        <a href="21-agent-engineering-layers.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🏗️</span>
+            エージェント工学の階層
+        </a>
+        
+        <a href="22-official-docs-index.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="20-version-management.html" class="nav-prev">← バージョン管理</a>
+            
+            
+            <a href="22-official-docs-index.html" class="nav-next">公式ドキュメント索引 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>21 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層 — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>からグラフまで5層の設計地図</h1>
+<div class="callout callout-info"><p>2026年のLLM運用には5つの「○○エンジニアリング」が存在する。流行語の羅列ではなく、<strong>下の層が壊れた場所に上の層が生まれた</strong>積み上げ構造として理解すると、自分の環境のどの層が厚く・どの層が薄いかを診断できる。</p></div>
+<hr />
+<h2>5層の系譜</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>名称</th>
+<th>何を設計するか</th>
+<th>生まれた理由（下の層の漏れ）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>プロンプトエンジニアリング</td>
+<td>1回の依頼の言葉（役割・例・出力形式）</td>
+<td>モデルの次<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>予測は保証ゼロ。言葉で予測経路を狙い撃ちする必要があった</td>
+</tr>
+<tr>
+<td>2</td>
+<td>コンテキストエンジニアリング</td>
+<td>ウィンドウに入る情報全部の選別</td>
+<td><span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>には記憶が要る。窓は有限で、全部入れるとノイズが予測を悪化させる</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ハーネスエンジニアリング</td>
+<td>モデルを包む実行プログラム（ツール定義・権限・失敗時処理・フック）</td>
+<td>ツールは揃っても「仕事の進め方」が決まっていなかった。保証は会話の外（コンパイラ・テスト・フック）にしかない</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ループエンジニアリング</td>
+<td>Plan→Act→Review→Repeat の進行形状と停止条件</td>
+<td>ハーネスが整っても、計画・実行・検証のサイクルを誰が制御するかが未定だった</td>
+</tr>
+<tr>
+<td>5</td>
+<td>グラフエンジニアリング</td>
+<td>レビューを<strong>別インスタンス</strong>に任せる構造</td>
+<td>同一インスタンスの自己レビューは「自分と別フォントで同意するだけ」。作った本人には構造的に見えないミスがある</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://krushiraj.github.io/writings/prompt-context-harness-loop-graph/">Prompt, harness, context, loop, graph: the jargon is a changelog</a>（2026-08-14）・<a href="https://futureagi.com/blog/loop-engineering/prompt-context-harness-loop-layers/">Prompt, Context, Harness, Loop: 4 Agent Layers — FutureAGI</a>・<a href="https://www.codecentric.de/en/knowledge-hub/blog/loop-harness-context-engineering-explained">codecentric による用語整理</a></p>
+<h2>各層の核心</h2>
+<h3>層1: プロンプト — 予測の狙い撃ち</h3>
+<p>「You are a senior reviewer」のような役割指定は、訓練データの<strong>その役割の文章が集まる領域</strong>へ予測を誘導する動きをする。Chain-of-Thought や few-shot 例示もこの層。エージェント化しても毎ターンの入力は誰かが書いたプロンプトであり、この層の妙が全層に波及する。</p>
+<h3>層2: コンテキスト — 窓は予算</h3>
+<p>Karpathy の定義「次の一手のためにコンテキスト窓にちょうど良い情報を満たす繊細な技術」。重要な転回は<strong>窓を資源（予算）と見なす</strong>視点。CLAUDE.md・memory・検索結果・ツール定義・過去ターンはすべて予算の内訳であり、「全部入れる」は網羅ではなくノイズ。</p>
+<h3>層3: ハーネス — 保証は会話の外にしかない</h3>
+<p>モデル自身の自己疑念は、誤りを作ったのと同じ経路で動くため保証にならない。保証は<strong>説得できない存在</strong>（コンパイラ・テストランナー・フック・権限システム）が持つ。Claude Code とチャット窓が同じ重みで全く異なる性能を出すのはハーネスの差。</p>
+<h3>層4: ループ — 仕事に形を与える</h3>
+<p>計画を先に出させ、進行ゲートを設け、再試行の上限で人間に戻す。Anthropic の <a href="https://platform.claude.com/docs/en/build-with-claude/agent-toolkit">Building effective agents</a> にある対比が有用: <strong>workflow = コードが工程を決める / agent = モデルが工程を決める</strong>。ループエンジニアリングはこのダイヤルを工程ごとに設定する作業で、「思ったよりコード側で決めたかった」箇所を発見する作業でもある。</p>
+<h3>層5: グラフ — 新鮮な目を意図的に呼ぶ</h3>
+<p>レビューを<strong>その場にいなかった別インスタンス</strong>（別<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>・別モデル・別コンテキストのsubagent）に渡す。作成インスタンスはプランへの愛着を持っているため、構造的に自己レビューできないミスを捕捉できる。</p>
+<h2><span class="term" tabindex="0">ワークフロー<span class="term-popup">一連の作業の流れ・手順の定義。GitHub Actionsでは自動実行の手順をこう呼ぶ</span></span> vs エージェントの対比</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>ワークフロー</th>
+<th>エージェント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工程を決めるのは</td>
+<td>コード（事前定義）</td>
+<td>モデル（実行時に判断）</td>
+</tr>
+<tr>
+<td>向いている</td>
+<td>繰り返し可能・予測可能性が要る作業</td>
+<td>工程を事前に書き下せない作業</td>
+</tr>
+<tr>
+<td>コスト予測</td>
+<td>しやすい</td>
+<td>しにくい</td>
+</tr>
+</tbody>
+</table></div>
+<p>設計の実務は「まず workflow で書けないか検討し、判断が必要な分岐だけ agent にする」方向に倒すのが安定する。</p>
+<h2>自己診断: 自分の環境はどの層まで作り込めているか</h2>
+<p>層ごとに「<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>の厚さ」を点検するチェックリスト。個人環境の実測例（2026-08-30時点・約120<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>/約50フックエントリ/durable <span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span> 12件の構成）では以下のような分布になった:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>点検項目</th>
+<th>実測例の結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 プロンプト</td>
+<td>恒常ルール・検証ゲートの文言が体系化されているか</td>
+<td>中層（CLAUDE.md+include構造・memory蓄積）</td>
+</tr>
+<tr>
+<td>2 コンテキスト</td>
+<td>必要情報が自動供給されるか（SessionStart読込・層別ルール）</td>
+<td>厚め（handoff自動読込・パススコープrules）</td>
+</tr>
+<tr>
+<td>3 ハーネス</td>
+<td>ガード・検証・記録・通知がフックで機械化されているか</td>
+<td>最厚（6イベント50エントリ・自作<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>100+）</td>
+</tr>
+<tr>
+<td>4 ループ</td>
+<td>定期実行・タスク<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>・完了ゲートが回り続けているか</td>
+<td>厚い（durable cron＋Triage＋<span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span>ゲート）</td>
+</tr>
+<tr>
+<td>5 グラフ</td>
+<td>完了前に<strong>別インスタンス</strong>のレビューが常設で走るか</td>
+<td>薄い（レビューは依頼時のみ手動発火）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 診断の使い方: 全層を均等に厚くする必要はない。<strong>一番壊れている層に投資する</strong>のが原則で、多くの個人環境は層3（フック）より層5（別インスタンスレビュー）が先に薄くなる。</p></div>
+<h2>層5の実装パターン（未整備ならここから）</h2>
+<ol>
+<li><strong>他モデルレビュー</strong>: 完了前に別LLMへレビューを依頼する（本ガイド環境では multi-llm-review スキルが該当・依頼時のみの手動発火が弱点）</li>
+<li><strong>fresh-context監査</strong>: セッションを跨いで、前セッションの成果物を文脈ゼロの新セッションに検証させる</li>
+<li><strong>別コンテキストのsubagent</strong>: 同一セッション内でも、実装者と検証者を別subagent（クリーンなコンテキスト）に分ける</li>
+<li><strong>常設化の要諦</strong>: 手動発火のままでは「省略しても気づかれない」ので、フックやループのゲートに組み込んで<strong>通らないと先へ進めない</strong>形にする</li>
+</ol>
+<h2>公式ドキュメントとの対応</h2>
+<p>各層に対応する公式ドキュメントの索引は<a href="22-official-docs-index.html">第22章 公式ドキュメント索引</a>を参照。監視cronが公式サイトの新規ページを毎日検出し、同章に自動追記する。</p>
+<hr />
+<p><strong>関連章</strong>: <a href="06-%E3%83%A1%E3%83%A2%E3%83%AA.html">第6章 メモリ</a>（層2）・<a href="05-%E3%83%95%E3%83%83%E3%82%AF.html">第5章 フック</a>（層3）・<a href="18-%E3%83%AB%E3%83%BC%E3%83%97%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0.html">第18章 ループシステム</a>（層4）・<a href="16-%E5%A4%96%E9%83%A8%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99.html">第16章 外部参考資料</a></p>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="20-version-management.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔧 バージョン管理</span>
+            </a>
+            
+            
+            <a href="22-official-docs-index.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📚 公式ドキュメント索引</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

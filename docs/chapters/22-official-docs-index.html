@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公式ドキュメント索引 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 公式ドキュメント索引の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="公式ドキュメント索引 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 公式ドキュメント索引の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/22-official-docs-index.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="13-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="14-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="15-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="16-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="17-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="18-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="19-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="20-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
+        </a>
+        
+        <a href="21-agent-engineering-layers.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            エージェント工学の階層
+        </a>
+        
+        <a href="22-official-docs-index.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📚</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="21-agent-engineering-layers.html" class="nav-prev">← エージェント工学の階層</a>
+            
+            
+            <a href="skill-catalog.html" class="nav-next">Skill カタログ →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>22 公式ドキュメント索引 — 358ページの1行要約と新規ページ監視</h1>
+<div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
+セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
+この章へ自動追記する。</p></div>
+<hr />
+<h2>この章の使い方</h2>
+<ol>
+<li><strong>調べたい機能で目次から探す</strong> — 各ページの日本語タイトルに公式リンクが付いている</li>
+<li><strong>要約は1行だけ</strong> — 詳細は必ず公式ページを直接開く（要約は入口・正は公式）</li>
+<li><strong>層の対応は第21章</strong> — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>〜グラフの5層のどれに効くページかは
+<a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
+</ol>
+<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>191ページ</strong>（言語別索引11件は対象外）+
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>167ページ</strong>
+（<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
+合計 <strong>358ページ</strong>・最終更新 2026-08-30。</p>
+<h2>新規ページ監視の仕組み</h2>
+<p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
+監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
+<ol>
+<li>新規ページをローカルに取得し、1行要約を作ってこの章の該当セクションに追記</li>
+<li><code>convert.py</code> で再<span class="term" tabindex="0">ビルド<span class="term-popup">ソースコードから、実行可能な完成品を組み立てること</span></span>してサイト更新</li>
+</ol>
+<p>仕組みの実体: <code>~/bin/official-docs-watch.sh</code>（差分検出）+ durable cron（日次発火）。
+未処理の新規ページは <code>~/.claude/state/official-docs-monitor/pending_summaries.txt</code>
+に蓄積されるため、要約が失敗しても翌日以降に再処理される。</p>
+<hr />
+<h2>Claude Code 公式（code.claude.com・全ページ）</h2>
+<h3>基本・概要・始め方</h3>
+<p><strong>138ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://code.claude.com/docs/en/accessibility">Claude Codeをスクリーンリーダーと使う</a></td>
+<td>スクリーンリーダー用のアクセシビリティ設定（画面読み上げモード、画面拡大、動き低減、色覚多様性テーマ）を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/admin-setup">Claude Codeを組織向けにセットアップする</a></td>
+<td>管理者向けにAPIプロバイダー・マネージド設定・ポリシー適用・利用監視・データ管理の設定方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/advisor">advisorツールで難しい判断をエスカレーションする</a></td>
+<td>メインのモデルより強いadvisorモデルにタスク中の重要な局面で相談できる実験的サーバーサイドツール</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-teams">Claude Code<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>群のオーケストレーション</a></td>
+<td>実験的機能として複数Claude Codeインスタンスをチームで協調させ、共有タスクと直接メッセージングで<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>作業を実現する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-view">複数エージェントをエージェントビューで管理する</a></td>
+<td><code>claude agents</code>で起動し、複数のClaude Codeセッションを一覧で監視・操作する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agents">Claude Codeでエージェントを並列実行する</a></td>
+<td>Claude Codeで複数タスクを並列処理する4つの方法（<span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>・エージェントビュー・エージェントチーム・動的<span class="term" tabindex="0">ワークフロー<span class="term-popup">一連の作業の流れ・手順の定義。GitHub Actionsでは自動実行の手順をこう呼ぶ</span></span>）を比較解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/amazon-bedrock">Claude Code on Amazon Bedrock</a></td>
+<td>Amazon Bedrock経由のClaude Code設定方法、IAM構成、トラブルシューティングを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/analytics">チームの使用状況をアナリティクスで追跡する</a></td>
+<td>Claude Codeの利用状況・導入・貢献指標を分析ダッシュボードで確認できる</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/artifacts">セッション出力をArtifactとして共有する</a></td>
+<td>Claude Codeのセッション出力をインタラクティブなWebページとしてArtifact化し、共有・公開する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/authentication"><span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span></a></td>
+<td>Claude Codeのログイン方法と個人・チーム・組織向けの認証設定について説明するページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/auto-mode-config">自動モードの設定</a></td>
+<td>auto mode分類器に信頼できるリポジトリ・バケット・ドメインを伝え設定を構成する方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/best-practices">Claude Codeのベストプラクティス</a></td>
+<td>Claude Codeを最大限活用するためのパターン集。<span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span>管理と検証手段の付与が最重要</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/champion-kit">Claude Code 社内推進者向けプレイブック（チャンピオンキット）</a></td>
+<td>社内推進者向けに、共有・質問対応・30日プレイブックで導入拡大を支援する手引き</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/changelog">Claude Code 変更履歴</a></td>
+<td>Claude Codeの<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>別<span class="term" tabindex="0">リリース<span class="term-popup">完成したものを外に出すこと。公開・出荷の意味</span></span>ノート。新機能・改善・<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>修正を記載</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/channels-reference">チャンネルリファレンス（<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバー<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>ガイド）</a></td>
+<td>Claude CodeセッションへWeb<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>や通知をプッシュするMCPチャンネルサーバーの<span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>・構築・リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/channels">チャンネルでイベントを実行中セッションにプッシュする</a></td>
+<td>MCPサーバーからセッションにメッセージ・アラート・<span class="term" tabindex="0">Webhook<span class="term-popup">ウェブフック。「イベントが起きたら指定URLに自動で通知を送る」仕組み。GitHubで更新があればDiscordに通知が飛ぶ、等の連携に使う</span></span>を双方向でプッシュする研究プレビュー機能</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/checkpointing">チェックポイント機能</a></td>
+<td>Claude Codeが編集履歴を自動記録し、コード復元や会話要約でセッション状態管理を可能にする仕組みを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/chrome">Claude CodeをChromeで使用する</a></td>
+<td>Chrome<span class="term" tabindex="0">拡張機能<span class="term-popup">ソフト本体に後から足して機能を増やす追加部品。プラグインとほぼ同義</span></span>と連携し、CLIからブラウザ操作によるWebアプリのテスト・<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>・自動化・データ抽出を可能にする</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-apps-gateway-config">Claude apps gateway設定リファレンス</a></td>
+<td>gateway.yaml全<span class="term" tabindex="0">オプション<span class="term-popup">コマンドの動作を変えるスイッチ。-x や --verbose のような指定。引数の一種</span></span>（listener・TLS・OIDC・session・store・upstream・model・policy・telemetry）の網羅的リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-apps-gateway-deploy">Claude apps gateway <span class="term" tabindex="0">デプロイ<span class="term-popup">作ったプログラムやサイトを、実際に動く環境へ設置して公開すること</span></span>と運用</a></td>
+<td>IdP登録、コンテナビルド、Kubernetes/Cloud Runへのデプロイ、監視・運用手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-apps-gateway-on-aws">AWSでClaude apps gatewayをデプロイする</a></td>
+<td>AWS上のECS FargateまたはEKS上に、RDS PostgreSQL・Secrets Manager・IAMロール認証でBedrockを利用するClaude apps gateway構築例</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-apps-gateway-on-gcp">Google Cloud での Claude apps gateway デプロイ手順</a></td>
+<td>Cloud RunまたはGKE上でClaude apps gatewayを構築し、Cloud SQL・Secret Manager・OIDC認証を設定する手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-apps-gateway-spend-limits">Claudeアプリゲートウェイの支出上限</a></td>
+<td>ゲートウェイ管理者が各開発者の日次・週次・月次の支出上限をAdmin APIで設定し、超過時は429を返す</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-apps-gateway">Claude apps gateway</a></td>
+<td>自社インフラ経由のゲートウェイでClaude CodeにSSO認証・グ<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>別モデル制御・OTLPテレメトリを提供する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web でセッションを管理する</a></td>
+<td>ウェブと<span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>間でセッションを移動し、PRを自動修正するクラウド実行機能を紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-directory">.claude <span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>を探る</a></td>
+<td>Claude Codeが参照する.claudeディレクトリの構成要素（CLAUDE.md、設定、フック、<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>等）を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-platform-on-aws">Claude Code on AWS（Claude Platform）での設定</a></td>
+<td>AWS認証・IAMアクセス制御・AWS Marketplace課金でClaude CodeをAnthropic提供API経由で利用する方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-security">コードベースの脆弱性スキャン</a></td>
+<td>Claude Security<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>で、複数エージェントが連携してコードベースの脆弱性をスキャンし、検出結果をもとにパッチを生成・適用できる</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/claude-tag">Claude Tag（Slack統合）</a></td>
+<td>Slackチャンネルで<code>@Claude</code>をチーム共有アイデンティティとして利用可能にする統合機能（Team/Enterprise向け）</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/cli-reference">CLIリファレンス</a></td>
+<td>Claude Codeの<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>ラインインターフェースの完全リファレンス（コマンド・フラグ一覧）</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/cloud-environments">クラウド環境の構成</a></td>
+<td>Claude Codeクラウドセッションのネットワーク・<span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>・セットアップ<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>を構成する方法を解説する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/code-review"><span class="term" tabindex="0">コードレビュー<span class="term-popup">書かれたコードを、書いた本人以外の視点で読んで問題を指摘する作業。バグ・読みにくさ・危険な書き方を見つけるのに有効</span></span></a></td>
+<td>GitHub PRを自動解析し、論理エラーや脆弱性を重大度付きでインラインコメント投稿する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/commands">Claude Codeコマンド完全リファレンス</a></td>
+<td>セッション内でClaude Codeを制御する全コマンド（モデル切替・権限管理・コンテキスト整理など）の網羅的リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/common-workflows">一般的なワークフロー</a></td>
+<td>コードベース探索、バグ修正、<span class="term" tabindex="0">リファクタリング<span class="term-popup">動きを変えずにコードの中身を読みやすく整理すること。機能追加でなく「掃除」の作業</span></span>、テストなど日常タスクの手順集</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/communications-kit">コミュニケーションキット</a></td>
+<td>Claude Codeを組織に展開するためのローンチ案内文・Tips配信・FAQ集</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/computer-use">CLIでClaudeにコンピュータ操作をさせる</a></td>
+<td>Claude Code CLIでmacOSのアプリ操作・クリック・画面表示を可能にするコンピュータユース機能の有効化と使い方を説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/context-window">コンテキストウィンドウを探る</a></td>
+<td>Claude Codeのコンテキスト消費を可視化するセッション開始時のインタラクティブシミュレーター</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/corporate-launcher">コーポレートランチャー背後で Claude Code を実行する</a></td>
+<td>CLAUDE_CODE_PROCESS_WRAPPER で組織必須のランチャー経由で全<span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>を起動する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/costs">コストを効果的に管理する</a></td>
+<td>Claude Codeの<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>使用量を追跡し、チームの支出上限設定やモデル選択、コンテキスト管理でコストを削減する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/cross-session-messaging">他のClaude Codeセッションにメッセージを送る</a></td>
+<td>ClaudeがListAgents/SendMessageで他セッションを発見・通知する仕組みを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/data-usage">Claude Code におけるデータ利用ポリシー</a></td>
+<td>データ学習ポリシー、Development Partner Program、/feedback、セッション品質調査などデータ利用方針を説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/debug-your-config">デバッグ設定</a></td>
+<td>CLAUDE.md・設定・フック・MCP・スキルが効かない原因を /context・/doctor 等で実際に読み込まれた内容を確認して特定する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/deep-links">URLからセッションを起動する</a></td>
+<td>claude-cli://カスタムURLスキームでClaude Codeを任意のディレクトリとプロンプト指定で起動するディープリンク機能の説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/desktop-ios-simulator">iOS Simulatorでアプリをテストする</a></td>
+<td>Claude Code DesktopがiOS Simulatorペインでアプリのビルド・実行・検証を自動表示する機能の説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/desktop-linux">Linux用Claude Desktop（ベータ）のインストール手順</a></td>
+<td>Ubuntu/DebianにAnthropicのaptリポジトリからClaudeデスクトップアプリをインストール・更新する手順と必要要件を説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/desktop-quickstart">デスクトップアプリで始める</a></td>
+<td>Claude Codeデスクトップアプリのインストール手順と初回セッション開始方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/desktop-scheduled-tasks">Claude Code Desktopで定期タスクをスケジュールする</a></td>
+<td>デスクトップアプリのRoutines機能でローカル定期タスクを作成し自動実行する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/desktop-wsl">Claude Code DesktopをWSLで使う</a></td>
+<td>Windows上でWSL 2ディストリビューション内のLinuxツールチェーンを使ってClaude Codeセッションを実行する方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/desktop">デスクトップアプリケーション</a></td>
+<td>Claude DesktopアプリのCodeタブで、セッション単位の並列作業・差分レビュー・アプリプレビュー・外部連携などを行う方法を解説する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/devcontainer">開発コンテナ</a></td>
+<td>Claude Codeをdev containerで実行し、チーム全体で一貫した隔離環境を実現する設定方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/discover-plugins">マーケットプレイスからプラグインを発見・インストールする</a></td>
+<td>Claude Codeのプラグインをマーケットプレイス経由で発見・インストールする方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/env-vars">環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span></a></td>
+<td>Claude Codeの動作を制御する環境変数の設定方法・優先順位・変数一覧のリファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/errors">エラーリファレンス</a></td>
+<td>Claude Codeの実行時エラー一覧とそれぞれの意味・復旧方法をまとめたページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/fast-mode">高速モードで応答をスピードアップする</a></td>
+<td>Claude Opusの応答を最大2.5倍高速化する「fast mode」をClaude Codeで切り替えて使う方法を説明するページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/feature-availability">機能の利用可否</a></td>
+<td>Claude Codeの機能が各プロバイダー・サブスクリプション別に利用可能か比較したページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/features-overview">Claude Codeの拡張機能</a></td>
+<td>CLAUDE.md、スキル、サブエージェント、フック、MCP、プラグインなど拡張機能の概要と使い分けを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/fullscreen">フルスクリーンレンダリング</a></td>
+<td>CLIの代替描画モードでちらつき・メモリ増大を抑え、マウス操作や長い会話でも安定動作を実現する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/gateways">Claude Codeをゲートウェイ経由で実行する</a></td>
+<td>組織が運用するゲートウェイをClaude Codeとモデルプロバイダー間に配置し、認証・利用追跡・コスト管理を一元化する方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/github-actions-cloud-providers">Claude Code <span class="term" tabindex="0">GitHub Actions<span class="term-popup">GitHubが提供する自動実行の仕組み。pushをきっかけにテストやビルドを自動で回せる。「リポジトリに置いておくと動く作業ロボット」</span></span>をクラウドプロバイダー経由で使う</a></td>
+<td>Amazon Bedrock・Google Cloud Agent Platform・Microsoft FoundryでOIDC認証する手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/github-actions">Claude Code GitHub Actions</a></td>
+<td>リポジトリのワークフロー内でClaude Codeを実行し、@claudeメンションによるコード分析・修正・PR作成などを自動化するGitHub Action</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/github-enterprise-server">Claude CodeとGitHub Enterprise Serverの連携</a></td>
+<td>セルフホスト型GitHub Enterprise ServerとClaude Codeを接続しWebセッション・コードレビュー・プラグインマーケットプレースを利用可能にする方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/gitlab-ci-cd">Claude Code GitLab <span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>/CD</a></td>
+<td>GitLab CI/CDでClaude Codeをbeta統合し、MR自動作成や@claudeメンションによるイベント駆動AI実行を実現</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/glossary">用語集</a></td>
+<td>Claude Codeで使用される専門用語（エージェントループ、コンパクション、CLAUDE.md、フックなど）の定義一覧</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/goal">Keep Claude working toward a goal</a></td>
+<td><code>/goal</code>コマンドで完了条件を設定し、達成不可能判定または修復可能なエラーまで作業を継続する仕組み</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/google-vertex-ai">Claude Code on Google Cloud Agent Platform（旧Vertex AI）</a></td>
+<td>Google Cloud Agent Platform（旧Vertex AI）経由のClaude Code設定・IAM構成・トラブルシューティングを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/headless">Claude Codeをプログラムで実行する</a></td>
+<td><code>-p</code>フラグを使ってCLIから非インタラクティブにClaude Codeを実行する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/hooks-guide">フックでアクションを自動化する</a></td>
+<td>Claude Codeがファイル編集・タスク完了・入力待ち時に<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>コマンドを自動実行する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/hooks">フックリファレンス</a></td>
+<td>Claude Codeのフックイベント、設定<span class="term" tabindex="0">スキーマ<span class="term-popup">データの型・形の決まり。「このファイルには何の項目が必須か」等の定義。決まりに合っているか機械で検査できる</span></span>、<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>入出力形式を網羅した完全リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/how-claude-code-works">Claude Codeの仕組み</a></td>
+<td>エージェントループ・モデル・ツールを中心としたClaude Codeのコアアーキテクチャを解説するページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/interactive-mode">インタラクティブモード</a></td>
+<td>Claude Codeセッションのキーボードショートカット・入力モード・インタラクティブ機能の完全リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/jetbrains">JetBrains IDEs</a></td>
+<td>JetBrains製IDE向けプラグインでClaude Codeを利用。差分表示・選択共有・診断情報連携などを実現する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/keybindings">Claude Codeのキーボードショートカットをカスタマイズする</a></td>
+<td><code>/keybindings</code>コマンドで<code>~/.claude/keybindings.json</code>を編集し、コンテキスト別に<span class="term" tabindex="0">キーバインド<span class="term-popup">キーボードのキー操作と機能の割り当てのこと。「Ctrl+Sで保存」のような対応関係</span></span>を設定・解除できる</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/large-codebases">Claude Codeをモノレポまたは大規模コードベースでセットアップする</a></td>
+<td>モノレポや大規模コードベースでClaude Codeを効率的に使うための設定方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/legal-and-compliance">法的事項とコンプライアンス</a></td>
+<td>Claude Codeのライセンス、第三者製品への提供条件、ヘルスケアBAA、認証方法をまとめたページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/llm-gateway-connect">Claude CodeをLLMゲートウェイに接続する</a></td>
+<td>Claude Codeを組織のLLMゲートウェイへ接続し、設定確認・ベースURL・認証情報の設定・検証・エラー対処を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/llm-gateway-protocol">Gateway プロトコルリファレンス</a></td>
+<td>Claude CodeとLLMゲートウェイ間のAPI契約仕様（エンドポイント、ヘッダー、機能低下条件）</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/llm-gateway-rollout">LLMゲートウェイを組織に展開する</a></td>
+<td>ゲートウェイの要件確認から設定配布、検証までの5ステップを展開手順として解説する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/llm-gateway">他のLLMゲートウェイ</a></td>
+<td>Claude Codeを既存LLMゲートウェイ経由でルーティングする設定・管理方法の説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/managed-mcp">組織向けのMCPサーバーアクセス制御</a></td>
+<td>managed-mcp.jsonや許可/拒否リストで組織が利用可能なMCPサーバーを制限・管理する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/managed-settings">マネージド設定のデプロイ</a></td>
+<td>managed-settings.jsonの各OS配置先と配信機構、適用確認方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/mcp-quickstart">MCPサーバーに接続する</a></td>
+<td>Claude CodeにMCPサーバーを追加・接続確認・設定場所・エラー対処までをCLI手順で説明する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/mcp">MCP経由でClaude Codeをツールに接続する</a></td>
+<td>MCPを使いClaude Codeを外部ツール・データベース・APIに接続する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/memory">Claudeがプロジェクトを記憶する方法</a></td>
+<td>CLAUDE.mdファイルと自動メモリを使ってセッション間で知識を共有する2つの仕組みを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/microsoft-foundry">Microsoft FoundryでのClaude Code</a></td>
+<td>Microsoft Foundry経由でのClaude Code設定・構成・トラブルシューティング方法を説明するページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/mobile">Claude Code on mobile</a></td>
+<td>スマホアプリからクラウドセッション・リモートコントロールでタスクを実行・管理する方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/model-config">モデル設定</a></td>
+<td>Claude Codeで使用するモデル・推論レベル・拡張コンテキスト・自動圧縮を構成する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/monitoring-usage">モニタリング</a></td>
+<td>OpenTelemetryで使用状況・コスト・ツール活動をテレメトリ出力する方法と管理者設定</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/network-config">エンタープライズネットワーク設定</a></td>
+<td><span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>サーバー、カスタムCA証明書、mTLS認証で企業環境に構成する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/output-styles">出力スタイル</a></td>
+<td>応答スタイル（役割・トーン・形式）を変更し、ソフトウェア以外の用途にも適応させる機能の説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/overview">Claude Code概要</a></td>
+<td>AI搭載コーディングツールで、コードベース理解・ファイル編集・コマンド実行を統合的に行う</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/permission-modes">権限モードの選択</a></td>
+<td>Claudeがユーザーに確認なしで実行可能なアクションを制御する6つの権限モードを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/permissions">権限の構成</a></td>
+<td>ツールごとに細かな権限ルール・モード・マネージドポリシーを設定する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/platforms">プラットフォームと統合</a></td>
+<td>CLI/Desktop/VS Code/Web/Mobile等の実行環境の選択とChrome・Slack・CI/CD連携の比較ガイド</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugin-dependencies">プラグイン<span class="term" tabindex="0">依存関係<span class="term-popup">ある部品が別の部品に依存して動く関係。片方を変えるともう片方にも影響する繋がり</span></span>のバージョン制約</a></td>
+<td>プラグイン依存にバージョン制約を宣言し、自動更新による予期しない破壊を防ぐ方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugin-hints">CLIからプラグインを推奨する</a></td>
+<td>CLI/SDKがstderrにマーカーを出力し、公式マーケットプレイスプラグインの導入を促す仕組みを説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugin-marketplaces">プラグインマーケットプレイスを作成・配布する</a></td>
+<td>プラグインマーケットプレイスの作成からホスティング、配布までの手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugin-relevance">組織向けプラグイン推奨設定</a></td>
+<td>marketplace.jsonのrelevanceブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>で作業内容に応じたプラグインを提案する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins-reference">プラグインリファレンス</a></td>
+<td>プラグインシステムの技術リファレンス。スキーマ、CLIコマンド、コンポーネント仕様を網羅</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins">プラグインの作成</a></td>
+<td>カスタムプラグインをスキル・エージェント・フック・MCPサーバーで作成・共有する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/prompt-caching">プロンプト<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>の仕組み</a></td>
+<td>APIが同一プレフィックスを再利用し変更部分のみ課金される仕組みと無効化要因を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/prompt-library">プロンプト<span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span></a></td>
+<td>Claude Code向けタスク・ロール別コピペ可能なプロンプト集</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/quickstart">Claude Codeクイックスタート</a></td>
+<td>インストール・ログイン・基本的な使い方を数分で習得できる入門ガイド</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/remote-control">リモートコントロール</a></td>
+<td>ローカル環境のまま、スマホやブラウザからClaude Codeセッションを遠隔操作できる機能</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/routines">ルーチンで作業を自動化する</a></td>
+<td>ルーチン機能で、スケジュール・API・GitHubイベントをトリガーに自動実行できる</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/sandbox-environments">サンドボックス環境の選択</a></td>
+<td>サンドボックス手法（Bashツール、ランタイム、コンテナ、VM等）を分離範囲と導入コストで比較</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/sandboxing">サンドボックスBashツールの設定</a></td>
+<td>OSレベルで隔離されたサンドボックスBashツールの設定方法と利用手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/scheduled-tasks">スケジュールタスクの実行</a></td>
+<td>セッション内で/loopやcronツールを使いプロンプトを定期実行する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/security-guidance">コード記述時のセキュリティ問題を検出する</a></td>
+<td>セキュリティガイダンスプラグインでコード変更の脆弱性をレビュー・修正する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/security">Claude Codeのセキュリティ</a></td>
+<td>セキュリティ保護機能、権限ベース設計、組み込み保護、プロンプトインジェクション対策の説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/self-hosted-environments-configuration">セルフホスト環境でのセッションのカスタマイズ</a></td>
+<td>ランナーでラッ<span class="term" tabindex="0">パース<span class="term-popup">文字で書かれたデータを、プログラムが扱える構造に変換すること。JSONパース＝JSON文字列→データ構造</span></span>クリプトやフックを使いセッション単位の認証情報やライフサイクルを設定</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/self-hosted-environments-deploy">本番環境にセルフホスト環境をデプロイする</a></td>
+<td>セキュリティ強化、egress制御、git認証、Kubernetes/Composeレシピ、トラブルシューティングを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/self-hosted-environments-identity">セルフホスト環境でのセッションID検証</a></td>
+<td>セッショントークンJWTをJWKSで検証しリクエスト信頼性を確保する方法を説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/self-hosted-environments-quickstart">セルフホスト環境クイックスタート</a></td>
+<td>自前インフラで動かす最小構成を、1ホスト1ランナーで立ち上げる手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/self-hosted-environments-reference">セルフホスト環境リファレンス</a></td>
+<td>ランナーとオーケストレーターのCLIフラグ、環境変数、Prometheusメトリクスの完全リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/self-hosted-environments-testing">セルフホスト環境のエンドツーエンドテスト</a></td>
+<td>StopフックとCLIでセルフホストランナーのCIスモークテストを実行する手順</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/self-hosted-environments">セルフホスト環境</a></td>
+<td>組織が管理するインフラ上でクラウドセッションを実行する仕組みと構成を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/server-managed-settings">サーバー管理設定の構成</a></td>
+<td>管理コンソールから組織全体で一元設定する手順と要件を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/sessions">セッション管理</a></td>
+<td>CLIでのセッション管理（再開・分岐・切替・エクス<span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>）方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/settings-example"><span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>の例</a></td>
+<td>開発者・チーム・組織向けの3つのsettings.jsonサンプルと各キーの役割を解説する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/settings-reference">settingsリファレンス</a></td>
+<td>settings.jsonの全キーについて設定場所・型・<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>・例を一覧で解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/settings">Claude Code設定</a></td>
+<td>設定変更、スコープ選択、優先順位の決定方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/setup">高度なセットアップ</a></td>
+<td>システム要件、インストール方法、更新・アンインストール手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/skills">スキル拡張ガイド</a></td>
+<td>スキル（SKILL.md）の作成・管理・共有方法およびバンドルスキルの制御を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/slack">Claude Code in Slack</a></td>
+<td>Slack上の@Claudeメンションでコーディングタスクを委任できる統合機能の説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/statusline">ステータスラインのカスタマイズ</a></td>
+<td>コンテキスト使用量、コスト、git状態を表示するカスタムステータスバーの設定方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/sub-agents">カスタムサブエージェントの作成</a></td>
+<td>タスク特化型のAIサブエージェントを作成し、コンテキスト管理を改善する方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/terminal-config">ターミナル設定</a></td>
+<td>Shift+Enter・通知・tmux・VimモードなどCLIのターミナル設定を症状別に解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/third-party-integrations">エンタープライズ展開の概要</a></td>
+<td>組織全体でサードパーティサービスやインフラと統合して展開する方法を紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/tools-reference">ツールリファレンス</a></td>
+<td>利用可能な全ツールの完全リファレンス。各ツールの説明・必要な権限・個別挙動を一覧で示す</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/troubleshoot-install">インストールとログインのトラブルシューティング</a></td>
+<td>インストール・ログイン時のコマンド未認識・パス・権限・ネットワーク・認証エラーの解決方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/troubleshooting">トラブルシューティング</a></td>
+<td>高CPU・メモリ使用、ハング、自動コンパクション、検索問題などの修正方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/ultrareview">Ultrareviewでバグを見つける</a></td>
+<td>クラウド上の複数エージェントで深層コードレビューを実行し、バグを再現・検証して検出する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/voice-dictation">音声ディクテーション</a></td>
+<td>CLIでプロンプトを音声入力する機能の使い方・要件・設定方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/vs-code">VS CodeでClaude Codeを使う</a></td>
+<td>VS Code向け拡張機能のインストール・設定・使い方を解説したページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/web-quickstart">Claude Code on the web 入門</a></td>
+<td>ブラウザやモバイルからGitHubリポジトリに接続してクラウド実行し、PRレビューまでを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/workflows">動的ワークフローでサブエージェントを大規模に調整する</a></td>
+<td>Claudeが作成するJavaScriptスクリプトで多数のサブエージェントを並列実行する機能</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/worktrees">ワークツリーで並列セッションを実行する</a></td>
+<td>git worktreeでセッションを分離し、編集の<span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>を防ぎ並列作業を実現する方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/zero-data-retention">ゼロデータ保持（ZDR）</a></td>
+<td>Enterprise組織のClaude Codeで推論データをリアルタイム処理後に保持しない機能の概要と対象外機能</td>
+</tr>
+</tbody>
+</table></div>
+<h3>agent-sdk</h3>
+<p><strong>31ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">エージェントループの仕組み</a></td>
+<td>SDKエージェントのメッセージライフサイクル・ツール実行・コンテキスト窓・アーキテクチャを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/claude-code-features">SDKでClaude Codeの機能を使う</a></td>
+<td>SDKエージェントでsettingSourcesを使いCLAUDE.md等のファイルシステム設定を読み込む方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/cost-tracking">コストと使用量の追跡</a></td>
+<td>Claude Agent SDKでトークン使用量・コスト推定・プロンプトキャッシュ設定方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/custom-tools">Claude Agent SDKにカスタムツールを定義する</a></td>
+<td><code>@tool</code>デコレータで<span class="term" tabindex="0">関数<span class="term-popup">一連の処理をまとめて名前を付けたもの。呼び出すたびに同じ処理が実行される。プログラムの基本単位</span></span>を定義しMCPサーバー経由でClaudeから呼び出せるようにする方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/examples">例とサンプルプロジェクト</a></td>
+<td>Agent SDKの実行可能なサンプルプロジェクトとCookbookレシピへのリンク集</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/file-checkpointing">ファイル変更をチェックポイントで巻き戻す</a></td>
+<td>エージェントセッション中のファイル変更を追跡し、任意の以前の状態に復元できるSDKのチェックポイント機能を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/hooks">フックでエージェントの挙動を傍受・制御する</a></td>
+<td>SDKのフック機能でイベント発生時にコールバックを実行し、ツール呼び出しのブロック・ログ・入力変換・承認などを実現する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/hosting">Agent SDKのホスティング</a></td>
+<td>Agent SDKを本番環境でホスティングする際のサブプロセスアーキテクチャ、セッション永続化、スケーリング、可観測性、マルチテナント分離を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/mcp">MCPで外部ツールに接続する</a></td>
+<td>Agent SDKでMCPサーバーを設定し、データベース・API等の外部ツールをエージェントに統合する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/migration-guide">Claude Agent SDKへの移行ガイド</a></td>
+<td>Claude Code SDKからClaude Agent SDKへの移行手順と破壊的変更を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts"><span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>の変更</a></td>
+<td>Claude Codeプリセットとカスタムプロンプトの選択、CLAUDE.md等でのカスタマイズ方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/observability">OpenTelemetryによる可観測性</a></td>
+<td>Agent SDKからOpenTelemetry経由でトレース・メトリクス・ログを任意のOTLP対応バックエンドにエクスポートする方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/overview">Agent SDK概要</a></td>
+<td>Claude Codeをライブラリとして使い、Python/TypeScriptで本番エージェントを構築</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/permissions">権限設定</a></td>
+<td>フック・拒否/確認/許可ルール・権限モード・コールバックによるツール使用制御の仕組みを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/plugins">SDKのプラグイン</a></td>
+<td>Agent SDKでローカルパスからプラグインを読み込みスキルやエージェントなどを拡張する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/python">Agent SDK リファレンス - Python</a></td>
+<td>Python用Agent SDKの完全APIリファレンス。インストール、query()とClaudeSDKClientの選択方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/quickstart">Agent SDK クイックスタート</a></td>
+<td>PythonまたはTypeScriptでAgent SDKを使い、バグを自動検出・修正するAIエージェントを構築する手順を紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/secure-deployment">AIエージェントの安全なデプロイ</a></td>
+<td>Claude CodeとAgent SDKのデプロイで分離・認証情報管理・ネットワーク制御を用いたセキュリティ対策を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/session-storage">セッションを外部ストレージに永続化する</a></td>
+<td>SessionStoreインターフェースでセッショントランスクリプトをS3等のバックエンドにミラーリングし、複数ホスト間でのセッション再開を可能にする方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/sessions">セッションの使い方</a></td>
+<td>エージェントの会話履歴を永続化し、continue/resume/forkで過去のセッションに戻る方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/skills">Claude Agent SDKでスキルを使ってエージェントを拡張する</a></td>
+<td>SDKセッションでClaudeが呼び出せるスキルを制御し、コマンドを名前でディスパッチする方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/streaming-output">エージェントSDKでレスポンスをリアルタイムにストリーミングする</a></td>
+<td>Agent SDKで<code>include_partial_messages</code>を有効にし、StreamEventからテキストデルタを抽出してリアルタイム出力を取得する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/streaming-vs-single-mode">ストリーミング入力</a></td>
+<td>Claude Agent SDKの2つの入力モード（ストリーミングと単一メッセージ）の概要とストリーミングモードのメリットを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/structured-outputs">エージェントから構造化出力を取得する</a></td>
+<td>JSON Schema・Zod・Pydanticでエージェント出力に型安全な検証済みデータを返す方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/subagents">SDKのサブエージェント</a></td>
+<td>Claude Agent SDKでサブエージェントを定義・呼び出し、コンテキスト分離や並列実行、専門指示を実現する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/todo-tracking">エージェントSDKでTodoを追跡する</a></td>
+<td>エージェントSDKセッションでClaudeのタスク追跡ツールを有効化し、進捗を構造化ツール呼び出しとして受信する方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/tool-search">ツール検索で多数ツールにスケールする</a></td>
+<td>ツール定義を必要時に動的検索しコンテキスト効率と選択精度を両立する仕組み</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/troubleshooting">トラブルシューティング（Agent SDK）</a></td>
+<td>Agent SDKで発生する各エラー（CLINotFoundError、CLIConnectionError等）の原因と対処法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/typescript-v2-preview">TypeScript SDK V2 セッション API（削除済み）</a></td>
+<td>削除済みのV2セッションAPIの参照情報。<code>query()</code> APIへの移行を推奨</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/typescript">Agent SDK リファレンス - TypeScript</a></td>
+<td>TypeScript向けAgent SDKの完全なAPIリファレンス。インストール、query関数、各種オプションを網羅</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/agent-sdk/user-input">承認とユーザー入力の処理</a></td>
+<td>canUseToolコールバックでツールの承認要求とAskUserQuestionの質問を管理しユーザー応答を返す方法</td>
+</tr>
+</tbody>
+</table></div>
+<h3>whats-new</h3>
+<p><strong>22ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w13">第13週（2026年3月23〜27日）の新機能まとめ</a></td>
+<td>Auto modeやデスクトップ操作、PR自動修正など6つの新機能をv2.1.83〜85で紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w14">第14週（2026年3月30日〜4月3日）の更新情報</a></td>
+<td>CLIでのコンピュータ操作、/powerup、ちらつき防止レンダリングなど5機能を追加</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w15">第15週（2026年4月6日〜10日）の新機能</a></td>
+<td>Ultraplanクラウド計画、Monitorツール、自己ペーシング/loop、/autofix-prを紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w16">第16週（2026年4月13〜17日）アップデートのまとめ</a></td>
+<td>Opus 4.7と新xhigh effortレベル、Routines、モバイル通知、/usage内訳、ネイティブバイナリ化を紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w17">第17週（2026年4月20〜24日）のアップデート</a></td>
+<td>/ultrareviewの研究プレビュー公開、セッション自動recap、カスタムテーマ、Web版UI刷新</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w18">2026年第18週の変更点（4月27日〜5月1日）</a></td>
+<td>WindowsでGit Bash不要、auth loginの<span class="term" tabindex="0">OAuth<span class="term-popup">オーオースと読む。他のサービスの機能を、IDやパスワードを教えずに安全に使わせるための認可の標準規格。「○○でログイン」ボタンの裏側で動いている仕組み</span></span>コード貼付対応、project purge追加、PR URLで再開可能</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w19">2026年第19週（5月4日〜8日）のアップデートまとめ</a></td>
+<td>zip/URLからのプラグイン読み込み、Ctrl+Rで全履歴検索、worktreeのbaseRef設定、hard_deny追加</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w20">第20週（2026年5月11〜15日）アップデート</a></td>
+<td>新機能「agent view」「/goal」「Opus 4.7でのfast mode」3点を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w21">第21週（2026年5月18〜22日）のアップデート</a></td>
+<td>ProプランでAuto mode対応、/usageでスキル等の内訳表示、新/code-reviewコマンド追加</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w22">第22週（2026年5月25日〜29日）の更新情報</a></td>
+<td>Opus 4.8を新デフォルトに採用、動的ワークフロー、セキュリティプラグイン、高速モードを紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w23">第23週（2026年6月1〜5日）の更新情報</a></td>
+<td>サードパーティプロバイダー対応Autoモード、保護ファイル確認、/plugin list等を追加</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w24">第24週（2026年6月8〜12日）の更新情報</a></td>
+<td>/cdでセッション移動、サブエージェントのネスト、セーフモードによる設定トラブルシュートを紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w25">第25週（2026年6月15日〜19日）アップデート</a></td>
+<td>Artifacts公開、deny/askルールでのツール入力パラメータ一致、/configでの設定変更を追加</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w26">2026年第26週（6月22〜26日）のアップデート</a></td>
+<td>CLIからのMCPサーバー認証、シェル出力への応答、/rewindでの/clear前会話復元などを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w27">第27週（2026年6月29日〜7月3日）の最新情報</a></td>
+<td>Sonnet 5がデフォルトに、Chrome版一般提供、サブエージェントのバックグラウンド実行、Linux Desktopベータ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w28">第28週（2026年7月6〜10日）の新機能</a></td>
+<td>Desktopアプリ内蔵ブラウザ、/doctorの完全セットアップ診断機能など2機能を追加</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w29">第29週（2026年7月13〜17日）アップデート</a></td>
+<td>アーティファクトからMCPコネクタでライブデータ取得、スクリーンリーダーモードを追加</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w30">第30週（2026年7月20〜24日）の更新情報</a></td>
+<td>Opus 5がデフォルトに、DesktopにiOS Simulatorペイン、Claude Securityプラグイン搭載</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w32">第32週（2026年8月3〜7日）アップデート</a></td>
+<td>セッション間メッセージング、セルフホスト環境、自動モードがデフォルト化</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w33">第33週（2026年8月10〜14日）の更新情報</a></td>
+<td>Desktopの利用上限リセット後自動継続や、GitLab対応強化などをまとめた週次更新情報</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/2026-w34">2026年第34週（8月17〜21日）のアップデート</a></td>
+<td>/designスキル、Concise出力スタイル、スマホからPCセッションを開始する機能を追加</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/whats-new/index">新着情報</a></td>
+<td>週次アップデートdigest。新機能・モデル更新を週別に紹介する索引ページ</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Platform 公式（platform.claude.com・LLM工学関連）</h2>
+<h3>Build with Claude（プロンプト・コンテキスト・effort等）</h3>
+<p><strong>44ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing">バッチ処理</a></td>
+<td>Message Batches APIで大容量リクエストを非同期処理し、コスト50%削減とスループット向上を実現</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics">キャッシュ診断</a></td>
+<td>プロンプトキャッシュミスの原因を前回の応答IDと比較し、乖離箇所を診断するベータ機能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/citations">引用（Citations）</a></td>
+<td>ドキュメントに基づく回答に引用機能を有効化し、参照元を検証可能にする仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock">Claude in Amazon Bedrock（Opus 4.7以降）</a></td>
+<td>AWS Bedrock上でClaude Messages APIを利用するためのセットアップ・認証・リージョン情報の総合ガイド</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry">Claude in Microsoft Foundry</a></td>
+<td>Microsoft FoundryでClaudeモデルを利用するための設定方法とAPI呼び出し手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy">Claude on Amazon Bedrock (Opus 4.6以前) レガシー統合</a></td>
+<td>InvokeModel/Converse APIとARN版モデルIDを使うレガシーAmazon Bedrock統合の説明</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai">Google Cloud上でClaudeを利用する</a></td>
+<td>Google Cloud Agent PlatformでClaude APIを使う方法とSDKインストール手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws">Claude Platform on AWS</a></td>
+<td>AWSアカウントからAnthropicのインフラで運用されるClaudeの全プラットフォーム機能を利用できる統合</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/compaction">コンパクション</a></td>
+<td>コンテキスト窓に近づいた長文会話を自動要約で管理するサーバーサイド機能（ベータ）</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/context-editing">コンテキスト編集（Context editing）</a></td>
+<td>会話履歴が肥大化する際に、ツール結果や思考ブロックを選択的にクリアしてコンテキストを能動的に管理する仕組み。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">コンテキストウィンドウ</a></td>
+<td>Claudeのコンテキストウィンドウの仕組み、トークン蓄積、モデル別サイズ（1M/200k）、コンテキスト管理戦略を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/effort">Effort</a></td>
+<td>effortパラメータで応答のトークン使用量と精度・効率のトレードオフを制御する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/embeddings"><span class="term" tabindex="0">埋め込み<span class="term-popup">文章の意味を数字の列（ベクトル）に変換すること。意味が近い文章は近い数字になるため、「意味での検索」ができるようになる。RAGの部品</span></span>（Embeddings）</a></td>
+<td>Anthropicは独自の埋め込みモデルを提供せず、Voyage AIのテキスト埋め込みモデルの利用を推奨している</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking">拡張思考（Extended thinking）</a></td>
+<td>思考トークン予算を手動で設定する拡張思考の使用方法と適応思考への移行手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/fallback-credit"><span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>クレジット</a></td>
+<td>リトライ時にプロンプトキャッシュの書き込み課金を回避し、別のモデルで再利用可能なクレジットトークンを使う仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/fast-mode">Fast mode（リサーチプレビュー）</a></td>
+<td>Claude Opus 5/4.8で標準比最大2.5倍の出力トークン/秒を実現する高速モード</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/files">Files API</a></td>
+<td>ファイルをアップロードしfile_idで参照してMessagesリクエストで再アップロード不要で利用できるAPI</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons">停止理由とフォールバック</a></td>
+<td>Messages APIのstop_reason値（end_turn・max_tokens・tool_use・refusal等）の意味と各ケースでの対処法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/mid-conversation-effort-example">オーケストレーションモードの構築</a></td>
+<td>エフォートレベルとmid-conversationシステムメッセージを使ったセッションレベルのオーケストレーションモードの構築例</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages">会話途中でのシステムメッセージとツール変更</a></td>
+<td>キャッシュを無効化せずに会話途中でシステム指示やツール構成を変更する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/multilingual-support">多言語サポート</a></td>
+<td>Claudeは多言語タスクに強く、英語を基準とした各言語のゼロショット性能ベンチマーク結果を提供</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/overview">機能の概要</a></td>
+<td>Claude APIの5つの機能領域（モデル能力、ツール、ツール基盤、コンテキスト管理、ファイル）と各機能の提供状況を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/pdf-support">PDFサポート</a></td>
+<td>ClaudeでPDFのテキスト抽出・図表解析・視覚的内容を理解し処理する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">プロンプトキャッシュ</a></td>
+<td><code>cache_control</code>でプロンプト前置部分をキャッシュし、コストと遅延を削減（自動/明示的、5分/1時間TTL）</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices">プロンプトエンジニアリングのベストプラクティス</a></td>
+<td>Claude最新モデル向けのプロンプト作成ガイド。モデル別ガイダンスと全モデル共通の技法、移行時の注意点を解説する。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview">プロンプトエンジニアリングの概要</a></td>
+<td>Claudeでのプロンプトエンジニアリングの適用場面・手法・チュートリアルを紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5">Claude Fable 5 のプロンプティングガイド</a></td>
+<td>Opus 4.8からの行動変化と長期タスクや並列サブエージェント等のプロンプト調整パターンを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8">Claude Opus 4.8のプロンプティングガイド</a></td>
+<td>Claude Opus 4.8固有の振る舞いとプロンプトパターン（冗長性、努力レベル、ツール使用、サブエージェント等）を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5">Claude Opus 5 のプロンプティング</a></td>
+<td>Opus 5の行動特性とエージェント的コーディング向けのプロンプトパターンを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5">Claude Sonnet 5 のプロンプティングガイド</a></td>
+<td>Claude Sonnet 5 の挙動特性とプロンプトパターン（effort・適応的思考・ツール利用・Sonnet 4.6からの移行）を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback">拒否とフォールバック</a></td>
+<td>Claude Fable 5/Opus 5の拒否応答を<code>fallbacks: &quot;default&quot;</code>で別モデルへ自動再試行する方法を解説。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/search-results">検索結果</a></td>
+<td><span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>アプリ向け検索結果を渡し、Claudeにソース付きで引用させる方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/skills-guide">APIでAgent Skillsを利用する</a></td>
+<td>Messages APIのcontainerパラメータでAnthropic製・カスタム両方のSkillsを統合する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/streaming">ストリーミングメッセージ</a></td>
+<td>Messages APIのレスポンスをサーバー送信イベントで逐次受信する方法をSDK別に解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs">構造化出力（Structured outputs）</a></td>
+<td>JSON出力と厳格なツール使用で、Claudeの応答を指定スキーマに準拠させる機能を紹介する。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/task-budgets">タスクバジェット</a></td>
+<td>エージェントループ全体で使用するトークン数の上限をClaudeに通知し、自己制御させる機能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost">思考の誘導</a></td>
+<td>Claudeの思考頻度と深度を努力レベルやプロンプトで誘導し、コストと価格体系を説明する。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/thinking-tool-workflows">ツール使用・複数ターンでの思考処理</a></td>
+<td>思考ブロックを保持した2ターンのツール呼び出し往復手順とコード例を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting">Thinkingのトラブルシューティング</a></td>
+<td>モデル別のthinking設定エラー400、思考ブロック欠落、max_tokens停止、キャッシュミス等の原因と対処法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/thinking">Thinking</a></td>
+<td>Claudeの思考機能の仕組み、制御方法、ツール・キャッシュ・ストリーミングとの連携を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/token-counting">トークンカウント</a></td>
+<td>メッセージ送信前にトークン数を算出し、<span class="term" tabindex="0">レート制限<span class="term-popup">短時間の利用回数にかけられる上限。API等で一定時間内のリクエスト数が制限されること。超えると一時的にエラーになる</span></span>・コスト管理やモデル選定、プロンプト長調整を可能にする機能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/vision-coordinates">座標とバウンディングボックス</a></td>
+<td>Claudeが返す画像座標の仕組みと、元画像へのマッピング方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/vision">ビジョン（画像認識）</a></td>
+<td>Claudeのビジョン機能で画像を送信・解析する方法を解説。base64、URL、ファイルIDの3方式に対応</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages">Messages APIの使用方法</a></td>
+<td>Messages APIの基本リクエストからマルチターン会話・ビジョン機能まで実践的なパターンを解説</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Agents and Tools（スキル・ツール利用・MCP）</h3>
+<p><strong>42ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices">スキル作成のベストプラクティス</a></td>
+<td>効果的なスキルを書くための簡潔さ・自由度設定・テストの指針を示す</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/claude-api-skill">Claude API スキル</a></td>
+<td>Messages API向けのリファレンス・SDKドキュメント・ベストプラクティスを提供するAgent Skill</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/enterprise">エンタープライズ向けSkills</a></td>
+<td>エンタープライズ規模でのSkills配備に必要なリスク評価・セキュリティ審査・運用ガバナンスの指針</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview">Agent Skills概要</a></td>
+<td>Claudeの機能を拡張する<span class="term" tabindex="0">モジュール<span class="term-popup">コードを機能ごとに分けたファイル単位。他のファイルから読み込んで使える</span></span>型機能で、ファイルシステムベースの専門知識やワークフローを提供</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/quickstart">APIでAgent Skillsを始める</a></td>
+<td>Claude APIでAgent Skillsを使いPowerPoint等を作成する方法を10分で学べるチュートリアル</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-connector">MCPコネクタ</a></td>
+<td>Messages APIからMCPクライアント不要でリモートMCPサーバーに接続するベータ機能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/concepts">アーキテクチャと構成要素</a></td>
+<td>MCPトンネル構成の各コンポーネントの正式名称と別名を定義する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/console">ConsoleでMCPトンネルを管理する</a></td>
+<td>トンネル作成、CA証明書登録、トークン取得、エージェントへの接続手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/deploy-compose">Docker ComposeでMCPトンネルスタックをデプロイする</a></td>
+<td>Docker Composeを使ってVM上にトンネルのコンテナ群をデプロイする手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/deploy-helm">HelmでMCPトンネルをデプロイ</a></td>
+<td>公式HelmチャートでKubernetes<span class="term" tabindex="0">クラス<span class="term-popup">データとその操作をひとまとめにした設計図。オブジェクト指向の基本単位</span></span>タにトンネルスタックをデプロイする手順</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/overview">MCPトンネル概要</a></td>
+<td>プライベートネットワーク内のMCPサーバーへポート開放なしで安全に接続するトンネルの概要</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/quickstart">MCPトンネル クイックスタート</a></td>
+<td>Docker Composeでローカルにトンネルスタックを構築しプライベートMCPサーバーに接続する手順</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/reference">MCPトンネル リファレンス</a></td>
+<td>プロキシ設定項目、REST API、証明書要件、セットアップコンポーネントのリファレンス</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/security">MCPトンネルのセキュリティ</a></td>
+<td>OAuth必須化・SSO・IP制限・資格情報ローテーション等のベストプラクティスと侵害時対応を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/troubleshooting">MCPトンネルのトラブルシューティング</a></td>
+<td>接続問題をエッジ・TLS・IP検証・ルーティングの順で診断・修正する手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/remote-mcp-servers">リモートMCPサーバー</a></td>
+<td>MCPコネクタAPIでサードパーティ製リモートMCPサーバーに接続しツール機能を拡張する方法</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool">Advisorツール</a></td>
+<td>高速な実行モデルに高性能アドバイザー助言を組み合わせ、コストと品質を両立させるツール</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>-tool">Bashツール</a></td>
+<td>Claudeが永続bashセッションでシェルコマンド実行を要求できるクライアントツール</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/browser-use-tool">ブラウザ使用ツール</a></td>
+<td>Claudeがアプリ側のブラウザでウェブページを操作できるツール群の仕様と使い方</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/build-a-tool-using-agent">チュートリアル: ツールを使うエージェントを構築する</a></td>
+<td>カレンダー管理エージェントを5段階で構築し、エージェントループからTool Runner SDKまで学ぶ</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool">コード実行ツール</a></td>
+<td>サンドボックス環境でPython・Bashを実行し、データ分析やファイル操作を行うツール</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool">コンピュータ使用ツール</a></td>
+<td>Claudeにデスクトップ環境のスクリーンショット・マウス・キーボード操作を提供するcomputer_toolsetツールセットの解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools">ツールの定義</a></td>
+<td>ツールスキーマの指定、効果的な説明の書き方、Claudeがツールを呼び出すタイミングの制御を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming">きめ細かいツールストリーミング</a></td>
+<td>ツール入力をサーバー側バッファリング・JSON検証なしでストリーミングし、レイテンシを削減する機能の使い方</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls">ツール呼び出しの処理</a></td>
+<td>tool_useブロックの解析、tool_resultのフォーマット、is_errorでのエラー処理の手動手順を解説。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works">ツール利用の仕組み</a></td>
+<td>ツール実行の場所・エージェントループ・テキスト生成との使い分けを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/manage-tool-context">ツールコンテキストの管理</a></td>
+<td>ツール定義やtool_resultで消費されるコンテキストを削減する4つの手法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool">メモリツール</a></td>
+<td>Claudeが会話間で情報を保存・取得できるクライアントサイドのメモリファイル操作機能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Claudeでのツール使用</a></td>
+<td>Claudeが外部関数やツールを呼び出す仕組みの概要と、Web検索ツールの基本的なコード例を紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use">並列ツール利用</a></td>
+<td>Claudeが1応答で複数のツールを呼び出す際の実行戦略・メッセージ履歴フォーマット・無効化方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling">プログラムによるツール呼び出し</a></td>
+<td>コード実行コンテナ内でClaudeがツールを直接呼び出し、モデルラウンドトリップとトークン消費を削減する機能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools">サーバーツール</a></td>
+<td>サーバーツールのserver_tool_useブロック・pause_turn継続処理・サーバー/クライアント混在・ZDR対応とドメイン制限を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use">厳密ツール使用（Strict tool use）</a></td>
+<td>strict: trueでJSON Schema準拠を保証し、エージェントの型安全な関数呼び出しを実現する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/text-editor-tool">テキスト<span class="term" tabindex="0">エディタ<span class="term-popup">テキストファイルを編集するソフト。VS CodeやVim等</span></span>ツール</a></td>
+<td>Claudeにファイル閲覧・作成・編集機能を提供するAnthropic定義のテキストエディタツールの使い方を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-combinations">ツールの組み合わせ</a></td>
+<td>リサーチ・コーディング・長時間エージェント向けのAnthropic公式ツールの典型的な組み合わせパターンを紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-reference">ツールリファレンス</a></td>
+<td>Anthropic提供のサーバーツール・クライアントツール一覧と任意のツール定義プロパティの解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner">ツールランナー (SDK)</a></td>
+<td>SDKのツールランナーでエージェントループ・エラー処理・型安全を自動化</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool">ツール検索ツール</a></td>
+<td>数百〜数千のツールからClaudeが必要分だけ動的に検索・読み込みする仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-use-with-prompt-caching">プロンプトキャッシュを使ったツール利用</a></td>
+<td>ツール定義へのキャッシュ制御配置法、defer_loadingによるキャッシュ保持、無効化条件を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/troubleshooting-tool-use">ツール使用のトラブルシューティング</a></td>
+<td>ツール使用の一般的なエラーについて、症状・原因・修正方法を対応表で提供するドキュメント</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool">Web fetch ツール</a></td>
+<td>指定したURLやPDFを取得しコンテキストへ動的フィルタリング付きで取り込むツール</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool">Web searchツール</a></td>
+<td>ClaudeにリアルタイムWebコンテンツと引用ソースへのアクセスを提供するツール。動的フィルタリングやドメイン制御も可能。</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Test and Evaluate（評価・ガードレール）</h3>
+<p><strong>7ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/test-and-evaluate/develop-tests">成功基準の定義と評価の構築</a></td>
+<td>LLMアプリの成功基準を具体的に定義し、定量・定性指標で評価する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/handle-streaming-refusals">ストリーミング拒否の処理</a></td>
+<td>Claude 4のストリーミング応答でstop_reasonがrefusalの場合の検出・リセット・代替モデルへの再試行方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency">出力の一貫性を高める</a></td>
+<td>フォーマット指定・応答の先埋め・例示・検索によるグラウンディングでClaude出力の一貫性を向上させる手法を紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks">ジェイルブレイクとプロンプトインジェクションの軽減</a></td>
+<td>入力スクリーニングやシステムプロンプトの強化でジェイルブレイク・プロンプトインジェクション対策する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations">ハルシネーションを減らす</a></td>
+<td>Claudeの出力における事実誤認を削減するため、不確実性の表明・直接引用の活用・引用による検証などの手法を紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency">レイテンシーの削減</a></td>
+<td>Claude Haiku 4.5など高速モデルの選択、プロンプト・出力トークンの削減、ストリーミングで応答遅延を低減する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-prompt-leak">プロンプトリークを減らす</a></td>
+<td>コンテキストとクエリの分離、出力フィルタリング、定期監査によりプロンプトリークリスクを低減する戦略を紹介</td>
+</tr>
+</tbody>
+</table></div>
+<h3>CLI・SDK・ライブラリ</h3>
+<p><strong>15ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/authentication">CLI認証オプション</a></td>
+<td>CLIの認証方法として、対話的ログイン・APIキー・名前付きプロファイル・Workload Identity Federationを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart">CLIクイックスタート</a></td>
+<td>ant CLIのインストール・認証・初回リクエスト送信方法を解説する導入ページ</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/scripting">CLIスクリプティングと自動化</a></td>
+<td>APIリソースを<span class="term" tabindex="0">YAML<span class="term-popup">ヤムル。階層構造を字下げで表す、人間が読みやすい設定ファイルの書式。frontmatter（文書冒頭の---で囲んだ設定塊）で使われる</span></span>でバージョン管理し、ant CLIコマンドをスクリプトで連携・自動化する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/using">CLIの使用方法</a></td>
+<td><code>ant</code> CLIのコマンド構造・出力形式・GJSON変換・デバッグ方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/apple-foundation-models">Apple Foundation Models</a></td>
+<td>Apple Foundation Models<span class="term" tabindex="0">フレームワーク<span class="term-popup">アプリを作るための骨組み部品のセット。土台が用意されているので、中身の作り込みに集中できる</span></span>でClaudeをSwift<span class="term" tabindex="0">パッケージ<span class="term-popup">配布・インストール可能な形にまとめたソフトウェアの単位。Pythonではpipで入れる部品のこと</span></span>経由のサーバサイド言語モデルとして利用する方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk">OpenAI SDK互換性</a></td>
+<td>OpenAI SDKを使ってClaude APIを呼び出す互換レイヤーの使い方と注意点を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/middleware">SDKミドルウェア</a></td>
+<td>Anthropic SDKでリクエスト/レスポンスを傍受・変更するミドルウェアの使い方を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/overview">CLI、SDK、ライブラリ</a></td>
+<td>Claude API構築用のant CLI、7言語のクライアントSDK、各種フレームワーク向け統合ライブラリを紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/csharp">C# SDK</a></td>
+<td>C#/.NET向けAnthropic公式SDK（β版）のインストール・設定・使用方法を紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/go">Go SDK</a></td>
+<td>GoからClaude APIを使うためのSDKのインストール・設定・基本的な使い方を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/java">Java SDK</a></td>
+<td>Java SDKのインストール方法、APIキー設定、ビルダーパターンを用いた初期化方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/php">PHP SDK</a></td>
+<td>PHP 8.1+向けベータ版SDK。Composerで導入し、名前付き<span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>でAPIを呼び出す方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python">Python SDK</a></td>
+<td>Python SDKのインストール方法と同期・非同期・ストリーミングの基本的な使い方を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/ruby">Ruby SDK</a></td>
+<td>Ruby 3.2.0+向けAnthropic SDKのインストール・SSEストリーミング・ツール実行・Sorbet型対応を紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/typescript">TypeScript SDK</a></td>
+<td>Node.js、Deno、Bun、ブラウザ環境でClaude APIを利用するためのSDKのインストール方法と使い方を解説</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Managed Agents（エージェント基盤）</h3>
+<p><strong>27ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/agent-setup">エージェントの定義</a></td>
+<td>再利用・バージョン管理可能なエージェント設定の作成方法と構成フィールドを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/budgets">セッションバジェット</a></td>
+<td>セッション作成時に公開リスト価格でハードなドル予算上限を設定し、到達時にアイドル状態で停止する仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/cloud-sandboxes-reference">クラウドサンドボックスリファレンス</a></td>
+<td>Anthropic管理クラウドサンドボックスの事前インストール済み言語・DB・ユーティリティ一覧</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/define-outcomes">成果を定義する</a></td>
+<td>エージェントに完了基準と品質測定を伝える方法、ルーブリック作成と採点者の自動プロビジョニングを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/dreams">Dreams</a></td>
+<td>Claudeが過去セッションを反映してメモリストアを再構築し新規インサイトを発掘する研究プレビュー機能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/environments">クラウド環境セットアップ</a></td>
+<td>エージェント実行用のクラウドサンドボックス環境を作成し管理する方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/events-and-streaming">セッションイベントストリーム</a></td>
+<td>Claude Managed Agentsとのイベント送受信・ストリーミング・割り込みによるセッション制御方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/files">ファイルの追加</a></td>
+<td>Files APIでアップロードし、セッションのサンドボックスにマウントしてエージェントに読み書きさせる方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/github">GitHubへのアクセス</a></td>
+<td>エージェントをGitHubリポジトリに接続し、クローン・読み取り・<span class="term" tabindex="0">プルリクエスト<span class="term-popup">「この変更を本体に取り込んでください」とレビューを求める仕組み（GitHubの機能）。自分の変更を他人が確認してから統合するフローに使う</span></span>作成を行う方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/mcp-connector">MCPコネクタ</a></td>
+<td>MCPサーバーをエージェントに接続し、外部ツールやデータソースへアクセスする方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/memory">エージェントメモリの使用</a></td>
+<td>セッションを越えて情報を保持するメモリストアでエージェントに永続的な記憶を与える方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/migration">移行ガイド</a></td>
+<td>Messages APIまたはClaude Agent SDKで構築した既存エージェントをClaude Managed Agentsへ移行する手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/multiagent-orchestration">マルチエージェントオーケストレーション</a></td>
+<td>1つのセッション内で複数エージェントを調整し、並列実行や専門化により複雑な作業を協調して処理する仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/onboarding">Consoleでエージェントを構築する</a></td>
+<td>Consoleでエージェントを視覚的に作成・テストし、APIからコードで実行する方法を紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/overview">Claude Managed Agentsの概要</a></td>
+<td>マネージドインフラで動作する設定可能なエージェント実行環境で、長時間タスクや非同期処理に適している</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/permission-policies">権限ポリシー</a></td>
+<td>Managed Agentsでツール実行時の自動実行または承認待ちを制御する権限ポリシーの設定方法</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/quickstart">Claude Managed Agents入門</a></td>
+<td>最初の自律エージェント作成手順を解説（環境構築・セッション開始・ストリーミング応答）</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/reference">Managed Agents リファレンス</a></td>
+<td>イベント種別、self-hosted worker CLIフラグ、対応MCPサーバー、レート制限、ブランディング情報をまとめたリファレンス</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/scheduled-deployments">Scheduled deployments（スケジュールされたデプロイ）</a></td>
+<td>cronスケジュールでエージェントを自動実行するデプロイメントを作成・管理する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-security">セキュリティモデル</a></td>
+<td>セルフホストサンドボックスにおける共同責任モデルとユーザー責任範囲を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes">セルフホスト型サンドボックス</a></td>
+<td>ツール実行をユーザー自身のインフラで行い、データやネットワークの境界を保持するManaged Agentsの仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/session-operations">セッション操作</a></td>
+<td>Managed Agentsセッションの取得・一覧・更新・アーカイブ・削除の各APIを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/sessions">セッションの開始</a></td>
+<td>エージェントIDと環境IDでセッションを作成し、ユーザーイベント送信でタスク実行を開始する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/skills">スキル</a></td>
+<td>Managed Agentsで事前構築またはカスタムスキルをエージェントに添付し、再利用可能なファイルシステムベースの専門知識を提供する方法を説明するページ</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/tools">ツール</a></td>
+<td>Claude Managed Agentsで利用可能な組み込みツールと設定方法を解説する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/vaults">ボールトで認証する</a></td>
+<td>セッション作成時にエンドユーザーの認証情報を登録・管理するボールトの作成方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/<span class="term" tabindex="0">webhook<span class="term-popup">ウェブフック。「イベントが起きたら指定URLに自動で通知を送る」仕組み。GitHubで更新があればDiscordに通知が飛ぶ、等の連携に使う</span></span>s">Webhookの購読</a></td>
+<td>セッションの主要な状態変化をWebhookで通知し、GETで詳細を取得する仕組み</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Models（モデル別の挙動とプロンプティング）</h3>
+<p><strong>19ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/fable-5/introducing-claude-fable-5-and-claude-mythos-5">Claude Fable 5とClaude Mythos 5の紹介</a></td>
+<td>Claude Fable 5とClaude Mythos 5の能力、1Mトークンコンテキスト、価格、安全分類器、リトライ方法を紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/fable-5/migration-guide">Claude Mythos 5・Fable 5 への移行ガイド</a></td>
+<td>Messages API利用者を対象に新モデルIDへの更新と破壊的変更（thinking・prefill等）の移行手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/fable-5/overview">Claude Fable 5</a></td>
+<td>Anthropicの最上位モデルで、長時間エージェント推論向け、1Mコンテキスト・安全拒否機能搭載</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/haiku-4-5/migration-guide">Claude Haiku 4.5への移行ガイド</a></td>
+<td>Haiku 3.5以前からの移行手順、モデルID更新、破壊的変更（temperature/top_p、tool、refusal）一覧</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/haiku-4-5/overview">Claude Haiku 4.5</a></td>
+<td>2025年10月リリースの最速・高性能モデル。200Kコンテキスト、手頃な価格、各プラットフォームで利用可能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/mythos-5/overview">Claude Mythos 5</a></td>
+<td>招待制の防御的サイバーセキュリティ向けモデル。Claude Fable 5と同じ仕様でセーフティ分類器なし</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-4-5/overview">Claude Opus 4.5</a></td>
+<td>レガシーモデルでライフサイクル・モデルID・価格・現行ラインナップとの比較をまとめたリファレンス</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-4-6/overview">Claude Opus 4.6</a></td>
+<td>2026年2月リリースのレガシーモデル。1Mコンテキスト、入出力価格は$5/$25でOpus 5への移行を推奨</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-4-7/overview">Claude Opus 4.7</a></td>
+<td>レガシーモデル。1Mコンテキスト・128K出力で、Opus 5への移行が推奨される</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-4-8/overview">Claude Opus 4.8</a></td>
+<td>レガシーモデルClaude Opus 4.8の仕様・価格・他モデルとの比較情報をまとめたリファレンスページ</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-5/migration-guide">Claude Opus 5への移行ガイド</a></td>
+<td>Opus 4.8からの移行手順：モデルID・破壊的変更・推奨変更点・チェックリストを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-5/overview">Claude Opus 5</a></td>
+<td>Claude Opus 5の概要：複雑なエージェント型コーディングとエンタープライズ向け、1Mコンテキスト・適応的思考対応</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-5/whats-new-opus-5">Claude Opus 5の新機能</a></td>
+<td>Opus 4.8から推論・エージェント性能が大幅向上、思考デフォルト有効化など破壊的変更を含む新モデル</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/overview">モデル概要</a></td>
+<td>Claudeモデルのラインナップ（Fable 5、Opus 5、Sonnet 5、Haiku 4.5）の比較と特徴を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/sonnet-4-5/overview">Claude Sonnet 4.5</a></td>
+<td>2025年9月29日リリースのレガシーモデルで、Sonnet 5への移行が推奨される200Kコンテキスト対応モデル</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/sonnet-4-6/overview">Claude Sonnet 4.6</a></td>
+<td>レガシーモデルSonnet 4.6の仕様・価格・他モデルとの比較表を提供するページ</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/sonnet-5/migration-guide">Claude Sonnet 5への移行ガイド</a></td>
+<td>Sonnet 4.6からSonnet 5への移行手順と注意点（破壊的変更2点）を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/sonnet-5/overview">Claude Sonnet 5</a></td>
+<td>速度と知能のバランスに優れたSonnet 5。1Mコンテキスト・128K出力、適応的思考デフォルト搭載の次世代モデル概要</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/sonnet-5/whats-new-sonnet-5">Claude Sonnet 5の新機能</a></td>
+<td>適応的思考がデフォルト有効化、手動拡張思考と非デフォルトのサンプリングパラメータは400エラーを返す</td>
+</tr>
+</tbody>
+</table></div>
+<h3>About Claude（モデル選択・移行ガイド）</h3>
+<p><strong>13ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/additional-resources">追加リソース</a></td>
+<td>クイックスタート・コース・クックブック等の学習リソースとAI取り込み向けドキュメントリンク集</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/glossary">用語集</a></td>
+<td>Claudeに関する重要な概念（コンテキストウィンドウ、ファインチューニング、HHH、レイテンシ、LLM、MCPなど）の要約</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/model-deprecations">モデルの非推奨について</a></td>
+<td>Claudeモデルのライフサイクル（アクティブ・レガシー・非推奨・削除済み）と移行・通知・監査方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/models/choosing-a-model">適切なモデルの選び方</a></td>
+<td>性能・速度・コスト・労力の4基準で評価し、最適なClaudeモデルを選択するガイド</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/models/migration-guide">移行ガイド</a></td>
+<td>旧Claudeモデルから最新版への移行ガイド一覧と支援情報</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions">モデルIDとバージョニング</a></td>
+<td>モデルIDの構造と、4.6世代以降のデートレス形式および固定<span class="term" tabindex="0">スナップショット<span class="term-popup">ある瞬間の状態のコピー。後で比較・復元するために取っておくもの</span></span>としての扱いを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence">コストと知能の<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span></a></td>
+<td>コストと品質のトレードオフを管理する各種手法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/pricing">価格設定</a></td>
+<td>全Claudeモデルの入力・出力・キャッシュのUSD価格表（基本・5分/1時間キャッシュ書き・ヒット・出力別）</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/use-case-guides/content-moderation">コンテンツモデレーション</a></td>
+<td>Claudeを使ったコンテンツモデレーションの判断基準と導入前ガイダンス</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/use-case-guides/customer-support-chat">カスタマーサポートエージェントの構築ガイド</a></td>
+<td>Claudeで製品質問対応・話題維持・ツールで見積もりを生成するサポートチャットボット構築法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/use-case-guides/legal-summarization">法的文書要約</a></td>
+<td>Claudeを使った契約書・訴訟準備・規制業務の文書要約による法務プロセス効率化ガイド</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/use-case-guides/overview">一般的なユースケースのガイド</a></td>
+<td>Claudeを使ったチケット振り分け・カスタマーサポート・コンテンツモデレーション・法律要約の構築ガイド一覧</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/about-claude/use-case-guides/ticket-routing">チケットルーティング</a></td>
+<td>Claudeの自然言語理解で顧客サポートチケットを大規模に分類・振り分けする方法を解説</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><strong>関連章</strong>: <a href="21-agent-engineering-layers.html">第21章 エージェント工学の階層</a>・
+<a href="16-external-references.html">第16章 外部参考資料</a>・<a href="20-version-management.html">第20章 バージョン管理</a></p>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="21-agent-engineering-layers.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🏗️ エージェント工学の階層</span>
+            </a>
+            
+            
+            <a href="skill-catalog.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📄 Skill カタログ</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

@@ -32,6 +32,8 @@ CHAPTER_MAP = {
     "15_コスト最適化構成.md": {"slug": "15-cost-optimization", "title": "コスト最適化", "icon": "💰", "desc": "GLM/MiniMaxルーティング（独自構成）"},
     "17_キーバインド.md": {"slug": "17-keybindings", "title": "CLI操作・キーバインド", "icon": "🎛️", "desc": "プロンプト入力欄の編集操作 — 全選択/消去/行編集/Vim/履歴/Windows特有"},
     "19_decisions_log.md": {"slug": "19-decisions-log", "title": "決定ログ", "icon": "🧩", "desc": "設計判断の図解入り記録 — どういう考えで決めたか"},
+    "21_エージェント工学の階層.md": {"slug": "21-agent-engineering-layers", "title": "エージェント工学の階層", "icon": "🏗️", "desc": "プロンプトからグラフまで5層の設計地図と自己診断"},
+    "22_公式ドキュメント索引.md": {"slug": "22-official-docs-index", "title": "公式ドキュメント索引", "icon": "📚", "desc": "公式ドキュメント364ページの1行要約と新規ページ監視"},
 }
 
 
