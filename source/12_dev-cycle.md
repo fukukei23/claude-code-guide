@@ -197,6 +197,15 @@ CronCreate:
 | Stop Hook（start.sh） | 今すぐ連続実行したい |
 | CronCreate | 夜間・放置・数日かけて処理 |
 
+### Cron定義と実体の同期（apply_crons.py）
+
+CronCreateをセッション毎に手動登録すると、定義（正典）と実体（`scheduled_tasks.json`）がズレる。`apply_crons.py`（`claude-config/scripts/auto-dev/`）が**冪等同期と健康診断**を担う。
+
+- **定義源**: `~/bin/renew-crons.sh` の `# @cron` タグ書式 → **実体**: `~/.claude/scheduled_tasks.json`
+- **version gate**: 適用前にClaude Code CLIバージョンを照合し、Phase 0観測時と異なれば **apply拒否**（golden master再観測を要求・バージョン違いで壊れたJSONを量産するのを防止）
+- **冪等**: 何回実行しても同じ状態に収束（重複登録しない・flockで多重実行も保護）
+- **テスト**: `scripts/auto-dev/tests/test_apply_crons.py`（同期ロジックのunit test）
+
 ### 1 Issue あたりの自動処理
 
 ```

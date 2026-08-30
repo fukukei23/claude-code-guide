@@ -391,7 +391,7 @@ Claude Code がその指示に従って動作
 <li><strong><a href="#superpowers">⚡ superpowers（開発ワークフロー）</a></strong> — brainstorming / writing-plans / executing-plans / systematic-debugging / test-driven-development / verification-before-completion / using-git-worktrees</li>
 <li><strong><a href="#agent-skills">🛠️ agent-skills（開発全工程・26スキル）</a></strong> — 思いを固める / 計画・設計 / 実装 / 品質・検証 / 守る・届ける / スラッシュ<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>群</li>
 <li><strong><a href="#other-plugins">🔌 その他プラグイン</a></strong> — code-review / review-pr / feature-dev</li>
-<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / tech-clip / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku / teian / demo-site-sales / resume-session / codebase-memory / multi-llm-review / multi-llm-review-lite / delegate-to-minimax / vision-analyze / fable-advisor / outward-reply / reflection</li>
+<li><strong><a href="#custom">🎯 カスタムスキル</a></strong> — dev-cycle / gas-autopilot / tech-clip / make-guide / guide-builder / textbook-guide / html-guide / ssot-record / record-new-feature / ssot-search / ssot-check / new-session / update-guide / skill-test / send-email / proxy-doctor / sentaku / teian / demo-site-sales / resume-session / codebase-memory / multi-llm-review / multi-llm-review-lite / delegate-to-minimax / vision-analyze / fable-advisor / outward-reply / reflection</li>
 </ul>
 <hr />
 <h2 id="builtin">🧩 ビルトインスキル</h2>
@@ -633,6 +633,16 @@ Claude Code がその指示に従って動作
 <li><strong>詳細</strong>: <a href="14-ssot-search.html">14_SSOTから探して</a></li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-search/</code>）</li>
 <li><strong><span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>可視化（False Negative 対策・spec v3）</strong>: 検索結果末尾に母数・フィルタ結果・除外量・次点候補・低抽出率警告🚨(&lt;5%)を表示。「N件ヒット＝全部だ」でなく「未確認領域が残る」と気づける。<code>--no-coverage</code>（表示抑制）・<code>--log-coverage</code>（JSON stderr・計測用途）</li>
+</ul>
+<hr />
+<h3 id="ssot-check"><code>ssot-check</code>（カスタムスキル）</h3>
+<p>SSOT（知識ベース）と実ファイル・設定・Cron等の実態を照合し、乖離があれば修正するスキル。</p>
+<ul>
+<li><strong>呼び出し</strong>: 「SSOTチェックして」「SSOT整合性チェックして」「乖離を修正して」<code>/ssot-check</code></li>
+<li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-check/</code>）</li>
+<li><strong>無人モード（auto）</strong>: <code>/ssot-check auto</code> で Cron 定期実行用の無人モード。重要度「高」のみ自動修正し、「中」「低」は**「修正は要確認（承認後に実施）」として報告**（「検知のみ」「修正しない」等の完了風受け身表現は禁止・後続アクションが見えず紛らわしいため）</li>
+<li><strong>2段階state</strong>: <code>ssot-check-triggered</code>（hookが発火指示時に先行マーク・本スキルでは触らない）と <code>ssot-check-last-run</code>（実行完了時に更新）に分離。高0件で commit をスキップした場合でも last-run は更新必須（更新忘れが翌セッション再発火の無限ループを起こす事故対策）</li>
+<li><strong>実行ロック</strong>: 並行セッションの同時実行を stamp+年齢方式の汎用ロックで封止（LLM駆動のためflock包み不可・停滞30分で次回が強制取得）</li>
 </ul>
 <hr />
 <h3 id="new-session"><code>new-session</code>（カスタムスキル）</h3>

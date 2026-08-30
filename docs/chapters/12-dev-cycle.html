@@ -382,6 +382,14 @@ bash ~/.claude/scripts/auto-dev/start.sh --auto my-repo
 </tr>
 </tbody>
 </table></div>
+<h3>Cron定義と実体の同期（apply_<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>s.py）</h3>
+<p>CronCreateを<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>毎に手動登録すると、定義（正典）と実体（<code>scheduled_tasks.json</code>）がズレる。<code>apply_crons.py</code>（<code>claude-config/scripts/auto-dev/</code>）が<strong><span class="term" tabindex="0">冪等<span class="term-popup">めいとう。「同じ操作を2回実行しても、1回実行した時と同じ結果になる」性質。再実行時の二重登録等の事故を防ぐ設計</span></span>同期と健康診断</strong>を担う。</p>
+<ul>
+<li><strong>定義源</strong>: <code>~/bin/renew-crons.sh</code> の <code># @cron</code> タグ書式 → <strong>実体</strong>: <code>~/.claude/scheduled_tasks.json</code></li>
+<li><strong>version gate</strong>: 適用前にClaude Code CLI<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>を照合し、Phase 0観測時と異なれば <strong>apply拒否</strong>（golden master再観測を要求・バージョン違いで壊れた<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>を量産するのを防止）</li>
+<li><strong>冪等</strong>: 何回実行しても同じ状態に収束（重複登録しない・flockで多重実行も保護）</li>
+<li><strong>テスト</strong>: <code>scripts/auto-dev/tests/test_apply_crons.py</code>（同期ロジックのunit test）</li>
+</ul>
 <h3>1 Issue あたりの自動処理</h3>
 <pre><code>実装（LLM でコード生成）
     ↓
@@ -407,7 +415,7 @@ print('停止:', s)
 </code></pre>
 <hr />
 <h2>フェーズ4.5: Daily Triage &amp; Stale検知（2026-07-24追加）</h2>
-<p>並行<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の stale🟢検知と、staleタスクの自動除外ロジックを実装。</p>
+<p>並行セッションの stale🟢検知と、staleタスクの自動除外ロジックを実装。</p>
 <h3>stale判定（⚠staleマーク）</h3>
 <p><code>daily_triage.py</code> で実装:</p>
 <ul>
@@ -456,7 +464,7 @@ def parse_task_date(text: str) -&gt; date | None:
     stale（30日超）には⚠staleマークを付与。
     結果を 10_DAILY/2026-07-27.md に追記。
 </code></pre>
-<p><strong>Cron管理</strong>: <code>apply_crons.py</code> で管理・<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>s.shで再登録</p>
+<p><strong>Cron管理</strong>: <code>apply_crons.py</code> で管理・crons.shで再登録</p>
 <hr />
 <h2>フェーズ5: 完了通知（自動）</h2>
 <p><code>pending=[]</code> を検知したら自動実行:</p>

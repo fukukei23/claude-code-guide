@@ -217,6 +217,14 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 </tbody>
 </table></div>
+<h4>バナー集約パターン（startup-banner.sh）</h4>
+<p>複数のSessionStart <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>が各自 <code>stdout</code> を出すと出力が散らかるため、<strong>各hookは <code>/tmp/claude-startup/&lt;名前&gt;.status</code> にステータスを書くだけ</strong>にし、最後の1本 <code>startup-banner.sh</code> が集約して1枚のバナーにする設計。</p>
+<ul>
+<li><strong>集計</strong>: ステータスファイルの行頭マーク <code>✅/⚠️/❌</code> を数えて「フック: N/M 正常 | 要確認: &lt;名前&gt;」形式でサマリー</li>
+<li><strong>表示内容</strong>: CC<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>（hook検知時は「✅最新版！」フラグ）・前回handoff・本日セッション数・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>トリガーマップ（各SKILL.mdの「トリガーワード」欄を自動抽出）</li>
+<li><strong>層1読込検証（@取り込み実働チェック）</strong>: CLAUDE.md の <code>@rules/</code> 参照ファイルの存在確認に加え、LLMへ「特定行の見出しを返答冒頭で引用せよ」という<strong>引用チャレンジ</strong>を出す（中身は表示しない=引用できれば読込証明・echo捏造では成立しない）</li>
+<li><strong>Desktop App対応</strong>: <code>/dev/tty</code> は使わず <code>stdout</code> に出力（Desktop Appでは <code>/dev/tty</code> が使用不可のため）</li>
+</ul>
 <h3>&lt;a id=&quot;pretooluse&quot;&gt;&lt;/a&gt;PreToolUse</h3>
 <p><strong>ツール実行前</strong>に実行。最も重要なフック。</p>
 <div class="table-wrapper"><table>
@@ -245,7 +253,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-tip"><p>💡 ※2026-07-02統合撤去: 2026-06-30に追加していた minimax系<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ブロック（matcher <code>mcp__minimax-(official|video)__.*</code>・<code>exit 2</code>）は、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため PreToolUse <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> を削除し撤去。minimax-official/video は日常セッションで即呼び可能。</p></div>
+<div class="callout callout-tip"><p>💡 ※2026-07-02統合撤去: 2026-06-30に追加していた minimax系<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ブロック（matcher <code>mcp__minimax-(official|video)__.*</code>・<code>exit 2</code>）は、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため PreToolUse hook を削除し撤去。minimax-official/video は日常セッションで即呼び可能。</p></div>
 <div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="11-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
 <div class="callout callout-info"><p><strong>クロスプラットフォーム対応</strong>: フックスクリプトで <code>python3</code> を直接呼ぶとWindows Git Bashで動作しない。<code>run-security-check.sh</code> ラッパーが python3 / python / wsl を自動検出する。Bashフックは純<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>（<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span>/sed）で<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>解析しpython3に依存しない。</p></div>
 <p>ブロックされるコマンドの例:</p>
@@ -387,7 +395,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-version.sh</code></td>
-<td><span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>確認・新機能検知</td>
+<td>バージョン確認・新機能検知</td>
 </tr>
 <tr>
 <td></td>
@@ -482,7 +490,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>skill-guard.sh</code></td>
-<td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>定義の整合性ガード</td>
+<td>スキル定義の整合性ガード</td>
 </tr>
 <tr>
 <td></td>
