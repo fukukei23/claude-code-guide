@@ -407,6 +407,45 @@ LLM（Claude Sonnet / Opus / Haiku）
   ▼
 ユーザーに表示
 </code></pre>
+<h3>「Claude Code の本体」を一言で</h3>
+<p>上の図を <strong>LLM 視点</strong> に翻訳すると、こうなる:</p>
+<div class="callout callout-info"><p><strong>LLM が「ファイルを読む・書く・コマンドを撃つ」という道具を自分で選んで使い、</strong>
+<strong>結果を見て次の行動を決める<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span></strong></p></div>
+<p>これが Claude Code の本体（=ハーネス）で、<code>claude</code> コマンドも Desktop App も、すべてこのループを
+「人間にどう見せるか」の皮でしかありません。<strong>道具のカタログ（tools 配列）と実行結果のフィードバック</strong>
+が揃えば、別のアプリからも同じループを起動できます（Agent SDK / <code>claude -p</code> / MCPサーバー経由など）。</p>
+<p>つまり「LLM にエージェント能力を与える」=「<strong>道具リストを渡して、応答に <code>tool_use</code> が現れたら実行して、
+結果を <code>tool_result</code> として LLM に返す</strong>」だけ。このループを 1 回だけ回すのが単発エージェント、
+<strong>終了条件を満たすまで回し直すのが自律ループ（= <code>Loop Engineering</code>）</strong> です。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ハーネス（harness）</strong></td>
+<td>上記のループ全体（tool 受付 → LLM 呼出 → 結果フィードバック）</td>
+</tr>
+<tr>
+<td><strong>tool calling</strong></td>
+<td>LLM が応答の途中で「○○を実行して」と道具を要求する仕組み</td>
+</tr>
+<tr>
+<td><strong>自律ループ</strong></td>
+<td>終了条件（テスト緑・<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>達成等）を満たすまでループを回し続けること</td>
+</tr>
+<tr>
+<td><strong>サーキットブレーカ</strong></td>
+<td>ループ暴走防止（429 検知・コスト上限・同一エラー N 回で停止）</td>
+</tr>
+</tbody>
+</table></div>
+<p>Claude Code 固有の差別化要素は <strong>deny/ask/allow の権限ゲート・hooks・CLAUDE.md の自動注入</strong> で、
+これらはハーネスの「外側」を固める仕組み。ループ本体自体は Anthropic Agent SDK でも
+<code>claude -p &quot;...&quot;</code> でも自前実装でも再現できます。</p>
 <hr />
 <div class="mermaid-wrapper"><div class="mermaid">
 graph LR
