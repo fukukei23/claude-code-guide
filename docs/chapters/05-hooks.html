@@ -535,6 +535,21 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td><code>~/projects/</code>等の既知WSLパスプレフィックスをUNCパスへ書き換え（matcher: &quot;Bash&quot;限定・ホワイトリスト4種・<code>/home/&lt;USER&gt;</code>もヒットするため、Bashツールに送るコマンド文字列内にリテラルで含めると意図せず書き換えられる点に注意。2026-07-10発見）</td>
 </tr>
 <tr>
+<td></td>
+<td><code>enforce-ssot-record.sh</code></td>
+<td><code>01_DECISIONS/</code> への手動Write/Editをブロックし ssot-record スキル経由を強制（フラグ=<code>~/.claude/state/ssot-record-active-&lt;セッションID&gt;</code>・スキル開始時作成/終了時削除・セッションID分離で並行セッションの誤許可を防止。2026-07-03事故〔手動WriteでINDEX/frontmatter/自動化.mdの連携更新漏れ〕対策）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>guard-config-secrets.sh</code></td>
+<td><span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>副本（<code>01_DECISIONS/claude-code/設定ファイル/</code> 配下）への生値シークレット混入をブロック（api_key/auth_token/secret等のキー名に <code>${ENV}</code> 参照以外の実値があれば exit 2・フラグ迂回なし・常にブロック。2026-07-06監査⑩対策・2026-08-30 Windows側settings.jsonにも登録）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>warn-naming-rules.sh</code></td>
+<td>呼称ルール違反（記録内の「私/ユーザー＋助詞」）を警告表示（<strong>ブロックなし</strong>・exit 0 + additionalContext）。外向きディレクトリ（20_PUBLISHING/40_CAREER）と第三者意味の複合語は除外・r3で検出をpython単一パス化（同行混在検知漏れ修正）</td>
+</tr>
+<tr>
 <td><strong>PostToolUse</strong></td>
 <td></td>
 <td></td>
@@ -547,7 +562,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>post-tool-settings-sync.sh</code></td>
-<td>settings.json変更後のSSOT<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>への同期</td>
+<td>settings.json変更後のSSOT設定ファイルへの同期</td>
 </tr>
 <tr>
 <td></td>
