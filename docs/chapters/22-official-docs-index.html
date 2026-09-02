@@ -189,7 +189,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 358ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 364ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -202,9 +202,9 @@
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
 <p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>191ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>167ページ</strong>
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>173ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>358ページ</strong>・最終更新 2026-08-30。</p>
+合計 <strong>364ページ</strong>・最終更新 2026-09-02。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -1019,7 +1019,7 @@
 </table></div>
 <h2>Platform 公式（platform.claude.com・LLM工学関連）</h2>
 <h3>Build with Claude（プロンプト・コンテキスト・effort等）</h3>
-<p><strong>44ページ</strong></p>
+<p><strong>46ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1121,6 +1121,10 @@
 <td>ClaudeでPDFのテキスト抽出・図表解析・視覚的内容を理解し処理する方法を解説</td>
 </tr>
 <tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/preserved-thinking">思考保持（Preserved Thinking）</a></td>
+<td>Claude の推論能力を保ちながら関数呼び出しを使うための機能。thinking ブロックを保持してツール実行時のパフォーマンスとコストを<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span>。</td>
+</tr>
+<tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">プロンプトキャッシュ</a></td>
 <td><code>cache_control</code>でプロンプト前置部分をキャッシュし、コストと遅延を削減（自動/明示的、5分/1時間TTL）</td>
 </tr>
@@ -1131,6 +1135,10 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview">プロンプトエンジニアリングの概要</a></td>
 <td>Claudeでのプロンプトエンジニアリングの適用場面・手法・チュートリアルを紹介</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1">Claude Fable 5.1 のプロンプトエンジニアリング</a></td>
+<td>Fable 5.1 向けに最適化されたプロンプト作成のベストプラクティス。XML タグ・具体例・明確な指示の構造化で性能を引き出す。</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5">Claude Fable 5 のプロンプティングガイド</a></td>
@@ -1619,7 +1627,7 @@
 </tbody>
 </table></div>
 <h3>Models（モデル別の挙動とプロンプティング）</h3>
-<p><strong>19ページ</strong></p>
+<p><strong>23ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1628,6 +1636,18 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide">Fable 5.1 移行ガイド</a></td>
+<td>既存モデルから Fable 5.1 への移行手順。新パラメータ・廃止機能・コード更新ポイントを解説しスムーズな移行を支援。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/fable-5-1/overview">Fable 5.1 モデル概要</a></td>
+<td>Anthropic の最新モデル Fable 5.1 の特徴・性能・料金体系・ユースケースを網羅的に紹介する総合ページ。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1">Fable 5.1 の新機能</a></td>
+<td>Fable 5.1 で追加された新機能・改善点を解説。推論力・コンテキスト長・ツール利用の拡張など主要な変更を網羅。</td>
+</tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/models/fable-5/introducing-claude-fable-5-and-claude-mythos-5">Claude Fable 5とClaude Mythos 5の紹介</a></td>
 <td>Claude Fable 5とClaude Mythos 5の能力、1Mトークンコンテキスト、価格、安全分類器、リトライ方法を紹介</td>
@@ -1647,6 +1667,10 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/models/haiku-4-5/overview">Claude Haiku 4.5</a></td>
 <td>2025年10月リリースの最速・高性能モデル。200Kコンテキスト、手頃な価格、各プラットフォームで利用可能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/mythos-5-1/overview">Mythos 5.1 モデル概要</a></td>
+<td>Anthropic の大規模モデル Mythos 5.1 の特徴・性能・利用方法をまとめたページ。高度な推論と長文コンテキスト処理に強み。</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/models/mythos-5/overview">Claude Mythos 5</a></td>
@@ -1741,7 +1765,7 @@
 <td>モデルIDの構造と、4.6世代以降のデートレス形式および固定<span class="term" tabindex="0">スナップショット<span class="term-popup">ある瞬間の状態のコピー。後で比較・復元するために取っておくもの</span></span>としての扱いを解説</td>
 </tr>
 <tr>
-<td><a href="https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence">コストと知能の<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span></a></td>
+<td><a href="https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence">コストと知能の最適化</a></td>
 <td>コストと品質のトレードオフを管理する各種手法を解説</td>
 </tr>
 <tr>
