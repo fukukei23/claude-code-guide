@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知識の保存先の使い分け — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 知識の保存先の使い分けの解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="知識の保存先の使い分け — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 知識の保存先の使い分けの解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/23.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="11-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="12-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="13-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="14-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="15-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="16-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="17-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="18-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="19-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="20-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
+        </a>
+        
+        <a href="21-agent-engineering-layers.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            エージェント工学の階層
+        </a>
+        
+        <a href="22-official-docs-index.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="23.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📄</span>
+            知識の保存先の使い分け
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="22-official-docs-index.html" class="nav-prev">← 公式ドキュメント索引</a>
+            
+            
+            <a href="skill-catalog.html" class="nav-next">Skill カタログ →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>23 知識の保存先の使い分け — どこに何を書くか</h1>
+<p>Claude Codeを使い込むと「この知識、どこに保存すればいいのか？」という問題に必ずぶつかる。保存先を誤ると、知識は<strong>埋もれる</strong>か、あるいは<strong>毎回の読み込みコスト</strong>として払い続けることになる。本章では代表的な保存先を3層に整理し、判断フローを示す。</p>
+<div class="callout callout-info"><p>この章は Claude Code 機能ベースの3層（memory / rules / <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s）を扱う。プロジェクト知識ベース（SSOT）側の保存先（決定記録・タスク管理）は <a href="https://fukukei23.github.io/ssot-guide/">ssot-guide「知識の保存先の使い分け（SSOT層）」</a> に分離している。</p></div>
+<hr />
+<h2>3層の全体像</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>正体</th>
+<th>読まれるタイミング</th>
+<th>向いている知識</th>
+<th>コスト</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>memory</strong></td>
+<td>Claude Code公式のauto-memory（<code>~/.claude/projects/&lt;path&gt;/memory/</code>）</td>
+<td><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>開始時に自動読込</td>
+<td>個人の失敗の直し方・教訓・好み</td>
+<td>最小（ファイル1個=1事実）</td>
+</tr>
+<tr>
+<td><strong>rules / CLAUDE.md</strong></td>
+<td>CLAUDE.mdが<code>@include</code>する共有ルールファイル</td>
+<td><strong>毎レスポンス</strong>に毎回読込</td>
+<td>行動方針・判断ゲート（「〜する時は〜せよ」型）</td>
+<td>高（行数ぶん毎回課金・全タブで読まれる）</td>
+</tr>
+<tr>
+<td><strong>hooks</strong></td>
+<td>PreToolUse等の設定で登録する<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span></td>
+<td>該当ツール実行の<strong>その瞬間</strong>に機械実行</td>
+<td>LLMが忘れても防ぎたい事故の機械的防御</td>
+<td>最大（<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>+テスト+設定登録）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>それぞれの層の性質</h2>
+<h3>memory — 「私的失敗の直し方」を置く</h3>
+<ul>
+<li>1ファイル=1事実・frontmatterの<code>description</code>で回収時に判定される</li>
+<li>セッション開始時に毎回読まれるため、<strong>軽く・具体的</strong>であるべき</li>
+<li>向いている例: 「commit前にstagedの<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>行数を確認する」「<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>の<code>$HOME</code>はWindows側に化ける」</li>
+<li>向いていない例: 恒久的な方針（→rulesへ）・「なぜそう決めたか」の経緯（→プロジェクトの決定記録へ）</li>
+</ul>
+<h3>rules / CLAUDE.md — 「毎回の方針」を置く（ただし肥大化に注意）</h3>
+<ul>
+<li>ここに書いたことは<strong>毎セッション・全タブが読む</strong>。1行追加=全セッションのコンテキストコスト増</li>
+<li>書くべきは判断ゲート型の短い方針:「検索結果の件数を根拠に結論を出す前に中身を目視せよ」等</li>
+<li><strong>防衛力の限界</strong>にも注意: ルールが存在してもLLMが読み飛ばす事故は起こる（実例: 「git add時のdiff確認」ルールがあったのに巻き込み事故が2回発生）。方針を強制したいならhooksとの二重防御を検討する</li>
+</ul>
+<h3>hooks — 「機械的に止めたい」を置く</h3>
+<ul>
+<li>LLMが知識を読んでいなくても、該当操作の瞬間に<strong>機械が介入</strong>できる唯一の層</li>
+<li>block（阻止）/ ask（人間に確認を求める）/ warn（警告表示）の3段階から選べる</li>
+<li>向いているのは「頻度は低いが、一度起きると被害が大きい」型の事故</li>
+<li>実例: サブ<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>で<code>git init</code>すると上位リポジトリに静かに吸着する事故 → 吸着検知時に<code>ask</code>で確認を強制するhook+層1ルール1行の二重防御で対処</li>
+<li>注意: 全<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>を監視すると<strong>正常な作業まで誤爆</strong>する。発火条件は「危険が高まる特定の操作」に絞る</li>
+</ul>
+<hr />
+<h2>判断フロー（書き込む前に自問する順）</h2>
+<ol>
+<li><strong>LLMが忘れても機械的に防ぎたい事故か？</strong> → はい: hooks（頻度低×被害大なら特に）</li>
+<li><strong>毎回の行動方針として全セッションに読ませたいか？</strong> → はい: rules / CLAUDE.md（1〜2行に凝縮）</li>
+<li><strong>個人の失敗の直し方・環境固有の教訓か？</strong> → はい: memory</li>
+<li><strong>「なぜそう決めたか」の経緯や、生きているタスクか？</strong> → プロジェクト知識ベース側（→ ssot-guide参照）</li>
+</ol>
+<h2>読み出すとき（事故調査・疑問解消）</h2>
+<ul>
+<li>「なぜこうなった」を探す → 決定記録の検索（ssot-guide側）</li>
+<li>「この操作を間違えやすい」を探す → memory</li>
+<li>「機械的に何が防がれているか」を探す → hook一覧・<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span></li>
+</ul>
+<hr />
+<p>💡 <strong>一言でいうと</strong>: 「忘れないでほしいこと」はmemory、「毎回の方針」はrules、「忘れても機械が止める」はhooks。この3層は強度とコストが比例するので、事故の頻度と被害で選ぶ。</p>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="22-official-docs-index.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">📚 公式ドキュメント索引</span>
+            </a>
+            
+            
+            <a href="skill-catalog.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📄 Skill カタログ</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
