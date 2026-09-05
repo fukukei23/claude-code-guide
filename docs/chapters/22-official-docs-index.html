@@ -195,7 +195,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 364ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 365ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -208,9 +208,9 @@
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
 <p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>191ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>173ページ</strong>
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>174ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>364ページ</strong>・最終更新 2026-09-02。</p>
+合計 <strong>365ページ</strong>・最終更新 2026-09-05。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -1441,7 +1441,7 @@
 </tbody>
 </table></div>
 <h3>CLI・SDK・ライブラリ</h3>
-<p><strong>15ページ</strong></p>
+<p><strong>16ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1450,6 +1450,10 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/apply">リソースをコードとして管理する <code>ant apply</code></a></td>
+<td><code>ant apply</code> でエージェント等のリソースをファイルから宣言・管理しロックファイルで同期する手順</td>
+</tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/authentication">CLI認証オプション</a></td>
 <td>CLIの認証方法として、対話的ログイン・APIキー・名前付きプロファイル・Workload Identity Federationを解説</td>
