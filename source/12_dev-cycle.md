@@ -222,6 +222,12 @@ Issue close（GitHub API）
 次の Issue へ（Stop Hook 連鎖）
 ```
 
+**run-task.sh の機械ゲート（2026-08-31追加）**:
+
+- **検証範囲宣言の機械検査（spec v5 3-3）**: 検証プロセスの出力に「検証範囲宣言」（タイプ/正常系/異常系/各ケースの理由）が無ければ即NG（自己修復なし・単体テスト2件+構文確認）。LLMが「確認済」と自己申告するだけで検証をすり抜けるのを構造的に封じる
+- **計画専用制約**: Phase1計画claudeのprompt先頭に「計画のみで実装しない」制約を追加（計画が実装まで進んでしまいPhase3検証が空振りblockedになる構造バグの封止）
+- **review_policy.yaml 参照化（G3）**: レビュー観点のハードコードをYAML読込へ置換（Strict+fail-fast+version照合・pre-commitで構文/直書き/pytestを機械ゲート）
+
 ### 緊急停止
 
 ```bash

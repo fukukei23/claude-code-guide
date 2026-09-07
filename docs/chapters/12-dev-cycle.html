@@ -421,6 +421,12 @@ Issue close（GitHub API）
     ↓
 次の Issue へ（Stop Hook 連鎖）
 </code></pre>
+<p><strong>run-task.sh の機械ゲート（2026-08-31追加）</strong>:</p>
+<ul>
+<li><strong>検証範囲宣言の機械検査（spec v5 3-3）</strong>: 検証<span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>の出力に「検証範囲宣言」（タイプ/正常系/異常系/各ケースの理由）が無ければ即NG（自己修復なし・<span class="term" tabindex="0">単体テスト<span class="term-popup">関数など部品単位で動作を確認するテスト。pytestはPythonの定番テスト実行道具。変更のたびに自動で回して壊れていないことを担保する</span></span>2件+構文確認）。LLMが「確認済」と自己申告するだけで検証をすり抜けるのを構造的に封じる</li>
+<li><strong>計画専用制約</strong>: Phase1計画claudeのprompt先頭に「計画のみで実装しない」制約を追加（計画が実装まで進んでしまいPhase3検証が空振りblockedになる構造<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>の封止）</li>
+<li><strong>review_policy.yaml 参照化（G3）</strong>: レビュー観点のハードコードを<span class="term" tabindex="0">YAML<span class="term-popup">ヤムル。階層構造を字下げで表す、人間が読みやすい設定ファイルの書式。frontmatter（文書冒頭の---で囲んだ設定塊）で使われる</span></span>読込へ置換（Strict+fail-fast+version照合・pre-commitで構文/直書き/pytestを機械ゲート）</li>
+</ul>
 <h3>緊急停止</h3>
 <pre><code class="language-bash">python3 -c &quot;
 import json

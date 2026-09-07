@@ -329,7 +329,12 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td>Stop</td>
 <td>セッション終了時</td>
-<td>セッションログの保存・ハンドオフ生成・ガイド更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>の記録・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>同期・クリーンアップ</td>
+<td>セッションログの保存・ハンドオフ生成・ガイド更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>の記録・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>同期・クリーンアップ。加えて<strong>検証系機械ゲート群</strong>（検証範囲宣言<code>check-fail-coverage.sh</code>・平易解説<code>check-plain-explanation.sh</code>・ゼロ断定<code>check-zero-assert.sh</code>・MLR台帳<code>check-mlr-ledger-coverage.sh</code>・迎合防止<code>check-consult-balance.sh</code>等・2026-08-28〜09-06に段階導入）</td>
+</tr>
+<tr>
+<td>UserPromptSubmit</td>
+<td>ユーザー発言の送信時</td>
+<td>発言への追加コンテキスト注入（<code>consult-balance-inject.sh</code>・意思決定相談の発言へ【根拠】【反証1つ】【意見】のフォーマット指示を注入し迎合を構造防止・2026-09-06導入）</td>
 </tr>
 <tr>
 <td>Notification</td>
