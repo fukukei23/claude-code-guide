@@ -196,7 +196,7 @@
 
         <article class="chapter-body">
             <h1>15 コスト<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span>構成 — Claude Code を安く使う裏技</h1>
-<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: コスト対策は「節約」でなく「測定」から始める。</p></div>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: コスト対策は<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>計測を出発点に、<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>→モデル切替の順で構成する。</p></div>
 <div class="callout callout-warn"><p>⚠️ <strong>この章は <strong>個人の独自カスタマイズ</strong> です。</strong></p>
 <p>公式の Claude Code は Anthropic <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>（Sonnet/Opus/Haiku）をそのまま使います。
 以下は「Anthropic 課金を抑えて GLM/MiniMax にルーティングする」個人のコストカット手法の記録です。</p>

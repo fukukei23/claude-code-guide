@@ -196,8 +196,9 @@
 
         <article class="chapter-body">
             <h1>23 知識の保存先の使い分け — どこに何を書くか</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: memory/rules/<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>sの3層は強度とコストが比例する。事故の頻度と被害で選ぶ。</p></div>
 <p>Claude Codeを使い込むと「この知識、どこに保存すればいいのか？」という問題に必ずぶつかる。保存先を誤ると、知識は<strong>埋もれる</strong>か、あるいは<strong>毎回の読み込みコスト</strong>として払い続けることになる。本章では代表的な保存先を3層に整理し、判断フローを示す。</p>
-<div class="callout callout-info"><p>この章は Claude Code 機能ベースの3層（memory / rules / <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s）を扱う。プロジェクト知識ベース（SSOT）側の保存先（決定記録・タスク管理）は <a href="https://fukukei23.github.io/ssot-guide/">ssot-guide「知識の保存先の使い分け（SSOT層）」</a> に分離している。</p></div>
+<div class="callout callout-info"><p>この章は Claude Code 機能ベースの3層（memory / rules / hooks）を扱う。プロジェクト知識ベース（SSOT）側の保存先（決定記録・タスク管理）は <a href="https://fukukei23.github.io/ssot-guide/">ssot-guide「知識の保存先の使い分け（SSOT層）」</a> に分離している。</p></div>
 <hr />
 <h2>3層の全体像</h2>
 <div class="table-wrapper"><table>
@@ -274,6 +275,7 @@
 <hr />
 <p>💡 <strong>一言でいうと</strong>: 「忘れないでほしいこと」はmemory、「毎回の方針」はrules、「忘れても機械が止める」はhooks。この3層は強度とコストが比例するので、事故の頻度と被害で選ぶ。</p>
 <p>💡 <strong>一言</strong>: memoryは「守る気があれば守るLLM用の覚え書き」。機械で止めたい事故だけがhooks。</p>
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: 「忘れないで」はmemory・「毎回の方針」はrules・「忘れても機械が止める」はhooks。</p></div>
 
         </article>
 
