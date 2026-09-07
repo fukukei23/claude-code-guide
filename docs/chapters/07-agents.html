@@ -196,6 +196,7 @@
 
         <article class="chapter-body">
             <h1>07 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span> — <span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>と<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>実行</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: サブエージェントは「文脈を分けて調べさせる」装置。</p></div>
 <h2>エージェントとは</h2>
 <p>Claude Codeは <strong>Agent ツール</strong>を使って、サブエージェント（別のAIインスタンス）を起動できる。サブエージェントは独立したコンテキストで動作し、結果をメイン<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>に返す。</p>
 <pre><code>メインセッション（あなたとの会話）

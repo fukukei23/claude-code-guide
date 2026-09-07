@@ -196,6 +196,7 @@
 
         <article class="chapter-body">
             <h1>14 SSOTから探して — 個人ナレッジベースへの<span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>検索</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: SSOT検索は正典に辿り着くための地図。</p></div>
 <div class="callout callout-info"><p>Claude Codeから knowledge-base（個人ナレッジベース）を横断検索する<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>。rip<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span> + sentence-transformers のハイブリッドRAG構成。</p></div>
 <hr />
 <h2>&lt;a id=&quot;overview&quot;&gt;&lt;/a&gt;概要：これは何か</h2>
@@ -399,6 +400,7 @@ results = rerank(query, hits, top_n=5)
 </tr>
 </tbody>
 </table></div>
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: 検索は出発点。最後は実ファイルを直接確認する。</p></div>
 
         </article>
 

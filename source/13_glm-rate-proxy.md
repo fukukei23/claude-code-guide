@@ -1,5 +1,8 @@
 # 13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用
 
+> 💡 **章の核**: プロキシはLLMコストの調整弁。止まったらproxy-doctorで診断。
+
+
 > **⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。**
 > Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は [04_MCPサーバー](04-mcp.html#glm) のglm/minimax MCPを参照してください。
 
@@ -462,3 +465,5 @@ ZAI使用率     : 0.0%
 - [Artificial Analysis - GLM-5.2ベンチマーク](https://artificialanalysis.ai/models/glm-5-2)（※GLM-5.3版ページは2026-08-17時点で未掲載・404確認済み。5.2が直近の計測対象）
 - [04 MCPサーバー](04_MCPサーバー.md)
 - [11 現場の知見](11_現場の知見.md)
+
+> 💡 **章の落とし所**: 再起動は全セッション数秒停止とセット——必ず事前警告を。

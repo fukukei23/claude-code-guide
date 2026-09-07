@@ -196,6 +196,7 @@
 
         <article class="chapter-body">
             <h1>03 <span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>システム — Skills の仕組み</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: スキルは「手順の再利用<span class="term" tabindex="0">パッケージ<span class="term-popup">配布・インストール可能な形にまとめたソフトウェアの単位。Pythonではpipで入れる部品のこと</span></span>」— 発動条件と手順をSKILL.mdに書く。</p></div>
 <h2>スキルとは</h2>
 <p>スキルは <strong><span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span><span class="term" tabindex="0">テンプレート<span class="term-popup">雛形。穴埋め部分だけ差し替えて、同じ形の文書やコードを量産する元になるもの</span></span>の<span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span></strong>。<code>/コマンド名</code> で呼び出すと、対応するプロンプトが読み込まれ、Claude Codeの動作をガイドする。</p>
 <pre><code>ユーザー: /brainstorming
@@ -934,6 +935,7 @@ Claude Code がその指示に従って動作
 <li><a href="#">2026-07-05_セットアップ監査-第2回read-only診断</a> — 「CLAUDE.md本文の要約と二重記述」原則の出典</li>
 <li><a href="#">2026-07-06_ssot-sync-auto-Cronプロンプト-7ステップ-二重記述解消</a> — 本原則の適用事例（sentaku L2 で案B採用・65点）</li>
 </ul>
+<div class="callout callout-warn"><p>💡 <strong>章の落とし所</strong>: 同じ手順を3度書いたらスキル化を検討。作りすぎ注意。</p></div>
 
         </article>
 

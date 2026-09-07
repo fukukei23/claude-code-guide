@@ -1,5 +1,8 @@
 # 14 SSOTから探して — 個人ナレッジベースへのRAG検索
 
+> 💡 **章の核**: SSOT検索は正典に辿り着くための地図。
+
+
 > Claude Codeから obsidian-ssot（個人ナレッジベース）を横断検索するスキル。ripgrep + sentence-transformers のハイブリッドRAG構成。
 
 ---
@@ -212,3 +215,5 @@ sudo apt-get install -y ripgrep
 | `~/.claude/venv/ssot-search/` | Python仮想環境 |
 | `~/projects/claude-config/scripts/ssot/` | スクリプトのソース（シンボリックリンク元）|
 | `~/projects/claude-config/skills/ssot-search/` | スキルのソース |
+
+> 💡 **章の落とし所**: 検索は出発点。最後は実ファイルを直接確認する。

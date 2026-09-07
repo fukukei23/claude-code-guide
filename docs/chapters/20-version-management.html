@@ -199,14 +199,14 @@
 <h2>icon: 🔧
 slug: 20-version-management</h2>
 <h1>20 <span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>管理 — Claude Codeの更新・ダウングレード・<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>環境の注意</h1>
-<aside class="tldr">
-<p><strong>3行で分かる</strong></p>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: Claude Code自体も更新が速い。変化への追従が運用の一部。</p></div>
+<div class="callout callout-warn"><p><strong>3行で分かる</strong></p>
 <ol>
 <li>Claude Codeのバージョン確認・更新・ダウングレード（旧版に戻す）手順を方式別に整理</li>
 <li>npm版は確実に旧版へ戻せる・ネイティブ版（Bun）は戻せるがやや弱い・Windows Desktopは困難</li>
 <li>GLMプロキシ環境では「設定は勝手に書き換わらない」が「新機能×非公式プロキシ互換性」だけ注意</li>
 </ol>
-</aside>
+</blockquote>
 <hr />
 <h2 id="why">なぜこのページがあるか</h2>
 <p>Claude Codeは頻繁に細かいバージョンアップを繰り返す（2.1.19x〜2.1.20x帯）。更新で新機能が入る一方で、<strong>まれに不具合や互換性問題</strong>が起きる。本ページでは「<strong>更新の方法</strong>」「<strong>旧版に戻す方法</strong>」「<strong>GLMプロキシを使っている時の注意</strong>」を1箇所にまとめる。</p>
@@ -226,7 +226,8 @@ ls ~/.local/share/claude/versions/        # ネイティブ版の場合（バイ
 # または明示的に最新へ
 npm install -g @anthropic-ai/claude-code@latest
 </code></pre>
-<div class="callout callout-warn"><p>⚠️ <code>npm update -g</code> は semver範囲を尊重してしまうため<strong>実更新しない</strong>ことがある。<code>@latest</code> 指定か <code>claude update</code> を使うこと（<a href="https://code.claude.com/docs/en/setup">公式setup docs</a>）。</p></div>
+<blockquote>
+<p>⚠️ <code>npm update -g</code> は semver範囲を尊重してしまうため<strong>実更新しない</strong>ことがある。<code>@latest</code> 指定か <code>claude update</code> を使うこと（<a href="https://code.claude.com/docs/en/setup">公式setup docs</a>）。</p></div>
 <h3>ネイティブ版（Bun・auto-updater）</h3>
 <pre><code class="language-bash">claude install latest    # または stable / 特定バージョン
 </code></pre>

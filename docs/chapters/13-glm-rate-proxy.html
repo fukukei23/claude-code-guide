@@ -196,8 +196,9 @@
 
         <article class="chapter-body">
             <h1>13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: <span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>はLLMコストの調整弁。止まったらproxy-doctorで診断。</p></div>
 <div class="callout callout-warn"><p><strong>⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。</strong>
-Windows Desktopアプリ版はエンドポイントを変更できないため、この<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>は使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバー</a> のglm/minimax MCPを参照してください。</p></div>
+Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバー</a> のglm/minimax MCPを参照してください。</p></div>
 <p>Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.3）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
 <hr />
 <h2>&lt;a id=&quot;overview&quot;&gt;&lt;/a&gt;概要：なぜプロキシが必要か</h2>
@@ -643,6 +644,7 @@ ZAI使用率     : 0.0%
 <li><a href="04-mcp.html">04 MCPサーバー</a></li>
 <li><a href="11-tips.html">11 現場の知見</a></li>
 </ul>
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: 再起動は全セッション数秒停止とセット——必ず事前警告を。</p></div>
 
         </article>
 

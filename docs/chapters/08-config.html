@@ -196,6 +196,7 @@
 
         <article class="chapter-body">
             <h1>08 <span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span> — 全設定の解説</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: settings.jsonは権限・<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s・<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>の正典。編集は手順に従い値を直接書かない。</p></div>
 <div class="mermaid-wrapper"><div class="mermaid">
 graph BT
     L1["Layer 1: グローバル<br/>~/.claude/CLAUDE.md<br/>全プロジェクト共通"]
@@ -319,7 +320,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td>SessionStart</td>
 <td>セッション開始時</td>
-<td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示・設定ファイル同期・INDEX自動更新・SKILL_CATALOG自動生成（generate-skill-catalog.py）・<strong>ssot-check日次トリガー</strong>（check-ssot-check-staleness.sh・前回実行が前々日以前なら当日実行を指示・2026-08-14）・<strong>バナー集約</strong>（startup-banner.sh・各<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>のステータスを <code>/tmp/claude-startup/</code> 経由で集約し1枚のバナーに統一・層1読込検証つき・2026-08-25）</td>
+<td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示・設定ファイル同期・INDEX自動更新・SKILL_CATALOG自動生成（generate-skill-catalog.py）・<strong>ssot-check日次トリガー</strong>（check-ssot-check-staleness.sh・前回実行が前々日以前なら当日実行を指示・2026-08-14）・<strong>バナー集約</strong>（startup-banner.sh・各hookのステータスを <code>/tmp/claude-startup/</code> 経由で集約し1枚のバナーに統一・層1読込検証つき・2026-08-25）</td>
 </tr>
 <tr>
 <td>SessionStart hook圧縮</td>
@@ -446,7 +447,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td><code>MCP_TOOL_TIMEOUT</code></td>
 <td><code>300000</code></td>
-<td><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ツール実行タイムアウト（既定60秒→5分に延長）</td>
+<td>MCPツール実行タイムアウト（既定60秒→5分に延長）</td>
 </tr>
 <tr>
 <td><code>DISABLE_AUTO_COMPACT</code></td>
