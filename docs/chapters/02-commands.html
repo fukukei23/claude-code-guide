@@ -196,6 +196,7 @@
 
         <article class="chapter-body">
             <h1>02 <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>一覧 — ビルトインコマンド全解説</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: Claude Codeは対話が9割。打つべきコマンドは10個もない——忘れたらこの章。</p></div>
 <div class="callout callout-info"><p>スラッシュ（<code>/</code>）で始まるコマンド。Claude Code本体に組み込まれている。
 <span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>由来の<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>（<code>/brainstorming</code>等）は <a href="03-skills.html">03_スキルシステム</a> を参照。</p>
 <p><strong>クイックリファレンス版</strong>: <a href="https://fukukei23.github.io/guides/claude-code-commands/">ガイドサイト - コマンド＆スキル集</a>
@@ -704,6 +705,39 @@
 <li><strong>覚え方</strong>: 「会話を整える」「状態を見る」「設定する」の3グループくらい。必要になったらこの章で探せばOK</li>
 </ul>
 <hr />
+<h2>日常の実行フロー（打つ順）</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>順</th>
+<th>コマンド/操作</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>claude</code></td>
+<td>セッション開始</td>
+</tr>
+<tr>
+<td>2</td>
+<td>作業を依頼（自然文）</td>
+<td>実装・調査・修正</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>/clear</code> または <code>/compact</code></td>
+<td>コンテキストのリセット/圧縮</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>claude -p &quot;...&quot; --output-format json</code></td>
+<td><span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>・<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>からの無人実行</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: コマンドは増やさなくてよい。対話で解決しない時だけ新コマンドを覚える。</p></div>
 
         </article>
 

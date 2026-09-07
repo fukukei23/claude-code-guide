@@ -194,9 +194,10 @@
 
         <article class="chapter-body">
             <h1>00 早見表 — Claude Code 全機能チートシート</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: このサイトで迷ったら、まずこの章に戻る。「やりたいこと→<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>/設定」の対応表が本体。</p></div>
 <div class="callout callout-info"><p>各項目の「→」リンク先で詳解を読めます。</p></div>
 <hr />
-<h2>1. ビルトイン<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></h2>
+<h2>1. ビルトインコマンド</h2>
 <h3><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>管理</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -810,6 +811,39 @@
 <li><strong>「MCP」「スキル」「フック」は全部「追加機能」の仲間</strong>: 詳しい違いは各章で。ざっくり「Claudeに新しい能力を追加する仕組み」がいくつかある、と思ってください。</li>
 <li><strong>お金がかかる</strong>: Claudeは使った分だけ課金されます。長く使うほど、1回あたりのコストがじわじわ上がります。節約のコツは <a href="11-tips.html">11章</a> と <a href="15-cost-optimization.html">15章</a> にあります。</li>
 </ul>
+<h2>紛れたら戻る意思決定フロー</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>状況</th>
+<th>まず見る場所</th>
+<th>深掘り先</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>コマンドを忘れた</td>
+<td>02_コマンド一覧</td>
+<td><code>claude --help</code></td>
+</tr>
+<tr>
+<td>設定の意味が分からない</td>
+<td>08_設定ファイル</td>
+<td><code>claude config list</code></td>
+</tr>
+<tr>
+<td>hookが動かない</td>
+<td>05_フック</td>
+<td>dispatch.log</td>
+</tr>
+<tr>
+<td>用語が不明</td>
+<td>10_用語集</td>
+<td>公式docs（22章）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: この章の表は「検索の手がかり」であって完全なマニュアルではない。詳細は常に各章か公式docsへ。</p></div>
 
         </article>
 

@@ -196,6 +196,7 @@
 
         <article class="chapter-body">
             <h1>05 フック — イベント駆動の自動実行</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>は「LLMの約束」を機械が強制する唯一の層。事故を止めたいならここに<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>する。</p></div>
 <h2>フックとは</h2>
 <p>フックは <strong>特定のイベント発生時に自動実行される<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span><span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span></strong>。Claude Codeの動作を拡張・制御する。</p>
 <pre><code>ユーザーがツールを実行
@@ -236,7 +237,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tbody>
 </table></div>
 <h4>バナー集約パターン（startup-banner.sh）</h4>
-<p>複数のSessionStart <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>が各自 <code>stdout</code> を出すと出力が散らかるため、<strong>各hookは <code>/tmp/claude-startup/&lt;名前&gt;.status</code> にステータスを書くだけ</strong>にし、最後の1本 <code>startup-banner.sh</code> が集約して1枚のバナーにする設計。</p>
+<p>複数のSessionStart hookが各自 <code>stdout</code> を出すと出力が散らかるため、<strong>各hookは <code>/tmp/claude-startup/&lt;名前&gt;.status</code> にステータスを書くだけ</strong>にし、最後の1本 <code>startup-banner.sh</code> が集約して1枚のバナーにする設計。</p>
 <ul>
 <li><strong>集計</strong>: ステータスファイルの行頭マーク <code>✅/⚠️/❌</code> を数えて「フック: N/M 正常 | 要確認: &lt;名前&gt;」形式でサマリー</li>
 <li><strong>表示内容</strong>: CC<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>（hook検知時は「✅最新版！」フラグ）・前回handoff・本日セッション数・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>トリガーマップ（各SKILL.mdの「トリガーワード」欄を自動抽出）</li>
@@ -649,7 +650,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </table></div>
 <div class="callout callout-info"><p>SessionStartは19コマンド構成。初期化・セキュリティ・SSOT同期・設定チェック・日次自動発動の5カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
 <h3>state日付管理による日次自動発動パターン（再利用可能）</h3>
-<p><code>check-ssot-sync-staleness.sh</code> が<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
+<p><code>check-ssot-sync-staleness.sh</code> が実装する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
 <pre><code class="language-bash">STATE=&quot;$HOME/.claude/state/&lt;task&gt;-last-run&quot;
 TODAY=$(date +%Y-%m-%d)
 LAST=$(cat &quot;$STATE&quot; 2&gt;/dev/null)
@@ -804,6 +805,44 @@ print('停止しました')
 <li><strong>地味だけど強力</strong>: 手動で毎回やる作業をフックに任せると、ミスが減って楽になる</li>
 </ul>
 <hr />
+<h2>hook実行タイミング早見</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>イベント</th>
+<th>タイミング</th>
+<th>代表例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UserPromptSubmit</td>
+<td>発言の送信直後</td>
+<td>相談フォーマットの注入</td>
+</tr>
+<tr>
+<td>PreToolUse</td>
+<td>ツール実行の直前</td>
+<td>破壊的コマンドのブロック</td>
+</tr>
+<tr>
+<td>PostToolUse</td>
+<td>ツール実行の直後</td>
+<td>ログ記録・設定同期</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td>応答完了時</td>
+<td>検証宣言チェック・handoff生成</td>
+</tr>
+<tr>
+<td>SessionStart</td>
+<td>開始時</td>
+<td>handoff読込・整合チェック</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: hookを増やすほど起動が遅くなる。目的が「止める」か「記録する」かを決めてから追加する。</p></div>
 
         </article>
 
