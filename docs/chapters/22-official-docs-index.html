@@ -195,7 +195,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 366ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 367ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -207,10 +207,10 @@
 <li><strong>層の対応は第21章</strong> — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>〜グラフの5層のどれに効くページかは
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
-<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>191ページ</strong>（言語別索引11件は対象外）+
+<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>192ページ</strong>（言語別索引11件は対象外）+
 <code>platform.claude.com</code> のLLM工学関連7セクション <strong>175ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>366ページ</strong>・最終更新 2026-09-11。</p>
+合計 <strong>367ページ</strong>・最終更新 2026-09-12。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -224,7 +224,7 @@
 <hr />
 <h2>Claude Code 公式（code.claude.com・全ページ）</h2>
 <h3>基本・概要・始め方</h3>
-<p><strong>138ページ</strong></p>
+<p><strong>139ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -608,6 +608,10 @@
 <tr>
 <td><a href="https://code.claude.com/docs/en/plugin-dependencies">プラグイン<span class="term" tabindex="0">依存関係<span class="term-popup">ある部品が別の部品に依存して動く関係。片方を変えるともう片方にも影響する繋がり</span></span>のバージョン制約</a></td>
 <td>プラグイン依存にバージョン制約を宣言し、自動更新による予期しない破壊を防ぐ方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugin-evals">プラグインをevalsでテストする</a></td>
+<td><code>claude plugin eval</code>でプラグインのテストケースを実行・採点し、ベースライン比較やCIゲートを行う方法を説明する。</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/plugin-hints">CLIからプラグインを推奨する</a></td>
