@@ -230,6 +230,7 @@ Issue close（GitHub API）
 - **検証範囲宣言の機械検査（spec v5 3-3）**: 検証プロセスの出力に「検証範囲宣言」（タイプ/正常系/異常系/各ケースの理由）が無ければ即NG（自己修復なし・単体テスト2件+構文確認）。LLMが「確認済」と自己申告するだけで検証をすり抜けるのを構造的に封じる
 - **計画専用制約**: Phase1計画claudeのprompt先頭に「計画のみで実装しない」制約を追加（計画が実装まで進んでしまいPhase3検証が空振りblockedになる構造バグの封止）
 - **review_policy.yaml 参照化（G3）**: レビュー観点のハードコードをYAML読込へ置換（Strict+fail-fast+version照合・pre-commitで構文/直書き/pytestを機械ゲート）
+- **verify プロンプトと機械検査の整合（2026-09-09追加）**: verify AIへのプロンプトが「検証範囲宣言を書かせる」ことを明示しないままだと、機械検査（`grep -qE '(検証範囲宣言|...)'`）が恒常的にNG化する構造不一致が発生（2026-09-08 ssot-check blocked・09-09 githooks blocked の実事故）。現在はプロンプト側に出力末尾の「検証範囲宣言:」セクション必須を明記し、stderr分離（`verify-stderr.log`）と上書き警告（verify-raw）も併せて強化。整合は単体テスト `test_run_task_verify_prompt.py`（4テスト）がスクリプト本体を検査して担保
 
 ### 緊急停止
 
