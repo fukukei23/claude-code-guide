@@ -628,6 +628,7 @@ Claude Code がその指示に従って動作
 <li><strong>フェーズ2確認ゲート省略特例</strong>: 記録先が低リスク場所（LLMサボりバイアス実例集）なら確認を省略し即記録（記録ハードルを下げ実例蓄積を促進・2026-08-12）</li>
 <li><strong>INDEX自動整備</strong>: <code>check-decision-indexes.sh</code> が未INDEXエントリに【要更新】マーカーを自動付与（2026-08-11）</li>
 <li><strong>フェーズ0.5（関連ファイル自動検出）</strong>: 2つのマッピング設定（<code>タグマッピング.md</code>=プロジェクト別docs + <code>ハブマッピング.md</code>=00_SYSTEMハブ・2026-07-07新設）に基づき更新対象を自動検出。プロジェクトdocs→フェーズ3-6・00_SYSTEMハブ（セキュリティ設定ハブ/MCPガイド等）→フェーズ3-8（見逃し防止・LLM裁量抜きの機械表照合）</li>
+<li><strong>フェーズ0.5のmarker発行SID渡し（2026-09-14・E案適用漏れ是正）</strong>: marker発行<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span> <code>ssot-record-detect-targets.py</code> のセッション分離キー（SID）受け渡しを <strong><code>--sid &lt;SID&gt;</code> argv単一経路化</strong>（env読み取りは廃止）。従来のenv依存経路はWindows Desktop版でSIDが不伝播するE案適用漏れ箇所で、b70d退避（書込全面ブロック退避）の真因。CCはenvまたはtranscript最新jsonlからSIDを取得して渡す。単体7ケース+stdin_sid E2E 20/20+ゲート自己テスト緑</li>
 <li><strong>対応ハブ（12種・2026-07-07）</strong>: セキュリティ設定ハブ/自動化/MCP/リポジトリ索引/リンク運用方針/全体マップ_MOC/CCガイド + <span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>(glm-rate-proxy運用ハブ)/通知(完了通知設定ハブ)/シークレット台帳/スキル記録ガイドライン/3層メモリ構造・<strong>00_SYSTEM直下=正典・CCガイド=派生</strong>（SSOT思想・5種追加と主従訂正はユーザー指摘で実施）</li>
 <li><strong>環境別判定</strong>: WSL CLI版は自分自身で直接判定（外部LLM呼び出し不要・不可）、Windows Desktop版はMCP経由で外部LLM呼び出し可</li>
 <li><strong>CCガイド自動同期</strong>: 記録内容がClaude Code機能（スキル/MCP/フック/settings）に関連する場合、対応するガイドページ（03/04/05/08等）への追記を自動判定・実行。SSOT内CCガイドマスターから claude-code-guide（派生物）へ同期</li>
@@ -693,7 +694,7 @@ Claude Code がその指示に従って動作
 </ul>
 <hr />
 <h3 id="update-guide"><code>update-guide</code>（カスタムスキル）</h3>
-<p><strong>claude-code-guideの更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>を処理</strong>。変更された<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>・設定に合わせてガイドのHTMLを最新化する。</p>
+<p><strong>claude-code-guideの更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>を処理</strong>。変更されたスクリプト・設定に合わせてガイドのHTMLを最新化する。</p>
 <ul>
 <li><strong>呼び出し</strong>: <code>/update-guide</code></li>
 <li><strong><span class="term" tabindex="0">オプション<span class="term-popup">コマンドの動作を変えるスイッチ。-x や --verbose のような指定。引数の一種</span></span></strong>:
