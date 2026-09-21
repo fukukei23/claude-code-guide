@@ -881,6 +881,7 @@ Claude Code がその指示に従って動作
 <ul>
 <li><strong>呼び出し</strong>: <code>/ai-eval &lt;owner/repo&gt;</code>、「これ評価して」「AIリポ評価して」</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ai-eval/</code>・2026-09-09新設）</li>
+<li><strong>書き戻しは専用スクリプト</strong>: verdict反映は <code>ai-eval-writeback.py</code>（Phase 4専用）が担い、LLMの直接編集を禁止。<strong>コマンド生出力の貼り付けを必須</strong>とし、「書き戻したつもり」の省略事故を防止（2026-09-14・書き戻し省略事故対策）</li>
 </ul>
 <hr />
 <h2>スキルとコマンドの違い</h2>

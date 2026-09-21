@@ -207,7 +207,8 @@ CronCreateをセッション毎に手動登録すると、定義（正典）と�
 - **定義源**: `~/bin/renew-crons.sh` の `# @cron` タグ書式 → **実体**: `~/.claude/scheduled_tasks.json`
 - **version gate**: 適用前にClaude Code CLIバージョンを照合し、Phase 0観測時と異なれば **apply拒否**（golden master再観測を要求・バージョン違いで壊れたJSONを量産するのを防止）
 - **冪等**: 何回実行しても同じ状態に収束（重複登録しない・flockで多重実行も保護）
-- **テスト**: `scripts/auto-dev/tests/test_apply_crons.py`（同期ロジックのunit test）
+- **健康診断（check）**: 定義と実体の差分を「欠落(create) / 不要(ghost)」で報告。ghost集計は `_ghost_tasks` 関数に単一情報源化し、日付pinned one-shot（特定日発火の使い切り予約）は正統タスクとしてghost誤表示から除外（2026-09-14実測：正統one-shot12件がghost誤表示される事故の修正）
+- **テスト**: `scripts/auto-dev/tests/test_apply_crons.py`（同期ロジックのunit test・ghost境界テスト込み21 passed）
 
 ### 1 Issue あたりの自動処理
 

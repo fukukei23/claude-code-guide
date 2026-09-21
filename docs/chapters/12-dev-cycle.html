@@ -407,7 +407,8 @@ bash ~/.claude/scripts/auto-dev/start.sh --auto my-repo
 <li><strong>定義源</strong>: <code>~/bin/renew-crons.sh</code> の <code># @cron</code> タグ書式 → <strong>実体</strong>: <code>~/.claude/scheduled_tasks.json</code></li>
 <li><strong>version gate</strong>: 適用前にClaude Code CLI<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>を照合し、Phase 0観測時と異なれば <strong>apply拒否</strong>（golden master再観測を要求・バージョン違いで壊れた<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>を量産するのを防止）</li>
 <li><strong>冪等</strong>: 何回実行しても同じ状態に収束（重複登録しない・flockで多重実行も保護）</li>
-<li><strong>テスト</strong>: <code>scripts/auto-dev/tests/test_apply_crons.py</code>（同期ロジックのunit test）</li>
+<li><strong>健康診断（check）</strong>: 定義と実体の<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を「欠落(create) / 不要(ghost)」で報告。ghost集計は <code>_ghost_tasks</code> 関数に単一情報源化し、日付pinned one-shot（特定日発火の使い切り予約）は正統タスクとしてghost誤表示から除外（2026-09-14実測：正統one-shot12件がghost誤表示される事故の修正）</li>
+<li><strong>テスト</strong>: <code>scripts/auto-dev/tests/test_apply_crons.py</code>（同期ロジックのunit test・ghost境界テスト込み21 passed）</li>
 </ul>
 <h3>1 Issue あたりの自動処理</h3>
 <pre><code>実装（LLM でコード生成）
