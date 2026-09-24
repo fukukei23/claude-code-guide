@@ -195,7 +195,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 378ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 382ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -208,9 +208,9 @@
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
 <p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>197ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>181ページ</strong>
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>185ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>378ページ</strong>・最終更新 2026-09-22。</p>
+合計 <strong>382ページ</strong>・最終更新 2026-09-24。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -1049,7 +1049,7 @@
 </table></div>
 <h2>Platform 公式（platform.claude.com・LLM工学関連）</h2>
 <h3>Build with Claude（プロンプト・コンテキスト・effort等）</h3>
-<p><strong>51ページ</strong></p>
+<p><strong>52ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1197,6 +1197,10 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8">Claude Opus 4.8のプロンプティングガイド</a></td>
 <td>Claude Opus 4.8固有の振る舞いとプロンプトパターン（冗長性、努力レベル、ツール使用、サブエージェント等）を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5">Claude Opus 5.5のプロンプトエンジニアリング</a></td>
+<td>Opus 5.5固有のプロンプトパターン集。effort調整、思考制御、進捗更新、マルチエージェント連携、視覚入力など10のシナリオ別に解説する</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5">Claude Opus 5 のプロンプティング</a></td>
@@ -1685,7 +1689,7 @@
 </tbody>
 </table></div>
 <h3>Models（モデル別の挙動とプロンプティング）</h3>
-<p><strong>23ページ</strong></p>
+<p><strong>26ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1749,6 +1753,18 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/models/opus-4-8/overview">Claude Opus 4.8</a></td>
 <td>レガシーモデルClaude Opus 4.8の仕様・価格・他モデルとの比較情報をまとめたリファレンスページ</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-5-5/migration-guide">Claude Opus 5.5への移行ガイド</a></td>
+<td>旧Opus/Sonnet 5からOpus 5.5への移行時のリクエスト設定変更、thinking処理、各モデル別チェックリストを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">Claude Opus 5.5</a></td>
+<td>2026年9月22日リリースの長時間エージェント型コーディング・知識作業向けモデル（1Mコンテキスト・$4/$20）</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5">Claude Opus 5.5の新機能</a></td>
+<td>長時間のエージェント型コーディング・知識作業向けモデルの破壊的変更と思考機能の仕様変更を紹介</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/models/opus-5/migration-guide">Claude Opus 5への移行ガイド</a></td>
