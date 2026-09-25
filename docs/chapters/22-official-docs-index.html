@@ -195,7 +195,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 382ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 402ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -207,10 +207,10 @@
 <li><strong>層の対応は第21章</strong> — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>〜グラフの5層のどれに効くページかは
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
-<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>197ページ</strong>（言語別索引11件は対象外）+
+<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>217ページ</strong>（言語別索引11件は対象外）+
 <code>platform.claude.com</code> のLLM工学関連7セクション <strong>185ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>382ページ</strong>・最終更新 2026-09-24。</p>
+合計 <strong>402ページ</strong>・最終更新 2026-09-25。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -932,6 +932,98 @@
 <tr>
 <td><a href="https://code.claude.com/docs/en/agent-sdk/user-input">承認とユーザー入力の処理</a></td>
 <td>canUseToolコールバックでツールの承認要求とAskUserQuestionの質問を管理しユーザー応答を返す方法</td>
+</tr>
+</tbody>
+</table></div>
+<h3>plugins</h3>
+<p><strong>20ページ</strong></p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>1行要約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/anthropic-marketplaces">Anthropicのマーケットプレイス</a></td>
+<td>Anthropic公式・コミュニティ・デモの3つのプラグインマーケットプレイスのリポジトリとインストール方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/cli-hints">CLIからプラグインを推薦する</a></td>
+<td>Bash出力に<code>&lt;claude-code-hint /&gt;</code>タグをstderr出力し、ユーザーにプラグイン導入を提案する方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/cli-reference">プラグインコマンドリファレンス</a></td>
+<td>claude pluginシェルコマンド、セッション内/plugin・/reload-pluginsの全フラグを詳述した完全リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/code-intelligence">コード知能プラグイン</a></td>
+<td>LSP経由でClaude Codeに言語サーバーを接続し、型エラー検出やシンボル移動を可能にする</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/components">プラグインにコンポーネントを追加する</a></td>
+<td>Claude Codeプラグインにスキル、フック、MCPサーバー等のコンポーネントを追加する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/create-marketplace">マーケットプレイスの作成</a></td>
+<td>marketplace.jsonを持つディレクトリを作り、プラグインを登録してローカルテストする手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/create">Claude Codeプラグインの作成</a></td>
+<td>空のディレクトリからClaude Codeプラグインを作成し、マーケットプレースなしでテストする手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/dependencies">プラグインの依存関係</a></td>
+<td>plugin.jsonで依存プラグインとバージョン範囲を宣言し、インストール・解決・剪定方法を制御する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/host-marketplace">マーケットプレイスのホストと管理</a></td>
+<td>マーケットプレイスをホスティングし、ユーザーのアクセス権付与やアップデート配布を管理する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/install">プラグインをインストールして管理する</a></td>
+<td>マーケットプレースからプラグインをインストール・更新・削除し、インストールスコープを選択する方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/loading">プラグイン読み込みリファレンス</a></td>
+<td>Claude Codeがプラグインを読み込む場所と判断する設定ファイル、更新時の注意点を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/manifest-reference">プラグインマニフェストリファレンス</a></td>
+<td>plugin.jsonの全フィールド・型・デフォルト・パスルール・userConfigと環境変数スキーマを網羅した完全リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/marketplace-reference">マーケットプレイスリファレンス</a></td>
+<td><code>marketplace.json</code>のフィールド、プラグインエントリ、プラグインソースとマーケットプレイスソースの完全リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/measure">プラグインのコストと利用状況を計測する</a></td>
+<td>プラグインのトークンコスト計測・利用率確認・組織全体のテレメトリイベント選択方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/org">組織向けClaude Codeプラグイン管理</a></td>
+<td>マネージド設定で組織全体にプラグインを必須インストール・制限・監査する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/overview">プラグイン概要</a></td>
+<td>スキル・エージェント・フック・MCPサーバー等をまとめて配布するディレクトリ構造の解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/publish">プラグインを公開・配布する</a></td>
+<td>マーケットプレイス経由でClaude Codeプラグインを公開・配布する手順と配布方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/relevance">組織のプラグインを推奨する</a></td>
+<td>セッションシグナルに基づいてClaude Codeがプラグインを提案するrelevanceブロックの設定方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/security">プラグインのセキュリティと信頼性</a></td>
+<td>インストール前にプラグインが実行可能な内容やマーケットプレイスの信頼性を確認・レビューする方法を説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/troubleshooting">プラグインのトラブルシューティング</a></td>
+<td>プラグインのインストール・実行・エラー解決方法を段階別に解説した公式リファレンス</td>
 </tr>
 </tbody>
 </table></div>
