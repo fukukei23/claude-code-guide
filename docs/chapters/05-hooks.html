@@ -633,6 +633,11 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
+<td><code>check-model-stay.sh</code></td>
+<td>glm-5.3（高消費モデル）への手動切替の戻し忘れを検知して警告。直近2時間以内に更新されたtranscript（subagents配下は意図的呼出のため除外・2026-09-21修正）を合算判定し、30分以上継続かつ5ターン超で警告ログ1回（30分デバウンス）。exit 2で差戻ししCCがふくけいへ伝える（spec: <code>docs/superpowers/specs/2026-09-01_glm5.3戻し忘れ検知-design.md</code> §4.3-4.5）</td>
+</tr>
+<tr>
+<td></td>
 <td><code>next-issue.py</code></td>
 <td>自律開発<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>の継続判定</td>
 </tr>
