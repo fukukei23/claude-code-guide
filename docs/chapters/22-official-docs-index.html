@@ -195,7 +195,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 406ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 416ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -207,10 +207,10 @@
 <li><strong>層の対応は第21章</strong> — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>〜グラフの5層のどれに効くページかは
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
-<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>217ページ</strong>（言語別索引11件は対象外）+
+<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>227ページ</strong>（言語別索引11件は対象外）+
 <code>platform.claude.com</code> のLLM工学関連7セクション <strong>189ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>406ページ</strong>・最終更新 2026-09-29。</p>
+合計 <strong>416ページ</strong>・最終更新 2026-10-02。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -936,7 +936,7 @@
 </tbody>
 </table></div>
 <h3>plugins</h3>
-<p><strong>20ページ</strong></p>
+<p><strong>30ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1000,6 +1000,46 @@
 <tr>
 <td><a href="https://code.claude.com/docs/en/plugins/measure">プラグインのコストと利用状況を計測する</a></td>
 <td>プラグインのトークンコスト計測・利用率確認・組織全体のテレメトリイベント選択方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/admin">組織向けMod管理ガイド</a></td>
+<td>マネージド設定でユーザー導入Modを制御し、組織用Modの読み込み可否や順序を強制する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/api">mods API を使用する</a></td>
+<td>modsから呼び出すAPIでコマンド・ツール追加、モデル呼出、タイマー実行、他セッションへのメッセージ送受信、ファイル・ネットワークアクセスを行う方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/create">Claude Code modの作成</a></td>
+<td>Claudeにmodを書かせるか自分で作成する方法を解説。ホットリロードで即座に変更を試せる</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/events">イベントへの反応</a></td>
+<td>Claude Code のイベントを観察・書き換え・応答するフックの3つの動作を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/gallery">Modのインターフェース要素ギャラリー</a></td>
+<td>テキスト・ボックス・ボタン・フィールドなどModが描画できるUI要素のコード例と表示例を紹介</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/interface">インターフェースに描画する</a></td>
+<td>Claude Code mod でペイン・タブ・ボタン・入力欄を描画し、ui.render イベントで再描画やセッション間の状態管理を行う方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/overview">Modの概要</a></td>
+<td>Claude Codeのインターフェースやツール呼び出しを拡張するプラグインで、内部で動作しUI描画やフック処理が可能</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/reference">Modsリファレンス</a></td>
+<td>Claude Codeモッズのフック<span class="term" tabindex="0">モジュール<span class="term-popup">コードを機能ごとに分けたファイル単位。他のファイルから読み込んで使える</span></span>構成、イベント、APIメソッド、レンダリングサイト等の完全リファレンス</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/test">モジュールのテスト</a></td>
+<td>Claude Codeモジュールの自動テストを作成し、セッション不要でフック動作を検証する方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/plugins/mods/troubleshoot">トラブルシューティング: mod</a></td>
+<td>modが動作しない原因の特定、フック拒否メッセージ、デバッグログの確認方法を解説</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/plugins/org">組織向けClaude Codeプラグイン管理</a></td>
@@ -1388,7 +1428,7 @@
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview">Agent Skills概要</a></td>
-<td>Claudeの機能を拡張する<span class="term" tabindex="0">モジュール<span class="term-popup">コードを機能ごとに分けたファイル単位。他のファイルから読み込んで使える</span></span>型機能で、ファイルシステムベースの専門知識やワークフローを提供</td>
+<td>Claudeの機能を拡張するモジュール型機能で、ファイルシステムベースの専門知識やワークフローを提供</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/quickstart">APIでAgent Skillsを始める</a></td>
