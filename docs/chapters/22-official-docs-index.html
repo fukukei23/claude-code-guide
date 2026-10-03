@@ -195,7 +195,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 416ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 421ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -208,9 +208,9 @@
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
 <p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>227ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>189ページ</strong>
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>194ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>416ページ</strong>・最終更新 2026-10-02。</p>
+合計 <strong>421ページ</strong>・最終更新 2026-10-03。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -1705,7 +1705,7 @@
 </tbody>
 </table></div>
 <h3>Managed Agents（エージェント基盤）</h3>
-<p><strong>27ページ</strong></p>
+<p><strong>32ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1791,8 +1791,28 @@
 <td>cronスケジュールでエージェントを自動実行するデプロイメントを作成・管理する方法を解説</td>
 </tr>
 <tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-custom-tools">セルフホスト型サンドボックスでのカスタムツール</a></td>
+<td>サンドボックス内のSDKワーカーに独自ツールを登録し、エージェントからMCPサーバー経由で社内システムへ安全にアクセス可能にする方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-memory">セルフホスト型サンドボックスのメモリストア</a></td>
+<td>セルフホスト環境で最大8つのメモリストアを/mnt/memoryにマウントし、POSIXファイルシステム要件と隔離ルールを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-operations">セルフホスト型ワーカーの監視とトラブルシューティング</a></td>
+<td><span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>深度の取得、セッションとワーカーの安全な停止、一般的な障害への対処方法を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-reference">セルフホストワーカーリファレンス</a></td>
+<td>セルフホストワーカーのant CLIフラグ、環境変数、ホスト要件、ファイルシステムパス、SDKヘルパーオプションのリファレンス</td>
+</tr>
+<tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-security">セキュリティモデル</a></td>
 <td>セルフホストサンドボックスにおける共同責任モデルとユーザー責任範囲を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-workers">セルフホスト型ワーカーのデプロイ</a></td>
+<td>ワーカーの常時ポーリング/ウェブフック起動とセッションの実行場所（同一プロセス/サンドボックス分離）の選択肢と対応状況を解説</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes">セルフホスト型サンドボックス</a></td>
