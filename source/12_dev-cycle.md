@@ -335,6 +335,13 @@ subprocess.Popen(["powershell.exe", "-c",
 - **判定3値**: critical / pass / warning・`verify-result.txt` への拒否権（critical≥1でNG）
 - **早期abort**: 両ベンダーcriticalで即中止・ベンダー数<2で警告（モデル数でなくベンダー数判定）
 - **縮退戦略**: 片系障害→残り1ベンダーで警告付き続行／両系→pending-retry退避
+- **v3.1穴塞ぎ修正（2026-09-29・17テスト追加で349緑・正典=MLRスキル点検レポートレビュー r3）**:
+  - **実効provider動的検知**: `HOST_VENDOR`ハードコード廃止→`detect_host_vendor()`（unknown時abort・fail-loud）
+  - **served_model照合**: MiniMax REST直呼びでmodel欄返却を実測→`served≠requested`は正規化照合（`:free`除去）の上`error-served-mismatch`化（silentモデルすり替え検知）
+  - **policy起動ゲート**: `judge.fact_check.jaccard_threshold`必須化（YAML値欠落で起動fail-fast）
+  - **ログ経路拡張**: `log-mlr-calls.sh`に api.z.ai / api.minimax.io 経路追加＋allowlist拡張
+  - **v3.1.1（同日ホットフィックス）**: 検知を呼出前に前倒し＋`requests.Timeout`捕捉でフォールバック復活（5機39指摘レビュー採用・テスト24本）
+  - **有償モデル全排除（2026-10-04）**: gemini-3.1-pro-preview / gemini-2.5-pro → gemini-2.5-flash（GCP課金事故対応）
 
 ## LLM 割り当て
 

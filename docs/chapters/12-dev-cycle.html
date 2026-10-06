@@ -522,6 +522,16 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <li><strong>判定3値</strong>: critical / pass / warning・<code>verify-result.txt</code> への拒否権（critical≥1でNG）</li>
 <li><strong>早期abort</strong>: 両ベンダーcriticalで即中止・ベンダー数&lt;2で警告（モデル数でなくベンダー数判定）</li>
 <li><strong>縮退戦略</strong>: 片系障害→残り1ベンダーで警告付き続行／両系→pending-retry退避</li>
+<li><strong>v3.1穴塞ぎ修正（2026-09-29・17テスト追加で349緑・正典=MLRスキル点検レ<span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>レビュー r3）</strong>:
+<ul>
+<li><strong>実効provider動的検知</strong>: <code>HOST_VENDOR</code>ハードコード廃止→<code>detect_host_vendor()</code>（unknown時abort・fail-loud）</li>
+<li><strong>served_model照合</strong>: MiniMax REST直呼びでmodel欄返却を実測→<code>served≠requested</code>は正規化照合（<code>:free</code>除去）の上<code>error-served-mismatch</code>化（silentモデルすり替え検知）</li>
+<li><strong>policy起動ゲート</strong>: <code>judge.fact_check.jaccard_threshold</code>必須化（YAML値欠落で起動fail-fast）</li>
+<li><strong>ログ経路拡張</strong>: <code>log-mlr-calls.sh</code>に api.z.ai / api.minimax.io 経路追加＋allowlist拡張</li>
+<li><strong>v3.1.1（同日ホットフィックス）</strong>: 検知を呼出前に前倒し＋<code>requests.Timeout</code>捕捉で<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>復活（5機39指摘レビュー採用・テスト24本）</li>
+<li><strong>有償モデル全排除（2026-10-04）</strong>: gemini-3.1-pro-preview / gemini-2.5-pro → gemini-2.5-flash（GCP課金事故対応）</li>
+</ul>
+</li>
 </ul>
 <h2>LLM 割り当て</h2>
 <div class="table-wrapper"><table>

@@ -574,6 +574,11 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
+<td><code>vision-pack/</code>（視角パック運用 v4.2）</td>
+<td>自己点検の「歩いたことにする」を構造的に防止する root所有0640領域の運用。F2/F5 (hash監査 + heartbeat段階エスカレーション) + F4 (キャリブレーション必須)。CC=読取専用・書込はroot cron + ふくけい手動sudo のみ。詳細は vision_pack_core.py + 01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/2026-09-27_視角パックv4設計補足レビュー/参照</td>
+</tr>
+<tr>
+<td></td>
 <td><code>post-tool-settings-sync.sh</code></td>
 <td>settings.json変更後のSSOT設定ファイルへの同期</td>
 </tr>
