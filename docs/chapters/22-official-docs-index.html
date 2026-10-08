@@ -201,7 +201,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 423ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 429ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -214,9 +214,9 @@
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
 <p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>228ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>195ページ</strong>
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>201ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>423ページ</strong>・最終更新 2026-10-07。</p>
+合計 <strong>429ページ</strong>・最終更新 2026-10-08。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -1191,7 +1191,7 @@
 </table></div>
 <h2>Platform 公式（platform.claude.com・LLM工学関連）</h2>
 <h3>Build with Claude（プロンプト・コンテキスト・effort等）</h3>
-<p><strong>53ページ</strong></p>
+<p><strong>54ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1335,6 +1335,10 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5">Claude Fable 5 のプロンプティングガイド</a></td>
 <td>Opus 4.8からの行動変化と長期タスクや並列サブエージェント等のプロンプト調整パターンを解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5">Claude Haiku 5.5 のプロンプティング</a></td>
+<td>Claude Haiku 5.5固有のプロンプトパターン集。思考制御、検索、JSON、エージェント早期停止防止、検証指示などを解説</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8">Claude Opus 4.8のプロンプティングガイド</a></td>
@@ -1715,7 +1719,7 @@
 </tbody>
 </table></div>
 <h3>Managed Agents（エージェント基盤）</h3>
-<p><strong>33ページ</strong></p>
+<p><strong>35ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1747,6 +1751,10 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/environments">クラウド環境セットアップ</a></td>
 <td>エージェント実行用のクラウドサンドボックス環境を作成し管理する方法を説明する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/event-deltas">イベントデルタによるレスポンスのプレビュー</a></td>
+<td>エージェントのレスポンステキストを生成中にライブプレビュー表示するイベントデルタ機能の使い方</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/events-and-streaming">セッションイベントストリーム</a></td>
@@ -1829,6 +1837,10 @@
 <td>ツール実行をユーザー自身のインフラで行い、データやネットワークの境界を保持するManaged Agentsの仕組み</td>
 </tr>
 <tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/session-observability">セッションの検査と使用状況の追跡</a></td>
+<td>Claude Consoleのセッション ビューアーで、コードを書かずにエージェントの動作、トークン使用量、コストをデバッグする方法を説明する。</td>
+</tr>
+<tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/session-operations">セッション操作</a></td>
 <td>Managed Agentsセッションの取得・一覧・更新・アーカイブ・削除の各APIを解説</td>
 </tr>
@@ -1859,7 +1871,7 @@
 </tbody>
 </table></div>
 <h3>Models（モデル別の挙動とプロンプティング）</h3>
-<p><strong>29ページ</strong></p>
+<p><strong>32ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1899,6 +1911,18 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/models/haiku-4-5/overview">Claude Haiku 4.5</a></td>
 <td>2025年10月リリースの最速・高性能モデル。200Kコンテキスト、手頃な価格、各プラットフォームで利用可能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide">Claude Haiku 5.5 移行ガイド</a></td>
+<td>Claude Haiku 4.5から5.5への移行手順を、新モデルID・トークン再計算・thinking設定変更などのチェックリスト形式で解説。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/haiku-5-5/overview">Claude Haiku 5.5</a></td>
+<td>大量・低レイテンシタスク向けのモデルで、1Mコンテキスト・128K出力・アダプティブ思考に対応する最速クラス</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/models/haiku-5-5/whats-new-haiku-5-5">Claude Haiku 5.5の新機能</a></td>
+<td>Claude Haiku 5.5の概要を紹介し、適応的思考や100万トークンコンテキストなどの変更点を一覧でまとめているページ</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/models/mythos-5-1/overview">Mythos 5.1 モデル概要</a></td>
