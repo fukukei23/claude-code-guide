@@ -201,7 +201,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 429ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 432ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -213,10 +213,10 @@
 <li><strong>層の対応は第21章</strong> — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>〜グラフの5層のどれに効くページかは
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
-<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>228ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>201ページ</strong>
+<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>229ページ</strong>（言語別索引11件は対象外）+
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>203ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>429ページ</strong>・最終更新 2026-10-08。</p>
+合計 <strong>432ページ</strong>・最終更新 2026-10-12。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -230,7 +230,7 @@
 <hr />
 <h2>Claude Code 公式（code.claude.com・全ページ）</h2>
 <h3>基本・概要・始め方</h3>
-<p><strong>141ページ</strong></p>
+<p><strong>142ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -278,6 +278,10 @@
 <tr>
 <td><a href="https://code.claude.com/docs/en/authentication"><span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span></a></td>
 <td>Claude Codeのログイン方法と個人・チーム・組織向けの認証設定について説明するページ</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/auto-mode-classifier-billing">自動モードの分類リクエスト課金について</a></td>
+<td>LLMゲートウェイや<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>が原因の場合の自動モード分類リクエストの課金問題と対処法を解説</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/auto-mode-config">自動モードの設定</a></td>
@@ -597,7 +601,7 @@
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/network-config">エンタープライズネットワーク設定</a></td>
-<td><span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>サーバー、カスタムCA証明書、mTLS認証で企業環境に構成する方法を解説</td>
+<td>プロキシサーバー、カスタムCA証明書、mTLS認証で企業環境に構成する方法を解説</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/output-styles">出力スタイル</a></td>
@@ -1719,7 +1723,7 @@
 </tbody>
 </table></div>
 <h3>Managed Agents（エージェント基盤）</h3>
-<p><strong>35ページ</strong></p>
+<p><strong>37ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1845,6 +1849,10 @@
 <td>Managed Agentsセッションの取得・一覧・更新・アーカイブ・削除の各APIを解説</td>
 </tr>
 <tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/session-threads">セッションスレッド</a></td>
+<td>マルチエージェントセッションのスレッド一覧・中断・アーカイブやツール権限管理を解説</td>
+</tr>
+<tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/sessions">セッションの開始</a></td>
 <td>エージェントIDと環境IDでセッションを作成し、ユーザーイベント送信でタスク実行を開始する方法を解説</td>
 </tr>
@@ -1867,6 +1875,10 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/<span class="term" tabindex="0">webhook<span class="term-popup">ウェブフック。「イベントが起きたら指定URLに自動で通知を送る」仕組み。GitHubで更新があればDiscordに通知が飛ぶ、等の連携に使う</span></span>s">Webhookの購読</a></td>
 <td>セッションの主要な状態変化をWebhookで通知し、GETで詳細を取得する仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/workflow-runs">ワークフローラン</a></td>
+<td>エージェントが動的にワークフローを書き、複数エージェントを並列実行・結果連携して大規模タスクを処理する仕組みと、その構造（ラン・フェーズ・エージェントスレッド）を解説。</td>
 </tr>
 </tbody>
 </table></div>
