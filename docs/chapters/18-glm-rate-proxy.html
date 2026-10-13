@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLM Rate Proxy — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI GLM Rate Proxyの解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="GLM Rate Proxy — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI GLM Rate Proxyの解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/18-glm-rate-proxy.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="11-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="12-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="13-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="14-agent-engineering-layers.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            エージェント工学の階層
+        </a>
+        
+        <a href="15-official-docs-index.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="16-knowledge-storage.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗂️</span>
+            知識の保存先の使い分け
+        </a>
+        
+        <a href="17-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="18-glm-rate-proxy.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="19-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="20-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="21-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="22-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="23-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
+        </a>
+        
+        <a href="24-mobile-remote.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📱</span>
+            スマホからのリモート操作
+        </a>
+        
+        <a href="25-windows-wsl.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪟</span>
+            Windows⇔WSL 設定同期
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="17-dev-cycle.html" class="nav-prev">← dev-cycle</a>
+            
+            
+            <a href="19-ssot-search.html" class="nav-next">SSOTから探して →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: <span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>はLLMコストの調整弁。止まったらproxy-doctorで診断。</p></div>
+<div class="callout callout-warn"><p><strong>⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。</strong>
+Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバー</a> のglm/minimax MCPを参照してください。</p></div>
+<p>Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.3）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
+<hr />
+<h2>&lt;a id=&quot;overview&quot;&gt;&lt;/a&gt;概要：なぜプロキシが必要か</h2>
+<p>Claude Codeは通常、Anthropic <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>に直接接続する。しかし <code>ANTHROPIC_BASE_URL</code> を差し替えることで、<strong>Anthropic互換APIを持つ別プロバイダ</strong>に向けられる。</p>
+<pre><code>通常:
+Claude Code ────→ api.anthropic.com (Sonnet/Opus)
+
+プロキシ経由:
+Claude Code ──→ localhost:8787 (glm-rate-proxy) ──→ api.z.ai (GLM-5.3)
+                                                 └──→ api.minimax.io (MiniMax, フォールバック)
+</code></pre>
+<h3>コスト比較</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>Claude Pro $19/月</th>
+<th>Claude Max $200/月</th>
+<th>ZAI Lite $18/月</th>
+<th>ZAI Pro $72/月</th>
+<th>ZAI Max $160/月</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Pro比の利用量</td>
+<td>1x（基準）</td>
+<td>20x</td>
+<td>3x</td>
+<td>15x</td>
+<td>60x</td>
+</tr>
+<tr>
+<td>月額（USD）</td>
+<td>$19</td>
+<td>$200</td>
+<td>$18</td>
+<td>$72</td>
+<td>$160</td>
+</tr>
+<tr>
+<td>コスパ（1xあたり）</td>
+<td>$19</td>
+<td>$10</td>
+<td>$6</td>
+<td>$4.8</td>
+<td>$2.7</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p><strong>ポイント</strong>: ZAI Max（$160/月）でClaude Max（$200/月）の<strong>約3倍</strong>の利用量を使える。ZAIは月額サブスク制で、5時間・週単位のローリング制限あり（従量課金ではない）。</p></div>
+<hr />
+<h2>&lt;a id=&quot;architecture&quot;&gt;&lt;/a&gt;アーキテクチャ</h2>
+<pre><code>settings.json
+  └─ ANTHROPIC_BASE_URL: &quot;http://127.0.0.1:8787&quot;
+
+Claude Code（CLI）
+  │  Anthropic形式のAPIリクエスト
+  ▼
+┌─────────────────────────────────────────┐
+│         glm-rate-proxy (port 8787)      │
+│                                         │
+│  1. モデル名を書き換え（claude → GLM-5.3） │
+│  2. thinking制御を注入                  │
+│  3. 使用量に応じてモデルをダウングレード   │
+│  4. ピーク時間帯はMiniMaxに強制切替       │
+│  5. MiniMaxフォールバック(2アカウント)    │
+│     - keys[0]=MINIMAX_API_KEY(Pro優先・大量消費) │
+│     - keys[1]=MINIMAX_API_KEY_FALLBACK(旧・5h制限) │
+│     - 429/401/403で次キーへ連鎖           │
+│     - 起動ログでkeys=2確認                 │
+└─────────────────────────────────────────┘
+  │                        │
+  ▼                        ▼
+api.z.ai              api.minimax.io
+(GLM-5.3)             (MiniMax-M3)
+</code></pre>
+<h3>ファイル構成</h3>
+<pre><code>~/.claude/scripts/glm-rate-proxy/
+├── src/glm_rate_proxy/
+│   ├── proxy.py          # メインプロキシ処理・thinking制御
+│   ├── config.py         # 設定読み込み（DEFAULTS + config.json）
+│   ├── model_router.py   # モデル選択ロジック（使用量・ピーク判定）
+│   ├── upstream.py       # ZAI/MiniMaxへのHTTP通信
+│   └── usage_tracker.py  # 使用量トラッキング
+├── config/
+│   └── config.json       # ユーザー設定（DEFAULTSを上書き）
+└── service/
+    └── glm-rate-proxy.service  # systemdサービス定義
+</code></pre>
+<hr />
+<h2>&lt;a id=&quot;model-routing&quot;&gt;&lt;/a&gt;モデルルーティング</h2>
+<p>使用量（<code>usage_pct</code>）に応じて自動でモデルが切り替わる。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>モード</th>
+<th>条件</th>
+<th>使用モデル</th>
+<th>プロバイダ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>normal</code></td>
+<td>usage &lt; 80%</td>
+<td>GLM-5.3</td>
+<td>ZAI</td>
+</tr>
+<tr>
+<td><code>economy</code></td>
+<td>80% ≤ usage &lt; 95%</td>
+<td>Claude</td>
+<td>ZAI</td>
+</tr>
+<tr>
+<td><code>emergency</code></td>
+<td>usage ≥ 95%</td>
+<td>Claude-Flash</td>
+<td>ZAI</td>
+</tr>
+<tr>
+<td><code>peak_block</code></td>
+<td>JST 15:00〜18:59（15時台〜18時台・<code>15≦hour&lt;19</code>）</td>
+<td>MiniMax-M3</td>
+<td>MiniMax</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p><strong>ピーク時間帯の理由</strong>: ZAI公式ドキュメント（<a href="https://docs.z.ai/devpack/notice/usage-revision">usage-revision</a>・2026-08-17確認）によるとGLM-5.3はピーク時に<strong>3倍の消費レート</strong>（オフピークは1倍・ピーク=月〜金 14:00-18:00 UTC+8）で計算される。MiniMaxに逃がすことでZAIクォータを温存する。</p></div>
+<h3><span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>チェーン</h3>
+<pre><code>ZAI 429 → Claude-Flash（emergency）→ MiniMax keys[0] → MiniMax keys[1] → 503
+ZAI 5xx → MiniMax keys[0] → MiniMax keys[1] → 503
+
+MiniMax 429/401/403 → 次キーへ連鎖（Pro→旧）
+MiniMax 2キー両方 429/401/403 → 503
+</code></pre>
+<div class="callout callout-info"><p><strong>✅ MiniMax 2アカウント対応（2026-07-27追加）</strong>
+Pro（大量消費）と旧（安全網）の2アカウント運用。起動ログ <code>keys=2</code> で確認。
+フォールバック連鎖: <code>request_minimax</code> 内で Pro(MINIMAX_API_KEY)→旧(MINIMAX_API_KEY_FALLBACK) の429/401/403で次キーへ。状態管理不要・自動復帰。詳細: <a href="#">01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/2026-07-27_glm-rate-proxy-MiniMax2アカウント-Pro優先フォールバック</a></p></div>
+<div class="callout callout-info"><p><strong>✅ 週間制限時のフォールバック実機確認済（2026-07-11）</strong>
+ZAIの<strong>週間</strong>制限到達で429が返っても、上記チェーン通りMiniMax-M3へ自動フォールバックすることを<span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>+実機で確認（MiniMax API単体疎通テスト <span class="term" tabindex="0">HTTP<span class="term-popup">エイチティーティーピー。Webの通信で使われる基本的な約束事（プロトコル）。ブラウザとサーバー、プログラム同士のやり取りの共通言語</span></span> 200・<code>proxy.py:115-173</code>）。<code>usage_pct</code>は5時間窓の値で、週間累計（ZAIダッシュボード）とは別物。詳細: <a href="#">01_DECISIONS/2026-07-11_glm-rate-proxy週間制限時フォールバック実機確認</a></p></div>
+<div class="callout callout-warn"><p><strong>⚠️ 重要な制限: コンテキスト上限到達時はフォールバックが発動しない</strong></p>
+<p>Claude Codeの<span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span>が上限に達した場合、<strong>APIリクエストを送る前にClaude Code本体が判定してエラーを返す</strong>。そのためglm-rate-proxyにリクエストが届かず、MiniMaxへのフォールバックも発動しない。</p>
+<pre><code>通常時: Claude Code → glm-rate-proxy → GLM（→ エラー時MiniMax）
+上限時: Claude Code → （本体がAPIリクエストを送らずエラー）← プロキシに届かない
+</code></pre>
+<p><strong>対策</strong>: コンテキストが溜まってきたら早めに <code>/compact</code> または <code>/new-session</code> で切り替える。80%を超えたら <code>/new-session</code> 推奨。</p></div>
+<hr />
+<h2>&lt;a id=&quot;thinking&quot;&gt;&lt;/a&gt;Thinking（思考）モードの動的制御</h2>
+<p>GLM-5.3は<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>で「思考モード」が有効で、内部推論<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を大量消費する。</p>
+<h3>問題</h3>
+<ul>
+<li>「このファイルも確認が必要」という1行のために <strong>16,000トークンの内部思考</strong>を消費した例あり</li>
+<li>全体として <strong>平均LLMの2.6倍</strong>の冗長さ（Artificial Analysis実測）</li>
+</ul>
+<h3>解決策：キーワードベースの動的切り替え</h3>
+<p>プロキシがリクエストのメッセージ内容を見て自動判断する。</p>
+<pre><code>メッセージに以下のキーワードが含まれる場合 → Thinking ON（budget: 8,000トークン）
+  edit / fix / implement / debug / write / refactor
+  create / add / modify / update / build / test / generate
+
+それ以外（質問・説明・要約など）→ Thinking OFF
+</code></pre>
+<h3>thinking設定のパラメータ</h3>
+<p><code>config/config.json</code> で制御可能（2026-08-15時点の現行構成: <strong>glm-5.3 をprimary</strong>に切替・MiniMaxにM3追加・<code>last_actual_model</code>等の実測ラベルは自動記録）：</p>
+<pre><code class="language-json">{
+  &quot;thinking&quot;: {
+    &quot;mode&quot;: &quot;auto&quot;,
+    &quot;budget_tokens&quot;: 8000
+  }
+}
+</code></pre>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th><code>mode</code></th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;auto&quot;</code></td>
+<td>キーワード判定（デフォルト）</td>
+</tr>
+<tr>
+<td><code>&quot;always_on&quot;</code></td>
+<td>全リクエストでThinking ON</td>
+</tr>
+<tr>
+<td><code>&quot;always_off&quot;</code></td>
+<td>全リクエストでThinking OFF</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p><strong>budget_tokensの注意</strong>: これは上限であり、モデルが必ず使い切るわけではない。ただしGLM-5.3が上限を守るかは未検証。16,000以上は暴走リスクあり。</p></div>
+<hr />
+<h2>&lt;a id=&quot;status&quot;&gt;&lt;/a&gt;ステータス確認</h2>
+<pre><code class="language-bash"># プロキシの状態確認
+curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
+</code></pre>
+<pre><code class="language-json">{
+  &quot;usage_pct&quot;: 23.5,
+  &quot;request_count&quot;: 1016,
+  &quot;mode&quot;: &quot;normal&quot;,
+  &quot;provider&quot;: &quot;zai&quot;,
+  &quot;peak_block&quot;: false,
+  &quot;last_actual_model&quot;: &quot;glm-5.3&quot;
+}
+</code></pre>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>フィールド</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>usage_pct</code></td>
+<td>ZAIの月間クォータ消費率（%）</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>現在のルーティングモード</td>
+</tr>
+<tr>
+<td><code>provider</code></td>
+<td>次のリクエストの送信先</td>
+</tr>
+<tr>
+<td><code>peak_block</code></td>
+<td>ピーク時間帯ブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>中かどうか</td>
+</tr>
+<tr>
+<td><code>last_actual_model</code></td>
+<td>直近のリクエストで実際に使われたモデル</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>&lt;a id=&quot;start-stop&quot;&gt;&lt;/a&gt;起動・停止</h2>
+<pre><code class="language-bash"># 起動（SessionStart hookで自動実行されるが、手動でも可）
+bash ~/.claude/scripts/llm/start-glm-proxy.sh
+
+# プロセス確認
+pgrep -a -f glm_rate_proxy
+
+# 停止
+pkill -f glm_rate_proxy
+
+# ログ確認
+tail -f /tmp/glm-proxy.log
+</code></pre>
+<h3>ピークブロックを一時的に無効化</h3>
+<pre><code class="language-bash"># 環境変数でピークブロック無効化
+GLM_PEAK_BLOCK=false bash ~/.claude/scripts/llm/start-glm-proxy.sh
+</code></pre>
+<hr />
+<h2>&lt;a id=&quot;troubleshooting&quot;&gt;&lt;/a&gt;トラブルシューティング</h2>
+<h3>❌ Claude Codeが「API error」を返す</h3>
+<p><strong>確認手順:</strong></p>
+<pre><code class="language-bash"># 1. プロキシが起動しているか
+pgrep -a -f glm_rate_proxy
+
+# 2. ポートが開いているか
+curl -s http://127.0.0.1:8787/proxy/status
+
+# 3. settings.jsonのBASE_URLが正しいか
+grep ANTHROPIC_BASE_URL ~/.claude/settings.json
+</code></pre>
+<p><strong>解決:</strong></p>
+<pre><code class="language-bash"># プロキシを再起動
+pkill -f glm_rate_proxy
+bash ~/.claude/scripts/llm/start-glm-proxy.sh
+</code></pre>
+<hr />
+<h3>❌ 応答が遅い・ハングする</h3>
+<p><strong>原因候補:</strong></p>
+<ol>
+<li>Thinkingモードが暴走している（<code>budget_tokens</code>を超えている）</li>
+<li>ZAIの<span class="term" tabindex="0">レート制限<span class="term-popup">短時間の利用回数にかけられる上限。API等で一定時間内のリクエスト数が制限されること。超えると一時的にエラーになる</span></span>に引っかかっている</li>
+</ol>
+<p><strong>確認:</strong></p>
+<pre><code class="language-bash"># ログでthinking状況を確認（DEBUGレベル要設定）
+tail -50 /tmp/glm-proxy.log
+
+# ステータスでpeak_blockを確認
+curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d=json.load(sys.stdin); print('mode:', d['mode'], '/ peak:', d['peak_block'])&quot;
+</code></pre>
+<p><strong>応急処置（全ThinkingをOFFに）:</strong></p>
+<p><code>config/config.json</code> の <code>thinking.mode</code> を一時的に <code>&quot;always_off&quot;</code> に変更してプロキシ再起動。</p>
+<hr />
+<h3>❌ レート制限（429）が頻発する</h3>
+<p><strong>確認:</strong></p>
+<pre><code class="language-bash">curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d=json.load(sys.stdin); print('usage:', d['usage_pct'], '%')&quot;
+</code></pre>
+<ul>
+<li><code>usage_pct</code> が80%超 → <code>economy</code>モードに自動切替済みのはず</li>
+<li>95%超 → <code>emergency</code>モード（Claude-Flash）に切替済みのはず</li>
+<li>429が続く場合 → MiniMaxへのフォールバックが機能しているか <code>last_actual_model</code> を確認</li>
+</ul>
+<p><strong>手動でMiniMaxに切り替え:</strong></p>
+<p><code>config/config.json</code> に追加：</p>
+<pre><code class="language-json">{
+  &quot;peak_hours&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;start_hour&quot;: 0,
+    &quot;end_hour&quot;: 24
+  }
+}
+</code></pre>
+<p>（24時間ピーク扱いにして強制MiniMax）</p>
+<hr />
+<h3>❌ MiniMax APIキー変更後に400エラーが出る</h3>
+<p><strong>原因</strong></p>
+<p>ピークブロック（JST 15:00–19:00）が有効な状態では全リクエストがMiniMaxに強制ルーティングされる。この時間帯にMiniMaxのAPIキーをリセット・変更すると、プロキシが古いキーを保持したまま稼働し続け、全リクエストが400エラーになってClaude Codeが停止する。</p>
+<p><strong>確認手順</strong></p>
+<pre><code class="language-bash"># ピークブロック中かどうか確認
+curl -s http://127.0.0.1:8787/proxy/status | python3 -c &quot;import json,sys; d=json.load(sys.stdin); print('peak_block:', d['peak_block'], '/ provider:', d['provider'])&quot;
+
+# ログで400エラーを確認
+tail -30 /tmp/glm-proxy.log
+</code></pre>
+<p><strong>⚠️ APIキー変更時の手順（必須）</strong></p>
+<ul>
+<li>[ ] <code>~/.secrets.env</code> の <code>MINIMAX_API_KEY</code> を新しい値に更新</li>
+<li>[ ] プロキシを再起動して新しいキーを読み込ませる</li>
+</ul>
+<pre><code class="language-bash"># 1. ~/.secrets.env を編集（値はAPIキー管理ポリシーに従い直接記載）
+# 2. プロキシ再起動
+source ~/.secrets.env
+pkill -f glm_rate_proxy
+cd ~/.claude/scripts/glm-rate-proxy
+PYTHONPATH=src nohup python3 -m glm_rate_proxy &gt; /tmp/glm-proxy.log 2&gt;&amp;1 &amp;
+sleep 2
+curl http://127.0.0.1:8787/proxy/status
+</code></pre>
+<p><strong>ピークブロック中に緊急回避する場合</strong></p>
+<pre><code class="language-bash"># ピークブロックを無効化してGLM（ZAI）直結に戻す
+pkill -f glm_rate_proxy
+source ~/.secrets.env
+cd ~/.claude/scripts/glm-rate-proxy
+GLM_PEAK_BLOCK=false PYTHONPATH=src nohup python3 -m glm_rate_proxy &gt; /tmp/glm-proxy.log 2&gt;&amp;1 &amp;
+</code></pre>
+<hr />
+<h3>❌ <code>No module named glm_rate_proxy</code> エラー</h3>
+<p>プロキシの作業<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>かPYTHONPATHが正しくない。</p>
+<pre><code class="language-bash"># 正しい起動方法
+cd ~/.claude/scripts/glm-rate-proxy
+PYTHONPATH=src python3 -m glm_rate_proxy
+</code></pre>
+<hr />
+<h3>❌ thinking ONなのに効果が感じられない</h3>
+<p>ZAIの <code>enabled</code> モードはモデルが「自動判断」して思考量を決める。<code>budget_tokens</code>を上げても体感が変わらない場合、モデル自身が「不要」と判断している可能性がある。</p>
+<p><code>always_on</code> + <code>budget_tokens: 16000</code> を試すことで強制的に思考を増やせるが、<strong>トークン暴走リスクが上がる</strong>。</p>
+<hr />
+<h2>&lt;a id=&quot;config-reference&quot;&gt;&lt;/a&gt;設定リファレンス</h2>
+<p><code>config/config.json</code> の全項目：</p>
+<pre><code class="language-json">{
+  &quot;zai_base_url&quot;: &quot;https://api.z.ai/api/anthropic&quot;,
+  &quot;minimax_base_url&quot;: &quot;https://api.minimax.io/anthropic/v1&quot;,
+  &quot;listen_host&quot;: &quot;127.0.0.1&quot;,
+  &quot;listen_port&quot;: 8787,
+  &quot;upstream_timeout&quot;: 1200,
+  &quot;log_level&quot;: &quot;INFO&quot;,
+  &quot;default_model&quot;: &quot;GLM-5.3&quot;,
+  &quot;thresholds&quot;: {
+    &quot;normal&quot;:    {&quot;max_pct&quot;: 80,  &quot;model&quot;: null},
+    &quot;economy&quot;:   {&quot;max_pct&quot;: 95,  &quot;model&quot;: &quot;Claude&quot;},
+    &quot;emergency&quot;: {&quot;max_pct&quot;: 100, &quot;model&quot;: &quot;Claude-Flash&quot;}
+  },
+  &quot;fallback&quot;: {
+    &quot;provider&quot;: &quot;minimax&quot;,
+    &quot;model&quot;: &quot;MiniMax-M3&quot;
+  },
+  &quot;peak_hours&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;start_hour&quot;: 15,
+    &quot;end_hour&quot;: 19,
+    &quot;timezone_offset&quot;: 9
+  },
+  &quot;thinking&quot;: {
+    &quot;mode&quot;: &quot;auto&quot;,
+    &quot;budget_tokens&quot;: 8000,
+    &quot;coding_keywords&quot;: [
+      &quot;edit&quot;, &quot;fix&quot;, &quot;implement&quot;, &quot;debug&quot;, &quot;write&quot;, &quot;refactor&quot;,
+      &quot;create&quot;, &quot;add&quot;, &quot;modify&quot;, &quot;update&quot;, &quot;build&quot;, &quot;test&quot;, &quot;generate&quot;
+    ]
+  }
+}
+</code></pre>
+<hr />
+<h2>&lt;a id=&quot;proxy-doctor&quot;&gt;&lt;/a&gt;proxy-doctor <span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span> — 診断を自動化する</h2>
+<p>プロキシが壊れた時の原因調査を自動化する Claude Code スキル。</p>
+<h3>できること</h3>
+<ul>
+<li><span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>・ステータス・ログを自動収集して原因を分類</li>
+<li>10パターン（停止・400/401/429・<span class="term" tabindex="0">タイムアウト<span class="term-popup">待ち時間の上限。指定時間内に応答が無ければ「失敗」とみなして打ち切る仕組み</span></span>・99%固定・設定書き換えなど）を診断</li>
+<li>各パターンへの具体的な対処<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>を提示（実行はユーザー確認後）</li>
+<li>複数プロセス起動・32MB上限接近・ZAI直結化などエッジケースも検出</li>
+</ul>
+<h3>いつ使うか</h3>
+<p>「なんか遅い・エラーが出る・フォールバックしない」と思ったら、原因を自分で追わずこのスキルを最初に使う。</p>
+<h3>使い方</h3>
+<p>CLI<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>内で以下のいずれかを言うとトリガーされる：</p>
+<pre><code>/proxy-doctor
+プロキシ直して
+GLMが使えない
+400エラーが出る
+プロキシを診断して
+</code></pre>
+<h3>出力例</h3>
+<pre><code>## proxy-doctor 診断結果
+
+プロセス      : 起動中 (PID: 354224)
+BASE_URL      : http://127.0.0.1:8787（プロキシ経由）
+モード        : peak_block
+プロバイダ    : minimax
+ZAI使用率     : 0.0%
+直近リクエスト: 2.1MB
+ピークブロック: true
+
+【検出された問題】 パターン J: 正常
+【原因】 -
+
+【推奨対処】 なし（正常動作中）
+</code></pre>
+<hr />
+<h2>💡 やさしい補足（初心者向け）</h2>
+<ul>
+<li><strong>「プロキシ」= AIを安く使うための中継地点</strong>: 公式の高価なAIに直接つなぐ代わりに、間に安いAIを置いてコストを下げる仕組み</li>
+<li><strong>この環境の核心</strong>: Claude Code → 中継（プロキシ）→ GLM/MiniMax（安いAI）。これで大幅に節約</li>
+<li><strong>壊れたら</strong>: AIが反応しない・エラーが出る等は、このプロキシが原因のことが多い。この章の「トラブルシューティング」を参照</li>
+<li><strong>意識しなくてOK</strong>: 普段は裏で自動で動いている。トラブル時だけこの章を見る</li>
+</ul>
+<hr />
+<h2>&lt;a id=&quot;related&quot;&gt;&lt;/a&gt;関連リンク</h2>
+<ul>
+<li><a href="https://docs.z.ai/guides/capabilities/thinking">ZAI公式ドキュメント - Deep Thinking</a></li>
+<li><a href="https://docs.z.ai/guides/llm/glm-5.3">ZAI公式ドキュメント - GLM-5.3モデル概要</a></li>
+<li><a href="https://artificialanalysis.ai/models/glm-5-2">Artificial Analysis - GLM-5.2ベンチマーク</a>（※GLM-5.3版ページは2026-08-17時点で未掲載・404確認済み。5.2が直近の計測対象）</li>
+<li><a href="04-mcp.html">04 MCPサーバー</a></li>
+<li><a href="12-tips.html">11 現場の知見</a></li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: 再起動は全セッション数秒停止とセット——必ず事前警告を。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="17-dev-cycle.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔄 dev-cycle</span>
+            </a>
+            
+            
+            <a href="19-ssot-search.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📄 SSOTから探して</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

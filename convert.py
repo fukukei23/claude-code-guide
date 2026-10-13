@@ -25,17 +25,31 @@ CHAPTER_MAP = {
     "07_エージェント.md": {"slug": "07-agents", "title": "エージェント", "icon": "🤖", "desc": "サブエージェントの並列活用"},
     "08_設定ファイル.md": {"slug": "08-config", "title": "設定ファイル", "icon": "⚙️", "desc": "CLAUDE.md・settings.json・3層構造"},
     "09_統合.md": {"slug": "09-integration", "title": "統合", "icon": "🔗", "desc": "IDE連携・リモート・モデル切替"},
-    "10_用語集.md": {"slug": "10-glossary", "title": "用語集", "icon": "📖", "desc": "A〜Zの用語解説"},
-    "11_現場の知見.md": {"slug": "11-tips", "title": "現場の知見", "icon": "💡", "desc": "実践テクニックと落とし穴"},
-    "12_dev-cycle.md": {"slug": "12-dev-cycle", "title": "dev-cycle", "icon": "🔄", "desc": "コード品質改善サイクル — スイープ→レビュー→Issue化→自律実装"},
-    "13_glm-rate-proxy.md": {"slug": "13-glm-rate-proxy", "title": "GLM Rate Proxy", "icon": "⚡", "desc": "ZAI/GLMで動かす低コスト運用 — モデルルーティング・Thinking制御"},
-    "15_コスト最適化構成.md": {"slug": "15-cost-optimization", "title": "コスト最適化", "icon": "💰", "desc": "GLM/MiniMaxルーティング（独自構成）"},
-    "17_キーバインド.md": {"slug": "17-keybindings", "title": "CLI操作・キーバインド", "icon": "🎛️", "desc": "プロンプト入力欄の編集操作 — 全選択/消去/行編集/Vim/履歴/Windows特有"},
-    "19_decisions_log.md": {"slug": "19-decisions-log", "title": "決定ログ", "icon": "🧩", "desc": "設計判断の図解入り記録 — どういう考えで決めたか"},
-    "21_エージェント工学の階層.md": {"slug": "21-agent-engineering-layers", "title": "エージェント工学の階層", "icon": "🏗️", "desc": "プロンプトからグラフまで5層の設計地図と自己診断"},
-    "22_公式ドキュメント索引.md": {"slug": "22-official-docs-index", "title": "公式ドキュメント索引", "icon": "📚", "desc": "公式ドキュメント364ページの1行要約と新規ページ監視"},
+    "11_用語集.md": {"slug": "11-glossary", "title": "用語集", "icon": "📖", "desc": "A〜Zの用語解説"},
+    "12_現場の知見.md": {"slug": "12-tips", "title": "現場の知見", "icon": "💡", "desc": "実践テクニックと落とし穴"},
+    "17_dev-cycle.md": {"slug": "17-dev-cycle", "title": "dev-cycle", "icon": "🔄", "desc": "コード品質改善サイクル — スイープ→レビュー→Issue化→自律実装"},
+    "18_glm-rate-proxy.md": {"slug": "18-glm-rate-proxy", "title": "GLM Rate Proxy", "icon": "⚡", "desc": "ZAI/GLMで動かす低コスト運用 — モデルルーティング・Thinking制御"},
+    "20_コスト最適化構成.md": {"slug": "20-cost-optimization", "title": "コスト最適化", "icon": "💰", "desc": "GLM/MiniMaxルーティング（独自構成）"},
+    "10_キーバインド.md": {"slug": "10-keybindings", "title": "CLI操作・キーバインド", "icon": "🎛️", "desc": "プロンプト入力欄の編集操作 — 全選択/消去/行編集/Vim/履歴/Windows特有"},
+    "22_decisions_log.md": {"slug": "22-decisions-log", "title": "決定ログ", "icon": "🧩", "desc": "設計判断の図解入り記録 — どういう考えで決めたか"},
+    "14_エージェント工学の階層.md": {"slug": "14-agent-engineering-layers", "title": "エージェント工学の階層", "icon": "🏗️", "desc": "プロンプトからグラフまで5層の設計地図と自己診断"},
+    "15_公式ドキュメント索引.md": {"slug": "15-official-docs-index", "title": "公式ドキュメント索引", "icon": "📚", "desc": "公式ドキュメント364ページの1行要約と新規ページ監視"},
+    "16_知識の保存先の使い分け.md": {"slug": "16-knowledge-storage", "title": "知識の保存先の使い分け", "icon": "🗂️", "desc": "どこに何を書くか"},
 }
 
+
+# --- 旧slug→新slugリダイレクト（2026-10-14 章番号振り直しに伴う旧URL保護） ---
+OLD_SLUG_REDIRECTS = {
+    "10-glossary": "11-glossary", "11-tips": "12-tips",
+    "12-dev-cycle": "17-dev-cycle", "13-glm-rate-proxy": "18-glm-rate-proxy",
+    "14-ssot-search": "19-ssot-search", "15-cost-optimization": "20-cost-optimization",
+    "16-external-references": "13-external-references", "17-keybindings": "10-keybindings",
+    "18-loop-system": "21-loop-system", "19-decisions-log": "22-decisions-log",
+    "20-version-management": "23-version-management",
+    "21-agent-engineering-layers": "14-agent-engineering-layers",
+    "22-official-docs-index": "15-official-docs-index",
+    "23": "16-knowledge-storage",
+}
 
 # --- 自動スキャン ---
 
@@ -440,7 +454,7 @@ INDEX_TEMPLATE = Template("""\
                 {% for ch in cat.chapters %}
                 <a href="chapters/{{ ch.slug }}.html" class="chapter-card">
                     <div class="card-icon">{{ ch.icon }}</div>
-                    <div class="card-number">第{{ ch.number }}章</div>
+                    {% if ch.number.isdigit() %}<div class="card-number">第{{ ch.number }}章</div>{% else %}<div class="card-number">{{ ch.title }}</div>{% endif %}
                     <h2 class="card-title">{{ ch.title }}</h2>
                     <p class="card-desc">{{ ch.desc }}</p>
                 </a>
@@ -1186,11 +1200,12 @@ def convert_tldr(html: str) -> str:
 
 # 章番号→カテゴリの境界（番号レンジは閉区間）
 INDEX_CATEGORIES = [
-    ("🏗️ 基礎・仕組み", 0, 9),
-    ("📖 参考・実践知見", 10, 11),
-    ("🛠️ 個人運用・カスタムワークフロー", 12, 17),
+    ("🏗️ 基礎・仕組み", 0, 10),
+    ("📖 参考・実践知見", 11, 16),
+    ("🛠️ 個人運用・カスタムワークフロー", 17, 23),
+    ("📱 環境・リモート運用", 24, 25),
 ]
-INDEX_CATEGORY_FALLBACK = "📚 リソース"
+INDEX_CATEGORY_FALLBACK = "📚 付録"
 
 
 def group_chapters_by_category(chapters: list) -> list:
@@ -1267,6 +1282,19 @@ def main():
         out = chapters_dir / f"{ch['slug']}.html"
         out.write_text(full_html, encoding="utf-8")
         print(f"OK: {ch['slug']}.html")
+
+    # 旧slugのリダイレクトHTML生成（旧URLブックマーク保護・2026-10-14）
+    for old_slug, new_slug in OLD_SLUG_REDIRECTS.items():
+        redir = (
+            '<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
+            f'<meta http-equiv="refresh" content="0; url={new_slug}.html">'
+            f'<link rel="canonical" href="{new_slug}.html">'
+            f"<title>リダイレクト</title></head><body>"
+            f'この章は番号整理により移動しました。<a href="{new_slug}.html">新しいページへ</a>'
+            "</body></html>"
+        )
+        (chapters_dir / f"{old_slug}.html").write_text(redir, encoding="utf-8")
+    print(f"OK: redirects x{len(OLD_SLUG_REDIRECTS)}")
 
     # index.html 生成（カテゴリ分けして表示）
     categories = group_chapters_by_category(chapters)

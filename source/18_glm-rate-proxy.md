@@ -464,6 +464,6 @@ ZAI使用率     : 0.0%
 - [ZAI公式ドキュメント - GLM-5.3モデル概要](https://docs.z.ai/guides/llm/glm-5.3)
 - [Artificial Analysis - GLM-5.2ベンチマーク](https://artificialanalysis.ai/models/glm-5-2)（※GLM-5.3版ページは2026-08-17時点で未掲載・404確認済み。5.2が直近の計測対象）
 - [04 MCPサーバー](04_MCPサーバー.md)
-- [11 現場の知見](11_現場の知見.md)
+- [11 現場の知見](12_現場の知見.md)
 
 > 💡 **章の落とし所**: 再起動は全セッション数秒停止とセット——必ず事前警告を。

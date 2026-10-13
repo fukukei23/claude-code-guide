@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>現場の知見 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 現場の知見の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="現場の知見 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 現場の知見の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/12-tips.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="11-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="12-tips.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="13-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="14-agent-engineering-layers.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            エージェント工学の階層
+        </a>
+        
+        <a href="15-official-docs-index.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="16-knowledge-storage.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗂️</span>
+            知識の保存先の使い分け
+        </a>
+        
+        <a href="17-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="18-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="19-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="20-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="21-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="22-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="23-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
+        </a>
+        
+        <a href="24-mobile-remote.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📱</span>
+            スマホからのリモート操作
+        </a>
+        
+        <a href="25-windows-wsl.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪟</span>
+            Windows⇔WSL 設定同期
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="11-glossary.html" class="nav-prev">← 用語集</a>
+            
+            
+            <a href="13-external-references.html" class="nav-next">外部参考資料 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>11 現場の知見 — 使ってみないとわからないこと</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: コンテキストは資源。使い方の上手さが出力の質を決める。</p></div>
+<div class="callout callout-info"><p>実際にClaude Codeを使い込んで得た実践知。公式ドキュメントには書いていない「暗黙知」をまとめる。</p></div>
+<hr />
+<h2 id="toc">📑 セクション一覧（目次）</h2>
+<ul>
+<li><strong><a href="#sec-a">A. コンテキスト経済学</a></strong> — <span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>消費の実態・雪だるま式コスト</li>
+<li><strong><a href="#sec-b">B. 落とし穴（ハマりポイント）</a></strong> — 2ファイル問題・<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>復活・フックブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>等</li>
+<li><strong><a href="#sec-c">C. 効率テクニック</a></strong> — compact・BG<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>・model切替</li>
+<li><strong><a href="#sec-d">D. よくある誤解</a></strong> — コスト/メモリ/clear/compact等の誤解</li>
+<li><strong><a href="#sec-e">E. Cron管理の注意点</a></strong> — 7日失効・膨張<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>・<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>化</li>
+<li><strong><a href="#sec-f">F. <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>スクリプト共通基盤</a></strong> — api_base.py・プロバイダ追加手順</li>
+<li><strong><a href="#sec-g">G. コード行数の正確な計測</a></strong> — 自動生成除外・3層証明</li>
+<li><strong><a href="#sec-h">H. 並行<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の<span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>回避</a></strong> — active-sessionsボード運用</li>
+</ul>
+<hr />
+<h2 id="sec-a">A. コンテキスト経済学</h2>
+<p>トークンがどう消費されているかを理解することが、効率的な使い方の第一歩。</p>
+<h3>入力:出力 = 13:1 は正常</h3>
+<p>ChatGPT等のチャットAIでは「短い質問 → 長い回答」なので出力の方が多くなりがち。しかし<strong>Claude Codeでは逆転</strong>する。</p>
+<p><strong>理由</strong>: 毎ターンで「<span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span> + MCP定義 + メモリ + 過去の会話すべて + ツール結果」を丸ごと再送しているため。</p>
+<pre><code>ターン1: [システム + MCP + メモリ] = ~40K入力 → 回答 = ~1K出力
+ターン5: [システム + MCP + メモリ + 過去4回] = ~60K入力 → 回答 = ~1K出力
+ターン10: [システム + MCP + メモリ + 過去9回] = ~100K入力 → 回答 = ~1K出力
+</code></pre>
+<p>→ セッションが長くなるほど、1ターンあたりのコストが雪だるま式に増加。</p>
+<h3>1Mの実質使える量は〜960K</h3>
+<p><span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span>は現行主力モデルで最大1Mトークンだが、<strong>ユーザーが自由に使えるのは約960K</strong>。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>固定消費（毎ターン）</th>
+<th>推定サイズ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCPツール定義（6サーバー83ツール）</td>
+<td>~21K</td>
+</tr>
+<tr>
+<td>システム<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>（CLAUDE.md等）</td>
+<td>~15K</td>
+</tr>
+<tr>
+<td>Auto Memory（MEMORY.md + 各ファイル）</td>
+<td>~5〜10K</td>
+</tr>
+<tr>
+<td>その他システム指示</td>
+<td>~5K</td>
+</tr>
+<tr>
+<td><strong>合計</strong></td>
+<td><strong>~40K</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>→ 会話を始める前に既に約4%消費済み。1Mになっても長いセッションでは消費が着実に積み上がる。</p>
+<h3>MCP定義だけで毎ターン消費</h3>
+<p>MCPツールは<strong>呼び出した時だけ</strong>コストが発生するわけではない。ツールの定義（名前・説明・パラメータ）が<strong>毎ターンの入力に含まれる</strong>。</p>
+<ul>
+<li>83ツールの定義 ≒ ~21Kトークン/ターン</li>
+<li>10ターンのセッション → MCP定義だけで 21K × 10 = <strong>210Kトークン</strong>（入力側）</li>
+<li>使わないサーバーは削除するのが最も効果的な節約策</li>
+</ul>
+<h3><code>/context</code> 1回で~4Kトークン消費</h3>
+<p>コンテキスト使用量を確認する <code>/context</code> <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>自身もトークンを消費する。1回約4K。多用は避け、気になった時だけ使う。</p>
+<h3>32MBバイト上限（画像が唯一の犯人）</h3>
+<p>トークンとは別に**リクエストペイロードのバイトサイズ上限（32MB）**がある。<code>Request too large (max 32MB)</code> が出たらこれ。</p>
+<p><strong>2つの上限を混同しないこと</strong>（これが核心）:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>上限</th>
+<th>単位</th>
+<th>MCP削減の効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1M窓</strong></td>
+<td>トークン</td>
+<td>✅ <strong>効く</strong>（MCP固定費32kが長時間・複数セッションで効く）</td>
+</tr>
+<tr>
+<td><strong>32MB</strong></td>
+<td>バイト</td>
+<td>❌ <strong>無意味</strong>（テキスト定義全部で0.3MB・物理的に届かない）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>犯人は画像</strong>。テキストだけで32MBには<strong>絶対届かない</strong>（1M窓を使い切っても3-4MB）。32MB到達の<strong>唯一の経路は画像のbase64蓄積</strong>。画像1枚は数百KB〜1MBだが、履歴に残って毎ターン再送され雪だるま式に積もる。画像1枚追加が「最後の1滴」で弾かれる。</li>
+<li><strong>テキスト定義（MCP/<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>等）は無罪</strong>。全部で0.3MB。MCP削減は1M窓の節約には効くが32MB問題には無意味。<code>/context</code>実測で全体110kトークン=0.5MB。</li>
+<li><strong>curl(proxy/status)では測れない</strong>。<code>last_request_mb</code> は proxy→GLM 送信後のCDN化サイズ（常に0.4MB前後）。32MBチェックは Claude Code 側が proxy 送信前に弾くので proxy に届かず反映されない。正しく測るなら <strong><span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>Lファイルサイズ</strong>（画像base64含む実会話サイズ）。</li>
+<li><strong>対策</strong>: 画像セッションは短く（=/clear惜しまない）・<code>/compact</code>で画像を履歴から消す・同じ画像を何度もReadしない。画像分析は<strong>subagentに委任</strong>（テキスト結果だけメインに戻せばメイン履歴に画像が残らない）。</li>
+</ul>
+<div class="callout callout-warn"><p>⚠️ <strong>訂正・補足（2026-06-30）</strong>: 上記「テキストだけで32MBには絶対届かない・唯一の経路は画像」は <strong>auto-compact 有効前提</strong>の記述だった。実際は環境・条件により経路が変わる:</p>
+<ul>
+<li><strong>auto-compact 無効（<code>DISABLE_AUTO_COMPACT</code> 設定環境＝本環境）の場合</strong>: 履歴が圧縮されず、画像を使わなくても<strong>ツール結果（ファイルRead・コマンド出力等の巨大テキスト）の蓄積で20-30往復で32MB到達し得る</strong>。純会話テキスト（1M tok ≈ 3-4MB）では届かないが、ツール結果込みなら別。</li>
+<li><strong>auto-compact 有効の場合</strong>: 1M窓到達で圧縮されるため、純テキストでは32MB届かず画像が主因（従来記述の通り）。</li>
+<li><strong>MCP/スキル定義（0.3MB）は無罪</strong>なのは変わらない。テキスト削減（柱2-A等）は1M窓節約には効くが、32MB対策としては auto-compact 無効下の「ツール結果蓄積」に対してのみ寄与し得る。</li>
+<li>詳細・継続課題は [[2026-06-30_32MB問題の基礎知見と対策現況]]（01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/）を参照。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>🎯 <strong>追訂正（2026-07-01）・真因確定</strong>: 上記（画像が犯人・auto-compact無効下のツール結果蓄積・proxy送信前弾き）は<strong>全て主因誤認</strong>だった。真因は <strong>glm-rate-proxy の <code>aiohttp.web.Application</code> が <code>client_max_size</code> 未設定（<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>1MB）</strong> で、画像添付リクエストが1MB超で <strong>413弾き</strong> されていた。proxyログに413記録＝proxy到達済み（「送信前弾き」は誤り）。CCは「max 32MB」と<strong>固定嘘表示</strong>（実効1MB）。「画像2枚1.3MBが通り3枚目で32MBエラー」の25倍跳びがこの乖離の証拠。対策は <code>proxy.py</code> の <code>create_app()</code> に <code>client_max_size=32*1024*1024</code> 追加の1行（commit 9ac5f24fd）で<strong>32MB問題は解消</strong>。デスクトップ版で出ないのはproxy非経由のため。詳細は [[2026-07-01_32MBエラー真因解明-proxy-client_max_size修正]]。
+🔬 <strong>検証（2026-07-02・18枚画像積載）</strong>: 18枚（base64想定41MB ≫ 32MB）でもproxy通過・413ゼロ。JSONL実測で<strong>画像はURL参照（<code>maas-log-prod</code>の短いURL・1行約30KB）で履歴保存されbase64では蓄積しない</strong>ことが判明。→ <strong>6/19「画像履歴累積で雪だるま式32MB到達」は過大評価</strong>。画像では32MB到達は構造的に不可能。残る到達経路は「巨大テキスト（ツール結果の蓄積）」のみ。</p></div>
+<ul>
+<li><strong>statusLineで常時監視</strong>: <code>llm-status.sh</code> がJSONL実サイズを <code>Req X.XMB/32</code> で表示（27MB黄・30MB赤）。色が変わったら画像整理の合図。</li>
+</ul>
+<hr />
+<h2 id="sec-b">B. 落とし穴（ハマりポイント）</h2>
+<h3><span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>が2つ存在する（2ファイル問題）</h3>
+<pre><code>~/.claude.json          ← CLI自動生成（隠れファイル）
+~/.claude/settings.json ← ユーザー編集用
+</code></pre>
+<p>Claude Codeは<strong>両方を<span class="term" tabindex="0">マージ<span class="term-popup">分かれていた変更を1つに統合すること。ブランチで進めた作業を本体（main）に取り込む作業</span></span>して読み込む</strong>。片方だけ編集してもう片方に古い設定が残っていると、変更が反映されない。</p>
+<p><strong>対策</strong>: MCPサーバーの追加・削除は手動編集ではなく <code>claude mcp add/remove</code> コマンドを使う。このコマンドは両ファイルを正しく更新する。</p>
+<h3>MCP削除が「復活」する</h3>
+<p>上記2ファイル問題が原因で、<code>settings.json</code> だけ編集してMCPサーバーを削除しても、<code>~/.claude.json</code> に定義が残っていれば次回起動時に復元される。</p>
+<p><strong>対策</strong>: 削除後は両ファイルを確認:</p>
+<pre><code class="language-bash">claude mcp list
+cat ~/.claude.json | jq '.mcpServers | keys'
+cat ~/.claude/settings.json | jq '.mcpServers | keys'
+</code></pre>
+<h3>フックがツールを意図せずブロック</h3>
+<p>PreToolUseフックのスクリプトがエラー（exit code ≠ 0）を返すと、そのツールの実行が<strong>サイレントにブロック</strong>される。エラーメッセージは表示されるが、「フックがブロックした」とは明示されないことがある。</p>
+<p><strong>対策</strong>: 予期せぬツールブロックが起きたら、まずPreToolUseフックのスクリプトを確認。</p>
+<h3><code>/clear</code> しても MCP・メモリは残る</h3>
+<p><code>/clear</code> がリセットするのは<strong>会話履歴のみ</strong>。以下は消えない:</p>
+<ul>
+<li>システムプロンプト（CLAUDE.md）</li>
+<li>MCPツール定義</li>
+<li>Auto Memory</li>
+<li>設定（permissions, <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s）</li>
+</ul>
+<p>完全リセットしたい場合は <code>/clear</code> → セッション再起動。</p>
+<h3>Read ツールで巨大ファイルを読むとコンテキスト爆発</h3>
+<p>1つのファイルでも数千〜数万行なら数万トークン消費。特にログファイル・JSON・生成コードに注意。</p>
+<p><strong>対策</strong>: <code>offset</code> と <code>limit</code> パラメータで必要な範囲だけ読む。</p>
+<h3>セッション開始時にMCPが全ツール一括ロード</h3>
+<p>MCPツールは「必要になったら読み込む」のではなく、<strong>セッション開始時に全ツール定義を一括でロード</strong>する。これがコンテキストの固定消費の主因。</p>
+<hr />
+<h2 id="sec-c">C. 効率テクニック</h2>
+<h3>作業が長くなったら <code>/compact</code> か新セッション</h3>
+<p>セッションが長くなると過去の会話が蓄積し、1ターンあたりの入力トークンが増加し続ける。</p>
+<ul>
+<li><strong><code>/compact</code></strong>: 古い会話を要約して圧縮。会話の文脈は維持</li>
+<li><strong>新セッション</strong>: <code>/clear</code> または再起動。完全にリセット</li>
+<li><strong>自動コンパクション</strong>: ~167K到達時に自動発動（33Kバッファ）</li>
+</ul>
+<p>手動 <code>/compact</code> を適度に使うのが、最もバランスが良い。</p>
+<h3>バックグラウンドエージェントで<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>作業</h3>
+<p><code>Agent</code> ツールを <code>run_in_background: true</code> で使うと、メインコンテキストを消費せずに独立タスクを実行できる。</p>
+<pre><code>メイン: ガイドを書く
+  ├── BG Agent: リポジトリAを調査
+  └── BG Agent: リポジトリBを調査
+</code></pre>
+<p>→ メインのコンテキストを節約しつつ、複数タスクを同時進行可能。</p>
+<h3><code>/model haiku</code> で軽作業は高速化・低コスト化</h3>
+<p>単純な質問・フォーマット変換・短い修正等は、安価なモデルで十分。</p>
+<pre><code class="language-bash">/model haiku    # Haiku に切替
+# ... 軽作業 ...
+/model sonnet   # Sonnet に戻す
+</code></pre>
+<h3>CLAUDE.md は短く保つ</h3>
+<p>CLAUDE.mdの内容は<strong>毎ターン読み込まれる</strong>。長すぎると毎回無駄にトークンを消費。</p>
+<ul>
+<li>グローバルCLAUDE.md: 共通ルールのみ（現状〜5Kトークン）</li>
+<li>プロジェクトCLAUDE.md: プロジェクト固有のみ</li>
+<li>長いドキュメントは別ファイルにして、必要時だけ参照</li>
+</ul>
+<hr />
+<h2 id="sec-d">D. よくある誤解</h2>
+<h3>「会話履歴がコンテキスト圧迫の主因」</h3>
+<p><strong>半分正解・半分不正解</strong>。</p>
+<ul>
+<li>MCP定義（~21K）は<strong>固定</strong>で毎ターン消費 — これがベースライン</li>
+<li>会話履歴は<strong>変動</strong>するが、単発のやりとりでは小さい</li>
+<li><strong>長いセッション</strong>になると会話蓄積が主因に変わる</li>
+</ul>
+<p>→ 短いセッションではMCP固定コストが目立つ。長いセッションでは会話蓄積が目立つ。</p>
+<h3>「MCPツールは呼んだ時だけコスト発生」</h3>
+<p><strong>違う</strong>。ツール定義だけで毎ターン消費。呼び出しは<strong>追加</strong>コスト。</p>
+<p>→ 使っていないサーバーを残しておくと、1ターンごとに無駄なトークンを消費し続ける。</p>
+<h3>「メモリは無料」</h3>
+<p><strong>違う</strong>。MEMORY.md + 各メモリファイルが毎ターン読み込まれ、トークンを消費。</p>
+<ul>
+<li>メモリファイルが増えすぎると、それだけで数千トークン/ターンの固定消費になる</li>
+<li>古い・不要なメモリは定期的に整理する</li>
+</ul>
+<h3>「<code>/clear</code> = すべてリセット」</h3>
+<p><strong>違う</strong>。<code>/clear</code>がリセットするのは会話履歴のみ。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>リセットされる</th>
+<th>残る</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>会話履歴</td>
+<td>システムプロンプト（CLAUDE.md）</td>
+</tr>
+<tr>
+<td></td>
+<td>MCPツール定義</td>
+</tr>
+<tr>
+<td></td>
+<td>Auto Memory</td>
+</tr>
+<tr>
+<td></td>
+<td>設定（permissions, hooks）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>「コンパクション（compact）= 要約品質が高い」</h3>
+<p><strong>注意が必要</strong>。自動コンパクションは古い会話を要約して捨てるが、<strong>詳細が失われる</strong>。重要な文脈は compact 前にメモリに保存するか、自分で要約を控えておく。</p>
+<hr />
+<h2 id="sec-e">E. Cron管理の注意点</h2>
+<h3>Cron は7日で自動失効する</h3>
+<p>Claude Code の <code>CronCreate</code> で登録したCronジョブは、<strong><code>durable=false</code> の場合は7日後に自動削除される</strong>。<code>durable=true</code> も実質7日が上限とされている（2026年6月時点）。</p>
+<p>→ <strong>放置するとCronが静かに消える。</strong></p>
+<h3>自己更新プロンプトは膨張バグを引き起こす</h3>
+<p>「このプロンプト全文をそのままコピーして再登録せよ」というプロンプトをCronに埋め込むと、再登録のたびにプロンプトが重複コピーされ続け、最終的に8倍以上の長さになる。</p>
+<pre><code>初回: &quot;このプロンプト全文を...&quot;（100文字）
+1回目実行後: &quot;このプロンプト全文を...このプロンプト全文を...&quot;（200文字）
+N回目実行後: N倍の長さに膨張
+</code></pre>
+<h3>推奨: スクリプト方式で永続化する</h3>
+<p>Cron定義を外部スクリプトに書き出し、更新専用Cronがそれを読んで再登録する方式が安全。</p>
+<p><strong>構成例:</strong></p>
+<pre><code class="language-bash"># ~/bin/renew-crons.sh
+# このファイルは実行ではなく、Claudeがcatして読むための定義ファイル
+#
+# 1. Knowledge Lint
+#    schedule: &quot;3 3 * * 0,2,4&quot;
+#    prompt:   &quot;bash ~/.claude/scripts/knowledge-lint/run-lint.sh &amp;&amp; ...&quot;
+#
+# 2. Cron更新タスク（このスクリプト自身）
+#    schedule: &quot;0 3 */6 * *&quot;
+#    prompt:   &quot;bash ~/bin/renew-crons.sh を cat して全Cronを再登録せよ&quot;
+</code></pre>
+<p><strong>更新Cronのプロンプト（短く固定）:</strong></p>
+<pre><code>bash ~/bin/renew-crons.sh を cat して、記載された全Cronを
+CronCreate(durable=true, recurring=true) で再登録せよ。
+既存の同名Cronは削除してから登録すること。
+</code></pre>
+<p><strong>ポイント:</strong></p>
+<ul>
+<li>プロンプト本文にCron定義を書かない（スクリプトに委譲する）</li>
+<li>スクリプト内容を変更してもプロンプトは変わらないため膨張しない</li>
+<li>更新スケジュールは <code>0 3 */6 * *</code>（6日ごと）で7日失効の前に再登録</li>
+</ul>
+<hr />
+<h2 id="sec-f">F. APIスクリプト共通基盤（api_base.py）</h2>
+<p>外部API（Gemini・Last.fm等）をCLIから叩くとき、<strong>共通基盤 <code>lib/api_base.py</code> を経由</strong>するとプロバイダを増やすたびに同じパターンが使い回せる。2プロバイダで同一雛形が再利用可能なことを実証済み。</p>
+<h3>設計思想：CCはAPIを直接叩かない</h3>
+<pre><code>SKILL.md → scripts/api/&lt;provider&gt;.py → lib/api_base.py → 統一JSON
+</code></pre>
+<p>スクリプトは<strong>統一JSON</strong>（<code>status/summary/full_data/error</code>）を返し、CCは<code>summary</code>のみ受け取る。巨大な<code>full_data</code>（生レスポンス）は<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>ファイルに退避するので<strong>トークン膨張を防げる</strong>。</p>
+<h3>api_base.py の中身（4<span class="term" tabindex="0">関数<span class="term-popup">一連の処理をまとめて名前を付けたもの。呼び出すたびに同じ処理が実行される。プログラムの基本単位</span></span>のみ）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>関数</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run_api(call_fn, summary_fn, cache_key)</code></td>
+<td>API呼び出しをラップし<strong>全<span class="term" tabindex="0">例外<span class="term-popup">プログラムの実行中に起きた異常のこと、とその知らせ。例外を捕まえて処理（ハンドリング）しないと、その場でプログラムが止まる</span></span>を統一JSONへ</strong>捕捉</td>
+</tr>
+<tr>
+<td><code>make_error_result(error)</code></td>
+<td>例外をエラーJSONに正規化</td>
+</tr>
+<tr>
+<td><code>make_success_result(summary, full_data, cache_key)</code></td>
+<td>成功JSON生成 + <code>full_data</code>を<code>~/tmp/api_cache/</code>に退避</td>
+</tr>
+<tr>
+<td><code>_cache_dir()</code></td>
+<td>キャッシュ<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>生成</td>
+</tr>
+</tbody>
+</table></div>
+<p>核心は <code>run_api</code> の抽象：プロバイダ固有ロジックは <code>call_fn</code>（API呼び出し）と <code>summary_fn</code>（結果→成功JSON）の2関数に閉じ込め、基盤側は汎用的。</p>
+<h3>新しいAPIを追加する手順（5ステップ）</h3>
+<ol>
+<li><strong>キー取得</strong> — ユーザーが <code>~/.secrets.env</code> に <code>&lt;PROVIDER&gt;_API_KEY</code> 追加（<strong>値は会話・ファイルに書かない</strong>）</li>
+<li><strong><span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span></strong> — <code>scripts/api/&lt;provider&gt;.py</code> を新設。下記雛形の <code>_call</code>/<code>_summarize</code> だけ書き換える。<code>tests/test_&lt;provider&gt;.py</code> でparse系純粋関数を先にテスト</li>
+<li><strong>スキル統合</strong> — 呼び出し元SKILL.mdにPhase追加（🔷ユーザー確認ポイント付き）</li>
+<li><strong>実URL検証</strong> — 本物の入力でE2Eを通す（<span class="term" tabindex="0">モック<span class="term-popup">テスト用の「偽物」。本物の代わりに決まった値を返すようにして、テスト対象だけを確実に検査できるようにする</span></span>じゃなく実API）</li>
+<li><strong>完了記録</strong> — SSOT <code>01_DECISIONS/claude-code/</code> に完了ファイル。<code>prev:</code> で前フェーズにリンク</li>
+</ol>
+<h3>雛形（コピペして <code>_call</code>/<code>_summarize</code> だけ書き換え）</h3>
+<pre><code class="language-python">import json
+from lib.api_base import run_api, make_success_result
+
+def _call():
+    # プロバイダ固有のAPI呼び出し（SDK / urllib）
+    ...
+
+def _summarize(result, cache_key):
+    # result → summary文字列 + full_dataをmake_success_resultへ
+    return make_success_result(summary=..., full_data=result, cache_key=cache_key)
+
+if __name__ == &quot;__main__&quot;:
+    args = parse_args()
+    cache_key = f&quot;{provider}_{args.xxx}&quot;
+    print(json.dumps(run_api(_call, _summarize, cache_key), ensure_ascii=False))
+</code></pre>
+<h3>現場で踏んだ罠</h3>
+<ul>
+<li><strong>Gemini モデル廃止</strong>: <code>gemini-2.0-flash</code> は404。最新GAモデルを都度確認（現 <code>gemini-3.5-flash</code>）</li>
+<li><strong>SDK<span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>の勘</strong>: <code>Part.from_uri</code> は <code>file_uri=</code>（<code>url=</code> ではない）</li>
+<li><strong>自動特定の誤認</strong>: Last.fm <code>track.search</code> はYouTube動画タイトルのノイズで誤認しやすい → 🔷ユーザー確認 + 手動指定<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>必須</li>
+<li><strong>片方指定バグ</strong>: <code>--track</code>/<code>--artist</code> の片方だけ指定すると無視される → XORバリデーション</li>
+<li><strong>timeout は今は死にパラメータ</strong>: <span class="term" tabindex="0">docstring<span class="term-popup">ドックストリング。関数等の直後に書く説明文。プログラムの動作を1行で説明し、AIや人間がコードを理解する助けになる</span></span>に「将来signalで適用」と明記（SDK側が<span class="term" tabindex="0">タイムアウト<span class="term-popup">待ち時間の上限。指定時間内に応答が無ければ「失敗」とみなして打ち切る仕組み</span></span>保持）</li>
+</ul>
+<div class="callout callout-info"><p>詳細（アーキテクチャ全体・フェーズ別成果）: SSOT <code>01_DECISIONS/claude-code/2026-06-18_サードパーティAPI統合アーキテクチャ.md</code></p></div>
+<hr />
+<h2 id="sec-g">G. コード行数の正確な計測</h2>
+<p><span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>フォリオや経歴書に「コード行数」を記載する際、<strong>自動生成ファイルを除外しないと数字が大きく狂う</strong>。</p>
+<h3>必ず除外すべきディレクトリ</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ディレクトリ</th>
+<th>正体</th>
+<th>実例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mutants/</code></td>
+<td>ミューテーションテストの自動生成コピー</td>
+<td>NexusCoreで5.5万行が混入</td>
+</tr>
+<tr>
+<td><code>evaluation/</code></td>
+<td>外部評価<span class="term" tabindex="0">フレームワーク<span class="term-popup">アプリを作るための骨組み部品のセット。土台が用意されているので、中身の作り込みに集中できる</span></span>（evalplus等）</td>
+<td>実コードとは別物</td>
+</tr>
+<tr>
+<td><code>archive/</code></td>
+<td>廃止・旧版コード</td>
+<td>現行プロダクトではない</td>
+</tr>
+<tr>
+<td><code>.venv/</code> <code>venv/</code></td>
+<td>Python<span class="term" tabindex="0">仮想環境<span class="term-popup">プロジェクトごとにインストールするライブラリを分ける独立したPython環境。プロジェクト間のバージョン衝突を防ぐ</span></span></td>
+<td>サードパーティ<span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span></td>
+</tr>
+<tr>
+<td><code>node_modules/</code> <code>dist/</code></td>
+<td>JS依存・<span class="term" tabindex="0">ビルド<span class="term-popup">ソースコードから、実行可能な完成品を組み立てること</span></span>成果物</td>
+<td>自分が書いたコードではない</td>
+</tr>
+<tr>
+<td><code>__pycache__/</code> <code>.git/</code> 等</td>
+<td>システム生成物</td>
+<td>全て除外</td>
+</tr>
+</tbody>
+</table></div>
+<h3>異常値の見つけ方</h3>
+<p>計測後に以下を確認する：</p>
+<ul>
+<li><strong>ファイルが10,000行超</strong> → 生成物の可能性が高い。冒頭20行を確認する</li>
+<li><strong>ディレクトリ平均が300行超</strong> → そのディレクトリの中身をlsして確認</li>
+<li><strong>バイト数÷行数が10未満または500超</strong> → バイナリ混入 or minified JS</li>
+</ul>
+<h3>「本当に読んで計測した」3層証明</h3>
+<p>数字の信頼性を担保するために：</p>
+<ol>
+<li><strong>ランダムサンプル</strong> — 計測ファイルから3件抽出して冒頭5行を表示</li>
+<li><strong>バイト整合性</strong> — 最大ファイルの「バイト数÷行数」が10〜500の範囲か確認</li>
+<li><strong>git log</strong> — 各リポジトリの最終コミット日時・総コミット数を表示</li>
+</ol>
+<p>→ <code>/code-metrics</code> スキルがこれらを自動実行する。</p>
+<hr />
+<h2 id="sec-h">H. 並行セッションの競合回避（active-sessionsボード）</h2>
+<h3>問題：複数セッションが「共通ファイル」を逆向きに触る</h3>
+<p>通常4セッション程度を並行運用するが、トピックを分けていても<strong>境界が曖昧な「共通ファイル」を複数セッションが同時に逆向きに触り、矛盾・無効化</strong>が起きる。</p>
+<p><strong>共通ファイル（9種）</strong> — 複数セッションの境界をまたぐ設定・運用ファイル:</p>
+<ol>
+<li><code>~/.claude/settings.json</code></li>
+<li><code>~/.claude/CLAUDE.md</code></li>
+<li><code>SKILL.md</code>群（<code>skills/*/SKILL.md</code>）</li>
+<li>hook群（<code>scripts/hooks/*</code>・<code>scripts/obsidian/*</code>）</li>
+<li><code>00★SYSTEM/自動化.md</code></li>
+<li><code>00★SYSTEM/全体マップ_MOC.md</code></li>
+<li><code>00★SYSTEM/repo-index.yaml</code> / <code>リポジトリ索引.md</code></li>
+<li><code>00★SYSTEM/MCPツール使い分けガイド.md</code></li>
+<li><code>00★SYSTEM/リンク運用方針.md</code></li>
+</ol>
+<p><strong>実例（同一日内で発生）</strong>: <code>check-link-policy.sh</code> が3セッションで「修正 / 削除 / 活用」と分裂。どれか1人が作業しても別の1人が無効化する状態になった。</p>
+<p>根本原因は <strong>各セッションが他の並行セッションの「進行中方針」を知らない</strong>こと。git log には未commitの意図は載らない。</p>
+<h3>解決：作業宣言の共有ボード</h3>
+<p><code>00★SYSTEM/active-sessions.md</code> に「いま誰がどの共通ファイルを・どうするか」を宣言する。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>タイミング</th>
+<th>担当スキル</th>
+<th>ボードへの書き込み</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>開始時</td>
+<td>resume-session</td>
+<td>自分の行を<strong>追加</strong>（触る予定ファイル・方針を宣言）</td>
+</tr>
+<tr>
+<td>記録時</td>
+<td>ssot-record</td>
+<td>共通ファイルを触ったら自分の行を<strong>更新</strong></td>
+</tr>
+<tr>
+<td>終了時</td>
+<td>new-session</td>
+<td>自分の行に <strong>✅終了</strong>（or削除）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>競合発見時のフロー</strong>（共通ファイルを触る前）:</p>
+<ul>
+<li><strong>同方向</strong>（両方「修正」等）→ 協調。片方に任せるか連携</li>
+<li><strong>逆方向</strong>（修正 vs 削除 等）→ <strong>止まる。必ずユーザー判断</strong>。勝手に進めない</li>
+</ul>
+<h3>運用のポイント</h3>
+<ul>
+<li><strong>即push徹底</strong>: ボード変更時は5分auto-syncを待たず手動commit+push（ラグで他セッションが見逃すのを防ぐ）</li>
+<li><strong>stale掃除</strong>: 24h超・状態不明のエントリは次セッション開始時に確認・掃除可</li>
+<li><strong>完全防止ではない</strong>: Phase1は手動運用。宣言忘れはgit logで事後検出（Phase2でPreToolUse hookによる自動警告を予定）</li>
+</ul>
+<div class="callout callout-info"><p><strong>根本原則</strong>: 逆方向の変更は勝手にやらない。必ずユーザー判断。</p></div>
+<hr />
+<h2>💡 やさしい補足（初心者向け）</h2>
+<p>この章に書いてある「使ってみないと分からない実話」を、日常の言葉で言い直します。</p>
+<ul>
+<li><strong>「長く使うほど高くつく」</strong>: 1回の質問にかかる料金が、会話が長引くほどじわじわ上がります（毎回それまでの全履歴を読み直すから）。<strong>長くなったら <code>/compact</code>（要約して短くする）か、新しい会話に切り替える</strong>のが節約のコツです。</li>
+<li><strong>「追加機能は減らす方が安い」</strong>: 「MCP」という追加機能（Web検索・GitHub操作など）は、<strong>使っていなくても毎回料金がかかります</strong>（説明書を毎回読み込むから）。使わないものは外すのが一番の節約です。</li>
+<li><strong>「設定ファイルが2つあってややこしい」</strong>: Claude Codeの設定は<strong>2つのファイルに分かれて</strong>いて、両方を合わせて読まれます。片方だけ直してもう片方が古いままだと「直したはずなのに効かない」になります。<strong>MCPの追加・削除は手作業ではなく専用コマンド（<code>claude mcp ...</code>）を使う</strong>と、両方正しく直ります。</li>
+<li><strong>「危ない命令は自動で止まる」</strong>: この環境では、ファイルを消す命令やシステムを壊す命令を<strong>実行前に自動でブロック</strong>する仕組み（フック）が入っています。万が一Claudeが危なそうなことを言っても、勝手には実行されません。</li>
+<li><strong>「複数のClaudeを同時に動かすとぶつかる」</strong>: 複数のセッションが同じファイルを逆向きにいじると台無しになります。「active-sessionsボード」という共有メモでぶつからないようにする運用をしています（上のH節）。</li>
+</ul>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="11-glossary.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+            
+            <a href="13-external-references.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">🔗 外部参考資料</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

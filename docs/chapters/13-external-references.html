@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外部参考資料 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 外部参考資料の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="外部参考資料 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI 外部参考資料の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/13-external-references.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="11-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="12-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="13-external-references.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="14-agent-engineering-layers.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            エージェント工学の階層
+        </a>
+        
+        <a href="15-official-docs-index.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="16-knowledge-storage.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗂️</span>
+            知識の保存先の使い分け
+        </a>
+        
+        <a href="17-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="18-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="19-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="20-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="21-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="22-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="23-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
+        </a>
+        
+        <a href="24-mobile-remote.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📱</span>
+            スマホからのリモート操作
+        </a>
+        
+        <a href="25-windows-wsl.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪟</span>
+            Windows⇔WSL 設定同期
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="12-tips.html" class="nav-prev">← 現場の知見</a>
+            
+            
+            <a href="14-agent-engineering-layers.html" class="nav-next">エージェント工学の階層 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>icon: 🔗
+slug: 13-external-references</h2>
+<h1>16 外部参考資料 — 自分の実体験ではないが参考になる情報源</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: 一次情報は公式docs。記事はあくまで道案。</p></div>
+<div class="callout callout-warn"><p>この章は他の章と性質が違います。他の章は「自分の環境で実際に試して確かめた」記録ですが、ここに載せるのは<strong>外部リポジトリの内容を日本語に翻訳・要約したもの</strong>です。未検証・他者の知見である点に注意して読んでください。</p></div>
+<h2>claude-code-best-practice（リポジトリ概要）</h2>
+<p><a href="https://github.com/shanraisshan/claude-code-best-practice">claude-code-best-practice</a> は、vibe codingからagentic engineeringへの実践ノウハウをまとめたOSSリポジトリ（60.9k star・MIT・2026-06-26調査時点）。以下は中身を実際に読んで翻訳した抜粋。</p>
+<h3>Claude Code の隠れ機能「パワーアップ」（<code>/powerup</code>）</h3>
+<p>v2.1.90で追加されたインタラクティブレッスン機能。<code>claude</code> 起動後に <code>/powerup</code> を打つと、以下10レッスンを1つずつ学べる。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>機能</th>
+<th>主要トピック</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>コードベースとの対話</td>
+<td><code>@ファイル</code>、行参照</td>
+</tr>
+<tr>
+<td>2</td>
+<td>モードで操作</td>
+<td><code>shift+tab</code>、プラン、自動</td>
+</tr>
+<tr>
+<td>3</td>
+<td>すべてを取り消し</td>
+<td><code>/rewind</code>、<code>Esc</code>×2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>バックグラウンド実行</td>
+<td>タスク、<code>/tasks</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>ルールを教える</td>
+<td><code>CLAUDE.md</code>、<code>/memory</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>ツール拡張</td>
+<td><span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>、<code>/mcp</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><span class="term" tabindex="0">ワークフロー<span class="term-popup">一連の作業の流れ・手順の定義。GitHub Actionsでは自動実行の手順をこう呼ぶ</span></span>自動化</td>
+<td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>、フック</td>
+</tr>
+<tr>
+<td>8</td>
+<td>自分を複製</td>
+<td><span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>、<code>/agents</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td>どこからでもコード化</td>
+<td><code>/remote-control</code>、<code>/teleport</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>モデル調整</td>
+<td><code>/model</code>、<code>/effort</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>/powerup</code> <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>自体は試していないが、まだ触ったことのない機能（<code>/teleport</code>・<code>/effort</code>等）の存在を知る一覧として有用。</p>
+<h3><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>管理と1Mコンテキスト（Thariq氏の知見・翻訳）</h3>
+<p>各ターン後に取れる選択肢は5つ:</p>
+<ol>
+<li><strong>Continue</strong> — 同じセッションを継続（全コンテキスト保持）</li>
+<li><strong>Rewind</strong>（<code>Esc</code>×2） — 前のメッセージに戻り、それ以降を削除して再開</li>
+<li><strong><code>/compact</code></strong> — 会話を要約して圧縮（情報の損失あり）</li>
+<li><strong><code>/clear</code></strong> — 新規セッション開始（自分で書いたブリーフのみ保持）</li>
+<li><strong>Subagents</strong> — 専用コンテキストを持つ子<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>に委譲</li>
+</ol>
+<p>実践的なポイント:</p>
+<ul>
+<li><strong>「新しいタスク＝新規セッション」が原則</strong></li>
+<li><strong>コンテキストロット</strong>（パフォーマンス低下）は約30〜40万<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>付近から目立ち始める</li>
+<li>失敗した試みは修正メッセージで残すより、<strong>Rewindして学んだ内容を含めて再<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span></strong>する方がコンテキスト効率が良い</li>
+<li><code>/compact</code> は「タスク途中で勢いを保ちたい時」向け（低コストだが要約ロスあり）、新規セッションは「重要な判断ポイント」向け（要約ロスなし）</li>
+<li>モデルが次の方向性を予測できない時にCompactすると重要情報が落ちやすい。<strong>「これから何をするか」のヒントを付けてCompactする</strong>と精度が上がる</li>
+</ul>
+<p>この内容は本ガイドの<a href="01-basics.html">01_基礎概念</a>（コンテキストの仕組み）・<a href="12-tips.html">12_現場の知見</a> A節（コンテキスト経済学）の話と重なるが、「Rewindの使い分け」は本ガイドでは扱っていない観点。</p>
+<h3>Opus活用の6つのコツ（Boris Cherny氏・Claude Code開発者の知見）</h3>
+<div class="callout callout-warn"><p>⚠️ 元記事は「Opus 4.7」を前提に書かれており（2026年4月時点の記事）、モデル名は現行（Opus 4.8等）と異なる可能性がある。ただし機能自体は汎用的なので参考になる。</p></div>
+<ol>
+<li><strong>オートモード</strong> — 安全なコマンドは自動承認、リスクのあるものだけ一時停止。<code>Shift+Tab</code>で切替。複数のClaudeを並行実行しやすくなる</li>
+<li><strong><code>/fewer-permission-prompts</code>スキル</strong> — セッション履歴から「安全だが毎回許可を求められるコマンド」を検出し、許可リストへの追加を提案</li>
+<li><strong>リキャップ機能</strong> — 長時間セッションから戻る際に「モデルが何をしたか・次は何か」を短く要約</li>
+<li><strong>フォーカスモード</strong>（<code>/focus</code>） — 中間作業を隠して最終結果だけに集中させる</li>
+<li><strong>エフォートレベル調整</strong>（<code>/effort</code>） — 5段階（低〜最大）で思考量を調整、速度と知能のバランス取り</li>
+<li><strong>検証メカニズムの確保</strong> — モデルが強力なほど「バックエンドはサーバテスト・フロントエンドはブラウザ制御」のようなタスク別の検証手段が重要になる</li>
+</ol>
+<h2>gstack（リポジトリ概要）</h2>
+<p><a href="https://github.com/garrytan/gstack">gstack</a> は、Garry Tan氏（Y Combinator CEO）が開発したClaude Code拡張<span class="term" tabindex="0">フレームワーク<span class="term-popup">アプリを作るための骨組み部品のセット。土台が用意されているので、中身の作り込みに集中できる</span></span>（116k star・MIT・作成3.5ヶ月で急成長）。「個人が大規模チームのように生産性を発揮する」がコンセプト。</p>
+<h3>導入（30秒）</h3>
+<pre><code class="language-bash">git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack &amp;&amp; cd ~/.claude/skills/gstack &amp;&amp; ./setup
+</code></pre>
+<p>必要環境: Claude Code・Git・Bun v1.0+（Windowsのみ Node.js も）</p>
+<h3>主要スキル（23の専門家ロール）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>段階</th>
+<th>スキル</th>
+<th>役割・機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>企画</td>
+<td><code>/office-hours</code></td>
+<td>YC担当者役。6つの厳しい質問で製品フレーミングを再考させる</td>
+</tr>
+<tr>
+<td>企画</td>
+<td><code>/autoplan</code></td>
+<td>CEO→デザイン→エンジニアのレビューを自動で一通り実行</td>
+</tr>
+<tr>
+<td><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span></td>
+<td><code>/review</code></td>
+<td>スタッフエンジニア役。本番で落ちそうな<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>を検出・自動修正</td>
+</tr>
+<tr>
+<td>実装</td>
+<td><code>/qa</code></td>
+<td>QAリード役。実ブラウザでテスト実行・<span class="term" tabindex="0">回帰テスト<span class="term-popup">変更後に「以前動いていた機能が壊れていないか」を確認するテスト。直したつもりが別の場所を壊す事故の防止</span></span>自動生成</td>
+</tr>
+<tr>
+<td><span class="term" tabindex="0">リリース<span class="term-popup">完成したものを外に出すこと。公開・出荷の意味</span></span></td>
+<td><code>/ship</code></td>
+<td>リリースエンジニア役。テスト実行・<span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>監査・PR作成まで一括</td>
+</tr>
+<tr>
+<td>リリース</td>
+<td><code>/canary</code></td>
+<td><span class="term" tabindex="0">デプロイ<span class="term-popup">作ったプログラムやサイトを、実際に動く環境へ設置して公開すること</span></span>後監視（コンソールエラー・パフォーマンス低下検知）</td>
+</tr>
+<tr>
+<td>デザイン</td>
+<td><code>/design-shotgun</code></td>
+<td><span class="term" tabindex="0">モック<span class="term-popup">テスト用の「偽物」。本物の代わりに決まった値を返すようにして、テスト対象だけを確実に検査できるようにする</span></span>アップ案を4〜6個生成・比較・反復</td>
+</tr>
+<tr>
+<td>セキュリティ</td>
+<td><code>/cso</code></td>
+<td>OWASP Top 10 + STRIDE脅威分析（誤検知除外パターン17個内蔵）</td>
+</tr>
+<tr>
+<td>調査</td>
+<td><code>/investigate</code></td>
+<td>系統的な根本原因分析（仮説検証ベース）</td>
+</tr>
+<tr>
+<td>その他</td>
+<td><code>/careful</code>/<code>/freeze</code>/<code>/guard</code></td>
+<td>破壊的コマンド警告・編集範囲<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>の安全ガード</td>
+</tr>
+<tr>
+<td>その他</td>
+<td><code>/retro</code></td>
+<td>チーム向け週次振り返り（出荷記録・テスト品質トレンド）</td>
+</tr>
+<tr>
+<td>その他</td>
+<td><code>/learn</code></td>
+<td>セッション間でのプロジェクトパターン学習・記憶</td>
+</tr>
+</tbody>
+</table></div>
+<p>実行順は「思考→企画→実装→レビュー→テスト→リリース→振り返り」という固定スプリント構造で、各スキルの出力が次のスキルに引き継がれる設計。</p>
+<h3>GBrain（永続知識ベース）</h3>
+<p><code>/setup-gbrain</code> でセットアップ。4つの選択肢（Supabaseクラウド共有・Supabase自動構築・PGLiteローカル・リモートGBrain参照）。<code>/sync-gbrain</code>でコードをインデックス化し、<code>gbrain search</code>等で呼び出す。<strong>セッションを超えた知識保持という点で、このSSOT運用の発想と一致する部分</strong>。</p>
+<h3>留意点</h3>
+<ul>
+<li>テレメトリは<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>オフ（送信内容はスキル名・実行時間・成否のみ、コード・ファイルパス・プロンプトは送信しない）</li>
+<li>アンインストール<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>（<code>gstack-uninstall</code>）あり、手動削除も明文化されている</li>
+<li>既存の自作スキル群（resume-session/ssot-record等）・agent-skills（<code>/review</code>/<code>/ship</code>等）と<strong>コマンド名が重複する可能性</strong>があるため、実導入する場合は名前衝突の確認が先</li>
+</ul>
+<h2>Anthropic-Cybersecurity-Skills（リポジトリ概要）</h2>
+<p><a href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">Anthropic-Cybersecurity-Skills</a> は、AIエージェント向けセキュリティスキル<span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span>（817スキル・21.4k star・Apache 2.0）。Anthropic非公式の独立コミュニティプロジェクト。</p>
+<h3>フレームワークマッピング（6種）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>フレームワーク</th>
+<th>対応範囲</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MITRE ATT&amp;CK v19.1</td>
+<td>15タクティック・286テクニック（754スキルがマッピング済み）</td>
+</tr>
+<tr>
+<td>NIST CSF 2.0</td>
+<td>6機能・22カテゴリ</td>
+</tr>
+<tr>
+<td>MITRE ATLAS v5.4</td>
+<td>AI/ML脅威（16タクティック・84テクニック）</td>
+</tr>
+<tr>
+<td>MITRE D3FEND v1.3</td>
+<td>防御対策（7カテゴリ・267テクニック）</td>
+</tr>
+<tr>
+<td>NIST AI RMF 1.0</td>
+<td>AIリスク管理（4機能・72サブカテゴリ）</td>
+</tr>
+<tr>
+<td>MITRE F3 v1.1</td>
+<td>サイバー詐欺TTP（8タクティック・123テクニック・JPMorganChase/Citigroup/CrowdStrike共同開発・2026年4月リリース）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>29のセキュリティドメイン（主要領域）</h3>
+<p>クラウドセキュリティ（66スキル）・脅威ハンティング（58）・脅威インテリジェンス（52）・ネットワークセキュリティ（43）・Webアプリケーションセキュリティ（42・OWASP Top 10対応）・デジタルフォレンジクス（41）・マルウェア分析（39）他21領域。</p>
+<h3>スキルの構造</h3>
+<pre><code>skills/skill-name/
+├── SKILL.md           ← YAMLフロントマター + Markdown本体
+├── references/        ← フレームワークマッピング・技術手順
+├── scripts/            ← ヘルパースクリプト
+└── assets/             ← テンプレート・チェックリスト
+</code></pre>
+<p>本体はWhen to Use（起動条件）→Prerequisites（必須ツール）→Workflow（手順）→Verification（成功確認）の4段構成。</p>
+<h3>導入方法</h3>
+<pre><code class="language-bash">npx skills add mukul975/Anthropic-Cybersecurity-Skills
+</code></pre>
+<p>Claude Code・GitHub Copilot・Cursor等26+プラットフォーム対応（agentskills.io標準互換）。</p>
+<h3>留意点</h3>
+<ul>
+<li><strong>817件は明らかに過剰</strong>。AIエージェント側は「スキャン段階(~30トークン)で<span class="term" tabindex="0">フロントマター<span class="term-popup">Markdownファイルの冒頭に「---」で囲んで置く設定データの塊。タイトルやタグ等を本文と分離して書ける</span></span>だけ検索→トップ3だけ完全ロード」という設計なので大量にあっても通常運用のコストは低いが、実際にセキュリティレビュー作業が発生した時に該当ドメインだけ拾う運用が現実的</li>
+<li>既存のセキュリティ設定ハブ（<code>run-security-check.sh</code>等）と重複しない領域（クラウド/脅威ハンティング/フォレンジクス等）を補完する位置づけが良さそう</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: 発行日の古い記事を鵜呑みにしない。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="12-tips.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">💡 現場の知見</span>
+            </a>
+            
+            
+            <a href="14-agent-engineering-layers.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">🏗️ エージェント工学の階層</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

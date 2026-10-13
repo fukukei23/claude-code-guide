@@ -91,88 +91,88 @@
             統合
         </a>
         
-        <a href="10-glossary.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">📖</span>
-            用語集
-        </a>
-        
-        <a href="11-tips.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">💡</span>
-            現場の知見
-        </a>
-        
-        <a href="12-dev-cycle.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">🔄</span>
-            dev-cycle
-        </a>
-        
-        <a href="13-glm-rate-proxy.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">⚡</span>
-            GLM Rate Proxy
-        </a>
-        
-        <a href="14-ssot-search.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">📄</span>
-            SSOTから探して
-        </a>
-        
-        <a href="15-cost-optimization.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">💰</span>
-            コスト最適化
-        </a>
-        
-        <a href="16-external-references.html"
-           class="sidebar-link">
-            <span class="sidebar-icon">🔗</span>
-            外部参考資料
-        </a>
-        
-        <a href="17-keybindings.html"
+        <a href="10-keybindings.html"
            class="sidebar-link">
             <span class="sidebar-icon">🎛️</span>
             CLI操作・キーバインド
         </a>
         
-        <a href="18-loop-system.html"
+        <a href="11-glossary.html"
            class="sidebar-link">
-            <span class="sidebar-icon">🔁</span>
-            ループシステム（Loop Engineering）
+            <span class="sidebar-icon">📖</span>
+            用語集
         </a>
         
-        <a href="19-decisions-log.html"
+        <a href="12-tips.html"
            class="sidebar-link">
-            <span class="sidebar-icon">🧩</span>
-            決定ログ
+            <span class="sidebar-icon">💡</span>
+            現場の知見
         </a>
         
-        <a href="20-version-management.html"
+        <a href="13-external-references.html"
            class="sidebar-link">
-            <span class="sidebar-icon">🔧</span>
-            バージョン管理
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
         </a>
         
-        <a href="21-agent-engineering-layers.html"
+        <a href="14-agent-engineering-layers.html"
            class="sidebar-link">
             <span class="sidebar-icon">🏗️</span>
             エージェント工学の階層
         </a>
         
-        <a href="22-official-docs-index.html"
+        <a href="15-official-docs-index.html"
            class="sidebar-link">
             <span class="sidebar-icon">📚</span>
             公式ドキュメント索引
         </a>
         
-        <a href="23.html"
+        <a href="16-knowledge-storage.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗂️</span>
+            知識の保存先の使い分け
+        </a>
+        
+        <a href="17-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="18-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="19-ssot-search.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
-            知識の保存先の使い分け
+            SSOTから探して
+        </a>
+        
+        <a href="20-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="21-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="22-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="23-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
         </a>
         
         <a href="24-mobile-remote.html"
@@ -183,7 +183,7 @@
         
         <a href="25-windows-wsl.html"
            class="sidebar-link">
-            <span class="sidebar-icon">📄</span>
+            <span class="sidebar-icon">🪟</span>
             Windows⇔WSL 設定同期
         </a>
         
@@ -351,7 +351,7 @@ graph TD
 <li>メモリは<strong>古くなる可能性がある</strong> — 鵜呑みにせず、必要に応じて現状を確認</li>
 <li>コードのパターンやファイル構造は<strong>メモリに保存しない</strong>（コードから直接読めるため）</li>
 <li>Git履歴も<strong>メモリに保存しない</strong>（<code>git log</code>が正）</li>
-<li><strong>メモリは無料ではない</strong> — MEMORY.md + 各ファイルが毎ターン読み込まれ、<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を消費。増えすぎると数千トークン/ターンの固定消費になる → <a href="11-tips.html#d-%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E8%AA%A4%E8%A7%A3">11_現場の知見</a></li>
+<li><strong>メモリは無料ではない</strong> — MEMORY.md + 各ファイルが毎ターン読み込まれ、<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を消費。増えすぎると数千トークン/ターンの固定消費になる → <a href="12-tips.html#d-%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E8%AA%A4%E8%A7%A3">12_現場の知見</a></li>
 </ul>
 <hr />
 <h2>CLAUDE.mdの3層構造（Instruction Memory）</h2>

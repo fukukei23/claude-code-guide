@@ -141,10 +141,10 @@ class TestRewriteLinks:
         assert 'href="02-commands.html#clear"' in result
 
     def test_url_encoded_md_links(self):
-        html = '<a href="11_%E7%8F%BE%E5%A0%B4%E3%81%AE%E7%9F%A5%E8%A6%8B.md">link</a>'
+        html = '<a href="12_%E7%8F%BE%E5%A0%B4%E3%81%AE%E7%9F%A5%E8%A6%8B.md">link</a>'
         result = rewrite_links(html)
         assert ".md" not in result
-        assert "11-tips.html" in result
+        assert "12-tips.html" in result
 
     def test_unknown_md_links_to_hash(self):
         html = '<a href="unknown_file.md">link</a>'
@@ -266,12 +266,16 @@ class TestBuildIntegrity:
     def test_all_chapters_have_nav(self):
         for html_file in (OUTPUT_DIR / "chapters").glob("*.html"):
             content = html_file.read_text(encoding="utf-8")
+            if 'http-equiv="refresh"' in content:
+                continue  # 旧slugリダイレクトstubは対象外（2026-10-14章番号振り直し）
             assert "chapter-nav-bottom" in content
             assert "sidebar" in content
 
     def test_all_chapters_have_ogp(self):
         for html_file in (OUTPUT_DIR / "chapters").glob("*.html"):
             content = html_file.read_text(encoding="utf-8")
+            if 'http-equiv="refresh"' in content:
+                continue  # 旧slugリダイレクトstubは対象外（2026-10-14章番号振り直し）
             assert "og:title" in content
             assert "og:image" in content
             assert "ogp.png" in content
@@ -279,6 +283,8 @@ class TestBuildIntegrity:
     def test_no_broken_md_links(self):
         for html_file in (OUTPUT_DIR / "chapters").glob("*.html"):
             content = html_file.read_text(encoding="utf-8")
+            if 'http-equiv="refresh"' in content:
+                continue  # 旧slugリダイレクトstubは対象外（2026-10-14章番号振り直し）
             # href内の.mdリンクのみ検出（ファイル名としての言及は除外）
             md_links = re.findall(r'href="[^"]*\.md[^"]*"', content)
             assert len(md_links) == 0, (

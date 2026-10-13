@@ -1,3 +1,10 @@
+---
+title: Windows⇔WSL 設定同期
+icon: 🪟
+slug: 25-windows-wsl
+card_desc: WSL CLI版とWindows Desktop版の2環境での設定配置と同期の考え方 — WSL symlink方式の罠を実測4パターンで検証し、確認コマンド付きで解説
+---
+
 # 25 Windows⇔WSL 設定同期
 
 > 最終更新: 2026-10-14 | 対象: WSL2 CLI版とWindows Desktopアプリ版の2環境運用

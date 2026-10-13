@@ -6,7 +6,7 @@
 
 1. **[00_早見表](00_早見表.md)** で全体像を把握する
 2. 気になる機能の **詳解ページ** を開いて深く理解する
-3. 分からない用語は **[10_用語集](10_用語集.md)** で引く
+3. 分からない用語は **[11_用語集](11_用語集.md)** で引く
 
 ## 目次
 
@@ -22,14 +22,14 @@
 | エージェント | [07_エージェント.md](07_エージェント.md) | カスタムエージェント・サブエージェント | 3〜4p |
 | 設定 | [08_設定ファイル.md](08_設定ファイル.md) | CLAUDE.md・settings.json解説 | 4〜5p |
 | 統合 | [09_統合.md](09_統合.md) | IDE連携・リモート・CI/CD | 3〜4p |
-| 用語集 | [10_用語集.md](10_用語集.md) | 全用語のA〜Z | 2〜3p |
-| 現場の知見 | [11_現場の知見.md](11_現場の知見.md) | Tips・落とし穴・効率テクニック | 3〜4p |
-| dev-cycle | [12_dev-cycle.md](12_dev-cycle.md) | コード品質改善の自律サイクル | 2〜3p |
-| GLM Rate Proxy | [13_glm-rate-proxy.md](13_glm-rate-proxy.md) | GLM/MiniMaxルーティングプロキシ | 2〜3p |
-| SSOTから探して | [14_ssot-search.md](14_ssot-search.md) | 個人ナレッジベースのRAG検索 | 2〜3p |
-| コスト最適化 | [15_コスト最適化構成.md](15_コスト最適化構成.md) | GLM/MiniMaxルーティング（独自構成） | 3〜4p |
+| 用語集 | [11_用語集.md](11_用語集.md) | 全用語のA〜Z | 2〜3p |
+| 現場の知見 | [12_現場の知見.md](12_現場の知見.md) | Tips・落とし穴・効率テクニック | 3〜4p |
+| dev-cycle | [17_dev-cycle.md](17_dev-cycle.md) | コード品質改善の自律サイクル | 2〜3p |
+| GLM Rate Proxy | [18_glm-rate-proxy.md](18_glm-rate-proxy.md) | GLM/MiniMaxルーティングプロキシ | 2〜3p |
+| SSOTから探して | [19_ssot-search.md](19_ssot-search.md) | 個人ナレッジベースのRAG検索 | 2〜3p |
+| コスト最適化 | [20_コスト最適化構成.md](20_コスト最適化構成.md) | GLM/MiniMaxルーティング（独自構成） | 3〜4p |
 | スキルマップ | （HTML専用・[公開ページ](https://fukukei23.github.io/claude-code-guide/chapters/16-skill-map.html)） | フェーズ別スキル選択のインタラクティブ早見表 | — |
-| バージョン管理 | [20_バージョン管理.md](20_バージョン管理.md) | 更新・ダウングレード手順・プロキシ環境の注意 | 2〜3p |
+| バージョン管理 | [23_バージョン管理.md](23_バージョン管理.md) | 更新・ダウングレード手順・プロキシ環境の注意 | 2〜3p |
 | スマホからのリモート操作 | [24_スマホからのリモート操作.md](24_スマホからのリモート操作.md) | Moshi+mosh+Tailscale+tmuxで外出先から自宅のClaude Codeを操作 | 2〜3p |
 | Windows⇔WSL設定同期 | [25_Windows-WSL設定同期.md](25_Windows-WSL設定同期.md) | 2環境の設定配置と同期の考え方・WSL symlink方式の罠と確認コマンド | 2〜3p |
 
