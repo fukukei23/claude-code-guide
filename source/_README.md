@@ -31,6 +31,7 @@
 | スキルマップ | （HTML専用・[公開ページ](https://fukukei23.github.io/claude-code-guide/chapters/16-skill-map.html)） | フェーズ別スキル選択のインタラクティブ早見表 | — |
 | バージョン管理 | [20_バージョン管理.md](20_バージョン管理.md) | 更新・ダウングレード手順・プロキシ環境の注意 | 2〜3p |
 | スマホからのリモート操作 | [24_スマホからのリモート操作.md](24_スマホからのリモート操作.md) | Moshi+mosh+Tailscale+tmuxで外出先から自宅のClaude Codeを操作 | 2〜3p |
+| Windows⇔WSL設定同期 | [25_Windows-WSL設定同期.md](25_Windows-WSL設定同期.md) | 2環境の設定配置と同期の考え方・WSL symlink方式の罠と確認コマンド | 2〜3p |
 
 ## 関連ドキュメント
 
