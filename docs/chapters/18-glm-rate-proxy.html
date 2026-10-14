@@ -209,8 +209,7 @@
         <article class="chapter-body">
             <h1>13 GLM Rate Proxy — Claude CodeをZAI/GLMで動かす低コスト運用</h1>
 <div class="callout callout-tip"><p>💡 <strong>章の核</strong>: <span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>はLLMコストの調整弁。止まったらproxy-doctorで診断。</p></div>
-<div class="callout callout-warn"><p><strong>⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。</strong>
-Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は <a href="04-mcp.html#glm">04_<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>サーバー</a> のglm/minimax MCPを参照してください。</p></div>
+<div class="callout callout-warn"><p><strong>⚠️ 旧記述の訂正（2026-10）</strong>: 以前は「Windows Desktopアプリ版はエンドポイント変更できないため本プロキシは使用しない」だったが、<strong>Anthropicが2026-07-09にthird-party inferenceモードをGA化</strong>したことで、Desktop側もGateway接続（Developer Mode → Configure Third-Party Inference）で本プロキシに接続可能になった。接続構成は「Windows側の <span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>:8787 を WSL 内のプロキシへ中継（portproxy）」する形。<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>（glm/minimax）は併用可能な補完経路（<a href="04-mcp.html#glm">04_MCPサーバー</a>）。</p></div>
 <p>Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.3）に切り替えるローカルプロキシの仕組みと運用ガイド。</p>
 <hr />
 <h2>&lt;a id=&quot;overview&quot;&gt;&lt;/a&gt;概要：なぜプロキシが必要か</h2>

@@ -3,8 +3,7 @@
 > 💡 **章の核**: プロキシはLLMコストの調整弁。止まったらproxy-doctorで診断。
 
 
-> **⚠️ これはWSL CLI版（Claude Code CLI）専用の仕組みです。**
-> Windows Desktopアプリ版はエンドポイントを変更できないため、このプロキシは使用しません。Windows版でGLM/MiniMaxを使う場合は [04_MCPサーバー](04-mcp.html#glm) のglm/minimax MCPを参照してください。
+> **⚠️ 旧記述の訂正（2026-10）**: 以前は「Windows Desktopアプリ版はエンドポイント変更できないため本プロキシは使用しない」だったが、**Anthropicが2026-07-09にthird-party inferenceモードをGA化**したことで、Desktop側もGateway接続（Developer Mode → Configure Third-Party Inference）で本プロキシに接続可能になった。接続構成は「Windows側の localhost:8787 を WSL 内のプロキシへ中継（portproxy）」する形。MCP（glm/minimax）は併用可能な補完経路（[04_MCPサーバー](04-mcp.html#glm)）。
 
 Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.3）に切り替えるローカルプロキシの仕組みと運用ガイド。
 
