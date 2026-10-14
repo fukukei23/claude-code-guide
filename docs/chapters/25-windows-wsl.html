@@ -327,9 +327,122 @@ readlink ~/.claude/scripts
 </code></pre>
 <h2>📖 かみ砕くと</h2>
 <p>2つの家（WSLとWindows）から同じ金庫室（設定フォルダ）を使いたいとき、<strong>渡り廊下（symlink）を自作すると鍵が合わず開かない</strong>か、最悪<strong>別の部屋に繋がる</strong>。正解は「金庫室は1つに置き、必要な複製を検閲付きの宅配（同期スクリプト）で送る」こと。</p>
+<h2>環境早見表（ここを見れば自分の環境が1目でわかる）</h2>
+<h3>ファイル配置 — 何がどこにあるか</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>役割</th>
+<th>WSL CLI版</th>
+<th>Windows Desktop版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>大本の指示書（CLAUDE.md）</td>
+<td><code>~/.claude/CLAUDE.md</code>（フル版・<code>@include</code>でルールファイルを毎回読込）</td>
+<td><code>~/.claude/CLAUDE.md</code>（<strong>Windows固有の注意に絞った別物</strong>・共通化しないのが正解）</td>
+</tr>
+<tr>
+<td>プロジェクト指示書</td>
+<td>各repoの <code>CLAUDE.md</code></td>
+<td>同左（<code>\\wsl.localhost\...</code>経由で読める）</td>
+</tr>
+<tr>
+<td>動作設定（settings.json）</td>
+<td><code>~/.claude/settings.json</code>（hooks多数）</td>
+<td><code>~/.claude/settings.json</code>（<strong>hooksはWSL版より少ない</strong>・移行済み分のみ）</td>
+</tr>
+<tr>
+<td><span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キー</td>
+<td><code>~/.secrets.env</code>（SessionStart hookがsettings.jsonへ注入・<strong>値を会話やコマンド<span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>に書かない</strong>）</td>
+<td><code>.env</code>読込不可 → Windows<span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>（<code>[System.Environment]::SetEnvironmentVariable</code>）かsettings.json直書き・<strong>設定後はアプリ再起動</strong></td>
+</tr>
+<tr>
+<td>プロジェクト永続メモリ</td>
+<td><code>~/.claude/projects/&lt;プロジェクト&gt;/memory/</code>（<code>MEMORY.md</code>索引が毎<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>自動読込）</td>
+<td><code>C:\Users\&lt;ユーザー&gt;\.claude\projects\...</code>（<strong>WSL側とは別管理</strong>・同期されない）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>読み込み順序</strong>（Claude Code標準）: ①ユーザー設定（<code>~/.claude/</code>）→ ②プロジェクト設定（repoの<code>.claude/</code>）→ ③ローカル設定（<code>settings.local.json</code>）。後の方が優先。</p>
+<h3>バックエンドLLM — 何で動いているか確認する方法</h3>
+<p><strong>原則</strong>: 実行エンジンは<strong>動的</strong>。<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>（<span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span>:8787）が使用率・時間帯で自動切替するため、<strong>起動時のバッジ・画面表示・transcriptのモデル名は当てにならない</strong>（自己申告の<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>）。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>信頼度</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>プロキシstatus（1行確認）</strong></td>
+<td>高</td>
+<td><code>bash ~/bin/proxy-mode.sh status</code> → 実効provider・使用率を表示。<strong>迷ったらこれ</strong></td>
+</tr>
+<tr>
+<td>プロキシ転送ログ</td>
+<td>最高</td>
+<td>journalctlの<code>Captured actual model</code>行（実エンジンの直接証跡・<code>llm-check</code><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>の手順）</td>
+</tr>
+<tr>
+<td>起動時バッジ/画面表示</td>
+<td>❌不可</td>
+<td>起動時固定で動的切替を追跡しない（例: 15-19時のピーク帯は別エンジンに自動フォールバックするがバッジは変わらない）</td>
+</tr>
+</tbody>
+</table></div>
+<p>切替: 「MiniMaxにして」「GLMにして」「自動に戻して」等の発話でプロキシの手動モード切替（TTL式・期限切れで自動復帰）。<strong>Desktop版（ネイティブSonnet動作）ではモデル切替不可</strong>・外部LLMは<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ツール経由で呼ぶ。</p>
+<h3>コマンド系の制限 — guard・分類器と安全な回避</h3>
+<p>コマンド実行には3層の防御が働く。<strong>引っかかったら別ツールに差し替えて迂回するのではなく、正規経路を使う</strong>のが原則:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>検知するもの</th>
+<th>引っかかる例</th>
+<th>安全な対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>破壊的コマンドdeny（hook）</td>
+<td>恒真に危険な操作</td>
+<td><code>rm -rf /</code>・<code>git push --force origin main</code>・<code>sudo rm -rf /</code>・<code>DROP DATABASE</code>・<code>terraform destroy</code></td>
+<td>実行しない。削除は個別ファイル指定+ユーザー確認の正規経路</td>
+</tr>
+<tr>
+<td><span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>書込guard（hook）</td>
+<td>設定ファイル読取→外部送信の連鎖</td>
+<td><code>cat settings.json</code> の内容を含むcurl送信</td>
+<td>設定の<strong>値</strong>をコマンドに含めない（キー名のみ扱う）</td>
+</tr>
+<tr>
+<td>権限分類器（CC本体・auto mode）</td>
+<td>外部送信系コマンド</td>
+<td>curlでのデータ送信（設定ファイルを含まなくても発火する場合がある）</td>
+<td><strong>WebFetchツール</strong>や<code>gh</code> CLI等の専用経路を使う。分類器の迂回（別ツールへの差し替え）はしない——迂回は検知を外れるだけで事故種別は消えない</td>
+</tr>
+</tbody>
+</table></div>
+<p>シークレットの鉄則: ①コマンド引数に直接書かない（<code>source ~/.secrets.env</code>して<code>$変数</code>参照）②「今後許可」を押すと<strong>コマンド全文がallowリストに永続化</strong>される（<span class="term" tabindex="0">埋め込み<span class="term-popup">文章の意味を数字の列（ベクトル）に変換すること。意味が近い文章は近い数字になるため、「意味での検索」ができるようになる。RAGの部品</span></span>値も）③ denyされたら、なぜ止まったかを確認してから正規経路へ。</p>
+<h3>得意・不得意・障害（実測ベース）</h3>
+<p><strong>WSL CLI版</strong>:</p>
+<ul>
+<li>✅ 得意: <span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>/スクリプト類の完全動作・<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>・hook群（フルセット登録済み）・git hooks・両側ファイル操作（<code>/mnt/c</code>でWindows側も参照可）・LLMコスト<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span>（プロキシ経由の低コスト運用）</li>
+<li>⚠️ 不得意/障害: Windows GUIアプリの直接操作・<strong>WSL symlinkはWindows側から解決不可</strong>（本記事前半の実測）・LLMが動的切替のため確認を怠ると誤報告する</li>
+</ul>
+<p><strong>Windows Desktop版</strong>:</p>
+<ul>
+<li>✅ 得意: Windows固有のファイル/アプリ操作・PowerShellネイティブ実行・GUI連携</li>
+<li>⚠️ 不得意/障害（実測）: <code>source ~/.secrets.env</code>が使えない（Windows環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span>へ）・WSLパス参照は<code>\\wsl.localhost\...</code>形式が必要・bash/<span class="term" tabindex="0">シェルスクリプト<span class="term-popup">コマンドの並びをファイルに書いて、まとめて自動実行できるようにしたもの。定型作業の手順書をプログラム化したもの</span></span>はGit Bash経由で限定的（<strong>chmod/ln -sはexit 0だが実効果なし</strong>＝NTFSで反映されない）・pre-commitフックが<code>/usr/bin/python3</code>不在で失敗・WSL側cron/自動実行は<code>wsl bash -c &quot;...&quot;</code>経由が必須・hook登録数がWSL版より少なく一部ガードが未登録</li>
+</ul>
+<p><strong>使い分けの指針</strong>: 自動化・スクリプト・定期実行は<strong>WSL CLI版</strong>（本丸）。Windowsアプリ操作・GUIが絡む作業だけDesktop版。両者で設定を共通化しようとせず、<strong>「独立実体+必要なものだけ同期」</strong>（本記事前半の構成）が実測上の正解。</p>
 <h2>🔗 関連章</h2>
 <ul>
-<li><a href="08_%E8%A8%AD%E5%AE%9A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB.html">08_<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span></a> — CLAUDE.md・settings.jsonの基本</li>
+<li><a href="08_%E8%A8%AD%E5%AE%9A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB.html">08_設定ファイル</a> — CLAUDE.md・settings.jsonの基本</li>
 <li><a href="01_%E5%9F%BA%E7%A4%8E%E6%A6%82%E5%BF%B5.html">01_基礎概念</a> — Desktop vs CLI の違い</li>
 </ul>
 
