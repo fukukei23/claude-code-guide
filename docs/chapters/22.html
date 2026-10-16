@@ -213,7 +213,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 436ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 444ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -225,10 +225,10 @@
 <li><strong>層の対応は第21章</strong> — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>〜グラフの5層のどれに効くページかは
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
-<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>229ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>207ページ</strong>
+<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>235ページ</strong>（言語別索引11件は対象外）+
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>209ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>436ページ</strong>・最終更新 2026-10-15。</p>
+合計 <strong>444ページ</strong>・最終更新 2026-10-16。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -242,7 +242,7 @@
 <hr />
 <h2>Claude Code 公式（code.claude.com・全ページ）</h2>
 <h3>基本・概要・始め方</h3>
-<p><strong>142ページ</strong></p>
+<p><strong>148ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -382,6 +382,30 @@
 <tr>
 <td><a href="https://code.claude.com/docs/en/cloud-environments">クラウド環境の構成</a></td>
 <td>Claude Codeクラウドセッションのネットワーク・<span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>・セットアップ<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>を構成する方法を解説する</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/code-review-costs">Code Reviewの費用と使用量</a></td>
+<td>Code Reviewの従量課金の仕組み（レビューレベルと頻度で変動・使用クレジットで課金）と費用見積り・月額上限の設定方法を案内。</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/code-review-customize">Code Reviewのカスタマイズ</a></td>
+<td>REVIEW.mdとCLAUDE.mdでCode Reviewの指摘内容を調整（重要度の再調整・パス除外・独自ルール追加・適用されるファイルの確認）する方法。</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/code-review-local">/code-reviewでローカルレビュー</a></td>
+<td>セッション内で/code-reviewを実行し<span class="term" tabindex="0">ブランチ<span class="term-popup">Gitで、本体（main）とは別に作業履歴を分けて保管できる「平行世界」。実験的な変更を本体に影響させずに進められる。終わったら本体に合流（マージ）する</span></span>変更のバグを検出・PRやパス指定・修正適用まで行う方法（/reviewエイリアス含む）。</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/code-review-pull-requests">PRでのレビュー読解と依頼</a></td>
+<td>GitHub PR上のCode Review結果の読み方（🔴🟡🟣重要度）・対応と却下・@claude reviewでのレビュー依頼方法を案内。</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/code-review-setup">Code Reviewのセットアップ</a></td>
+<td>管理者がClaude組織でCode Reviewを有効化（GitHub接続・GitHub App導入・リポジトリ追加・実行タイミング設定）する手順。</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/code-review-troubleshooting">Code Reviewのトラブルシューティング</a></td>
+<td>レビューが開始しない・失敗・予算スキップ等をチェックラン見出しから診断しREVIEW.md問題も解決する手順。</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/code-review"><span class="term" tabindex="0">コードレビュー<span class="term-popup">書かれたコードを、書いた本人以外の視点で読んで問題を指摘する作業。バグ・読みにくさ・危険な書き方を見つけるのに有効</span></span></a></td>
@@ -1435,7 +1459,7 @@
 </tbody>
 </table></div>
 <h3>Agents and Tools（スキル・ツール利用・MCP）</h3>
-<p><strong>42ページ</strong></p>
+<p><strong>43ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1515,6 +1539,10 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>-tool">Bashツール</a></td>
 <td>Claudeが永続bashセッションでシェルコマンド実行を要求できるクライアントツール</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/browser-use-sdk">SDKツールセットでのブラウザ/コンピュータ操作</a></td>
+<td>Python/TS SDKのbrowser/computer toolsetでドライバ（プロバイダ製・CDP自作）を介しブラウザ・デスクトップを操作するエージェントを構築（beta）。</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/browser-use-tool">ブラウザ使用ツール</a></td>
@@ -1735,7 +1763,7 @@
 </tbody>
 </table></div>
 <h3>Managed Agents（エージェント基盤）</h3>
-<p><strong>40ページ</strong></p>
+<p><strong>41ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1751,6 +1779,10 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/budgets">セッションバジェット</a></td>
 <td>セッション作成時に公開リスト価格でハードなドル予算上限を設定し、到達時にアイドル状態で停止する仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/choosing-an-environment">エージェント環境の選択</a></td>
+<td>Managed AgentsのサンドボックスをAnthropic管理クラウドとセルフホスト（worker経由）のどちらにするか比較して決める手引き（beta）。</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/cloud-sandboxes-reference">クラウドサンドボックスリファレンス</a></td>
