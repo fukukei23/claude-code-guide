@@ -418,6 +418,43 @@ graph TD
 <li><strong>古いメモは整理</strong>: メモが増えすぎると毎回の読み込みで料金が膨らむ。たまに見直して要らないものを消す</li>
 </ul>
 <hr />
+<h2>SSOT検索スキル（ssot-search/v2=<span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>主経路）</h2>
+<p>SSOT横断検索の正典は <strong><code>ssot-search</code> スキル</strong>。自然文クエリは v2（RAG意味検索）、型番・固有名は v1（字句検索）。</p>
+<h3>経路使い分け</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>クエリ型</th>
+<th>経路</th>
+<th>コマンド</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自然文・概念・語彙が不定</td>
+<td><strong>v2（主）</strong></td>
+<td><code>cd ~/projects/ssot-search-v2 &amp;&amp; .venv/bin/python3 cli.py &quot;&lt;クエリ&gt;&quot; --top 5</code></td>
+</tr>
+<tr>
+<td>型番・固有名・エラー文の正確コピー</td>
+<td>v1（サブ）</td>
+<td><code>python3 ~/.claude/scripts/ssot/search.py &quot;&lt;クエリ&gt;&quot; --top 5</code></td>
+</tr>
+<tr>
+<td>両方広く</td>
+<td>v2 hybrid</td>
+<td><code>cli.py &quot;&lt;クエリ&gt;&quot; --mode hybrid</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3>索引保守</h3>
+<ul>
+<li><span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>更新は <code>*/30 cron</code> 自動稼働（<code>~/bin/update_rag_index.sh</code>）</li>
+<li>鮮度確認: <code>tail -2 ~/.local/share/ssot-search-v2/update.log</code>・48h超で🚨警告</li>
+<li>詳細: <a href="19-ssot-search.html">19_ssot-search.md</a></li>
+</ul>
+<h3>層1ルールとの接続</h3>
+<p>層1 <code>rules/_shared/LLMサボりバイアス防止.md</code> のタスク再着手検索節は <strong>v2(RAG)を主経路</strong>、v1(字句)はサブ。<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span> 単独での「ゼロ件」断定は禁止（語彙違いを吸収できないため、誤断定が起きやすい・2026-10-17実測）。</p>
 
         </article>
 
