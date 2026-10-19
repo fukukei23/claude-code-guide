@@ -656,6 +656,11 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
+<td><code>check-plain-explanation.sh</code></td>
+<td>報告への平易な解説（「📖 かみ砕くと」等マーカー）の4要素（結論1行太字→指示の要約→CCがしたこと→比喩→あなたがやること）の記載を機械検査し、不足時は1回だけ差戻す。マーカー語彙は設定ファイル読み込み式で、<strong>短文応答は免罪</strong>（一定長未満の応答は検査対象外=RC-A・2026-10-13修正 <code>48c60c5</code>）、検出した欠落要素リストは同一応答内の他hook（check-fail-coverage等）の欠落と混ぜて帰属させない（RC-B・同日修正）</td>
+</tr>
+<tr>
+<td></td>
 <td><code>check-model-stay.sh</code></td>
 <td>glm-5.3（高消費モデル）への手動切替の戻し忘れを検知して警告。直近2時間以内に更新されたtranscript（subagents配下は意図的呼出のため除外・2026-09-21修正）を合算判定し、30分以上継続かつ5ターン超で警告ログ1回（30分デバウンス）。exit 2で差戻ししCCがふくけいへ伝える（spec: <code>docs/superpowers/specs/2026-09-01_glm5.3戻し忘れ検知-design.md</code> §4.3-4.5）</td>
 </tr>

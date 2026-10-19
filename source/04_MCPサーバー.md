@@ -77,6 +77,8 @@ MCPサーバー数が多いため、**4つのカテゴリ**に整理していま
 **使いどころ**: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。
 
 > **実装**: `~/.claude/scripts/mcp/minimax-mcp-server.py` — 自作Pythonスクリプト（**MiniMax-M3**使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては**別ファイル**。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。
+>
+> ⚠️ **モデルの出入りに注意（2026-10実測）**: `M3.1-Flash-Preview` に載せ替えたことがあるが（`2e50a5a`・effort env可変化）、**日本語応答への中国語混入が実測で発覚**し、MCPサーバーとproxy fallbackの両方を **M3へ復帰**（`2d08eef`）。レビュー観点の優先順（`config/multi-llm-review/review_policy.yaml` のmodels先頭）もM3へ復帰済み（`0da593c`）。「新モデルに載せ替えたら日本語品質を実測確認してから定着させる」運用。
 
 ### `MiniMax-M3` の context_window 設定（2026-07-12追加）
 
