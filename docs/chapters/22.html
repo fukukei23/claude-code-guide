@@ -213,7 +213,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 444ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 447ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -226,9 +226,9 @@
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
 <p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>235ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>209ページ</strong>
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>212ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>444ページ</strong>・最終更新 2026-10-16。</p>
+合計 <strong>447ページ</strong>・最終更新 2026-10-23。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -1231,7 +1231,7 @@
 </table></div>
 <h2>Platform 公式（platform.claude.com・LLM工学関連）</h2>
 <h3>Build with Claude（プロンプト・コンテキスト・effort等）</h3>
-<p><strong>54ページ</strong></p>
+<p><strong>57ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1259,6 +1259,18 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry">Claude in Microsoft Foundry</a></td>
 <td>Microsoft FoundryでClaudeモデルを利用するための設定方法とAPI呼び出し手順を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed">Claude Models on Google Cloud（Anthropic管理）</a></td>
+<td>Google Cloud経由のClaude APIをAnthropicが運用する形態。契約・必要サービス有効化・組織作成の手順。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed">Claude Models on Google Cloud（Google管理）</a></td>
+<td>Google Agent Platform上でClaudeを利用する準備（gcloud CLI・IAM権限）とAnthropicVertex SDKでのリクエスト方法。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/overview">Claude Models on Google Cloud概要</a></td>
+<td>Anthropic管理型とGoogle管理型の2つの提供形態をAPI形式・リージョン・モデルID等で比較。</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy">Claude on Amazon Bedrock (Opus 4.6以前) レガシー統合</a></td>
