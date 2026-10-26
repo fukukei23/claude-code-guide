@@ -254,14 +254,6 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 </tbody>
 </table></div>
-<h4>バナー集約パターン（startup-banner.sh）</h4>
-<p>複数のSessionStart hookが各自 <code>stdout</code> を出すと出力が散らかるため、<strong>各hookは <code>/tmp/claude-startup/&lt;名前&gt;.status</code> にステータスを書くだけ</strong>にし、最後の1本 <code>startup-banner.sh</code> が集約して1枚のバナーにする設計。</p>
-<ul>
-<li><strong>集計</strong>: ステータスファイルの行頭マーク <code>✅/⚠️/❌</code> を数えて「フック: N/M 正常 | 要確認: &lt;名前&gt;」形式でサマリー</li>
-<li><strong>表示内容</strong>: CC<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>（hook検知時は「✅最新版！」フラグ）・前回handoff・本日セッション数・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>トリガーマップ（各SKILL.mdの「トリガーワード」欄を自動抽出）</li>
-<li><strong>層1読込検証（@取り込み実働チェック）</strong>: CLAUDE.md の <code>@rules/</code> 参照ファイルの存在確認に加え、LLMへ「特定行の見出しを返答冒頭で引用せよ」という<strong>引用チャレンジ</strong>を出す（中身は表示しない=引用できれば読込証明・echo捏造では成立しない）</li>
-<li><strong>Desktop App対応</strong>: <code>/dev/tty</code> は使わず <code>stdout</code> に出力（Desktop Appでは <code>/dev/tty</code> が使用不可のため）</li>
-</ul>
 <h3>&lt;a id=&quot;pretooluse&quot;&gt;&lt;/a&gt;PreToolUse</h3>
 <p><strong>ツール実行前</strong>に実行。最も重要なフック。</p>
 <div class="table-wrapper"><table>
@@ -291,7 +283,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tbody>
 </table></div>
 <div class="callout callout-tip"><p>💡 ※2026-07-02統合撤去: 2026-06-30に追加していた minimax系<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ブロック（matcher <code>mcp__minimax-(official|video)__.*</code>・<code>exit 2</code>）は、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため PreToolUse hook を削除し撤去。minimax-official/video は日常セッションで即呼び可能。</p></div>
-<div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="12-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">12_現場の知見</a></p></div>
+<div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="12-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
 <div class="callout callout-info"><p><strong>クロスプラットフォーム対応</strong>: フックスクリプトで <code>python3</code> を直接呼ぶとWindows Git Bashで動作しない。<code>run-security-check.sh</code> ラッパーが python3 / python / wsl を自動検出する。Bashフックは純<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>（<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span>/sed）で<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>解析しpython3に依存しない。</p></div>
 <p>ブロックされるコマンドの例:</p>
 <ul>
@@ -350,6 +342,9 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </table></div>
 <h3>Notification / PostToolUseFailure</h3>
 <p>エラー・ブロック時（Notification）、ツール失敗時（PostToolUseFailure）に実行。Discord通知等の異常系ハンドリングに使用。</p>
+<h3>PermissionRequest（承認要求時）</h3>
+<p>承認<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>が出た瞬間に実行（2026-09-29配線・<code>notify-windows-approval.sh</code>）。Windows側でbeep2回+MessageBoxを出す通知専用hook（async fire-and-forget）。実発火E2E済み（ask ルールでPermissionRequestを発生させて音/ポップアップを人間観測）。</p>
+<div class="callout callout-warn"><p>⚠️ <strong>settings.jsonに書くhookコマンドは <code>~</code> 形式digit-freeに限定すること</strong>（2026-09-29実測）: guard-settings-write の層2（長文字列32字+文字種3種=TOKEN様判定）が、<code>/home/&lt;USER&gt;</code>（数字入り<span class="term" tabindex="0">絶対パス<span class="term-popup">一番上（ルート）から数えた完全な住所のようなファイルの場所表記。「/home/…」で始まる</span></span>）や <code>exit 2</code>（数字）を含むコマンド文字列をTOKENと誤判定して<strong>復元</strong>する。<code>~/.claude/...</code> 形式（小文字+記号のみ=文字種2種）ならCLEAN通過。数字が必要な処理（exit 2への変換等）はラッパスクリプト側に分離する（実例: <code>run-vision-pack-gate.sh</code>）。詳細: [[01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/2026-09-29_通知と視角パックhook配線完了-guard層2誤検知原因特定.md]]</p></div>
 <hr />
 <h2>設定方法</h2>
 <p>フックは <code>settings.json</code> の <code>hooks</code> セクションに定義する。</p>
@@ -432,7 +427,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-version.sh</code></td>
-<td>バージョン確認・新機能検知</td>
+<td><span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>確認・新機能検知</td>
 </tr>
 <tr>
 <td></td>
@@ -442,7 +437,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>load-obsidian-log.sh</code></td>
-<td>SSOT日記読み込み（今日・昨日のセッションログ＋🟢進行中タスク（他セッション占有・着手前確認）＋バックログ＋7日以上経過タスクの自動確認<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>・セッション数カウント付きサマリー）</td>
+<td>SSOT日記読み込み（今日・昨日のセッションログ＋🟢進行中タスク（他セッション占有・着手前確認）＋バックログ＋7日以上経過タスクの自動確認プロンプト・セッション数カウント付きサマリー）</td>
 </tr>
 <tr>
 <td></td>
@@ -527,11 +522,11 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>skill-guard.sh</code></td>
-<td>スキル定義の整合性ガード</td>
+<td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>定義の整合性ガード</td>
 </tr>
 <tr>
 <td></td>
-<td><code>check-ssot-sync-staleness.sh</code></td>
+<td><code>check-ssot-check-staleness.sh</code></td>
 <td>SSOT整合性の日次自動発動（state日付≠今日で <code>/ssot-check auto</code> をプロンプト注入・1日1回・REPL idle依存なし）</td>
 </tr>
 <tr>
@@ -556,23 +551,28 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
+<td><code>git-suction-guard.sh</code></td>
+<td>サブディレクトリ（.git無し）での <code>git init</code> が上位リポジトリに静かに吸着する事故の防御（2026-09-05新設）。吸着検知時は <code>permissionDecision: ask</code> で<strong>ふくけい確認必須</strong>（LLMが自己判断で続行不可）。対象外: 再init/上位.git無し/--bare/init以外（ホームrepo配下の日常作業の誤爆防止）。発火ログ <code>~/.claude/logs/git-suction-guard.log</code>・test 9ケース。層1ルール1行+ガイド23章と二重防御。spec: <code>docs/superpowers/specs/2026-09-04_git吸着対策hookと知識保存層ガイド分離-design.md</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>diary-write-guard.sh</code></td>
+<td>日記・SSOT追記専用ファイルへの stale 全体上書きを防ぐ hook（2026-09-05新設）。追記専用リスト（<code>diary-write-guard-list.conf</code>）の既存ファイルへの Write=deny（bypass は同一パス×同一セッション 1 回限り）・Edit は replace_all/空 old_string=deny・3 行超 old_string=ask・日記以外の大幅削減 Write や Bash リダイレクト上書きは ask・軽量 Read 追跡（mtime 不一致=ask）。導入期は shadow mode（判定ログのみ・<code>~/.claude/state/diary-write-guard/decisions.jsonl</code>）で誤検知観察後に enforce 化。設計: <code>00★SYSTEM/マルチLLMレビュー/2026-09-05_日記巻き込み再発防止G案/</code>・test 14 ケース。</td>
+</tr>
+<tr>
+<td></td>
 <td><code>path-rewrite.py</code>（Windows Desktop版のみ）</td>
 <td><code>~/projects/</code>等の既知WSLパスプレフィックスをUNCパスへ書き換え（matcher: &quot;Bash&quot;限定・ホワイトリスト4種・<code>/home/&lt;USER&gt;</code>もヒットするため、Bashツールに送るコマンド文字列内にリテラルで含めると意図せず書き換えられる点に注意。2026-07-10発見）</td>
 </tr>
 <tr>
 <td></td>
-<td><code>enforce-ssot-record.sh</code></td>
-<td><code>01_DECISIONS/</code> への手動Write/Editをブロックし ssot-record スキル経由を強制（フラグ=<code>~/.claude/state/ssot-record-active-&lt;セッションID&gt;</code>・スキル開始時作成/終了時削除・セッションID分離で並行セッションの誤許可を防止。2026-07-03事故〔手動WriteでINDEX/frontmatter/自動化.mdの連携更新漏れ〕対策）。<strong>2026-08-30/31拡張</strong>: ①Windows Desktop版がバックスラッシュ区切り（<code>\\wsl.localhost\...</code>）の<code>file_path</code>を渡すと判定に一致せず素通りする問題を正規化で解消（3hook同型・<span class="term" tabindex="0">単体テスト<span class="term-popup">関数など部品単位で動作を確認するテスト。pytestはPythonの定番テスト実行道具。変更のたびに自動で回して壊れていないことを担保する</span></span>付き）②判定時のSID有無を <code>~/.claude/state/ssot-record-sid-observe.jsonl</code> に記録（フラグ運用の実態観測）<strong>2026-09-14拡張</strong>: stdinのsession_id照合テスト（<code>test_enforce_ssot_record_stdin_sid.sh</code>・20ケース）追加・連携のmarker発行スクリプト <code>ssot-record-detect-targets.py</code> もSID渡しを <code>--sid</code> argv単一経路化（env依存廃止・Windows不伝播対策）</td>
-</tr>
-<tr>
-<td></td>
-<td><code>guard-config-secrets.sh</code></td>
-<td><span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>副本（<code>01_DECISIONS/claude-code/設定ファイル/</code> 配下）への生値シークレット混入をブロック（api_key/auth_token/secret等のキー名に <code>${ENV}</code> 参照以外の実値があれば exit 2・フラグ迂回なし・常にブロック。2026-07-06監査⑩対策・2026-08-30 Windows側settings.jsonにも登録）</td>
-</tr>
-<tr>
-<td></td>
 <td><code>warn-naming-rules.sh</code></td>
-<td>呼称ルール違反（記録内の「私/ユーザー＋助詞」）を警告表示（<strong>ブロックなし</strong>・exit 0 + additionalContext）。外向きディレクトリ（20_PUBLISHING/40_CAREER）と第三者意味の複合語は除外・r3で検出をpython単一パス化（同行混在検知漏れ修正）</td>
+<td>呼称ルール違反（<code>(私|ユーザー)(が|の|に|を|から|へ|は|も)</code>）の警告表示（<strong>ブロックなし</strong>・exit 0常時+additionalContext）。対象: knowledge-base/<code>.claude/rules</code>/claude-config配下・外向きdir除外・第三者複合語（エンド/API/顧客等）を<strong>単語単位で</strong>除外（r3: 同行混在検知漏れ修正・python単一パス）・MultiEdit edits配列対応。人間=「ふくけい」/LLM=「CC」固定名詞の機械的担保（spec 2026-08-29・テスト13件・2026-08-29新設）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>run-vision-pack-gate.sh</code></td>
+<td>視角パック監査gate（2026-09-29配線）。integrity fail(exit1)をhook block(exit2)へ変換（fail-closed・改変検知時は全ツール呼出停止・sudo reseedで回復）・tests 3ケース緑。<strong>⚠️settings.jsonへ「exit 2」等の数字を直書きするとguard-settings-write層2がTOKEN誤検知→復元するため、数字処理はこのラッパ側に分離</strong>（~形式digit-freeのみ配線可）</td>
 </tr>
 <tr>
 <td><strong>PostToolUse</strong></td>
@@ -586,13 +586,8 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
-<td><code>vision-pack/</code>（視角パック運用 v4.2）</td>
-<td>自己点検の「歩いたことにする」を構造的に防止する root所有0640領域の運用。F2/F5 (hash監査 + heartbeat段階エスカレーション) + F4 (キャリブレーション必須)。CC=読取専用・書込はroot cron + ふくけい手動sudo のみ。詳細は vision_pack_core.py + 01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/2026-09-27_視角パックv4設計補足レビュー/参照</td>
-</tr>
-<tr>
-<td></td>
 <td><code>post-tool-settings-sync.sh</code></td>
-<td>settings.json変更後のSSOT設定ファイルへの同期</td>
+<td>settings.json変更後のSSOT<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>への同期</td>
 </tr>
 <tr>
 <td></td>
@@ -605,19 +600,84 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td>Windows Desktop側<code>~/.claude/skills/</code>編集をWSL側実git正典（claude-config/skills/）へ即座にコピー＋軽量commit（matcher: &quot;Edit|Write|MultiEdit&quot;。既存のWSL→Windows一方向同期<code>sync-skills-windows.sh</code>による上書き消失事故の再発防止・2026-07-02追加）</td>
 </tr>
 <tr>
+<td></td>
+<td><code>log-mlr-calls.sh</code></td>
+<td>multi-llm-review の外部LLM呼出（MiniMax/GLM のMCP・Gemini/OpenRouter のcurl）の<strong>呼出事実と生の成否</strong>を <code>~/.claude/state/multi-llm-review.jsonl</code> に1行append。allowlist完全一致+除外リスト（<code>/api/v1/key</code> 等の疎通確認を弾く）・<strong>コマンド全文は書かない</strong>（APIキー混入回避・ドメインとモデル名のみ抽出）・対象外ツールは <code>case</code> 文で即 <code>exit 0</code>。ホスト側の補記は <code>~/bin/mlr-log.sh annotate</code>。<strong>2026-09-10改訂</strong>: stdout混在耐性fallback（2パス+後方優先・choices/candidates優先でerrorは第2パス・EXIT追記/リマインダ混在でも実成功をok分類）+curl ガード（ドメイン言及だけのコマンドで誤発火防止）・test 57件 GLM(api.z.ai)/MiniMax REST経路も記録（v3.1・2026-09-29）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-pipe-exit-code.sh</code></td>
+<td><span class="term" tabindex="0">パイプ<span class="term-popup">コマンドの結果を次のコマンドへ流し込む「｜」記号の仕組み。「検索する → 結果を数える」のように処理をつなげられる</span></span>付きコマンドで <code>EXIT=$?</code> を取得するパターン（<code>tail</code>/<code>grep</code>/<code>head</code> の戻り値で「成功」誤認・2026-09-07同日3回実測）とテスト実行+パイプ（pytest 0件収集時 exit 5 の隠蔽）を検知し<strong>警告表示</strong>（ブロックなし・exit 0固定・3機MLR r1-r3確定版）。<span class="term" tabindex="0">pip<span class="term-popup">ピップ。Pythonのライブラリ（部品）をインストールするコマンド。Pythonの買い物カートのようなもの</span></span>efail既定化は非対話shellに届かないため中止（BASH_ENVは全スクリプト波及）</td>
+</tr>
+<tr>
 <td><strong>PostToolUseFailure</strong></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td></td>
-<td>(atuin)</td>
-<td>シェル履歴統合</td>
+<td>(atuin) <code>~/bin/atuin-hook-capped.sh</code></td>
+<td>シェル履歴統合。timeout 3s+kill-after 2sでキャップ（51sスパイク再発防止・2026-08-15）。⚠️hookコマンドに32字以上+文字種3種の直書きはguard-settings-write層2がTOKEN誤検知→ラッパー絶対パス1<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>で回避（PATH_RE完全一致除外）・失敗時は ~/.claude/state/atuin-hook-timeout.log に記録</td>
+</tr>
+<tr>
+<td><strong>PermissionRequest</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>notify-windows-approval.sh</code></td>
+<td>承認プロンプト出現時にWindows側beep2回+MessageBox（async fire-and-forget・2026-09-29配線・実発火E2E済み）</td>
 </tr>
 <tr>
 <td><strong>Stop</strong></td>
 <td></td>
 <td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-plain-explanation.sh</code></td>
+<td>完了報告と思われる長い応答(600字超)に平易な解説(💡 一言でいうと 等)が無ければ1回だけ差戻し（同一メッセージ1回限定hashガード・短い応答無視・2026-08-18新設）。<code>claude --print</code>等の機械呼び出しは素通り: H層=env <code>CLAUDE_DISABLE_PLAIN_EXPLANATION_CHECK=1</code>（明示）+F層=実user 1個以下で自動判定・dispatch.logに経路記録（同日改訂）。<strong>2026-09-08: Windows Desktop版settings.jsonにも登録</strong>（Stop・独立エントリ）。<strong>2026-09-21: transcript読取レース対策</strong>（Stop hook発火が最終応答のtranscript書込前に走り前回応答を評価する誤差戻し対策・block判定直前に<code>CHECK_PLAIN_REREAD_DELAY</code>秒待機して再読込し完備応答がflush済みなら<code>guard-pass-race</code>で通す）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-observation-claim.sh</code></td>
+<td>観察期間入りの完了報告（「待つだけ」「観察期間」「N日後に判定」等の語彙）に3要素（判定日と判定方法/観察中に人間が見られるもの/到達方式）の欠落・プレースホルダ・実在しない日付を検知して差戻し（層1「観察フェーズ宣言の3要素必須」の機械的担保・2026-09-19新設）。同一報告の差戻し1回限定（hashガード）・dispatch.logにexit経路記録。<strong>2026-10-03 enforce化</strong>（grace 2週間の実測: warn系51件中block 0・誤検知代理指標11.8%&lt;50%・判定日当日からblock。正典: review_log <code>00★SYSTEM/マルチLLMレビュー/2026-09-19_観察フェーズ宣言機構/</code>）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-yagi-output.sh</code></td>
+<td>推奨案（「⭐ 推奨」「推奨：」等）を含む応答(300字超)にサボりバイアス防止4項目（反証/最悪ケース/見送った案の再評価点/省略デメリット）の欠落があれば1回だけ差戻し。<strong>さらに重み付き工数系軸（「工数/即効性/所要時間/作業コスト…(×N)」形式）を検知したら差戻し</strong>（sentaku L2「⛔工数系軸は既定で0」節の機械的担保・LLM自身の作業工数はふくけいが被らない不利益のため・2026-08-31追加・検知は重み付き形式に限定し通常文中の言及は対象外）（同一メッセージ1回限定hashガード・2026-08-27新設・sentakuの推奨を機械担保）。機械呼び出しは素通り: H層=env <code>CLAUDE_DISABLE_YAGI_CHECK=1</code>+F層=実user 1個以下自動判定・dispatch.logに経路記録</td>
+</tr>
+<tr>
+<td></td>
+<td><code>consult-balance-inject.sh</code></td>
+<td>ふくけいの発言が判断の相談と判定された場合（どう思う/意見/提案して 等・8字未満は無視）、迎合防止指示（事実主張/意見主張の分離・同意は根拠とセットで積極的に可・根拠なしなら反証1つ・無理やり反論を作らない・主観的実体験は裏取り不能を明示）を応答コンテキストへ自動注入（UserPromptSubmit・<code>~/.claude/state/consult-balance-guard/disabled</code> で無効化）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>status-first-inject.sh</code></td>
+<td>発話にモデル語（GLM/MiniMax/ミニマックス/claude/sonnet/opus/haiku/プロキシ/モード）を検出した場合、<code>proxy-mode.sh status</code> を自動実行し実効provider実測値を<code>&lt;proxy_status&gt;</code>カプセル（「モデルの状態を問う発話の場合のみ使用。それ以外では無視」の使用制限文付き）で応答コンテキストへ注入・同一セッション60秒<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>（atomic write）・status失敗時（exit≠0/空出力）は失敗カプセル（llm-check/proxy-doctor誘導）（UserPromptSubmit・<code>~/.claude/state/status-first-hook/disabled</code> で無効化・2026-09-22新設・「GLMに変えて」バッジ依存誤答事故2026-09-18/19の恒久策・設計は5機×4ラウンドMLR 112指摘を経た第3版）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>current-time-inject.sh</code></td>
+<td>全発話で毎ターンdate実測（日付+時刻+曜日+TZ）を<code>&lt;current_time&gt;</code>タグで応答コンテキストへ注入（検出条件なし・状態管理なし・<code>~/.claude/state/current-time-hook/disabled</code> で無効化・2026-09-22新設・CCがdate実測せず「月曜=明日」と日付誤答した事故2026-09-21の恒久策・WSL2時計ズレ対策）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-consult-balance.sh</code></td>
+<td>相談トリガーを含む直前user発言への回答に同意表現（正しいです/賛成です/その通り 等）があり<strong>根拠（【根拠】/出典/実測/引用/データ 等）と反証（【反証】/デメリット/懸念点/未検証 等）の両方が無い</strong>場合のみ1回だけ差戻し（案B・根拠付き同意は常に許可=「正しいことは正しいと言える」・2026-09-06 3機レビューで改訂）。モード=warn(既定)/shadow/enforce（<code>CLAUDE_CONSULT_BALANCE_MODE</code> 環境変数または state モードファイル・同一メッセージhashガード・テスト10ケース緑・2026-09-06新設・同日r1レビューで案B改訂・就活相談迎合事故の機械的防止）</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-zero-assert.sh</code></td>
+<td><strong>ゼロ断定ゲート（2026-09-01新設）</strong>: 「ゼロ件/見つからない」等の断定語×検索語共起時に、固定プロトコル再検索（<code>grep -rln --include='*.py' --include='*.sh' --include='*.md' --include='*.ts' --include='*.js' --include='*.json' --include='*.yaml'</code> head無し）のM&gt;N差分事実（tool_result内grep 2回以上+「再検索」ラベル）を要求・無ければ差戻し。ゼロで正しい場合は <code>!override &lt;理由&gt;</code> で通過。grep head打ち切りによる「参照元ゼロ」誤断定事故（2026-09-01）の機械的封じ。H層=<code>CLAUDE_DISABLE_ZA_CHECK=1</code>/F層・dispatch.logはyagiと同構造</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-fail-coverage.sh</code>（2026-09-01拡張）</td>
+<td>検証系完了宣言に<strong>検証範囲宣言セクション検査を追加</strong>: タイプI（exit code）/II（diff・hash）/III（判断文＋反証チェックリスト必須・30%上限）の宣言・異常系min(2,N)種・宣言内EXIT=Nのtool_result突合（エコー無効）・境界省略理由。<strong>grace期間〜2026-09-15は警告のみ→enforce</strong>（<code>FCC_FORCE_ENFORCE=1</code>でテスト用に強制）。spec: <code>docs/superpowers/specs/2026-09-01_テストは充分-体系化-design.md</code>。<strong>2026-09-08: Windows Desktop版settings.jsonにも登録</strong>（Stop・独立エントリ）。<strong>2026-09-16: MVR第2ステップ実装</strong>（省略行の値レベル制約機械判定〔TBD/なし単独無効・代替は採否3語+約N行必須・リスク検知不能時は数値必須〕+読み取り専用実行検証〔根拠欄のgrep/find/wc/lsをhookが実行しゼロ件なら警告〕+承認理由最小形式+omitted_scope/宣誓タグ組合せ検証・<span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span> 53 tests緑・grace中は警告のみ） <strong>2026-09-16: D1 shadow誤発火2経路修正</strong>（ADHOC_RE降格=shadow-t2a観測のみ+python -c書込は.write(高精度でt1捕捉維持+Edit断片AST<span class="term" tabindex="0">パース<span class="term-popup">文字で書かれたデータを、プログラムが扱える構造に変換すること。JSONパース＝JSON文字列→データ構造</span></span>除外=Write全文のみ対象・tests 53→56緑・第1回shadow判定2/3不成立→9/23再判定cron 94f9b3bc・claude-config 4e829bf） <strong>2026-10-22: D1経路待機応答skip+stop_hook_active再突入ガード実装</strong>（差戻し後の再Stop〔payloadの<code>stop_hook_active: true</code>〕は無条件通過=CC公式推奨パターン・待機スコア判定をD1ブロック前に移動しD1経路のblockでもscore≥2の待機応答をskip・同一応答9連続差戻し<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>遮断・テスト4件新設+pytest 11緑・claude-config b331811）</td>
 </tr>
 <tr>
 <td></td>
@@ -646,26 +706,6 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
-<td><code>check-mlr-ledger-coverage.sh</code></td>
-<td>外部LLMレビュー実行日に判断収束台帳が更新されたか機械検証（本日の <code>multi-llm-review.jsonl</code> にminimax/gemini行があり、台帳に本日付行が無ければexit 2で差戻し。lite=OpenRouterのみは対象外・当日限り免除フラグ <code>~/.claude/state/mlr-ledger-exempt-&lt;日付&gt;</code> あり。レビュー成果物の保存忘れ・置き場所間違いがLLM自発性に依存ですり抜けを反復した対策・2026-08-31新設）</td>
-</tr>
-<tr>
-<td></td>
-<td><code>check-fail-coverage.sh</code></td>
-<td>検証系完了宣言の書式を機械検証する検証網羅性ゲート。応答末尾の「検証範囲宣言」（タイプI/II/III・正常系/異常系/境界の各ケースと <code>検証済（EXIT=&lt;n&gt;）</code> か <code>省略（理由: …）</code> か）と「省略（」行の4要素（対象/根拠/代替/リスク）の記載を抽出検査し、不足時は1回だけ差戻す（同一応答の再差戻しはhashガードで1回限定・shadow→本番の段階導入で省略行4要素は値レベル制約と読み取り専用実行検証まで実装。「テストは充分？」を人間が毎回問うしかなかった構造の機械化・2026-08-28新設、MVR第1/2ステップは2026-09-14〜15実装。2026-10-22: stop_hook_active再突入ガード〔差戻し後の再Stopは無条件通過=CC公式推奨〕+D1経路への待機応答skip接続で同一応答の無限差戻し<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>を遮断）</td>
-</tr>
-<tr>
-<td></td>
-<td><code>check-plain-explanation.sh</code></td>
-<td>報告への平易な解説（「📖 かみ砕くと」等マーカー）の4要素（結論1行太字→指示の要約→CCがしたこと→比喩→あなたがやること）の記載を機械検査し、不足時は1回だけ差戻す。マーカー語彙は設定ファイル読み込み式で、<strong>短文応答は免罪</strong>（一定長未満の応答は検査対象外=RC-A・2026-10-13修正 <code>48c60c5</code>）、検出した欠落要素リストは同一応答内の他hook（check-fail-coverage等）の欠落と混ぜて帰属させない（RC-B・同日修正）</td>
-</tr>
-<tr>
-<td></td>
-<td><code>check-model-stay.sh</code></td>
-<td>glm-5.3（高消費モデル）への手動切替の戻し忘れを検知して警告。直近2時間以内に更新されたtranscript（subagents配下は意図的呼出のため除外・2026-09-21修正）を合算判定し、30分以上継続かつ5ターン超で警告ログ1回（30分デバウンス）。exit 2で差戻ししCCがふくけいへ伝える（spec: <code>docs/superpowers/specs/2026-09-01_glm5.3戻し忘れ検知-design.md</code> §4.3-4.5）</td>
-</tr>
-<tr>
-<td></td>
 <td><code>next-issue.py</code></td>
 <td>自律開発ループの継続判定</td>
 </tr>
@@ -673,6 +713,16 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td></td>
 <td><code>claude-config-sync.sh</code></td>
 <td><code>~/.claude/</code> → knowledge-base + claude-config へ自動同期</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-scripts-documented.sh</code></td>
+<td>C層事後監査（ssot-record三層設計M2・2026-09-10）: claude-config <code>scripts/</code> 配下の実行.sh/.pyと<code>自動化.md</code>スクリプト一覧を双方向照合（順方向=未掲載検知・逆方向=デッドリンク検知・basename許容・tests除外）。pre-commit <code>--staged</code>＝新規commit拒否（live-fire正当拒否EXIT=1実測）+ <code>check-ssot-check-staleness.sh --full</code>＝日次網拾いの二段</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-ai-eval-pending-consistency.sh</code></td>
+<td>AIリポ評価書き戻し漏れ検知（knowledge-base pre-commit local hook・2026-09-14）: 評価mdにverdict確定（<code>- verdict: skip/keep</code> 固定形式・太字許容）があるのにpending-ai-repos.jsonに残存ならcommitをblock（casefold正規化・対話入力なし・fail-open・自己修復1コマンド表示）。バイパス=<code>SKIP_EVAL_PENDING_CHECK=1</code> または使い捨てフラグ <code>.eval-pending-check-approve</code>（承認ログに記録）。書き戻し自体は <code>ai-eval-writeback.py</code>（RUN_ID付き生出力）で実行</td>
 </tr>
 <tr>
 <td><strong>Notification</strong></td>
@@ -688,7 +738,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </table></div>
 <div class="callout callout-info"><p>SessionStartは19コマンド構成。初期化・セキュリティ・SSOT同期・設定チェック・日次自動発動の5カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
 <h3>state日付管理による日次自動発動パターン（再利用可能）</h3>
-<p><code>check-ssot-sync-staleness.sh</code> が実装する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
+<p><code>check-ssot-check-staleness.sh</code> が実装する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
 <pre><code class="language-bash">STATE=&quot;$HOME/.claude/state/&lt;task&gt;-last-run&quot;
 TODAY=$(date +%Y-%m-%d)
 LAST=$(cat &quot;$STATE&quot; 2&gt;/dev/null)
@@ -698,7 +748,7 @@ if [ &quot;$LAST&quot; != &quot;$TODAY&quot; ]; then
 fi
 </code></pre>
 <h3>Windows Desktop版とWSL側のSessionStartフック差分に注意（2026-07-10）</h3>
-<p>Windows Desktop版とWSL CLI版の <code>settings.json</code> は別ファイル（<code>C:\Users\yn441\.claude\settings.json</code> と <code>~/.claude/settings.json</code>）のため、片方だけにフックを追加登録して<strong>もう片方に反映し忘れる</strong>ことがある。<code>check-proxy-compat.sh</code>・<code>check-ssot-sync-staleness.sh</code> はWSL側にのみ登録されWindows側で約1日分未同期だった実例あり。フック追加・変更時は両方の <code>settings.json</code> を確認すること。</p>
+<p>Windows Desktop版とWSL CLI版の <code>settings.json</code> は別ファイル（<code>C:\Users\yn441\.claude\settings.json</code> と <code>~/.claude/settings.json</code>）のため、片方だけにフックを追加登録して<strong>もう片方に反映し忘れる</strong>ことがある。<code>check-proxy-compat.sh</code>・<code>check-ssot-check-staleness.sh</code> はWSL側にのみ登録されWindows側で約1日分未同期だった実例あり。フック追加・変更時は両方の <code>settings.json</code> を確認すること。</p>
 <p>登録スクリプトの <code>$HOME</code> に依存する処理（例: <code>sync-secrets-to-settings.sh</code>）は要注意。<code>wsl bash</code> 経由で実行しても <code>$HOME</code> は常にWSL側 <code>/home/&lt;USER&gt;</code> に解決されるため、<strong>Windows側の<code>settings.json</code>自体を対象にしたい処理は<code>wsl bash</code>経由では実現できない</strong>（対象が常にWSL側ファイルになる）。逆に状態ファイル（<code>~/.claude/state/</code>）を使った日次発動制御のような「WSL・Windows間で共有したい」ロジックは、この同一解決先という性質を逆手に取って安全に両環境へ登録できる。</p>
 <p>Windows側でフックコマンド文字列をスクリプト経由（例: python の <code>json.dump</code>）で新規追加する際、<code>path-rewrite.py</code> が Bash ツールに送るコマンド文字列内の <code>/home/&lt;USER&gt;</code> を検知してUNC形式に書き換えてしまうため、文字列を <code>&quot;/&quot; + &quot;home/&lt;USER&gt;&quot;</code> のように分割して結合し検知パターンを回避する必要がある。</p>
 <p>実行側スキルは完了後 <code>date +%Y-%m-%d &gt; &quot;$STATE&quot;</code> で再発火を抑制する。 → <a href="#">ssot-sync定期実行化</a></p>
@@ -707,8 +757,194 @@ fi
 <p>共有されるフックコマンドは <code>uname -s</code> 判定で両環境に分岐させる:</p>
 <pre><code class="language-bash">if [ &quot;$(uname -s)&quot; = &quot;Linux&quot; ]; then python3 /home/&lt;USER&gt;/bin/xxx.py; else wsl bash -c &quot;python3 /home/&lt;USER&gt;/bin/xxx.py&quot;; fi
 </code></pre>
-<p>なお、フック設定はセッション起動時に<span class="term" tabindex="0">スナップショット<span class="term-popup">ある瞬間の状態のコピー。後で比較・復元するために取っておくもの</span></span>取込されるため、settings.json修正後も<strong>既存セッションでは旧コマンドが発火し続ける</strong>（反映には再起動が必要）。 → <a href="#">バックログhookのWindows環境判定分岐修正</a></p>
+<p>なお、フック設定はセッション起動時に<span class="term" tabindex="0">スナップショット<span class="term-popup">ある瞬間の状態のコピー。後で比較・復元するために取っておくもの</span></span>取込されるため、settings.json修正後も<strong>既存セッションでは旧コマンドが発火し続ける</strong>（反映には再起動が必要）。</p>
+<div class="callout callout-warn"><p>⚠️ <strong>2026-08-30 実測: 上記「WSL側のフックがWindows Desktopでも発火する」は少なくとも一部のhookでは成立しない</strong></p>
+<p>Windows Desktop版セッション（cwd = WSLホームのUNCパス）から <code>git commit</code> を実行しても、
+WSL側 <code>//wsl.localhost/Ubuntu/home/&lt;USER&gt;/.claude/settings.json</code> に登録済みの <code>git-commit-diff-check.sh</code> は<strong>一度も発火しなかった</strong>。</p>
+<pre><code>$ grep -c &quot;3bce&quot; //wsl.localhost/Ubuntu/home/&lt;USER&gt;/.claude/state/git-commit-diff-check.log     # Windows Desktop版セッション
+0
+$ grep -oE &quot;self=[0-9a-z]{4}&quot; //wsl.localhost/Ubuntu/home/&lt;USER&gt;/.claude/state/git-commit-diff-check.log | sort | uniq -c | sort -rn
+  5 self=zzzz / 4 self=d2a1 / 4 self=bc84 / 4 self=5065 / 3 self=ec4c / 3 self=6215 / 3 self=27e6 / 1 self=bab8
+</code></pre>
+<p>同日のログ84件はすべて WSL CLI版セッション。実測すると <strong>Windows側 settings.json の PreToolUse は2エントリしかなく、
+WSL側7エントリのうち6件が未登録</strong>だった。欠落は全イベント合計で26エントリ。</p>
+<p><strong>運用ルール</strong>: 「WSL側に登録したから両方で効く」と仮定しない。<strong>両方の settings.json に登録し、
+hook自身のログで発火を実測して確認する</strong>（<code>grep -c &quot;&lt;自セッションWT4&gt;&quot; &lt;hookのログ&gt;</code> が最も確実）。
+全数判定と経緯: <a href="#">2026-08-30 並行セッションstaged巻き込み</a>
+→ <a href="#">バックログhookのWindows環境判定分岐修正</a></p></div>
+<h4>git-commit-diff-check block時の脱出経路3種（2026-09-04・L279修正）</h4>
+<p>blockされた時のREQUIRED_ACTIONは実行可能手順になっている。目的別に3種:</p>
+<ol>
+<li><strong>自分の意図した大量変更（宣言で通す）</strong>: <code>python3 ~/.claude/scripts/session/paths-json-update.py &lt;自タブWT4&gt; '&lt;file&gt;'</code> を実行して宣言追加後に再commit（宣言内はwarnのみで通過）</li>
+<li><strong>巻き込み混入（除外して再commit）</strong>: <code>git restore --staged '&lt;file&gt;'</code> で対象だけ外して再commit</li>
+<li><strong>今回だけ判定を無効化</strong>: <code>DRY_RUN=1 git commit -m ...</code>（インライン指定可・hookがコマンド文字列側から検出する。hookは別<span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>のため従来の「インラインenvが届かない」問題を2026-09-04に解消）</li>
+</ol>
+<p>なお <code>git commit -- &lt;paths&gt;</code> 形式は指定パスだけ判定対象になる（他セッションのstagedは巻き込まれないため）。status A（新規ファイル追加）は意図的な追加としてblock対象外。</p>
 <hr />
+<h3>🚨 Windows Desktop版では <code>wsl bash -c &quot;...&quot;</code> 形式で書くこと（2026-08-22・最重要）</h3>
+<p>Windows Desktop 版の settings.json に hook を書く時、コマンドを <strong><code>wsl bash &lt;posixパス&gt;</code> 形式にしてはいけない</strong>。</p>
+<pre><code class="language-jsonc">// ❌ 動かない（エラーも出ずに何もしない）
+&quot;command&quot;: &quot;wsl bash /home/&lt;USER&gt;/.claude/scripts/hooks/track-tool-usage.sh&quot;
+
+// ✅ 動く
+&quot;command&quot;: &quot;wsl bash -c \&quot;bash /home/&lt;USER&gt;/.claude/scripts/hooks/track-tool-usage.sh\&quot;&quot;
+</code></pre>
+<p><strong>理由</strong>: Windows 側から <code>wsl bash /home/...</code> を起動すると、MSYS のパス変換で
+<code>/home/&lt;USER&gt;/...</code> が <code>C:/Users/yn441/...</code> に書き換えられ、WSL 内でファイルが見つからず
+<strong>無言で失敗</strong>する。<code>-c &quot;...&quot;</code> で括ると変換を免れる。</p>
+<pre><code>$ printf '…' | wsl bash /tmp/guard_copy.sh
+bash: C:/Users/yn441/AppData/Local/Temp/guard_copy.sh: No such file or directory
+</code></pre>
+<p>2026-08-22 時点で <strong>27 hook 中 25 本がこれに該当</strong>し、破壊的コマンドのブロック層を含めて
+全滅していた。動いていた2本はいずれも <code>wsl bash -c &quot;python3 ...&quot;</code> 形式だった。</p>
+<div class="callout callout-warn"><p>⚠️ <strong>matcher のせいだと誤診しやすい</strong>。「特定の matcher の hook だけ動く」という症状が出るが、
+実際は matcher ではなく<strong>その hook がたまたま <code>-c</code> 形式で書かれていた</strong>だけ、ということがある。
+2セッションにわたり <code>matcher:&quot;&quot;</code> → <code>matcher:&quot;*&quot;</code> と是正を繰り返して効果が出なかった事例あり。</p></div>
+<p><strong>切り分け手順</strong>: 「機能が無反応」に見えたら、スクリプトを疑う前に <strong>hook が呼ばれているか</strong>を先に見る。
+スクリプト冒頭に <code>date &gt;&gt; /tmp/canary.log</code> を一時挿入し、ツールを1回使ってファイルができるか確認する。
+できなければ原因は呼び出し側（＝この項目）にある。</p>
+<h3><code>-c</code> の内側のパスも WSL 内パスで書くこと（2026-08-30）</h3>
+<p>上の項目の続き。<code>wsl bash -c &quot;...&quot;</code> 形式にしても、<strong>内側に書くスクリプトのパスを <code>//wsl.localhost/Ubuntu/home/...</code> 形式にすると動かない</strong>。</p>
+<pre><code class="language-jsonc">// ❌ 動かない（bash が exit 127 で即死・ログも残らない）
+&quot;command&quot;: &quot;wsl bash -c \&quot;bash //wsl.localhost/Ubuntu/home/&lt;USER&gt;/.claude/scripts/hooks/git-commit-diff-check.sh\&quot;&quot;
+
+// ✅ 動く
+&quot;command&quot;: &quot;wsl bash -c \&quot;bash /home/&lt;USER&gt;/.claude/scripts/hooks/git-commit-diff-check.sh\&quot;&quot;
+</code></pre>
+<p><strong>理由</strong>: <code>//wsl.localhost/Ubuntu/...</code> は <strong>Windows から WSL を覗くためのネットワークパス</strong>であり、
+<code>wsl bash -c</code> の内側＝WSL の内側にはそのパスは存在しない。同一シェル内での実測:</p>
+<pre><code>test -f //wsl.localhost/Ubuntu/home/&lt;USER&gt;/.claude/scripts/hooks/git-commit-diff-check.sh → exit 1
+test -f /home/&lt;USER&gt;/.claude/scripts/hooks/git-commit-diff-check.sh                      → exit 0
+</code></pre>
+<p>2026-08-30 時点で全30 hook 中3件（同日に追加した分）がこれに該当。既存27件は正しい形式だったため、
+<strong>新規追加分だけが静かに無効</strong>という状態だった。</p>
+<div class="callout callout-warn"><p>💡 <strong>点検の一手</strong>: 追加した hook の表記が既存の同居エントリと揃っているか1回だけ機械的に突き合わせる。</p>
+<pre><code class="language-bash">python3 -c &quot;import json;d=json.load(open('/mnt/c/Users/yn441/.claude/settings.json',encoding='utf-8'));[print(ev,h.get('command')) for ev,es in d['hooks'].items() for e in es for h in e.get('hooks',[]) if 'wsl.localhost' in h.get('command','')]&quot;
+</code></pre>
+</blockquote>
+<h3>「何も起きない＝正常」の hook は fail 条件側で測る（2026-08-30）</h3>
+<p><code>git-commit-diff-check.sh</code> のように<strong>異常時だけログを書く</strong> hook は、正常系をいくら流してもログが増えない。
+「ログ行数が増えれば PASS」という検証は、<strong>hook が完全に死んでいても完全に動いていても同じ結果</strong>になりうる。</p>
+<p>2026-08-30 の実例: 「50行のファイルを stage して commit → ログが増えれば PASS」という手順を作ったが、
+<code>T=/tmp/x; cd $T</code> と<strong>変数</strong>を使っていたため hook 側の対象repo解決（<code>cd &lt;path&gt; &amp;&amp; git commit</code> の
+リテラル解析・スクリプト53〜56行目）が失敗し、clean な CC の cwd を検査して無言で終了していた。
+<strong>PASS し得ない手順</strong>だった。</p>
+<ul>
+<li>対象repoを跨ぐ検証では <strong><code>cd /literal/path &amp;&amp; git commit</code></strong> とリテラルで書く</li>
+<li>判定は「ログが増えたか」ではなく <strong>「ブロックされたか（コマンドが実際に止まったか）」</strong> で書く</li>
+<li>正しく測れた時の出力例:<pre><code>PreToolUse:Bash hook error: [wsl bash -c &quot;bash /home/&lt;USER&gt;/.claude/scripts/hooks/git-commit-diff-check.sh&quot;]:
+EXIT_CODE=2
+REASON=stage変動が1ファイル±20行超を検出: fire5.md (max delta=50)
+</code></pre>
+</li>
+</ul>
+<h3><code>file_path</code> はバックスラッシュ区切りで渡る — 判定前に正規化する（2026-08-30・重要）</h3>
+<p><code>tool_input.file_path</code> を見て対象かどうかを判定する hook（Write / Edit / MultiEdit 系）は、
+<strong>判定の直前でパス区切りを正規化</strong>すること。Windows Desktop 版は次の形で渡してくる。</p>
+<pre><code>\\wsl.localhost\Ubuntu\home\&lt;USER&gt;\projects\knowledge-base\01_DECISIONS\claude-code\x.md
+</code></pre>
+<pre><code class="language-bash"># ❌ 素通りする（&quot;01_DECISIONS\claude-code&quot; なので一致しない）
+case &quot;$FILE_PATH&quot; in *01_DECISIONS/*) ... ;; esac
+
+# ✅ 判定の直前で正規化
+FILE_PATH=$(printf '%s' &quot;$FILE_PATH&quot; | tr '\\' '/')
+case &quot;$FILE_PATH&quot; in *01_DECISIONS/*) ... ;; esac
+</code></pre>
+<pre><code class="language-python"># python 側で判定する場合
+fp = (ti.get(&quot;file_path&quot;, &quot;&quot;) or &quot;&quot;).replace(&quot;\\&quot;, &quot;/&quot;)
+</code></pre>
+<blockquote>
+<p>⚠️ <strong><code>path-rewrite.py</code> があっても直らない</strong>。あれは <code>tool_input.command</code>（Bash のコマンド文字列）が
+対象で、<strong><code>tool_input.file_path</code> は別経路</strong>なので変換されない。「Bash の hook は効くのに
+Write/Edit の hook だけ効かない」という症状は、matcher ではなく<strong>この経路差</strong>が原因のことがある。</p></div>
+<p>2026-08-30 時点で3つの hook がこれで素通りしていた（<code>enforce-ssot-record.sh</code>・
+<code>guard-config-secrets.sh</code>・<code>warn-naming-rules.sh</code>）。うち <code>guard-config-secrets.sh</code> は
+<strong>設定ファイルへの生シークレット混入を止める層</strong>だったため、実害の大きい抜けだった。</p>
+<p><strong>切り分けの決め手</strong>: 「matcher が効かない」と「判定が一致しない」は症状が同じに見える。
+<strong>同じスクリプトに区切り違いの file_path だけを流して比較</strong>すると1回で確定する。</p>
+<pre><code>A: /home/.../01_DECISIONS/claude-code/x.md          → exit 2（ブロックされる）
+B: \\wsl.localhost\...\01_DECISIONS\claude-code\x.md → exit 0（素通り）← 差は区切りだけ
+</code></pre>
+<h3>同一エントリ内の hook は順に評価される — 対象が入れ子なら前段の通過条件に注意（2026-08-30）</h3>
+<p>1つの matcher エントリに複数の hook を並べると<strong>上から順に評価</strong>され、<strong>先の hook が block した時点で後続には到達しない</strong>。</p>
+<p>対象パスが<strong>入れ子</strong>になる hook を足す時にこれが効いてくる。</p>
+<pre><code class="language-jsonc">&quot;matcher&quot;: &quot;Write|Edit|MultiEdit&quot;,
+&quot;hooks&quot;: [
+  { &quot;command&quot;: &quot;... enforce-ssot-record.sh&quot; },   // 対象: 01_DECISIONS/ 配下すべて
+  { &quot;command&quot;: &quot;... guard-config-secrets.sh&quot; }   // 対象: 01_DECISIONS/claude-code/設定ファイル/
+]
+</code></pre>
+<p>後者の対象は前者の対象に<strong>完全に含まれる</strong>ため、前者がブロックする条件下では後者は一度も走らない。</p>
+<pre><code>フラグ無し → enforce が block(exit 2) → guard-config-secrets に到達しない
+フラグ有り → enforce は通す        → guard-config-secrets が検査する
+</code></pre>
+<ul>
+<li><strong>設計としては筋が通る</strong>: 後段は「スキル経由なら何でも書ける」という前段の抜け穴を塞ぐ位置にいる</li>
+<li><strong>テスト設計に影響する</strong>: 後段を検証したいなら、<strong>前段を通過する状態を作ってからテストする</strong>
+（上の例なら <code>~/.claude/state/ssot-record-active-*</code> を置いてから）</li>
+<li>順序を意識せずに足すと「登録したのに一度も走らない hook」が生まれる</li>
+</ul>
+<h3>ssot-record強制ゲートは「フラグ+marker」の二重制（2026-09-07・L74-M1）</h3>
+<p><code>enforce-ssot-record.sh</code> は 01_DECISIONS/ と 00_SYSTEMハブ対象への Write/Edit に対し2つの証を要求する:</p>
+<ol>
+<li><strong>フラグ</strong> <code>~/.claude/state/ssot-record-active-&lt;SID&gt;</code> — ssot-record スキルがフェーズ3で作成（従来どおり）</li>
+<li><strong>marker</strong> <code>~/.claude/state/ssot-record-mapping-run-&lt;SID&gt;</code> — <strong>A層スクリプト <code>ssot-record-detect-targets.py</code> がフェーズ0.5で発行</strong>（マッピング2ファイル読込の実行証跡）</li>
+</ol>
+<ul>
+<li>marker が無い・TTL（6h）切れ・**stale（マッピング更新後にmtime/sha256照合で検知）**の場合は block され「A層スクリプトを再実行」と表示される</li>
+<li><strong>回復は再実行のみ</strong>。marker の手動作成（touch等）は禁止（スキル本文契約）</li>
+<li>SID（照合キー）は <strong>hook入力stdin JSONの <code>session_id</code></strong> から取得（2026-09-10 E案・env変数 <code>CLAUDE_CODE_SESSION_ID</code> は参照しない単一経路）。stdin未取得・不一致は fail-closed 全面block（緩和<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>不導入）</li>
+<li>表記揺れ耐性: file_path は normpath 正規化して判定（<code>//</code>・<code>./</code>・<code>..</code>・<span class="term" tabindex="0">相対パス<span class="term-popup">今いる場所からの相対的なファイルの場所表記。「../」は1つ上のフォルダの意味</span></span>表記でハブ判定をすり抜ける fail-open は MLR 2ラウンドで実測発見→修正済み）</li>
+<li>ブロック文面の <code>(rc=N)</code> は marker検査の<span class="term" tabindex="0">終了コード<span class="term-popup">プログラムが終了時に返す「結果の合図」。0は成功、0以外は失敗や異常を意味する。自動化の判定はこれを見て行う</span></span>（一時障害か恒久不在かの判別用）</li>
+<li><strong>2026-09-10: 書込先分布ログ（dest.tsv）追加</strong> — フラグ有効中の knowledge-base 配下書込（exit 0）で直前に <code>~/.claude/state/ssot-record-dest.tsv</code> へ <code>ts/SID/第1階層/第2階層/basename</code> を1行append（block分・スキル外は記録せず・追記失敗は握り潰す）。ssot-record の書込先偏りの LLM 非依存測定用で、2026-10-10 ベースライン確定 / 2026-12-10 反証条件再評価の durable cron（<code>f4b4bee8</code>/<code>79e7942a</code>）で機械評価される（claude-config <code>7219f25</code>・[[01_DECISIONS/claude-code/2026-09-10_ssot-recordマルチ起点再設計クローズ判断-Fable相談と3機レビュー.md]]）</li>
+<li><strong>2026-09-10: E案実装（SID照合をstdin session_idに統一）</strong> — 旧来はenv変数 <code>CLAUDE_CODE_SESSION_ID</code> 依存のため Windows Desktop 版（<code>wsl bash -c</code> 経由でenv非伝播）では ssot-record が完走不能だった。stdin <code>session_id</code> は両OSのPreToolUseで実在を実SID実証済み（並行5セッション混入なし）で、<strong>Windows版も flag+marker 照合が完走可能に</strong>。観測ログのbranchは <code>stdin</code>（取得成功）/ <code>stdin_missing</code>（stdinに無い）/ <code>stdin_mismatch</code>（取得したがフラグ不一致）の3値。テスト: 既存2件更新+新設 <code>test_enforce_ssot_record_stdin_sid.sh</code>（S1-S7・env無視/人工不一致/並行2セッション/E2E許可）・計54アサーション緑（claude-config <code>db41bf1</code>）。判断記録: [[01_DECISIONS/claude-code/2026-09-10_Windows版SID不伝播構造修正E案確定-stdin-session_id照合.md]]</li>
+<li><strong>2026-09-14: detect-targets.py のSID渡しargv化（E案適用漏れ箇所の修正）</strong> — E案でhook側はstdin統一されたが、フェーズ0.5のA層スクリプトだけがenv読み取りのまま残り Windows版でmarker発行が完走しなかった（09-12 b70d退避の真因）。<code>--sid &lt;SID&gt;</code> argv明示渡しに統一（env読み取り廃止・<code>--list-hubs</code>のみSID不要）・SID取得手順（env→transcript最新jsonl）をSKILL.mdフェーズ0.5に明文化・単体7+E2E 20/selftest緑・<strong>Windows実機E2Eは次回Windowsセッション</strong>（claude-config <code>10b338c</code>）。判断記録: [[01_DECISIONS/claude-code/2026-09-14_detect-targets-SID渡しargv化-Windows不伝播対応実装.md]]</li>
+</ul>
+<h3>PreToolUseでブロックする時は <code>exit 2</code> ではなく JSON を返す（2026-08-22）</h3>
+<p>Windows Desktop 版では <strong><code>exit 2</code> が効かない</strong>。stdout に以下を出して <strong>exit 0</strong> で終えること。</p>
+<pre><code class="language-bash">printf '{&quot;decision&quot;: &quot;block&quot;, &quot;reason&quot;: &quot;...&quot;}\n'
+exit 0
+</code></pre>
+<p><code>exit 2</code> を併記すると stdout の JSON 側が無視されるため、<strong>併用しない</strong>。
+<code>check-command-safety.py</code> がこの方式で実際に動作している唯一の実証例。</p>
+<div class="callout callout-info"><p>テストの合格基準を exit code にしていると、<strong>テストは緑なのに実環境では無防備</strong>という
+状態を見逃す。判定は「実際にブロックされる出力が出るか」で書くこと。</p></div>
+<h3>hook が本当に発火したかを実測する（2026-08-23）</h3>
+<p>設定が正しいことと、実際に発火していることは別。1コマンドで両方を分けて測る:</p>
+<pre><code class="language-bash">wsl bash -lc &quot;bash ~/bin/verify-hook-matchers.sh --session-id $CLAUDE_CODE_SESSION_ID&quot;
+</code></pre>
+<p>終了コードは <strong>0=PASS / 1=FAIL / 2=SKIP（判定不能）</strong> の3値。</p>
+<p><strong><code>--session-id</code> を必ず渡すこと。</strong> <code>CLAUDE_CODE_SESSION_ID</code> は Claude Code を動かしている
+<strong>Windows 側シェルにしか無く、<code>wsl bash -lc</code> の内側へは伝播しない</strong>（実測）。
+渡さないと「自セッションを特定できない」として SKIP になる。</p>
+<div class="callout callout-warn"><p>⚠️ <strong>他セッションの記録で「発火している」と判断してはいけない。</strong>
+<code>~/.claude/logs/tool-usage-YYYY-MM-DD.csv</code> には<strong>並行セッション全部</strong>の記録が混ざる
+（2026-08-23 実測で1日7セッション・119件）。session_id で絞らずに件数だけ見ると、
+自分の hook が死んでいても他人の記録で PASS に見える。2026-08-22 に実際にこれで誤判定した。</p></div>
+<p><strong>SKIP は「異常なし」ではない</strong>。判定材料が無いという意味なので、理由を読んで対処する:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>SKIP の理由</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自 session_id を特定できない</td>
+<td><code>--session-id</code> を渡す</td>
+</tr>
+<tr>
+<td>自セッションの記録が本日0件</td>
+<td>ツールを1回使ってから再実行（PostToolUse がまだ完了していないレース）</td>
+</tr>
+<tr>
+<td>WSL⇔Windows の時計がずれている</td>
+<td><code>sudo hwclock -s</code> で合わせてから再実行</td>
+</tr>
+</tbody>
+</table></div>
+<p>→ テスト21件: <a href="#">テスト実行ガイド.md</a></p>
 <h2>自律タスクループ（Stop <span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> 応用）</h2>
 <h3>概要</h3>
 <p>GitHub Issue を順番に自動実装するイベント駆動ループ。<br />
@@ -808,7 +1044,7 @@ print('停止しました')
 <td><code>permissions.{allow,deny,ask,default}</code> / <code>env</code> / <code>mcpServers.*.{env, headers, args, command, url}</code> / <code>hooks.*.{env, command}</code>、settings.local.json は全 JSON 値走査</td>
 </tr>
 <tr>
-<td>復元失敗<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span></td>
+<td>復元失敗フォールバック</td>
 <td>cp -p 戻り値 + ファイルサイズ一致 + JSON parse 成功 + sha256 一致 の <strong>AND</strong>。失敗時 <code>chmod 400</code>（所有者のみRead可・CC本体が読める）で読み取り専用化（<strong>chmod 000 は使わない</strong> — DoS回避）</td>
 </tr>
 <tr>
@@ -828,6 +1064,10 @@ print('停止しました')
 <td><a href="#">docs/superpowers/specs/2026-07-30-guard-settings-write-post-detection-design.md</a></td>
 </tr>
 <tr>
+<td>H恒久対策(2026-08-12)</td>
+<td>真因=クォート付きURL <code>&quot;https://...&quot;</code> がURL_RE <code>^https?</code> をくぐり抜けlayer2_long発火→偽陽性復元ループ・<code>split_inner_args(shlex+Unicodeフォールバック)</code> で正規化・c案(発火抑制)はmulti-llm-review両LLM critical一致で却下(セキュリティ後退)・spec: <a href="#">2026-08-12-guard-settings-write-H恒久対策-design.md</a></td>
+</tr>
+<tr>
 <td>経緯</td>
 <td>[<a href="#">2026-07-30_Task6α-guard-settings-Bash書込検知-設計C案転換</a>]（4層ルール確定 + multi-llm-review Gemini+MiniMax 直交指摘統合・chmod 000 → 400・TTL bypass 採用・過剰提案 YAGNI 却下）</td>
 </tr>
@@ -835,6 +1075,7 @@ print('停止しました')
 </table></div>
 <div class="callout callout-tip"><p>💡 <strong>やさしい補足</strong>: 通常のセキュリティ hook が「Edit や Write で設定ファイルを編集する時」だけ反応するのに対し、guard-settings-write は <strong>Bash コマンドで直接ファイルを書き換える経路も含めて全部見る</strong>番人です。さらに「書き換えた後すぐ外部に送る」という連続技も、実行前に「書込 + 送信」が同じコマンドにないか軽くチェックして止めます。</p></div>
 <hr />
+<div class="callout callout-warn"><p>⚠️ <strong>スナップショット復元構造の注意（2026-09-12実測）</strong>: 本hookはPreToolUse時にsettings.jsonのスナップショットを保存し・PostToolUse時の差分検知でTOKEN様値を検知すると<strong>スナップショットへ復元</strong>する。正当なenv値追加（例: <code>ANTHROPIC_CUSTOM_HEADERS</code>の長いヘッダ文字列）も・bypass TTL内であっても後続のPostToolUseで復元される実例あり（3回適用→3回復元・2026-09-12）。恒久的な正当env値追加には・<code>guard_settings_write_core.py</code>へのキーホワイトリスト追加（承認制）が前提。詳細: <code>01_DECISIONS/claude-code/2026-09-12_correlation-tag実装とguard-settings-write復元構造の解明.md</code></p></div>
 <h2>💡 やさしい補足（初心者向け）</h2>
 <ul>
 <li><strong>「フック」= 特定のタイミングで自動で動く番人</strong>: 「作業開始時」「命令実行前」「終了時」などに、自動で決まった処理を走らせる仕組み</li>
@@ -856,7 +1097,7 @@ print('停止しました')
 <tr>
 <td>UserPromptSubmit</td>
 <td>発言の送信直後</td>
-<td>相談フォーマットの注入</td>
+<td>相談フォーマットの注入・モデル語検出時のstatus実測注入・毎ターン日時注入</td>
 </tr>
 <tr>
 <td>PreToolUse</td>

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>外部参考資料：Claude Code Guide</title>
-    <meta name="description" content="Claude Code CLI 外部参考資料の解説：AIコーディングアシスタント完全ガイド">
-    <meta property="og:title" content="外部参考資料：Claude Code Guide">
+    <title>外部参考資料 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI 外部参考資料の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="外部参考資料 — Claude Code Guide">
     <meta property="og:description" content="Claude Code CLI 外部参考資料の解説">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/13-external-references.html">
@@ -216,7 +216,7 @@
             <hr />
 <h2>icon: 🔗
 slug: 13-external-references</h2>
-<h1>16 外部参考資料：自分の実体験ではないが参考になる情報源</h1>
+<h1>16 外部参考資料 — 自分の実体験ではないが参考になる情報源</h1>
 <div class="callout callout-tip"><p>💡 <strong>章の核</strong>: 一次情報は公式docs。記事はあくまで道案。</p></div>
 <div class="callout callout-warn"><p>この章は他の章と性質が違います。他の章は「自分の環境で実際に試して確かめた」記録ですが、ここに載せるのは<strong>外部リポジトリの内容を日本語に翻訳・要約したもの</strong>です。未検証・他者の知見である点に注意して読んでください。</p></div>
 <h2>claude-code-best-practice（リポジトリ概要）</h2>
@@ -288,11 +288,11 @@ slug: 13-external-references</h2>
 <h3><span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>管理と1Mコンテキスト（Thariq氏の知見・翻訳）</h3>
 <p>各ターン後に取れる選択肢は5つ:</p>
 <ol>
-<li><strong>Continue</strong>：同じセッションを継続（全コンテキスト保持）</li>
-<li><strong>Rewind</strong>（<code>Esc</code>×2）：前のメッセージに戻り、それ以降を削除して再開</li>
-<li><strong><code>/compact</code></strong>：会話を要約して圧縮（情報の損失あり）</li>
-<li><strong><code>/clear</code></strong>：新規セッション開始（自分で書いたブリーフのみ保持）</li>
-<li><strong>Subagents</strong>：専用コンテキストを持つ子<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>に委譲</li>
+<li><strong>Continue</strong> — 同じセッションを継続（全コンテキスト保持）</li>
+<li><strong>Rewind</strong>（<code>Esc</code>×2） — 前のメッセージに戻り、それ以降を削除して再開</li>
+<li><strong><code>/compact</code></strong> — 会話を要約して圧縮（情報の損失あり）</li>
+<li><strong><code>/clear</code></strong> — 新規セッション開始（自分で書いたブリーフのみ保持）</li>
+<li><strong>Subagents</strong> — 専用コンテキストを持つ子<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>に委譲</li>
 </ol>
 <p>実践的なポイント:</p>
 <ul>
@@ -306,12 +306,12 @@ slug: 13-external-references</h2>
 <h3>Opus活用の6つのコツ（Boris Cherny氏・Claude Code開発者の知見）</h3>
 <div class="callout callout-warn"><p>⚠️ 元記事は「Opus 4.7」を前提に書かれており（2026年4月時点の記事）、モデル名は現行（Opus 4.8等）と異なる可能性がある。ただし機能自体は汎用的なので参考になる。</p></div>
 <ol>
-<li><strong>オートモード</strong>：安全なコマンドは自動承認、リスクのあるものだけ一時停止。<code>Shift+Tab</code>で切替。複数のClaudeを並行実行しやすくなる</li>
-<li><strong><code>/fewer-permission-prompts</code>スキル</strong>：セッション履歴から「安全だが毎回許可を求められるコマンド」を検出し、許可リストへの追加を提案</li>
-<li><strong>リキャップ機能</strong>：長時間セッションから戻る際に「モデルが何をしたか・次は何か」を短く要約</li>
-<li><strong>フォーカスモード</strong>（<code>/focus</code>）：中間作業を隠して最終結果だけに集中させる</li>
-<li><strong>エフォートレベル調整</strong>（<code>/effort</code>）：5段階（低〜最大）で思考量を調整、速度と知能のバランス取り</li>
-<li><strong>検証メカニズムの確保</strong>：モデルが強力なほど「バックエンドはサーバテスト・フロントエンドはブラウザ制御」のようなタスク別の検証手段が重要になる</li>
+<li><strong>オートモード</strong> — 安全なコマンドは自動承認、リスクのあるものだけ一時停止。<code>Shift+Tab</code>で切替。複数のClaudeを並行実行しやすくなる</li>
+<li><strong><code>/fewer-permission-prompts</code>スキル</strong> — セッション履歴から「安全だが毎回許可を求められるコマンド」を検出し、許可リストへの追加を提案</li>
+<li><strong>リキャップ機能</strong> — 長時間セッションから戻る際に「モデルが何をしたか・次は何か」を短く要約</li>
+<li><strong>フォーカスモード</strong>（<code>/focus</code>） — 中間作業を隠して最終結果だけに集中させる</li>
+<li><strong>エフォートレベル調整</strong>（<code>/effort</code>） — 5段階（低〜最大）で思考量を調整、速度と知能のバランス取り</li>
+<li><strong>検証メカニズムの確保</strong> — モデルが強力なほど「バックエンドはサーバテスト・フロントエンドはブラウザ制御」のようなタスク別の検証手段が重要になる</li>
 </ol>
 <h2>gstack（リポジトリ概要）</h2>
 <p><a href="https://github.com/garrytan/gstack">gstack</a> は、Garry Tan氏（Y Combinator CEO）が開発したClaude Code拡張<span class="term" tabindex="0">フレームワーク<span class="term-popup">アプリを作るための骨組み部品のセット。土台が用意されているので、中身の作り込みに集中できる</span></span>（116k star・MIT・作成3.5ヶ月で急成長）。「個人が大規模チームのように生産性を発揮する」がコンセプト。</p>
@@ -477,7 +477,7 @@ slug: 13-external-references</h2>
     </main>
 
     <footer class="site-footer">
-        <p>Claude Code Guide：<a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
          · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
          · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>

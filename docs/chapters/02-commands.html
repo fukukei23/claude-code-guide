@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>コマンド一覧：Claude Code Guide</title>
-    <meta name="description" content="Claude Code CLI コマンド一覧の解説：AIコーディングアシスタント完全ガイド">
-    <meta property="og:title" content="コマンド一覧：Claude Code Guide">
+    <title>コマンド一覧 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI コマンド一覧の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="コマンド一覧 — Claude Code Guide">
     <meta property="og:description" content="Claude Code CLI コマンド一覧の解説">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/02-commands.html">
@@ -213,8 +213,8 @@
         </div>
 
         <article class="chapter-body">
-            <h1>02 <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>一覧：ビルトインコマンド全解説</h1>
-<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: Claude Codeは対話が9割。打つべきコマンドは10個もない。忘れたらこの章。</p></div>
+            <h1>02 <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>一覧 — ビルトインコマンド全解説</h1>
+<div class="callout callout-tip"><p>💡 <strong>章の核</strong>: Claude Codeは対話が9割。打つべきコマンドは10個もない——忘れたらこの章。</p></div>
 <div class="callout callout-info"><p>スラッシュ（<code>/</code>）で始まるコマンド。Claude Code本体に組み込まれている。
 <span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>由来の<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>（<code>/brainstorming</code>等）は <a href="03-skills.html">03_スキルシステム</a> を参照。</p>
 <p><strong>クイックリファレンス版</strong>: <a href="https://fukukei23.github.io/guides/claude-code-commands/">ガイドサイト - コマンド＆スキル集</a>
@@ -222,7 +222,7 @@
 <hr />
 <h2>主要コマンド深掘り</h2>
 <p>よく使う・挙動を正確に把握すべきコマンドの詳解。全一覧は後述の網羅表へ。</p>
-<h3>&lt;a id=&quot;clear&quot;&gt;&lt;/a&gt;<code>/clear</code> と <code>/compact</code>：コンテキスト管理の両輪</h3>
+<h3>&lt;a id=&quot;clear&quot;&gt;&lt;/a&gt;<code>/clear</code> と <code>/compact</code> — コンテキスト管理の両輪</h3>
 <p><strong><code>/clear</code></strong>: 会話履歴を<strong>完全にリセット</strong>する。</p>
 <ul>
 <li><span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>・<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ツール定義・スキル・メモリは残る</li>
@@ -237,7 +237,7 @@
 <li><code>/clear</code> との違い: <strong>文脈を残すか捨てるか</strong></li>
 </ul>
 <div class="callout callout-info"><p>どちらも<a href="11-glossary.html#context-saturation">コンテキスト飽和</a>対策。文脈を引き継ぎたいなら <code>/compact</code>、完全に切り替えるなら <code>/clear</code>。</p></div>
-<h3>&lt;a id=&quot;context&quot;&gt;&lt;/a&gt;<code>/context</code>：コンテキスト使用量の確認</h3>
+<h3>&lt;a id=&quot;context&quot;&gt;&lt;/a&gt;<code>/context</code> — コンテキスト使用量の確認</h3>
 <p>現在の<strong>コンテキスト使用量</strong>を表示する。</p>
 <ul>
 <li><span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>消費の内訳（システム・MCP・メモリ・メッセージ等）が見える</li>
@@ -251,7 +251,7 @@
   MCP tools: 21.4k tokens (10.7%)
   Free space: 108.7k (54.3%)
 </code></pre>
-<h3>&lt;a id=&quot;model&quot;&gt;&lt;/a&gt;<code>/model</code>：モデルの表示・切替</h3>
+<h3>&lt;a id=&quot;model&quot;&gt;&lt;/a&gt;<code>/model</code> — モデルの表示・切替</h3>
 <ul>
 <li><span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>なし: 現在のモデルを表示</li>
 <li>モデル名指定: そのモデルに切り替え（例: <code>/model sonnet</code>）</li>
@@ -301,12 +301,12 @@
 </tr>
 <tr>
 <td><code>/compact</code></td>
-<td>：</td>
+<td>—</td>
 <td>古い会話を要約して圧縮（文脈は保持）。<code>/clear</code>との違い: <strong>文脈を残すか捨てるか</strong>。<a href="11-glossary.html#context-saturation">コンテキスト飽和</a>対策</td>
 </tr>
 <tr>
 <td><code>/add-dir &lt;path&gt;</code></td>
-<td>：</td>
+<td>—</td>
 <td>作業<span class="term" tabindex="0">ディレクトリ<span class="term-popup">フォルダのこと。ファイルを階層的に整理する入れ物。Linux系ではフォルダをディレクトリと呼ぶのが普通</span></span>を追加</td>
 </tr>
 <tr>
@@ -326,22 +326,22 @@
 </tr>
 <tr>
 <td><code>/stop</code></td>
-<td>：</td>
+<td>—</td>
 <td>バックグラウンドセッションを停止</td>
 </tr>
 <tr>
 <td><code>/rename [name]</code></td>
-<td>：</td>
+<td>—</td>
 <td>セッション名を変更</td>
 </tr>
 <tr>
 <td><code>/export [file]</code></td>
-<td>：</td>
+<td>—</td>
 <td>会話をテキストファイルに出力</td>
 </tr>
 <tr>
 <td><code>/recap</code></td>
-<td>：</td>
+<td>—</td>
 <td>セッションの1行サマリーを生成</td>
 </tr>
 </tbody>
@@ -359,17 +359,17 @@
 <tbody>
 <tr>
 <td><code>/context</code></td>
-<td>：</td>
+<td>—</td>
 <td>コンテキスト使用量を色付きグリッドで表示。<strong>注意</strong>: 1回約4kトークン消費</td>
 </tr>
 <tr>
 <td><code>/help</code></td>
-<td>：</td>
+<td>—</td>
 <td>ヘルプ・コマンド一覧表示</td>
 </tr>
 <tr>
 <td><code>/model</code></td>
-<td>：</td>
+<td>—</td>
 <td>モデル表示・切替（例: <code>/model sonnet</code>）</td>
 </tr>
 <tr>
@@ -379,7 +379,7 @@
 </tr>
 <tr>
 <td><code>/mcp</code></td>
-<td>：</td>
+<td>—</td>
 <td>MCPサーバーの接続状態・ツール数確認</td>
 </tr>
 </tbody>
@@ -407,42 +407,42 @@
 </tr>
 <tr>
 <td><code>/model [model]</code></td>
-<td>：</td>
+<td>—</td>
 <td>モデル切替（デフォルトに保存）</td>
 </tr>
 <tr>
 <td><code>/effort [level]</code></td>
-<td>：</td>
+<td>—</td>
 <td>推論の深さ設定（low/medium/high/xhigh/max/ultracode）</td>
 </tr>
 <tr>
 <td><code>/fast [on|off]</code></td>
-<td>：</td>
+<td>—</td>
 <td>高速モード切替（Opus高速出力）</td>
 </tr>
 <tr>
 <td><code>/theme</code></td>
-<td>：</td>
+<td>—</td>
 <td>カラーテーマ変更</td>
 </tr>
 <tr>
 <td><code>/tui [mode]</code></td>
-<td>：</td>
+<td>—</td>
 <td><span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>UI切替（default/fullscreen）</td>
 </tr>
 <tr>
 <td><code>/statusline</code></td>
-<td>：</td>
+<td>—</td>
 <td>ステータスライン設定</td>
 </tr>
 <tr>
 <td><code>/sandbox</code></td>
-<td>：</td>
+<td>—</td>
 <td>サンドボックスモード切替</td>
 </tr>
 <tr>
 <td><code>/color [color]</code></td>
-<td>：</td>
+<td>—</td>
 <td><span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>バーの色を変更</td>
 </tr>
 </tbody>
@@ -568,32 +568,32 @@
 <tbody>
 <tr>
 <td><code>/mcp</code></td>
-<td>：</td>
+<td>—</td>
 <td>MCPサーバー接続管理</td>
 </tr>
 <tr>
 <td><code>/hooks</code></td>
-<td>：</td>
+<td>—</td>
 <td>フック設定を表示</td>
 </tr>
 <tr>
 <td><code>/agents</code></td>
-<td>：</td>
+<td>—</td>
 <td>カスタム<span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>管理</td>
 </tr>
 <tr>
 <td><code>/plugin</code></td>
-<td>：</td>
+<td>—</td>
 <td>プラグイン管理</td>
 </tr>
 <tr>
 <td><code>/skills</code></td>
-<td>：</td>
+<td>—</td>
 <td>利用可能スキル一覧</td>
 </tr>
 <tr>
 <td><code>/desktop</code></td>
-<td>：</td>
+<td>—</td>
 <td>デスクトップアプリにセッション引き継ぎ</td>
 </tr>
 <tr>
@@ -603,7 +603,7 @@
 </tr>
 <tr>
 <td><code>/voice [mode]</code></td>
-<td>：</td>
+<td>—</td>
 <td>音声入力切替（hold/tap/off）</td>
 </tr>
 <tr>
@@ -613,27 +613,27 @@
 </tr>
 <tr>
 <td><code>/release-notes</code></td>
-<td>：</td>
+<td>—</td>
 <td>チェンジログ表示</td>
 </tr>
 <tr>
 <td><code>/login</code> <code>/logout</code></td>
-<td>：</td>
+<td>—</td>
 <td>Anthropicアカウント<span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span></td>
 </tr>
 <tr>
 <td><code>/keybindings</code></td>
-<td>：</td>
+<td>—</td>
 <td><span class="term" tabindex="0">キーバインド<span class="term-popup">キーボードのキー操作と機能の割り当てのこと。「Ctrl+Sで保存」のような対応関係</span></span>設定</td>
 </tr>
 <tr>
 <td><code>/reload-plugins</code></td>
-<td>：</td>
+<td>—</td>
 <td>プラグイン再読み込み</td>
 </tr>
 <tr>
 <td><code>/reload-skills</code></td>
-<td>：</td>
+<td>—</td>
 <td>スキルディレクトリ再スキャン</td>
 </tr>
 </tbody>
@@ -651,12 +651,12 @@
 <tbody>
 <tr>
 <td><code>/insights</code></td>
-<td>：</td>
+<td>—</td>
 <td>セッション分析レ<span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>を生成</td>
 </tr>
 <tr>
 <td><code>/fewer-permission-prompts</code></td>
-<td>：</td>
+<td>—</td>
 <td>権限プロンプトを減らす設定</td>
 </tr>
 </tbody>
@@ -776,7 +776,7 @@
     </main>
 
     <footer class="site-footer">
-        <p>Claude Code Guide：<a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
          · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
          · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>

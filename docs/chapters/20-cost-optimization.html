@@ -359,6 +359,58 @@
 </tbody>
 </table></div>
 <hr />
+<h2>ベンダールール（有償モデル排除）</h2>
+<div class="callout callout-warn"><p>⚠️ <strong>2026-10-04 制定・GCP 請求事故（¥5,195）の対策</strong>（<a href="#">決定記録</a> ・<a href="https://github.com/%3CUSERNAME%3E/claude-config/commit/5f3668e">claude-config <code>5f3668e</code></a>）</p></div>
+<p>ふくけい方針「有償モデルは全て排除したい。GLM や MINIMAX のサブスクプランと、オープン Router の無料モデル、その他無料モデル以外は使用しない！させない」に基づく、ベンダー選定の厳格ルール。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>種別</th>
+<th>ベンダー / モデル</th>
+<th>課金経路</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>✅ サブスク</strong></td>
+<td>GLM-5.3（Z.AI）</td>
+<td>月額固定</td>
+<td>デフォルト・<code>glm-rate-proxy</code> 経由</td>
+</tr>
+<tr>
+<td><strong>✅ サブスク</strong></td>
+<td>MiniMax-M3 / MiniMax-M2.7</td>
+<td>月額固定</td>
+<td>ピーク時 fallback</td>
+</tr>
+<tr>
+<td><strong>✅ 無料枠</strong></td>
+<td>OpenRouter <code>cohere/north-mini-code:free</code>, <code>openai/gpt-oss-20b:free</code></td>
+<td>無料枠内</td>
+<td>OR枠=2（<span class="term" tabindex="0">YAML<span class="term-popup">ヤムル。階層構造を字下げで表す、人間が読みやすい設定ファイルの書式。frontmatter（文書冒頭の---で囲んだ設定塊）で使われる</span></span> <code>or_slots</code>）</td>
+</tr>
+<tr>
+<td><strong>✅ 無料枠</strong></td>
+<td>Gemini 2.5 / 2.0 / 1.5 Flash</td>
+<td>無料枠</td>
+<td>画像/音声/動画/テキスト対応・10 RPM/500 RPD 等</td>
+</tr>
+<tr>
+<td><strong>❌ 有償</strong></td>
+<td>Gemini 3.1 Pro Preview / 2.5 Pro / Vertex AI / OpenAI / Anthropic</td>
+<td>従量課金</td>
+<td><strong>使用禁止</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>ガード機構</strong>:</p>
+<ul>
+<li><code>claude-config/config/gemini-models.json</code> の <code>paid_ok</code> フラグ</li>
+<li><code>claude-config/lib/api_base.py:192-207</code> の <code>paid_ok_limit=False</code> ガード（<code>--allow-paid</code> 明示時のみ有料解禁）</li>
+<li><code>claude-config/config/multi-llm-review/review_policy.yaml</code> の <code>vendors.&lt;name&gt;.models</code> 設定</li>
+</ul>
+<p><strong><span class="term" tabindex="0">例外<span class="term-popup">プログラムの実行中に起きた異常のこと、とその知らせ。例外を捕まえて処理（ハンドリング）しないと、その場でプログラムが止まる</span></span></strong>: <code>--allow-paid</code> 明示時のみ <code>paid_ok: true</code> モデル解禁。<strong>本番運用では使用禁止</strong>（YAML ハードコードで迂回しない）。</p>
 <h2>バッジ表示ルール</h2>
 <p>コスト最適化構成では、使用したモデルに応じてレスポンスの冒頭と末尾にバッジを表示：</p>
 <div class="table-wrapper"><table>

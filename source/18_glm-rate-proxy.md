@@ -3,7 +3,7 @@
 > 💡 **章の核**: プロキシはLLMコストの調整弁。止まったらproxy-doctorで診断。
 
 
-> **⚠️ 旧記述の訂正（2026-10）**: 以前は「Windows Desktopアプリ版はエンドポイント変更できないため本プロキシは使用しない」だったが、**Anthropicが2026-07-09にthird-party inferenceモードをGA化**したことで、Desktop側もGateway接続（Developer Mode → Configure Third-Party Inference）で本プロキシに接続可能になった。接続構成は「Windows側の localhost:8787 を WSL 内のプロキシへ中継（portproxy）」する形。MCP（glm/minimax）は併用可能な補完経路（[04_MCPサーバー](04-mcp.html#glm)）。
+> **⚠️ 旧記述の訂正（2026-10-14）**: 以前は「Windows Desktopアプリ版はエンドポイント変更できないため本プロキシは使用しない」だったが、**Anthropicが2026-07-09にthird-party inferenceモードをGA化**したことでDesktop側もGateway接続（Developer Mode → Configure Third-Party Inference）で本プロキシに接続可能になった。本環境でも主力Desktop移行Phase 0でDesktop側が本プロキシを使用中（Windows localhost:8787 → portproxy(v6tov4) → WSL 127.0.0.1:8787・正典: [LLMルーティングSSOT](../共通ルール/LLMルーティング.md)）。Desktop側でのLLM呼出運用は実行指示書 `70_PROMPTS/coding/windows-desktop-glm-review.md` 参照。MCP（glm/minimax）は併用可能な補完経路（[04_MCPサーバー](04-mcp.html#glm)）。
 
 Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.3）に切り替えるローカルプロキシの仕組みと運用ガイド。
 
@@ -82,26 +82,55 @@ api.z.ai              api.minimax.io
 
 ## <a id="model-routing"></a>モデルルーティング
 
-使用量（`usage_pct`）に応じて自動でモデルが切り替わる。
+使用量（`usage_pct` = **max(5h%, 週間%)**）に応じて自動でモデルが切り替わる。
+
+> **使用率の取得方法（2026-08-17刷新）**: ZAI はレスポンスヘッダに rate limit 情報を返さないため、プロキシが ZAI monitor API（`GET /api/monitor/usage/quota/limit`・サブスク管理UIの内部API）を**60秒間隔でポーリング**して 5h% と週間% を取得する。`/proxy/status` の `usage_5h_pct` / `usage_week_pct` で内訳を確認できる。
 
 | モード | 条件 | 使用モデル | プロバイダ |
 |---|---|---|---|
-| `normal` | usage < 80% | GLM-5.3 | ZAI |
-| `economy` | 80% ≤ usage < 95% | GLM-4.7 | ZAI |
-| `emergency` | usage ≥ 95% | GLM-4.7-Flash | ZAI |
+| `manual` | `POST /proxy/mode` で手動指定中（全モード優先・2026-08-19追加） | MiniMax-M3 | MiniMax |
+| `normal` | usage < 95% | GLM-5.3 | ZAI |
+| `emergency` | usage ≥ 95% | MiniMax-M3 | MiniMax |
 | `peak_block` | JST 15:00〜18:59（15時台〜18時台・`15≦hour<19`） | MiniMax-M3 | MiniMax |
+
+> **⚠️ 2026-10-13更新**: `fallback`/`emergency`/`peak_block` のMiniMaxモデルは **`MiniMax-M3.1-Flash-Preview`** へ載せ替え済み（config `dc51c6f`・effort非転送=省略max動作・上表の「MiniMax-M3」は載せ替え前の記録）。詳細: [01_DECISIONS/2026-10-13_MiniMax-M3.1-Flash-Preview採用-proxyモデル載せ替え](../../01_DECISIONS/claude-code/2026-10-13_MiniMax-M3.1-Flash-Preview採用-proxyモデル載せ替え.md)
+
+### 手動モード切替（2026-08-19追加）
+
+GLM使用率が枯渇しそうな時など、**再起動なし**で「今日はMiniMax固定」に切り替える:
+
+```bash
+# MiniMaxへ固定（TTL 10時間・既定8・上限72・期限切れで自動auto復帰）
+curl -X POST http://127.0.0.1:8787/proxy/mode -d '{"provider":"minimax","hours":10}'
+# 通常運用へ戻す
+curl -X POST http://127.0.0.1:8787/proxy/mode -d '{"provider":"auto"}'
+# 状態確認（manual_provider / manual_expires_at）
+curl -s http://127.0.0.1:8787/proxy/status
+```
+
+manual=minimax中はpeak時間帯・使用率しきい値を無視して全リクエストがMiniMax-M3へ。状態は `/tmp/glm-rate-proxy-manual.json` に永続化（クラッシュ→systemd再起動でも意図維持）・期限30分前にWARNINGログ。詳細: [01_DECISIONS/2026-08-19_glm-rate-proxy手動モードAPI実装完走](../../01_DECISIONS/claude-code/2026-08-19_glm-rate-proxy手動モードAPI実装完走-peak最後の砦.md)
+
+**manual=glm（2026-09-04追加）**: `proxy-mode.sh glm` で peak_block（JST 15-19時・クォータ保護）中のみGLMへ強制。**peak_block外は無効**（autoと同じ＝戻し忘れても19時に自然解除）。GLMが429を返した場合はpeak_block専用分岐を迂回し通常チェーン（MiniMax→4.7-Flash）へ逃がすため保険は維持。トリガー: 「今夜はGLM」「GLMにして」。詳細: [01_DECISIONS/2026-09-04_peak_block中手動GLM切替-provider-glm拡張](../../01_DECISIONS/claude-code/2026-09-04_peak_block%E4%B8%AD%E6%89%8B%E5%8B%95GLM%E5%88%87%E6%9B%BF-provider-glm%E6%8B%A1%E5%BC%B5.md)
+
+> **日常の切替は `proxy-mode` スキル経由が正規経路（2026-08-20追加）**: 「今夜はミニマックス」「GLMに戻して」等の日本語発話で `~/bin/proxy-mode.sh`（on/off/status・時間帯ガード付き翌朝6時計算・calc-test内蔵）が実行される。curl直打ちよりスキル経由を推奨（時間計算ミス・コマンド打ち間違いを機械的に排除）。詳細: `skills/proxy-mode/SKILL.md`
+> **⚠️ status-first規則（2026-09-20追加）**: 切替系・確認系発話（「GLMに変更して」「今のモデルは？」等）では、CCは**応答前に必ず `proxy-mode.sh status` を実行して実効providerを実測**する（起動時ラベル・バッジは実エンジン保証にならないため・2026-09-18/19の「すでにGLM動作中」誤応答2日連続反復の再発防止）。詳細: `skills/proxy-mode/SKILL.md` の status-first規則節
+
+> **economy 段（80-95%）は2026-08-17に廃止**: 95%までは GLM-5.3 のまま使い切る方針（ユーザー確定）。
 
 > **ピーク時間帯の理由**: ZAI公式ドキュメント（[usage-revision](https://docs.z.ai/devpack/notice/usage-revision)・2026-08-17確認）によるとGLM-5.3はピーク時に**3倍の消費レート**（オフピークは1倍・ピーク=月〜金 14:00-18:00 UTC+8）で計算される。MiniMaxに逃がすことでZAIクォータを温存する。
 
-### フォールバックチェーン
+### フォールバックチェーン（2026-08-17改訂・順序入れ替え）
 
 ```
-ZAI 429 → GLM-4.7-Flash（emergency）→ MiniMax keys[0] → MiniMax keys[1] → 503
+ZAI 429 → MiniMax keys[0](Pro) → MiniMax keys[1](旧) → GLM-4.7-Flash（ZAI無料枠・最後の砦）→ 503（Retry-After: 600）
 ZAI 5xx → MiniMax keys[0] → MiniMax keys[1] → 503
 
 MiniMax 429/401/403 → 次キーへ連鎖（Pro→旧）
-MiniMax 2キー両方 429/401/403 → 503
+MiniMax 2キー両方 429/401/403 → GLM-4.7-Flash（ZAI）へ → それでもダメなら 503
+peak_block中にMiniMax 2キー全滅 → GLM-4.7-Flash（60sタイムアウト付き1回）→ 503（2026-08-19改訂）
 ```
+
+> **順序入れ替えの理由**: MiniMax-M3（高性能・月額サブスク枠）を先に使い、GLM-4.7-Flash（無料・無制限）を最後の砦にする方針（ユーザー確定・2026-08-17）。
 
 > **✅ MiniMax 2アカウント対応（2026-07-27追加）**
 > Pro（大量消費）と旧（安全網）の2アカウント運用。起動ログ `keys=2` で確認。
@@ -146,8 +175,7 @@ GLM-5.3はデフォルトで「思考モード」が有効で、内部推論ト�
 
 ### thinking設定のパラメータ
 
-`config/config.json` で制御可能（2026-08-15時点の現行構成: **glm-5.3 をprimary**に切替・MiniMaxにM3追加・`last_actual_model`等の実測ラベルは自動記録）：
-
+`config/config.json` で制御可能：
 
 ```json
 {
@@ -182,13 +210,20 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
   "mode": "normal",
   "provider": "zai",
   "peak_block": false,
-  "last_actual_model": "glm-5.3"
+  "last_actual_model": "glm-5.3",
+  "usage_5h_pct": 23.5,
+  "usage_week_pct": 12.1,
+  "monitor_error_count": 0,
+  "monitor_last_error": null
 }
 ```
 
 | フィールド | 意味 |
 |---|---|
-| `usage_pct` | ZAIの月間クォータ消費率（%） |
+| `usage_pct` | 使用率 = **max(5h%, 週間%)**（ルーティング判定に使用） |
+| `usage_5h_pct` | 5時間制限の使用率（monitor API取得・2026-08-17追加） |
+| `usage_week_pct` | 週間制限の使用率（monitor API取得・2026-08-17追加） |
+| `monitor_error_count` / `monitor_last_error` | monitor API の取得エラー状況（0/null が正常） |
 | `mode` | 現在のルーティングモード |
 | `provider` | 次のリクエストの送信先 |
 | `peak_block` | ピーク時間帯ブロック中かどうか |
@@ -199,24 +234,30 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -m json.tool
 ## <a id="start-stop"></a>起動・停止
 
 ```bash
-# 起動（SessionStart hookで自動実行されるが、手動でも可）
+# 起動・再起動（2026-10-15からsystemd統一・直接kill/バックグラウンド直接起動は禁止）
+systemctl --user start glm-rate-proxy.service
+systemctl --user restart glm-rate-proxy.service
+
+# start-glm-proxy.sh も使える（systemdラッパー・内部はsystemctl経由）
 bash ~/.claude/scripts/llm/start-glm-proxy.sh
 
 # プロセス確認
 pgrep -a -f glm_rate_proxy
 
 # 停止
-pkill -f glm_rate_proxy
+systemctl --user stop glm-rate-proxy.service
 
 # ログ確認
-tail -f /tmp/glm-proxy.log
+journalctl --user -u glm-rate-proxy -f
 ```
+
+> ⚠️ 直接killやバックグラウンド直接起動は systemd 非管理の野良インスタンスを生み、bind失敗無限ループの原因になる（2026-10-14事故・詳細: 01_DECISIONS/claude-code/2026-10-15_プロキシ野良インスタンス事故とstart-glm-proxy.sh遺物.md）。unit側ExecStartPreがhealthyな別インスタンスを検知すると起動を拒否する（exit 75）。
 
 ### ピークブロックを一時的に無効化
 
 ```bash
-# 環境変数でピークブロック無効化
-GLM_PEAK_BLOCK=false bash ~/.claude/scripts/llm/start-glm-proxy.sh
+# 環境変数はunit経由では渡らない・peak_blockはconfig.jsonまたはproxy-mode.shで制御
+bash ~/bin/proxy-mode.sh status
 ```
 
 ---
@@ -275,8 +316,8 @@ curl -s http://127.0.0.1:8787/proxy/status | python3 -c "import json,sys; d=json
 curl -s http://127.0.0.1:8787/proxy/status | python3 -c "import json,sys; d=json.load(sys.stdin); print('usage:', d['usage_pct'], '%')"
 ```
 
-- `usage_pct` が80%超 → `economy`モードに自動切替済みのはず
-- 95%超 → `emergency`モード（GLM-4.7-Flash）に切替済みのはず
+- `usage_pct` が95%超 → `emergency`モード（MiniMax-M3）に自動切替済みのはず
+- `monitor_error_count` が増え続ける → monitor API 到達障害（usage が前回値固定になる・`monitor_last_error` を確認）
 - 429が続く場合 → MiniMaxへのフォールバックが機能しているか `last_actual_model` を確認
 
 **手動でMiniMaxに切り替え:**
@@ -373,9 +414,13 @@ ZAIの `enabled` モードはモデルが「自動判断」して思考量を決
   "log_level": "INFO",
   "default_model": "GLM-5.3",
   "thresholds": {
-    "normal":    {"max_pct": 80,  "model": null},
-    "economy":   {"max_pct": 95,  "model": "GLM-4.7"},
-    "emergency": {"max_pct": 100, "model": "GLM-4.7-Flash"}
+    "normal":    {"max_pct": 95,  "model": null,         "provider": "zai"},
+    "emergency": {"max_pct": 95,  "model": "MiniMax-M3", "provider": "minimax"}
+  },
+  "monitor": {
+    "enabled": true,
+    "interval_sec": 60,
+    "timeout_sec": 10
   },
   "fallback": {
     "provider": "minimax",
@@ -466,3 +511,14 @@ ZAI使用率     : 0.0%
 - [11 現場の知見](12_現場の知見.md)
 
 > 💡 **章の落とし所**: 再起動は全セッション数秒停止とセット——必ず事前警告を。
+
+## 🆘 野良プロセス検知時の手動応答手順（2026-10-20・proxy-norai-check.sh検知時）
+
+1. `pgrep -af glm_rate_proxy` で対象PIDを特定（**PID+起動時刻を記録してからkill**・PID再利用防止）
+2. `systemctl --user show -p MainPID glm-rate-proxy.service` と照合し、MainPID以外なら野良確定
+3. `kill <野良PID>`（kill -9は最終手段）→ `ss -tlnp | grep 8787` で正規proxyがlisten復帰したか確認
+4. 正規unitが死んでいれば `bash ~/projects/claude-config/scripts/llm/start-glm-proxy.sh`（systemctlラッパー）で復旧
+5. 検知ログ `~/.claude/state/proxy-norai/log.jsonl` の該当行に対応メモを残す（再発パターン分析用）
+
+機構: PreToolUse gate `proxy-op-gate.sh`（経路A）+ .bashrc wrapper関数（経路B）+ 本checker（定期検知）の3層。
+正典: `docs/superpowers/specs/2026-10-15_ボード宣言なしプロキシ操作恒久対策-design.md`

@@ -290,6 +290,8 @@
 <p>外部ツールをClaude Codeから利用するためのプロトコル。サーバー単位でツール群を追加。→ <a href="04-mcp.html">04_MCPサーバー</a></p>
 <h3>MEMORY.md</h3>
 <p>Auto Memoryの目次ファイル。各メモリファイルへのポインタを格納。→ <a href="06-memory.html#memory-md">06_メモリ</a></p>
+<h3>mod / dev-mods</h3>
+<p>セッションにpane等のUIを追加する<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>機構。modは <code>~/.claude/dev-mods/&lt;セッションID&gt;/&lt;mod名&gt;/</code> 配下がスコープ（<strong>別セッションのmodは新セッションに出ない</strong>）。plugin-authoring<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>読込でwatch開始→初回書込で「Turn on the mods?」質問→「Turn them on」でhot-reload有効。UI確認は cc-shot（CC自己スクショ・<code>~/.claude/scripts/cc-shot.ps1</code>・EncodedCommand経由）で行う。→ <a href="#">01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS記録</a></p>
 <hr />
 <h2>O</h2>
 <h3>Opus</h3>
@@ -298,8 +300,8 @@
 <h2>P</h2>
 <h3>Plan Mode（プランモード）</h3>
 <p>Claude Codeがコードを書かずに計画だけを立てるモード。ユーザー承認後に<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>開始。→ <a href="02-commands.html#plan-mode">02_コマンド一覧</a></p>
-<h3>Plugin（<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>）</h3>
-<p>Claude Codeに<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>やエージェントを追加する拡張<span class="term" tabindex="0">パッケージ<span class="term-popup">配布・インストール可能な形にまとめたソフトウェアの単位。Pythonではpipで入れる部品のこと</span></span>。superpowers, pr-review-toolkit等。</p>
+<h3>Plugin（プラグイン）</h3>
+<p>Claude Codeにスキルやエージェントを追加する拡張<span class="term" tabindex="0">パッケージ<span class="term-popup">配布・インストール可能な形にまとめたソフトウェアの単位。Pythonではpipで入れる部品のこと</span></span>。superpowers, pr-review-toolkit等。</p>
 <h3>PreToolUse（プリツールユース）</h3>
 <p>ツール実行前に発火するフック。セキュリティチェック等に使用。→ <a href="05-hooks.html#pretooluse">05_フック</a></p>
 <h3>Project Memory（プロジェクトメモリ）</h3>
@@ -326,7 +328,7 @@
 </li>
 <li><strong>大原則</strong>: 画像を見せたい時だけ添付。それ以外はCCに Read/LS させる</li>
 </ul>
-<p>→ 対比: <a href="#context-saturation">コンテキスト飽和</a>（トークン上限） / 関連: Read・Context（本ページ内） / 詳細: <a href="#">01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/2026-06-16_image-path-auto-attach.md</a></p>
+<p>→ 対比: <a href="#context-saturation">コンテキスト飽和</a>（トークン上限） / 関連: Read・Context（本ページ内） / 詳細: <a href="#">01_DECISIONS/claude-code/2026-06-16_image-path-auto-attach.md</a></p>
 <hr />
 <h2>R</h2>
 <h3>Read</h3>

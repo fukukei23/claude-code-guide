@@ -237,13 +237,47 @@ Layer 1: グローバル（全プロジェクト共通）
   ~/.claude/CLAUDE.md
 </code></pre>
 <hr />
+<h2>MCPサーバーの有効/無効 — ⚠️ 書込先の罠（2026-08-14 実証）</h2>
+<p>MCPサーバーの無効化は <strong>書く場所を間違えるとサイレントに失敗する</strong>（エラーが出ず、サーバーは接続されたまま）。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>正しい場所</th>
+<th>メモ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>user/localスコープMCPの無効化</td>
+<td><code>~/.claude.json</code> の <code>projects[&quot;&lt;cwd&gt;&quot;].disabledMcpServers</code></td>
+<td><code>/mcp disable &lt;server&gt;</code> が書く場所。<strong>per-project</strong>（他プロジェクトでは繋がったまま）。復帰は <code>/mcp enable</code></td>
+</tr>
+<tr>
+<td>プロジェクト <code>.mcp.json</code> サーバーの無効化</td>
+<td><code>.claude/settings.local.json</code> の <code>disabledMcpjsonServers</code></td>
+<td></td>
+</tr>
+<tr>
+<td>❌ やってはいけない</td>
+<td><code>settings.json</code> に <code>disabledMcpServers</code> を書く</td>
+<td><strong>読まれない</strong>（2026-08-14 実証: 書いた3サーバーが接続したまま）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><code>claude mcp remove</code> での無効化は<strong>永久削除</strong>（env/<span class="term" tabindex="0">OAuth<span class="term-popup">オーオースと読む。他のサービスの機能を、IDやパスワードを教えずに安全に使わせるための認可の標準規格。「○○でログイン」ボタンの裏側で動いている仕組み</span></span><span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>消滅）なので使わない</li>
+<li>有効サーバー一覧の実体は <code>~/.claude.json</code> のトップレベル <code>mcpServers</code>（userスコープ）＋ <code>projects[&quot;&lt;cwd&gt;&quot;].mcpServers</code>（localスコープ）</li>
+<li>詳細経緯: <a href="#">2026-08-14_doctor診断-MCP誤配置解明と掃除-fnmソフト無効化</a></li>
+</ul>
+<hr />
 <h2>CLAUDE.md</h2>
 <h3>&lt;a id=&quot;claude-md-<span class="term" tabindex="0">glob<span class="term-popup">グロブ。ファイル名を「＊（任意の文字列）」等のワイルドカードで指定する書き方。「*.md」＝すべてのmdファイル、のような使い方</span></span>al&quot;&gt;&lt;/a&gt;Layer 1: グローバルCLAUDE.md</h3>
 <p><strong>全プロジェクトで共通するルール</strong>を記述。</p>
 <ul>
 <li><strong>場所</strong>: <code>~/.claude/CLAUDE.md</code></li>
 <li><strong>内容</strong>: 言語設定、LLM利用ポリシー、セキュリティルール、コーディング原則、SSOT参照</li>
-<li><strong><span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span></strong>: ~2.4k（常にロードされる）</li>
+<li><strong>トークン</strong>: ~2.4k（常にロードされる）</li>
 </ul>
 <p>グローバルCLAUDE.mdに含まれるもの:</p>
 <ul>
@@ -338,7 +372,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td>SessionStart</td>
 <td>セッション開始時</td>
-<td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示・設定ファイル同期・INDEX自動更新・SKILL_CATALOG自動生成（generate-skill-catalog.py）・<strong>ssot-check日次トリガー</strong>（check-ssot-check-staleness.sh・前回実行が前々日以前なら当日実行を指示・2026-08-14）・<strong>バナー集約</strong>（startup-banner.sh・各hookのステータスを <code>/tmp/claude-startup/</code> 経由で集約し1枚のバナーに統一・層1読込検証つき・2026-08-25）</td>
+<td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の注入（~/.secrets.env）・SSOT日記読込・バックログ7日経過タスク自動確認・セッション数サマリー表示・設定ファイル同期・INDEX自動更新・SKILL_CATALOG自動生成（generate-skill-catalog.py）</td>
 </tr>
 <tr>
 <td>SessionStart hook圧縮</td>
@@ -348,12 +382,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <tr>
 <td>Stop</td>
 <td>セッション終了時</td>
-<td>セッションログの保存・ハンドオフ生成・ガイド更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>の記録・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>同期・クリーンアップ。加えて<strong>検証系機械ゲート群</strong>（検証範囲宣言<code>check-fail-coverage.sh</code>・平易解説<code>check-plain-explanation.sh</code>・ゼロ断定<code>check-zero-assert.sh</code>・MLR台帳<code>check-mlr-ledger-coverage.sh</code>・迎合防止<code>check-consult-balance.sh</code>等・2026-08-28〜09-06に段階導入）</td>
-</tr>
-<tr>
-<td>UserPromptSubmit</td>
-<td>ユーザー発言の送信時</td>
-<td>発言への追加コンテキスト注入（<code>consult-balance-inject.sh</code>・意思決定相談の発言へ【根拠】【反証1つ】【意見】のフォーマット指示を注入し迎合を構造防止・2026-09-06導入）</td>
+<td>セッションログの保存・ハンドオフ生成・ガイド更新<span class="term" tabindex="0">キュー<span class="term-popup">待ち行列。依頼された処理を順番に並べて、前から順に消化していく仕組み</span></span>の記録・<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>同期・クリーンアップ</td>
 </tr>
 <tr>
 <td>Notification</td>
@@ -405,15 +434,43 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 </tbody>
 </table></div>
+<h5>コンテキスト窓1M認識 — モデルID末尾の <code>[1m]</code> サフィックス（2026-08-29・2026-10-21 追記）</h5>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>機構</td>
+<td>CCのコンテキスト窓認識（<code>/context</code> の分母）は<strong>モデルID末尾の <code>[1m]</code> サフィックス</strong>で決まる。<code>ANTHROPIC_DEFAULT_*_MODEL</code> の値末尾に <code>[1m]</code> を付けると1M窓として認識</td>
+</tr>
+<tr>
+<td>落とし穴</td>
+<td>モデル切替時にサフィックスを落とすと、<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000</code> があっても<strong>200k認識に後退</strong>する（2026-08-29 flash主軸化で実害発生・limit到達）。<strong>モデル切替時は <code>[1m]</code> 保持を必ず確認</strong></td>
+</tr>
+<tr>
+<td>確認方法</td>
+<td>新規セッションで <code>/context</code> を実行し、分母が1M表示か確認。200k表示ならサフィックス喪失</td>
+</tr>
+<tr>
+<td>⚠️ <strong>2026-10-21 追記: <code>[1m]</code> は ZAI（glm-rate-proxy経由）では使用不可</strong></td>
+<td>ZAI（<code>api.z.ai/api/anthropic</code>）は <code>[1m]</code> サフィックス付きモデル名を <strong>Unknown Model(1211) で拒否</strong>する。proxy は除去せずそのまま転送するため、MiniMax-M3 へ<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>する（ZAI直叩き=<span class="term" tabindex="0">HTTP<span class="term-popup">エイチティーティーピー。Webの通信で使われる基本的な約束事（プロトコル）。ブラウザとサーバー、プログラム同士のやり取りの共通言語</span></span>400/1211、proxy経由=<code>MiniMax-M3</code> 応答・2026-10-21 実測）。<strong><code>ANTHROPIC_DEFAULT_*_MODEL</code> に <code>[1m]</code> を付けないこと</strong>（HAIKU は 2026-10-21 に <code>glm-5.3-flash</code> へ変更済み。SONNET <code>glm-5.3-flash[1m]</code> と OPUS <code>glm-5.3[1m]</code> は未修正で残存）。1M窓は <code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000</code> で担保する</td>
+</tr>
+</tbody>
+</table></div>
+<p>詳細経緯: <code>01_DECISIONS/claude-code/2026-08-29_flash主軸化で1M窓喪失-[1m]サフィックス再付与で復旧.md</code>
+/ <code>01_DECISIONS/claude-code/2026-10-21_HAIKUモデル切替と1mサフィックス非対応の発見.md</code></p>
 <h5>&lt;a id=&quot;statusline&quot;&gt;&lt;/a&gt;statusLine の詳細</h5>
-<p>画面下部にLLM名・コスト・作業量・コンテキスト残量・会話サイズを表示する。glm-rate-proxy の実動作状態を反映し、peak時間帯の<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>もバッジで示す。</p>
+<p>画面下部にLLM名・コスト・作業量・コンテキスト残量・会話サイズを表示する。glm-rate-proxy の実動作状態を反映し、peak時間帯のフォールバックもバッジで示す。</p>
 <ul>
 <li><strong>設定</strong>: <code>{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;bash ~/.claude/scripts/llm/llm-status.sh&quot;}</code></li>
 <li><strong><span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span></strong>: <code>~/.claude/scripts/llm/llm-status.sh</code></li>
 <li><strong>表示例（通常）</strong>: <code>🟡[GLM] GLM-5.3 | Ctx 45% (90k/200k) | Req 8.5MB/32 | +100 -50 | 🪟e36d</code></li>
 <li><strong>表示例（peak帯フォールバック）</strong>: <code>🟠[peak→minimax] GLM-5.3→MiniMax-M3 | ... | 🪟e36d</code></li>
 <li><strong>並び順（2026-08-16改）</strong>: LLM名 → Ctx → Req → 作業量 → タブID。コスト（$表示）は削除（<code>claude-cost</code>コマンドで確認）。※スマホ表示で末尾が見切れるため、モデル・コンテキストを先頭に変更（旧: タブID先頭・2026-07-23〜）</li>
-<li><strong>使用率表示（2026-09-16追加・09-20 provider分離）</strong>: <span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>の使用率（5h窓/週間窓・閾値85/70で色分け）を表示。<strong>provider=zai（GLM稼働中）のみZAI使用率を表示し、MiniMax稼働中はZAI値を非表示</strong>（無関係な枠の使用率を見せて誤解させるのを防ぐ・MiniMax稼働中は <code>⛽MiniMax 5h=x%/週x%</code> を表示）</li>
 </ul>
 <div class="table-wrapper"><table>
 <thead>
@@ -448,6 +505,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <div class="callout callout-warn"><p><strong>注意</strong>: コンテキスト使用率が高くなったら早めに <code>/compact</code> すること。100%に達すると <code>/compact</code> 自体も失敗し、新セッションが必要になる。会話サイズ（<code>Req</code>）は32MB API上限に縛られるため context窓とは別管理。</p></div>
 <h3>&lt;a id=&quot;env-settings&quot;&gt;&lt;/a&gt;env（環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span>の注入）</h3>
 <p><code>env</code> セクションで Claude Code <span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>に環境変数を追加できる。APIキーは <code>~/.secrets.env</code> で管理するため、ここには非機密の制御変数のみ記載する（シークレットは SessionStart フックで自動注入）。</p>
+<div class="callout callout-warn"><p>⚠️ <strong><code>env</code> 値は <code>${VAR}</code> 展開されない（2026-09-13 実測+公式docs確認）</strong>: env ブロックの値は &quot;plain text&quot;（settings-reference）としてそのまま使われ・<span class="term" tabindex="0">変数展開<span class="term-popup">$HOME のように変数名が書かれた場所を、実際の値に置き換えること</span></span>は行われない（実測: <code>x-session-id: ${CLAUDE_CODE_SESSION_ID}</code> がリテラルのままヘッダ送信・journalctl 52/52件）。展開が効くのは <code>.mcp.json</code>（command/args/env/url/headers）・hooks の <code>command</code>（<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>展開）・HTTP hook の <code>headers</code>（allowedEnvVars指定のみ）・statusLine の <code>command</code> のみ。動的な値が必要なら環境変数を<strong>プロセス環境として</strong>起動前に渡すか・helperコマンド（apiKeyHelper等）を使う。詳細: <code>01_DECISIONS/claude-code/2026-09-12_correlation-tag実装とguard-settings-write復元構造の解明.md</code> 進捗（2026-09-13）</p></div>
 <p><strong>代表的な制御変数（非機密）</strong>:</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -485,7 +543,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 </tbody>
 </table></div>
-<p><strong>glm-rate-proxy経由のルーティング変数</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> / <code>ANTHROPIC_BASE_URL</code> / <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 等）→ <a href="18-glm-rate-proxy.html">18_glm-rate-proxy</a> で詳述。</p>
+<p><strong>glm-rate-proxy経由のルーティング変数</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> / <code>ANTHROPIC_BASE_URL</code> / <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 等）→ <a href="18-glm-rate-proxy.html">13_glm-rate-proxy</a> で詳述。</p>
 <div class="callout callout-info"><p><strong>auto-compact制御の罠（パターンB運用）</strong>: glm-5.3等のカスタムモデルは Claude Code で <strong>200K認識</strong>される。<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000</code> を設定しても200Kに <strong>cap</strong> されるため無意味（statusLine表示と本体判定がズレて「1% until auto-compact」が異常早発動）。auto-compact を止めるには <code>DISABLE_AUTO_COMPACT=1</code>。glm-5.3 を真に1M認識させるには <code>DISABLE_COMPACT=1</code> + <code>CLAUDE_CODE_MAX_CONTEXT_TOKENS=1000000</code>（ただし手動<code>/compact</code>も不可）。→ <a href="#">AUTO_COMPACT_WINDOW訂正・パターンB運用移行</a></p></div>
 <div class="callout callout-warn"><p><strong>MCP_TOOL_TIMEOUT を設定する理由</strong>: GLM-5.3等の思考型モデルは長い生成に60秒以上かかることがある。未設定だと <code>MCP error -32001 (Request timed out)</code> が連続発生する。glm-mcp-server.py は直列処理なので1件目のタイムアウトが2件目を巻き込む連鎖に注意。値はミリ秒単位（300000 = 5分）。→ <a href="#">GLM MCPタイムアウト修正</a></p></div>
 <div class="callout callout-info"><p><strong>WSL CLI版でglm MCPをdisabledにする理由</strong>: WSL CLI版ではCLI本体がGLMで動作するためglm MCPは二重呼び出しになり不要。<code>command</code>/<code>url</code> を省略すると「設定不備」警告が出るため、<code>disabled: true</code> を設定して警告を抑制。Desktop App版では <code>false</code> に戻すだけで再利用可。</p></div>
@@ -503,7 +561,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <li>しかし削除する際は<strong>両方から削除</strong>する必要がある</li>
 <li><code>claude mcp remove</code> CLIコマンドを使うと両方に反映される</li>
 </ul>
-<div class="callout callout-tip"><p><strong>現場の知見</strong>: <code>settings.json</code> だけ手動編集してMCPサーバーを削除しても、<code>~/.claude.json</code> に定義が残っていれば次回起動時に復元される。削除は必ず <code>claude mcp remove</code> で。→ <a href="12-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">12_現場の知見</a></p></div>
+<div class="callout callout-tip"><p><strong>現場の知見</strong>: <code>settings.json</code> だけ手動編集してMCPサーバーを削除しても、<code>~/.claude.json</code> に定義が残っていれば次回起動時に復元される。削除は必ず <code>claude mcp remove</code> で。→ <a href="12-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
 <hr />
 <h2>&lt;a id=&quot;secrets&quot;&gt;&lt;/a&gt;シークレット管理</h2>
 <p>APIキー等の機密情報は <code>~/.secrets.env</code> に一元管理。</p>
@@ -543,7 +601,7 @@ GITHUB_TOKEN=ghp_xxx...
 <p>SessionStartフック <code>sync-secrets-to-settings.sh</code> が起動のたびに <code>~/.secrets.env</code> の値を <code>settings.json</code> へ自動注入する。</p>
 <ul>
 <li><strong>目的</strong>: MCPサーバーへ環境変数を渡すため（<code>mcpServers.xxx.env</code> セクション）</li>
-<li><strong>Claude Code本体</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> 等）は<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>環境変数でも動作するが、同フックで注入する設計に統一</li>
+<li><strong>Claude Code本体</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> 等）はシェル環境変数でも動作するが、同フックで注入する設計に統一</li>
 <li><strong>Git管理</strong>: <code>settings.json</code> は <code>claude-config/.gitignore</code> で除外済み — GitHubには上がらない</li>
 </ul>
 <h3>settings.example.json の自動同期</h3>
@@ -600,7 +658,102 @@ settings.json          ← 実体。バックアップ・出力・表示は禁�
 </tr>
 </tbody>
 </table></div>
-<h3>&lt;a id=&quot;gitignore-best-practice&quot;&gt;&lt;/a&gt;.gitignore ベストプラクティス（設定リポジトリ向け）</h3>
+<h3>&lt;a id=&quot;deny-patterns&quot;&gt;&lt;/a&gt;<code>permissions.deny</code> の拒否パターン（文字列一致・重要）</h3>
+<p><code>settings.json</code> の <code>permissions.deny</code> は <strong><span class="term" tabindex="0">正規表現<span class="term-popup">文字のパターンを記号で表す書き方。「数字3桁」等を簡潔に指定でき、検索・置換・チェックに使う</span></span>ではなく文字列一致</strong> で判定される。<strong>登録されたパターンにマッチする書き方だけが拒否され、未登録の書き方は素通りする</strong>。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>パターン例</th>
+<th>結果</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Bash(rm -rf *)</code></td>
+<td>❌ 拒否</td>
+<td>ワイルドカード含むrm</td>
+</tr>
+<tr>
+<td><code>Bash(rm -rf /*)</code></td>
+<td>❌ 拒否</td>
+<td><span class="term" tabindex="0">絶対パス<span class="term-popup">一番上（ルート）から数えた完全な住所のようなファイルの場所表記。「/home/…」で始まる</span></span>からの全削除</td>
+</tr>
+<tr>
+<td><code>Bash(rm -R*)</code></td>
+<td>❌ 拒否</td>
+<td>大文字Rも拒否対象</td>
+</tr>
+<tr>
+<td><code>Bash(mv ...)</code></td>
+<td>✅ 通過</td>
+<td>mv系は未登録</td>
+</tr>
+<tr>
+<td><code>Bash(find ... -delete)</code></td>
+<td>✅ 通過</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>Bash(cp -r ...)</code></td>
+<td>✅ 通過</td>
+<td>force無しなら通過</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>つまり</strong>:</p>
+<ul>
+<li>「Windows版で<code>rm -rf</code>が拒否されたが、WSL版で<code>mv</code>が通った」のは、<strong>WSL版が強くなったからではない</strong>。<strong>拒否パターンが違っただけ</strong></li>
+<li><code>settings.json</code> は<strong>ユーザー単位で全環境共通</strong>（ホームの <code>~/.claude/settings.json</code> を共有）</li>
+</ul>
+<h4>💡 二重防御の本質（CLAUDE.md方針との組み合わせ）</h4>
+<p><code>settings.json.deny</code> の<strong>拒否パターンには限りがある</strong>（文字列一致なので抜け穴がある）。だから<strong>運用ルールでの防御</strong>が<strong>本質的に重要</strong>:</p>
+<pre><code>┌─────────────────────────────────────────────────┐
+│ 層1: 技術的防御（settings.json deny）            │
+│   - 「Bash(rm -rf *)」等の危険パターンのみブロック │
+│   - 抜け穴あり（mv/find -delete/cp等は通る）     │
+└─────────────────────────────────────────────────┘
+                       +
+┌─────────────────────────────────────────────────┐
+│ 層2: 運用防御（CLAUDE.md方針）                    │
+│   - 「`rm`（ファイル削除）は実行前にユーザー確認」 │
+│   - 「`git push` は実行前にユーザー確認」         │
+│   - 「`.env` の値を出力禁止」                     │
+└─────────────────────────────────────────────────┘
+                       = 二重防御
+</code></pre>
+<h4>🏗️ 3層モデル（deny / ask / allow）— 抜け道に頼らない正規経路</h4>
+<p>権限制御は <strong>deny（禁止）・ask（確認）・allow（許可）の3層</strong>。denyだけが全てではない:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>挙動</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>deny</strong></td>
+<td>自動拒否</td>
+<td><code>Bash(rm -rf *)</code></td>
+</tr>
+<tr>
+<td><strong>ask</strong></td>
+<td><strong>ユーザー確認→許可で実行</strong></td>
+<td><code>rm impeccable</code>（個別・-rf無）</td>
+</tr>
+<tr>
+<td><strong>allow</strong></td>
+<td>自動OK</td>
+<td><code>Bash(npm test)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>「削除したい時」の正規経路</strong>: <code>rm -rf *</code> は deny だが、<code>rm impeccable taste-skill</code>（<strong>個別指定・-rf無・ワイルドカード無</strong>）は denyにマッチせず <strong>ask（確認）</strong> になる → ユーザーが許可すれば<strong>削除される</strong>。これが<strong>抜け道（mv等でdeny回避）に頼らない、安全と使い勝手を両立する正規の手続き</strong>。</p>
+<div class="callout callout-tip"><p>💡 平易に: 「全部禁止」にするのではなく「<strong>危ない書き方（全部消す系）だけ禁止・普通の削除は毎回確認</strong>」。だから抜け道に頼らずとも、必要な時に消せる。</p></div>
+<p><strong>事故例（2026-07-30実例・Windows版実測確定）</strong>: Windows Desktop版CCで <code>/home/&lt;USER&gt;/</code> 配下に誤って clone した5リポ（impeccable / taste-skill / emil-skills / gsap-skills / hyperframes・約838MB）を <code>rm -rf</code> で消そうとしたら権限システムで拒否。WSLファイルへのアクセス自体は可能（UNC経由で読み書き成功）だったので、<strong>Windows版でも <code>mv</code>（抜け道）や 個別指定rm（ask正規経路）を使えば削除できた</strong>事案。WSL CLI版セッションで <code>mv</code> 退避で解決したが、<strong>本来は個別指定rmでaskを通す正規経路が設計思想に沿う</strong>。</p>
+<p>詳細は <a href="#">2026-07-30_rm拒否・mv成功挙動差の理解</a> を参照。</p>
 <p><code>claude-config</code> のような設定・hook・スクリプト類を管理するリポジトリでは、<strong>Auto sync / PostToolUse hook が編集系のバックアップファイルを巻き込んで commit する</strong>事故が過去に発生している（<code>*.bak</code> 129行混入の事例あり）。</p>
 <p>最低限入れておく除外パターン:</p>
 <pre><code class="language-gitignore"># バックアップファイル（エディタ・merge・rebase 由来）
@@ -682,7 +835,7 @@ backup-*/
 </ul>
 <h3>&lt;a id=&quot;windows-git-auth&quot;&gt;&lt;/a&gt;Windows DesktopのGitHub<span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span>（git push失敗の対処）</h3>
 <p>WindowsとWSLは<strong>SSH鍵の置き場所も独立</strong>している。WSL側<code>~/.ssh/id_ed25519</code>で運用しているGitHub鍵は、Windows側<code>C:\Users\&lt;user&gt;\.ssh\</code>には存在しないため、Windows Desktop版のBashツール（Git Bash）から<code>git push</code>すると<code>Permission denied (publickey)</code>で失敗する。</p>
-<p><strong>対処（<span class="term" tabindex="0">HTTP<span class="term-popup">エイチティーティーピー。Webの通信で使われる基本的な約束事（プロトコル）。ブラウザとサーバー、プログラム同士のやり取りの共通言語</span></span>S + GitHub CLI方式）</strong>: SSH鍵をコピー・共有せず、GitHub CLI (<code>gh</code>) の認証情報をWindows側のみで使う。</p>
+<p><strong>対処（HTTPS + GitHub CLI方式）</strong>: SSH鍵をコピー・共有せず、GitHub CLI (<code>gh</code>) の認証情報をWindows側のみで使う。</p>
 <pre><code class="language-bash"># 1. インストール
 winget install GitHub.cli
 
@@ -775,7 +928,7 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 <li>WSL CLIからはアクセス不可</li>
 <li>** filesystemのみ残す推奨**（ファイル操作に有用）</li>
 </ul>
-<h3><span class="term" tabindex="0">OAuth<span class="term-popup">オーオースと読む。他のサービスの機能を、IDやパスワードを教えずに安全に使わせるための認可の標準規格。「○○でログイン」ボタンの裏側で動いている仕組み</span></span>認証トークンの蓄積問題</h3>
+<h3>OAuth認証トークンの蓄積問題</h3>
 <p>Desktopアプリはセッション開始のたびに新しいOAuth認証トークンを作成し、旧トークンを削除しない。長期間使用すると100+個のトークンが蓄積される。</p>
 <h3>推奨運用（2026年5月時点）</h3>
 <div class="table-wrapper"><table>
@@ -799,7 +952,49 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-tip"><p><strong>現場の知見</strong>: Desktopアプリのコンテキスト過多はAnthropicのアップデート待ち。当面はWSL CLI版をメインで使用する。→ <a href="12-tips.html">12_現場の知見</a></p></div>
+<div class="callout callout-tip"><p><strong>現場の知見</strong>: Desktopアプリのコンテキスト過多はAnthropicのアップデート待ち。当面はWSL CLI版をメインで使用する。→ <a href="12-tips.html">11_現場の知見</a></p></div>
+<hr />
+<h2>一時envオーバーライドでのモデル試験（2026-08-29）</h2>
+<p><code>ANTHROPIC_DEFAULT_SONNET_MODEL=&lt;モデル&gt; claude -p &quot;...&quot;</code> で<strong>本番settings.jsonを変更せずに</strong>新モデルをCLI実セッションで試験できる（プロセス単位のenv上書き・稼働中タブと次回起動に影響ゼロ・失敗時の戻し操作も不要）。</p>
+<pre><code class="language-bash"># テキスト+ツール呼び出し試験
+ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5.3-flash claude -p &quot;bashでdateを実行して結果を教えて&quot; --allowedTools &quot;Bash(date:*)&quot;
+# 2ターン目（会話継続）
+ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5.3-flash claude -p -c &quot;今日は何曜日かも教えて&quot;
+# 画像読み取り試験（vision）
+ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5.3-flash claude -p &quot;/path/to.png をReadして書き起こして&quot; --allowedTools &quot;Read&quot;
+</code></pre>
+<ul>
+<li>glm-rate-proxyはnormal時モデル名をパススルーのため<strong><span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>再起動も不要</strong></li>
+<li>詳細: <a href="#">2026-08-29_一時envオーバーライドでのLLMモデル試験手法</a></li>
+</ul>
+<hr />
+<h2>Windows Desktop（Claude Desktopアプリ）の設定ファイル</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>C:\Users\&lt;ユーザー&gt;\.claude\settings.json</code></td>
+<td>CLI共通のユーザー設定（Desktop Codeセッションも読む）</td>
+</tr>
+<tr>
+<td><code>%APPDATA%\Claude\claude_desktop_config.json</code></td>
+<td>DesktopアプリのMCPサーバー等の設定</td>
+</tr>
+<tr>
+<td><code>%APPDATA%\Claude\developer_settings.json</code></td>
+<td>開発者設定（<code>{&quot;allowDevTools&quot;: true}</code> で開発者メニューが出現）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>モデル差替（第三者ゲートウェイ接続）はUI専用</strong>: settings.json の env（ANTHROPIC_BASE_URL等）ではDesktopアプリは切り替わらない（Pro認証優先・実測）。<code>developer_settings.json</code> で <code>allowDevTools: true</code> にするとメニューに「サードパーティ推論を設定...」が出現し、Gateway（Base URL・静的APIキー・bearer/x-api-key）をGUI設定するのが唯一の正式経路</li>
+<li>詳細: <a href="#">2026-09-29_Desktop移行Phase0実機接続成功とenv方式無効の特定</a></li>
+</ul>
 <hr />
 <h2>💡 やさしい補足（初心者向け）</h2>
 <ul>
@@ -809,6 +1004,9 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 <li><strong>秘密は別管理</strong>: APIキー等の重要な値は <code>.secrets.env</code> に一つにまとめて、設定ファイルには書かない（漏洩防止）</li>
 </ul>
 <hr />
+<ul>
+<li><a href="#">設定ファイル生値GitHub到達遮断（案E′）</a> — <strong>settings.json は home repo で追跡解除（2026-08-14）</strong>。SessionStart hook が API鍵生値を注入する設計のため git 追跡しない。<strong>バックアップ/DR復旧の正はSSOT側マスク版</strong>（<code>01_DECISIONS/claude-code/設定ファイル/settings.json.example.json</code>・sync-claude-md.sh ⑥が自動生成）。生値入りの実体ファイルをSSOTへ無加工cpする運用は禁止</li>
+</ul>
 
         </article>
 

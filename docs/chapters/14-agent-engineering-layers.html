@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>エージェント工学の階層：Claude Code Guide</title>
-    <meta name="description" content="Claude Code CLI エージェント工学の階層の解説：AIコーディングアシスタント完全ガイド">
-    <meta property="og:title" content="エージェント工学の階層：Claude Code Guide">
+    <title>エージェント工学の階層 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI エージェント工学の階層の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="エージェント工学の階層 — Claude Code Guide">
     <meta property="og:description" content="Claude Code CLI エージェント工学の階層の解説">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/14-agent-engineering-layers.html">
@@ -213,7 +213,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>21 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層：<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>からグラフまで5層の設計地図</h1>
+            <h1>21 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層 — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>からグラフまで5層の設計地図</h1>
 <div class="callout callout-tip"><p>💡 <strong>章の核</strong>: プロンプトからgraph層まで、AI活用の到達度は5層で測る。</p></div>
 <div class="callout callout-info"><p>2026年のLLM運用には5つの「○○エンジニアリング」が存在する。流行語の羅列ではなく、<strong>下の層が壊れた場所に上の層が生まれた</strong>積み上げ構造として理解すると、自分の環境のどの層が厚く・どの層が薄いかを診断できる。</p></div>
 <hr />
@@ -260,17 +260,17 @@
 </tr>
 </tbody>
 </table></div>
-<p>出典: <a href="https://krushiraj.github.io/writings/prompt-context-harness-loop-graph/">Prompt, harness, context, loop, graph: the jargon is a changelog</a>（2026-08-14）・<a href="https://futureagi.com/blog/loop-engineering/prompt-context-harness-loop-layers/">Prompt, Context, Harness, Loop: 4 Agent Layers：FutureAGI</a>・<a href="https://www.codecentric.de/en/knowledge-hub/blog/loop-harness-context-engineering-explained">codecentric による用語整理</a></p>
+<p>出典: <a href="https://krushiraj.github.io/writings/prompt-context-harness-loop-graph/">Prompt, harness, context, loop, graph: the jargon is a changelog</a>（2026-08-14）・<a href="https://futureagi.com/blog/loop-engineering/prompt-context-harness-loop-layers/">Prompt, Context, Harness, Loop: 4 Agent Layers — FutureAGI</a>・<a href="https://www.codecentric.de/en/knowledge-hub/blog/loop-harness-context-engineering-explained">codecentric による用語整理</a></p>
 <h2>各層の核心</h2>
-<h3>層1: プロンプト：予測の狙い撃ち</h3>
+<h3>層1: プロンプト — 予測の狙い撃ち</h3>
 <p>「You are a senior reviewer」のような役割指定は、訓練データの<strong>その役割の文章が集まる領域</strong>へ予測を誘導する動きをする。Chain-of-Thought や few-shot 例示もこの層。エージェント化しても毎ターンの入力は誰かが書いたプロンプトであり、この層の妙が全層に波及する。</p>
-<h3>層2: コンテキスト：窓は予算</h3>
+<h3>層2: コンテキスト — 窓は予算</h3>
 <p>Karpathy の定義「次の一手のためにコンテキスト窓にちょうど良い情報を満たす繊細な技術」。重要な転回は<strong>窓を資源（予算）と見なす</strong>視点。CLAUDE.md・memory・検索結果・ツール定義・過去ターンはすべて予算の内訳であり、「全部入れる」は網羅ではなくノイズ。</p>
-<h3>層3: ハーネス：保証は会話の外にしかない</h3>
+<h3>層3: ハーネス — 保証は会話の外にしかない</h3>
 <p>モデル自身の自己疑念は、誤りを作ったのと同じ経路で動くため保証にならない。保証は<strong>説得できない存在</strong>（コンパイラ・テストランナー・フック・権限システム）が持つ。Claude Code とチャット窓が同じ重みで全く異なる性能を出すのはハーネスの差。</p>
-<h3>層4: ループ：仕事に形を与える</h3>
+<h3>層4: ループ — 仕事に形を与える</h3>
 <p>計画を先に出させ、進行ゲートを設け、再試行の上限で人間に戻す。Anthropic の <a href="https://platform.claude.com/docs/en/build-with-claude/agent-toolkit">Building effective agents</a> にある対比が有用: <strong>workflow = コードが工程を決める / agent = モデルが工程を決める</strong>。ループエンジニアリングはこのダイヤルを工程ごとに設定する作業で、「思ったよりコード側で決めたかった」箇所を発見する作業でもある。</p>
-<h3>層5: グラフ：新鮮な目を意図的に呼ぶ</h3>
+<h3>層5: グラフ — 新鮮な目を意図的に呼ぶ</h3>
 <p>レビューを<strong>その場にいなかった別インスタンス</strong>（別<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>・別モデル・別コンテキストのsubagent）に渡す。作成インスタンスはプランへの愛着を持っているため、構造的に自己レビューできないミスを捕捉できる。</p>
 <h2><span class="term" tabindex="0">ワークフロー<span class="term-popup">一連の作業の流れ・手順の定義。GitHub Actionsでは自動実行の手順をこう呼ぶ</span></span> vs エージェントの対比</h2>
 <div class="table-wrapper"><table>
@@ -372,7 +372,7 @@
     </main>
 
     <footer class="site-footer">
-        <p>Claude Code Guide：<a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
          · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
          · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>

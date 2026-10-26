@@ -428,6 +428,83 @@ bash ~/.claude/scripts/auto-dev/start.sh --auto my-repo
 <li><strong>健康診断（check）</strong>: 定義と実体の<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を「欠落(create) / 不要(ghost)」で報告。ghost集計は <code>_ghost_tasks</code> 関数に単一情報源化し、日付pinned one-shot（特定日発火の使い切り予約）は正統タスクとしてghost誤表示から除外（2026-09-14実測：正統one-shot12件がghost誤表示される事故の修正）</li>
 <li><strong>テスト</strong>: <code>scripts/auto-dev/tests/test_apply_crons.py</code>（同期ロジックのunit test・ghost境界テスト込み21 passed）</li>
 </ul>
+<h3>システム crontab 一覧（実態・2026-10-26現在）</h3>
+<p>durable cron 以外に OS の crontab に直接登録している定期実行。<code>crontab -l</code> の実態（<code>scripts/auto-dev/crontab-backup/crontab.txt</code> に毎日バックアップ・crontab-backup.sh が8:53に取得）:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>cron</th>
+<th>処理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*/30 * * * *</code></td>
+<td>ssot-auto-sync.sh（SSOT自動commit+push）</td>
+</tr>
+<tr>
+<td><code>0 0 * * *</code></td>
+<td>generate-daily-note（日記<span class="term" tabindex="0">テンプレート<span class="term-popup">雛形。穴埋め部分だけ差し替えて、同じ形の文書やコードを量産する元になるもの</span></span>生成）</td>
+</tr>
+<tr>
+<td><code>23 4 * * *</code></td>
+<td>ssot-daily-batch.sh（SSOT日次バッチ）</td>
+</tr>
+<tr>
+<td><code>0 4 2 * *</code></td>
+<td>cleanup-claude-cache.sh（<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>掃除・毎月2日）</td>
+</tr>
+<tr>
+<td><code>0 5 3 * *</code></td>
+<td>backlog-auto-check.py archive（バックログアーカイブ・毎月3日）</td>
+</tr>
+<tr>
+<td><code>37 4 * * *</code></td>
+<td>paths-json-janitor.sh --apply（paths.json掃除）</td>
+</tr>
+<tr>
+<td><code>4,19,34,49 * * * *</code></td>
+<td>glm-relay-check.sh（<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>リレー監視・15分毎）</td>
+</tr>
+<tr>
+<td><code>40 23 * * *</code></td>
+<td>night-loop-catchup.sh（第2の脳夜間巡回のcatchup）</td>
+</tr>
+<tr>
+<td><code>*/15 * * * *</code></td>
+<td>playwright-chrome-guard.sh（Chrome/glm_rate_proxy野良<span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>掃除）</td>
+</tr>
+<tr>
+<td><code>43 8 * * *</code></td>
+<td>skill-drift-check.sh（SKILL.md baseline drift検知）</td>
+</tr>
+<tr>
+<td><code>53 8 * * *</code></td>
+<td>crontab-backup.sh（crontab自体のバックアップ+git参照先健全性チェック）</td>
+</tr>
+<tr>
+<td><code>7 15 * * *</code></td>
+<td>nexuscore-bench-canary.sh（ベンチカナリア）</td>
+</tr>
+<tr>
+<td><code>47 9 * * *</code></td>
+<td>rag_watchdog.sh（<span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>索引鮮度監視）</td>
+</tr>
+<tr>
+<td><code>17 9 * * 0</code></td>
+<td>wsl-windows-config-check.sh（WSL⇔Windows設定突合・毎週日曜）</td>
+</tr>
+<tr>
+<td><code>*/15 * * * *</code></td>
+<td>proxy-norai-check.sh（野良プロキシ検知・flock+HOME/PATH固定）</td>
+</tr>
+<tr>
+<td><code>17 3 1 * *</code></td>
+<td>regen-wait-keywords.sh（KW更新・毎月1日）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>ポイント</strong>: crontab に直接書くエントリは <code>HOME=</code> / <code>PATH=</code> を明示するか <code>bash</code> 経由で呼ぶ（cron は非ログイン<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>で <code>.bashrc</code> を読まないため <code>gh</code> 等のコマンドが見つからない・APIキーも <code>.secrets.env</code> をラッパーで source する必要がある）。詳細は<a href="https://github.com/%3CUSERNAME%3E/knowledge-base">自動化.md</a>参照。</p></div>
 <h3>1 Issue あたりの自動処理</h3>
 <pre><code>実装（LLM でコード生成）
     ↓
@@ -441,13 +518,6 @@ Issue close（GitHub API）
     ↓
 次の Issue へ（Stop Hook 連鎖）
 </code></pre>
-<p><strong>run-task.sh の機械ゲート（2026-08-31追加）</strong>:</p>
-<ul>
-<li><strong>検証範囲宣言の機械検査（spec v5 3-3）</strong>: 検証<span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>の出力に「検証範囲宣言」（タイプ/正常系/異常系/各ケースの理由）が無ければ即NG（自己修復なし・<span class="term" tabindex="0">単体テスト<span class="term-popup">関数など部品単位で動作を確認するテスト。pytestはPythonの定番テスト実行道具。変更のたびに自動で回して壊れていないことを担保する</span></span>2件+構文確認）。LLMが「確認済」と自己申告するだけで検証をすり抜けるのを構造的に封じる</li>
-<li><strong>計画専用制約</strong>: Phase1計画claudeのprompt先頭に「計画のみで実装しない」制約を追加（計画が実装まで進んでしまいPhase3検証が空振りblockedになる構造<span class="term" tabindex="0">バグ<span class="term-popup">プログラムの不具合。意図しない動きを引き起こすコードの欠陥</span></span>の封止）</li>
-<li><strong>review_policy.yaml 参照化（G3）</strong>: レビュー観点のハードコードを<span class="term" tabindex="0">YAML<span class="term-popup">ヤムル。階層構造を字下げで表す、人間が読みやすい設定ファイルの書式。frontmatter（文書冒頭の---で囲んだ設定塊）で使われる</span></span>読込へ置換（Strict+fail-fast+version照合・pre-commitで構文/直書き/pytestを機械ゲート）</li>
-<li><strong>verify プロンプトと機械検査の整合（2026-09-09追加）</strong>: verify AIへのプロンプトが「検証範囲宣言を書かせる」ことを明示しないままだと、機械検査（<code>grep -qE '(検証範囲宣言|...)'</code>）が恒常的にNG化する構造不一致が発生（2026-09-08 ssot-check blocked・09-09 git<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span>s blocked の実事故）。現在はプロンプト側に出力末尾の「検証範囲宣言:」セクション必須を明記し、stderr分離（<code>verify-stderr.log</code>）と上書き警告（verify-raw）も併せて強化。整合は単体テスト <code>test_run_task_verify_prompt.py</code>（4テスト）が<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>本体を検査して担保</li>
-</ul>
 <h3>緊急停止</h3>
 <pre><code class="language-bash">python3 -c &quot;
 import json
@@ -457,6 +527,22 @@ s['active'] = False
 json.dump(s, open(state_path, 'w'), indent=2)
 print('停止:', s)
 &quot;
+</code></pre>
+<hr />
+<h2>フェーズ5: 完了通知（自動）</h2>
+<p><code>pending=[]</code> を検知したら自動実行:</p>
+<ul>
+<li><span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>ベル音</li>
+<li>OS通知（macOS: <code>osascript</code> / Windows: PowerShell toast）</li>
+</ul>
+<pre><code class="language-python"># macOS 例
+import subprocess
+subprocess.run([&quot;osascript&quot;, &quot;-e&quot;,
+    'display notification &quot;全 Issue 完了&quot; with title &quot;dev-cycle&quot;'])
+
+# Windows (WSL2) 例
+subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
+    '$n=New-Object System.Windows.Forms.NotifyIcon; ...'])
 </code></pre>
 <hr />
 <h2>フェーズ4.5: Daily Triage &amp; Stale検知（2026-07-24追加）</h2>
@@ -480,7 +566,7 @@ def parse_task_date(text: str) -&gt; date | None:
 <h3>heartbeat機構</h3>
 <p><code>resume-session</code> スキル + <code>check-stale-sessions.sh</code> で実装:</p>
 <ul>
-<li><strong>trigger</strong>: SessionStart hook で自動発火</li>
+<li><strong>trigger</strong>: SessionStart <span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> で自動発火</li>
 <li><strong>検知条件</strong>:
 <ul>
 <li><code>heartbeat_timeout</code>: 12h超の無活動</li>
@@ -511,22 +597,6 @@ def parse_task_date(text: str) -&gt; date | None:
 </code></pre>
 <p><strong>Cron管理</strong>: <code>apply_crons.py</code> で管理・crons.shで再登録</p>
 <hr />
-<h2>フェーズ5: 完了通知（自動）</h2>
-<p><code>pending=[]</code> を検知したら自動実行:</p>
-<ul>
-<li><span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>ベル音</li>
-<li>OS通知（macOS: <code>osascript</code> / Windows: PowerShell toast）</li>
-</ul>
-<pre><code class="language-python"># macOS 例
-import subprocess
-subprocess.run([&quot;osascript&quot;, &quot;-e&quot;,
-    'display notification &quot;全 Issue 完了&quot; with title &quot;dev-cycle&quot;'])
-
-# Windows (WSL2) 例
-subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
-    '$n=New-Object System.Windows.Forms.NotifyIcon; ...'])
-</code></pre>
-<hr />
 <h2>Phase 5: 別LLMレビュー（実装済み・2026-08-12）</h2>
 <p><code>review_lib.py</code> に <code>run_multi_llm_review()</code> を<span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span>で実装（設計は3機レビューで確定済み）:</p>
 <ul>
@@ -538,7 +608,7 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <ul>
 <li><strong>実効provider動的検知</strong>: <code>HOST_VENDOR</code>ハードコード廃止→<code>detect_host_vendor()</code>（unknown時abort・fail-loud）</li>
 <li><strong>served_model照合</strong>: MiniMax REST直呼びでmodel欄返却を実測→<code>served≠requested</code>は正規化照合（<code>:free</code>除去）の上<code>error-served-mismatch</code>化（silentモデルすり替え検知）</li>
-<li><strong>policy起動ゲート</strong>: <code>judge.fact_check.jaccard_threshold</code>必須化（YAML値欠落で起動fail-fast）</li>
+<li><strong>policy起動ゲート</strong>: <code>judge.fact_check.jaccard_threshold</code>必須化（<span class="term" tabindex="0">YAML<span class="term-popup">ヤムル。階層構造を字下げで表す、人間が読みやすい設定ファイルの書式。frontmatter（文書冒頭の---で囲んだ設定塊）で使われる</span></span>値欠落で起動fail-fast）</li>
 <li><strong>ログ経路拡張</strong>: <code>log-mlr-calls.sh</code>に api.z.ai / api.minimax.io 経路追加＋allowlist拡張</li>
 <li><strong>v3.1.1（同日ホットフィックス）</strong>: 検知を呼出前に前倒し＋<code>requests.Timeout</code>捕捉で<span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span>復活（5機39指摘レビュー採用・テスト24本）</li>
 <li><strong>有償モデル全排除（2026-10-04）</strong>: gemini-3.1-pro-preview / gemini-2.5-pro → gemini-2.5-flash（GCP課金事故対応）</li>
@@ -568,7 +638,7 @@ subprocess.Popen([&quot;powershell.exe&quot;, &quot;-c&quot;,
 <tr>
 <td>Issue 化</td>
 <td>任意</td>
-<td><span class="term" tabindex="0">テンプレート<span class="term-popup">雛形。穴埋め部分だけ差し替えて、同じ形の文書やコードを量産する元になるもの</span></span>変換</td>
+<td>テンプレート変換</td>
 </tr>
 <tr>
 <td>コード生成（実装）</td>

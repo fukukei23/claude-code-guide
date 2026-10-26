@@ -210,6 +210,31 @@ CronCreateをセッション毎に手動登録すると、定義（正典）と�
 - **健康診断（check）**: 定義と実体の差分を「欠落(create) / 不要(ghost)」で報告。ghost集計は `_ghost_tasks` 関数に単一情報源化し、日付pinned one-shot（特定日発火の使い切り予約）は正統タスクとしてghost誤表示から除外（2026-09-14実測：正統one-shot12件がghost誤表示される事故の修正）
 - **テスト**: `scripts/auto-dev/tests/test_apply_crons.py`（同期ロジックのunit test・ghost境界テスト込み21 passed）
 
+### システム crontab 一覧（実態・2026-10-26現在）
+
+durable cron 以外に OS の crontab に直接登録している定期実行。`crontab -l` の実態（`scripts/auto-dev/crontab-backup/crontab.txt` に毎日バックアップ・crontab-backup.sh が8:53に取得）:
+
+| cron | 処理 |
+|---|---|
+| `*/30 * * * *` | ssot-auto-sync.sh（SSOT自動commit+push） |
+| `0 0 * * *` | generate-daily-note（日記テンプレート生成） |
+| `23 4 * * *` | ssot-daily-batch.sh（SSOT日次バッチ） |
+| `0 4 2 * *` | cleanup-claude-cache.sh（キャッシュ掃除・毎月2日） |
+| `0 5 3 * *` | backlog-auto-check.py archive（バックログアーカイブ・毎月3日） |
+| `37 4 * * *` | paths-json-janitor.sh --apply（paths.json掃除） |
+| `4,19,34,49 * * * *` | glm-relay-check.sh（プロキシリレー監視・15分毎） |
+| `40 23 * * *` | night-loop-catchup.sh（第2の脳夜間巡回のcatchup） |
+| `*/15 * * * *` | playwright-chrome-guard.sh（Chrome/glm_rate_proxy野良プロセス掃除） |
+| `43 8 * * *` | skill-drift-check.sh（SKILL.md baseline drift検知） |
+| `53 8 * * *` | crontab-backup.sh（crontab自体のバックアップ+git参照先健全性チェック） |
+| `7 15 * * *` | nexuscore-bench-canary.sh（ベンチカナリア） |
+| `47 9 * * *` | rag_watchdog.sh（RAG索引鮮度監視） |
+| `17 9 * * 0` | wsl-windows-config-check.sh（WSL⇔Windows設定突合・毎週日曜） |
+| `*/15 * * * *` | proxy-norai-check.sh（野良プロキシ検知・flock+HOME/PATH固定） |
+| `17 3 1 * *` | regen-wait-keywords.sh（KW更新・毎月1日） |
+
+> 💡 **ポイント**: crontab に直接書くエントリは `HOME=` / `PATH=` を明示するか `bash` 経由で呼ぶ（cron は非ログインシェルで `.bashrc` を読まないため `gh` 等のコマンドが見つからない・APIキーも `.secrets.env` をラッパーで source する必要がある）。詳細は[自動化.md](https://github.com/fukukei23/obsidian-ssot)参照。
+
 ### 1 Issue あたりの自動処理
 
 ```
@@ -226,13 +251,6 @@ Issue close（GitHub API）
 次の Issue へ（Stop Hook 連鎖）
 ```
 
-**run-task.sh の機械ゲート（2026-08-31追加）**:
-
-- **検証範囲宣言の機械検査（spec v5 3-3）**: 検証プロセスの出力に「検証範囲宣言」（タイプ/正常系/異常系/各ケースの理由）が無ければ即NG（自己修復なし・単体テスト2件+構文確認）。LLMが「確認済」と自己申告するだけで検証をすり抜けるのを構造的に封じる
-- **計画専用制約**: Phase1計画claudeのprompt先頭に「計画のみで実装しない」制約を追加（計画が実装まで進んでしまいPhase3検証が空振りblockedになる構造バグの封止）
-- **review_policy.yaml 参照化（G3）**: レビュー観点のハードコードをYAML読込へ置換（Strict+fail-fast+version照合・pre-commitで構文/直書き/pytestを機械ゲート）
-- **verify プロンプトと機械検査の整合（2026-09-09追加）**: verify AIへのプロンプトが「検証範囲宣言を書かせる」ことを明示しないままだと、機械検査（`grep -qE '(検証範囲宣言|...)'`）が恒常的にNG化する構造不一致が発生（2026-09-08 ssot-check blocked・09-09 githooks blocked の実事故）。現在はプロンプト側に出力末尾の「検証範囲宣言:」セクション必須を明記し、stderr分離（`verify-stderr.log`）と上書き警告（verify-raw）も併せて強化。整合は単体テスト `test_run_task_verify_prompt.py`（4テスト）がスクリプト本体を検査して担保
-
 ### 緊急停止
 
 ```bash
@@ -244,6 +262,26 @@ s['active'] = False
 json.dump(s, open(state_path, 'w'), indent=2)
 print('停止:', s)
 "
+```
+
+---
+
+## フェーズ5: 完了通知（自動）
+
+`pending=[]` を検知したら自動実行:
+
+- ターミナルベル音
+- OS通知（macOS: `osascript` / Windows: PowerShell toast）
+
+```python
+# macOS 例
+import subprocess
+subprocess.run(["osascript", "-e",
+    'display notification "全 Issue 完了" with title "dev-cycle"'])
+
+# Windows (WSL2) 例
+subprocess.Popen(["powershell.exe", "-c",
+    '$n=New-Object System.Windows.Forms.NotifyIcon; ...'])
 ```
 
 ---
@@ -304,26 +342,6 @@ CronCreate:
 ```
 
 **Cron管理**: `apply_crons.py` で管理・crons.shで再登録
-
----
-
-## フェーズ5: 完了通知（自動）
-
-`pending=[]` を検知したら自動実行:
-
-- ターミナルベル音
-- OS通知（macOS: `osascript` / Windows: PowerShell toast）
-
-```python
-# macOS 例
-import subprocess
-subprocess.run(["osascript", "-e",
-    'display notification "全 Issue 完了" with title "dev-cycle"'])
-
-# Windows (WSL2) 例
-subprocess.Popen(["powershell.exe", "-c",
-    '$n=New-Object System.Windows.Forms.NotifyIcon; ...'])
-```
 
 ---
 

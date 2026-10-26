@@ -28,17 +28,19 @@ MCPサーバーを追加すると、Claude Codeが**そのサーバーのツー�
 
 ---
 
-## 現在の構成（13サーバー・126ツール）
+## 現在の構成（14サーバー・実効126ツール＋rea 207ツール〔既定無効〕）
 
 MCPサーバー数が多いため、**4つのカテゴリ**に整理しています。目的のサーバーを探す場合は[📑 目次](#toc)からジャンプしてください。
 
 > 💡 **WSL CLI版（2026-07-02統合）**: minimax-official / minimax-video は日常セッション（`claude`直）の mcpServers で常時読込（画像/動画/音楽生成を即呼び可能）。※2026-06-30に `cc-music` プロファイルへ分離していたが、32MB真因が glm-rate-proxy の `client_max_size` 未設定と判明（9ac5f24fd解決）したため分離撤回・統合。Windows Desktop版は従来通り全MCP常時読込。
 
+> ⚠️ **doctor診断による無効化（2026-08-25）**: **gemini / context7 / mermaid / codebase-memory-mcp** の4サーバーを `/home/yn4416` プロジェクトで disabled 化（直近2.3日50セッションで呼び出し0のため・`/mcp enable <名>` で復帰可）。あわせて settings.json の `mcpServers.glm`（envのみで接続不能な死にエントリ）を削除。経緯: [2026-08-25_doctor診断クリーンアップ](../../01_DECISIONS/claude-code/2026-08-25_doctor診断クリーンアップ-未使用スキル78個off・MCP4無効化.md)
+
 ### 📑 サーバー一覧（目次） {#toc}
 
 - **[🤖 LLM・生成AI系（4サーバー）](#llm-gen)** — minimax / minimax-official / minimax-video / gemini
 - **[🔍 検索・情報取得系（4サーバー）](#search)** — brave-search / exa / context7 / web_reader
-- **[🛠️ 開発・自動化系（4サーバー）](#dev)** — github（無効化）/ playwright / discord / mermaid
+- **[🛠️ 開発・自動化系（5サーバー）](#dev)** — github（無効化）/ playwright / discord / mermaid / rea（既定無効・CLI主経路）
 - **[📊 画像分析系（1サーバー）](#image)** — 4_5v_mcp
 
 ---
@@ -76,9 +78,7 @@ MCPサーバー数が多いため、**4つのカテゴリ**に整理していま
 
 **使いどころ**: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。
 
-> **実装**: `~/.claude/scripts/mcp/minimax-mcp-server.py` — 自作Pythonスクリプト（**MiniMax-M3**使用）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては**別ファイル**。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。
->
-> ⚠️ **モデルの出入りに注意（2026-10実測）**: `M3.1-Flash-Preview` に載せ替えたことがあるが（`2e50a5a`・effort env可変化）、**日本語応答への中国語混入が実測で発覚**し、MCPサーバーとproxy fallbackの両方を **M3へ復帰**（`2d08eef`）。レビュー観点の優先順（`config/multi-llm-review/review_policy.yaml` のmodels先頭）もM3へ復帰済み（`0da593c`）。「新モデルに載せ替えたら日本語品質を実測確認してから定着させる」運用。
+> **実装**: `~/.claude/scripts/mcp/minimax-mcp-server.py` — 自作Pythonスクリプト（**MiniMax-M3.1-Flash-Preview**使用・2026-10-14 M3から載せ替え・`MINIMAX_EFFORT` envでeffort可変・既定low・`2e50a5a`）。glm-rate-proxyの設定ファイル（config.py）でフォールバック先として指定されているが、MCPサーバーとしては**別ファイル**。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。
 
 ### `MiniMax-M3` の context_window 設定（2026-07-12追加）
 
@@ -231,7 +231,7 @@ URL内容取得。
 
 ---
 
-## 🛠️ 開発・自動化系（4サーバー） {#dev}
+## 🛠️ 開発・自動化系（5サーバー） {#dev}
 
 ### github（41ツール / ~9.6kトークン・**無効化**） {#github}
 
@@ -270,6 +270,20 @@ URL内容取得。
 
 **使いどころ**: Webアプリのテスト、UI確認、スクレイピング
 
+#### 🔐 ログイン必須ページの閲覧（手動ログイン併用・2026-09-10実測）
+
+CCは認証情報を持たないため WebFetch ではログイン必須ページに届かない（botブロックされるサイトでも Playwright の実ブラウザ表示なら閲覧可）。**人間が手動ログインすれば読める**:
+
+1. `browser_navigate` でログインページを開く（例: `https://crowdworks.jp/login`）
+2. **人がそのブラウザ窓で自分の手でログイン**（パスワード・クッキーはCCに渡さない＝セキュリティルール準拠）
+3. 以後 CC が `browser_navigate` / `browser_snapshot` でログイン済みページを読める
+
+実測例: CrowdWorks dashboard（マイページ）→ タイトル「マイページ【クラウドワークス】」・ヘッダーにアカウント名表示を確認。**未検証の境界**: ブラウザプロファイル永続性（セッションが次回起動で残るか）— 次回はまず dashboard に navigate してログイン残存を実測してから「可能」と答える。
+
+#### playwright-nightloop（night-loop夜間巡回専用・2026-10-16新設）
+
+`~/.claude.json` の `mcpServers` に登録した **night-loop専用**のPlaywright MCPサーバー。plugin共有版と同じ `npx @playwright/mcp@latest` に `--user-data-dir ~/.claude/state/night-loop/playwright-profile` を追加しただけで、**専用プロファイルで起動するため並行セッションの共有browser（SingletonLock）と競合しない**。夜間取り込みcron（durable・23:40系）のtour生成のみで使用し、通常セッションは共有plugin playwrightを使う（機械的に分離して夜間巡回のno_tour占有競合を消す目的・2026-10-15ふくけい承認のB案）。ツール名は `mcp__playwright-nightloop__browser_*`。rollbackは `NIGHT_LOOP_TOUR_MODE=legacy` 環境変数（tour_isolation.py参照）。
+
 ---
 
 ### discord（5ツール / ~0.6kトークン） {#discord}
@@ -302,6 +316,17 @@ Discordとの連携。
 **使いどころ**: フローチャート、シーケンス図、クラス図の生成
 
 ---
+
+### rea（外部・リバースエンジニアリング / **207ツール・既定無効**） {#rea}
+
+> ⚠️ **2026-10-24 導入即日で既定無効化**: `tools/list` 実測で **207ツール・約3.4MB** のスキーマを広告するため（githubプラグイン41ツール無効化の前例を大きく超える）。登録は維持し、RE作業セッションだけ `/mcp enable rea` で有効化する。**主経路はCLI直叩き**（MCP無効でも同等機能・同一エンジン）: `REA_JADX_MCP_JAR=~/.local/share/rea/android/jadx-headless-mcp-0.7.1-all.jar ~/.nvm/versions/node/v24.22.1/bin/rea <command>`。手順正典はスキル `reverse-engineer-anything`。詳細: [2026-10-24_REA-MCP導入とAndroid解析ハーネス整備](../../01_DECISIONS/claude-code/2026-10-24_REA-MCP導入とAndroid解析ハーネス整備.md)
+
+| やりたいこと | コマンド例 |
+|---|---|
+| APK基本情報（権限・クラス数） | `rea inspect-android-package <apk>` |
+| クラス検索 | `rea search-android-classes <apk> <query>` |
+| メソッド逆コンパイル | `rea inspect-android-method <apk> <class> <method>` |
+| Electron/JS静的解析 | `rea analyze-javascript-application <dir>` |
 
 ## 📊 画像分析系（1サーバー） {#image}
 
@@ -376,15 +401,15 @@ AI画像分析。
 
 **使いどころ**: Windows Desktop版でコード生成・レビュー・説明など開発全般の処理をGLMに委譲したい場合。
 **注意（Windows Desktop版）**: ZAI APIキーが設定されていないと接続不可。
-**注意（WSL CLI版）**: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ [18_glm-rate-proxy](18_glm-rate-proxy.md)
+**注意（WSL CLI版）**: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ [13_glm-rate-proxy](18_glm-rate-proxy.md)
 
 > **実装**: `~/.claude/scripts/mcp/glm-mcp-server.py` — 自作Pythonスクリプト。glm-rate-proxyとは**別ファイル**。glm-rate-proxyはWSL CLI版のエンドポイント制御担当、glm MCPサーバーはMCPプロトコル経由の呼び出し担当。
 
 ---
 
-## zernio（導入済み・現在未接続 / ホストMCP / 280+ツール） {#zernio}
+## zernio（導入済み・接続確立 / プラグイン型MCP / 300+ツール） {#zernio}
 
-**SNS自動投稿MCP**。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。導入済み・投稿テスト済みだが、**現在は未接続**（必要時に再有効化）。
+**SNS自動投稿MCP**。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。導入済み・**2026-08-11 接続確立**（Instagram/TikTok/YouTube 3アカウント連携確認）。
 
 | カテゴリ | ツール例 |
 |---|---|
@@ -407,7 +432,21 @@ AI画像分析。
 # APIキー入力 → システムキーチェーンに保存
 ```
 
+**⚠️ プラグイン型MCPの有効化手順（2026-08-11 接続確立で判明）**:
+プラグインがインストール済みでも `.claude.json` の `enabledPlugins` が `null`（未有効化）だとセッション起動時にロードされない。APIキー（`ZERNIO_API_KEY`・`.secrets.env` で `export` 付き必須）・`.mcp.json` 設定・再起動だけでは繋がらない。以下の3ステップが必要:
+
+```
+/plugin            → zernio 選択 → "Install for you (user scope)"
+/reload-plugins    → 一度目はキャッシュ警告（MCPツールが変わる旨）
+/reload-plugins --force   → 実反映（"3 plugin MCP servers" ロード）
+```
+
+※ user scope（全リポジトリで利用可能）が推奨。project/local scope は範囲が狭い。
+※ 有効化後 `zernio:accounts` スキル or `accounts_list` で接続テスト（接続済みアカウント一覧が返れば成功）。
+
 **投稿テスト結果**（2026-06-13）: 4プラットフォーム（Discord / Instagram / TikTok / YouTube）の下書き投稿・クロス投稿・一覧取得・削除まで全て正常動作を確認。即時投稿（`publish_now=True`）も利用可能。
+
+**接続確認**（2026-08-11）: 有効化3ステップで接続確立。3アカウント（Instagram: fukukei4416 / TikTok: fukukei4416 / YouTube: fukukei-n2o）連携確認済み。詳細: `01_DECISIONS/claude-code/2026-08-11_Zernio-MCP接続確立-プラグイン有効化が真因.md`
 
 ---
 
@@ -448,7 +487,7 @@ start-<name>.sh
 - 以前は9サーバー（~35kトークン）だったが、使用頻度分析で最適化後、exa・画像分析・web_readerを追加
 - **クイックリファレンス**: [ガイドサイト - MCPサーバーカタログ](https://fukukei23.github.io/guides/claude-code-mcp-catalog/)
 
-> **現場の知見**: MCPツールは呼び出した時だけコストが発生するわけではない。**ツール定義だけで毎ターン消費**される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ [12_現場の知見](12_現場の知見.md#a-コンテキスト経済学)
+> **現場の知見**: MCPツールは呼び出した時だけコストが発生するわけではない。**ツール定義だけで毎ターン消費**される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ [11_現場の知見](12_現場の知見.md#a-コンテキスト経済学)
 
 ---
 
@@ -542,20 +581,6 @@ MCPサーバーは便利だが、**常時起動するだけでコンテキスト
 
 ---
 
-## MCPサーバーのユニットテスト（gemini / glm / MiniMax）
-
-自作MCPサーバー3本（`gemini-mcp-server.py` / `glm-mcp-server.py` / `minimax-mcp-server.py`）には **常駐サーバーの契約を固定するユニットテスト** が併設されている（2026-08-18 gemini版に倣って glm / MiniMax版を追加）。これらは **urllib をモックし実API不要** で、glm MCP / MiniMax MCP に依存するスキルが全滅しないよう契約（関数名・引数・戻り値の型）を担保する。
-
-| サーバー | テストファイル | 実行コマンド |
-|---|---|---|
-| gemini | `~/.claude/scripts/mcp/test_gemini_mcp_server.py` | `cd ~/projects/claude-config && python3 -m pytest scripts/mcp/test_gemini_mcp_server.py -q` |
-| glm | `~/.claude/scripts/mcp/test_glm_mcp_server.py` | `cd ~/projects/claude-config && python3 -m pytest scripts/mcp/test_glm_mcp_server.py -q` |
-| MiniMax | `~/.claude/scripts/mcp/test_minimax_mcp_server.py` | `cd ~/projects/claude-config && python3 -m pytest scripts/mcp/test_minimax_mcp_server.py -q` |
-
-**使いどころ**: 自作MCPのサーバー実装を改修した時の回帰検知、`.secrets.env` のキー追加で `_load_key` の探索経路が変わった時の確認（`01_DECISIONS/claude-code/2026-08-22__load_secret本番経路Windows側で鍵を読めない` の修正と同種の検証基盤）。
-
----
-
 ## MCPツール使い分けガイド
 
 詳細な使い分け基準は別ドキュメントを参照:
@@ -583,6 +608,5 @@ MCPサーバーは便利だが、**常時起動するだけでコンテキスト
 - [Claude-Code完全ガイド作成](../../01_DECISIONS/claude-code/2026-05-20_Claude-Code完全ガイド作成.md) — ガイド全体の設計と作成
 - [MCP設定削減2回目](../../01_DECISIONS/claude-code/2026-05-20_MCP設定削減2回目.md) — MCP使用頻度分析に基づく削減
 - [MCP-10ツール一括追加](../../01_DECISIONS/claude-code/2026-04-30_MCP-10ツール一括追加.md) — MCPツールの大規模追加
-- [MCPテスト基盤整備](../../01_DECISIONS/claude-code/2026-08-18_MCPサーバーglm-MiniMaxユニットテスト追加-gemini版の写経.md) — テストファイル追加の経緯（該当する場合）
 
 > 💡 **章の落とし所**: サーバーは増やすほど起動が遅くなる。使わないものは無効化。

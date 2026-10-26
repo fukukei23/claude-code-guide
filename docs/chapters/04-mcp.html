@@ -234,14 +234,15 @@
 </code></pre>
 <p>MCPサーバーを追加すると、Claude Codeが<strong>そのサーバーのツール</strong>を使えるようになる。各ツールはコンテキストを消費するため、必要なものだけを維持する。</p>
 <hr />
-<h2>現在の構成（13サーバー・126ツール）</h2>
+<h2>現在の構成（14サーバー・実効126ツール＋rea 207ツール〔既定無効〕）</h2>
 <p>MCPサーバー数が多いため、<strong>4つのカテゴリ</strong>に整理しています。目的のサーバーを探す場合は<a href="#toc">📑 目次</a>からジャンプしてください。</p>
 <div class="callout callout-tip"><p>💡 <strong>WSL CLI版（2026-07-02統合）</strong>: minimax-official / minimax-video は日常<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>（<code>claude</code>直）の mcpServers で常時読込（画像/動画/音楽生成を即呼び可能）。※2026-06-30に <code>cc-music</code> プロファイルへ分離していたが、32MB真因が glm-rate-proxy の <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため分離撤回・統合。Windows Desktop版は従来通り全MCP常時読込。</p></div>
+<div class="callout callout-warn"><p>⚠️ <strong>doctor診断による無効化（2026-08-25）</strong>: <strong>gemini / context7 / mermaid / codebase-memory-mcp</strong> の4サーバーを <code>/home/&lt;USER&gt;</code> プロジェクトで disabled 化（直近2.3日50セッションで呼び出し0のため・<code>/mcp enable &lt;名&gt;</code> で復帰可）。あわせて settings.json の <code>mcpServers.glm</code>（envのみで接続不能な死にエントリ）を削除。経緯: <a href="#">2026-08-25_doctor診断クリーンアップ</a></p></div>
 <h3 id="toc">📑 サーバー一覧（目次）</h3>
 <ul>
 <li><strong><a href="#llm-gen">🤖 LLM・生成AI系（4サーバー）</a></strong> — minimax / minimax-official / minimax-video / gemini</li>
 <li><strong><a href="#search">🔍 検索・情報取得系（4サーバー）</a></strong> — brave-search / exa / context7 / web_reader</li>
-<li><strong><a href="#dev">🛠️ 開発・自動化系（4サーバー）</a></strong> — github（無効化）/ playwright / discord / mermaid</li>
+<li><strong><a href="#dev">🛠️ 開発・自動化系（5サーバー）</a></strong> — github（無効化）/ playwright / discord / mermaid / rea（既定無効・CLI主経路）</li>
 <li><strong><a href="#image">📊 画像分析系（1サーバー）</a></strong> — 4_5v_mcp</li>
 </ul>
 <hr />
@@ -345,8 +346,7 @@
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: 要約・フォーマット変換・テストデータ生成・メール文面・キーワード抽出など大量処理タスク。</p>
-<div class="callout callout-warn"><p><strong><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span></strong>: <code>~/.claude/scripts/mcp/minimax-mcp-server.py</code> — 自作Python<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>（<strong>MiniMax-M3</strong>使用）。glm-rate-proxyの<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p>
-<p>⚠️ <strong>モデルの出入りに注意（2026-10実測）</strong>: <code>M3.1-Flash-Preview</code> に載せ替えたことがあるが（<code>2e50a5a</code>・effort env可変化）、<strong>日本語応答への中国語混入が実測で発覚</strong>し、MCPサーバーとproxy fallbackの両方を <strong>M3へ復帰</strong>（<code>2d08eef</code>）。レビュー観点の優先順（<code>config/multi-llm-review/review_policy.yaml</code> のmodels先頭）もM3へ復帰済み（<code>0da593c</code>）。「新モデルに載せ替えたら日本語品質を実測確認してから定着させる」運用。</p></div>
+<div class="callout callout-info"><p><strong><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span></strong>: <code>~/.claude/scripts/mcp/minimax-mcp-server.py</code> — 自作Python<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>（<strong>MiniMax-M3.1-Flash-Preview</strong>使用・2026-10-14 M3から載せ替え・<code>MINIMAX_EFFORT</code> envでeffort可変・既定low・<code>2e50a5a</code>）。glm-rate-proxyの<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>（config.py）でフォールバック先として指定されているが、MCPサーバーとしては<strong>別ファイル</strong>。glm-rate-proxyによる自動フォールバック（ピーク時間15-19時・429/エラー時）とMCPによる明示的呼び出しは独立した仕組み。</p></div>
 <h3><code>MiniMax-M3</code> の context_window 設定（2026-07-12追加）</h3>
 <p><strong>MINIMAX M3は1Mトークン対応</strong>だが <code>minimax-mcp-server.py</code> に <code>CONTEXT_WINDOW</code> 設定が存在しない場合、llm-status.sh が正しい context_window を認識できない。ステータスライン（/tmp/llm-last-used.txt）への書き込みを <code>🟠 MiniMax-M3|ctx:1000000</code> に変更することで1M認識を実現する。</p>
 <pre><code class="language-python">MINIMAX_KEY = _load_key()
@@ -588,7 +588,7 @@ CONTEXT_WINDOW = 1_000_000
 </table></div>
 <p><strong>使いどころ</strong>: Webページ内容の取得、ドキュメント読み込み</p>
 <hr />
-<h2 id="dev">🛠️ 開発・自動化系（4サーバー）</h2>
+<h2 id="dev">🛠️ 開発・自動化系（5サーバー）</h2>
 <h3 id="github">github（41ツール / ~9.6kトークン・<strong>無効化</strong>）</h3>
 <div class="callout callout-warn"><p>⚠️ <strong>2026-06-21 無効化</strong>: 41ツール・9.6kトークンが毎ターンの<span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>に積まれ、コンテキスト肥大（32MB上限問題）の最大要因となっていたため無効化。Issue/PR/push は <strong>gh CLI + git 直接操作</strong>に移行した。復元は <code>settings.json</code> の <code>enabledPlugins.github</code> を <code>true</code> に戻すだけ。</p></div>
 <p>最もツール数が多いサーバー。GitHub上のあらゆる操作が可能。</p>
@@ -670,6 +670,16 @@ CONTEXT_WINDOW = 1_000_000
 </tbody>
 </table></div>
 <p><strong>使いどころ</strong>: Webアプリのテスト、UI確認、スクレイピング</p>
+<h4>🔐 ログイン必須ページの閲覧（手動ログイン併用・2026-09-10実測）</h4>
+<p>CCは認証情報を持たないため WebFetch ではログイン必須ページに届かない（botブロックされるサイトでも Playwright の実ブラウザ表示なら閲覧可）。<strong>人間が手動ログインすれば読める</strong>:</p>
+<ol>
+<li><code>browser_navigate</code> でログインページを開く（例: <code>https://crowdworks.jp/login</code>）</li>
+<li><strong>人がそのブラウザ窓で自分の手でログイン</strong>（パスワード・クッキーはCCに渡さない＝セキュリティルール準拠）</li>
+<li>以後 CC が <code>browser_navigate</code> / <code>browser_snapshot</code> でログイン済みページを読める</li>
+</ol>
+<p>実測例: CrowdWorks dashboard（マイページ）→ タイトル「マイページ【クラウドワークス】」・ヘッダーにアカウント名表示を確認。<strong>未検証の境界</strong>: ブラウザプロファイル永続性（セッションが次回起動で残るか）— 次回はまず dashboard に navigate してログイン残存を実測してから「可能」と答える。</p>
+<h4>playwright-nightloop（night-loop夜間巡回専用・2026-10-16新設）</h4>
+<p><code>~/.claude.json</code> の <code>mcpServers</code> に登録した <strong>night-loop専用</strong>のPlaywright MCPサーバー。plugin共有版と同じ <code>npx @playwright/mcp@latest</code> に <code>--user-data-dir ~/.claude/state/night-loop/playwright-profile</code> を追加しただけで、<strong>専用プロファイルで起動するため並行セッションの共有browser（SingletonLock）と<span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>しない</strong>。夜間取り込みcron（durable・23:40系）のtour生成のみで使用し、通常セッションは共有plugin playwrightを使う（機械的に分離して夜間巡回のno_tour占有競合を消す目的・2026-10-15ふくけい承認のB案）。ツール名は <code>mcp__playwright-nightloop__browser_*</code>。rollbackは <code>NIGHT_LOOP_TOUR_MODE=legacy</code> 環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span>（tour_isolation.py参照）。</p>
 <hr />
 <h3 id="discord">discord（5ツール / ~0.6kトークン）</h3>
 <p>Discordとの連携。</p>
@@ -735,6 +745,34 @@ CONTEXT_WINDOW = 1_000_000
 </table></div>
 <p><strong>使いどころ</strong>: フローチャート、シーケンス図、<span class="term" tabindex="0">クラス<span class="term-popup">データとその操作をひとまとめにした設計図。オブジェクト指向の基本単位</span></span>図の生成</p>
 <hr />
+<h3 id="rea">rea（外部・リバースエンジニアリング / <strong>207ツール・既定無効</strong>）</h3>
+<div class="callout callout-warn"><p>⚠️ <strong>2026-10-24 導入即日で既定無効化</strong>: <code>tools/list</code> 実測で <strong>207ツール・約3.4MB</strong> のスキーマを広告するため（github<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>41ツール無効化の前例を大きく超える）。登録は維持し、RE作業セッションだけ <code>/mcp enable rea</code> で有効化する。<strong>主経路はCLI直叩き</strong>（MCP無効でも同等機能・同一エンジン）: <code>REA_JADX_MCP_JAR=~/.local/share/rea/android/jadx-headless-mcp-0.7.1-all.jar ~/.nvm/versions/node/v24.22.1/bin/rea &lt;command&gt;</code>。手順正典は<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span> <code>reverse-engineer-anything</code>。詳細: <a href="#">2026-10-24_REA-MCP導入とAndroid解析ハーネス整備</a></p></div>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th><span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>APK基本情報（権限・クラス数）</td>
+<td><code>rea inspect-android-package &lt;apk&gt;</code></td>
+</tr>
+<tr>
+<td>クラス検索</td>
+<td><code>rea search-android-classes &lt;apk&gt; &lt;query&gt;</code></td>
+</tr>
+<tr>
+<td>メソッド逆<span class="term" tabindex="0">コンパイル<span class="term-popup">人が読むソースコードを、コンピュータが実行できる形式に変換すること</span></span></td>
+<td><code>rea inspect-android-method &lt;apk&gt; &lt;class&gt; &lt;method&gt;</code></td>
+</tr>
+<tr>
+<td>Electron/JS静的解析</td>
+<td><code>rea analyze-javascript-application &lt;dir&gt;</code></td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="image">📊 画像分析系（1サーバー）</h2>
 <h3 id="4-5v-mcp">4_5v_mcp（画像分析 / ~0.8kトークン）</h3>
 <p>AI画像分析。</p>
@@ -957,11 +995,11 @@ CONTEXT_WINDOW = 1_000_000
 </table></div>
 <p><strong>使いどころ</strong>: Windows Desktop版でコード生成・レビュー・説明など開発全般の処理をGLMに委譲したい場合。
 <strong>注意（Windows Desktop版）</strong>: ZAI APIキーが設定されていないと接続不可。
-<strong>注意（WSL CLI版）</strong>: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ <a href="18-glm-rate-proxy.html">18_glm-rate-proxy</a></p>
+<strong>注意（WSL CLI版）</strong>: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ <a href="18-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
 <div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/glm-mcp-server.py</code> — 自作Pythonスクリプト。glm-rate-proxyとは<strong>別ファイル</strong>。glm-rate-proxyはWSL CLI版のエンドポイント制御担当、glm MCPサーバーはMCPプロトコル経由の呼び出し担当。</p></div>
 <hr />
-<h2 id="zernio">zernio（導入済み・現在未接続 / ホストMCP / 280+ツール）</h2>
-<p><strong>SNS自動投稿MCP</strong>。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。導入済み・投稿テスト済みだが、<strong>現在は未接続</strong>（必要時に再有効化）。</p>
+<h2 id="zernio">zernio（導入済み・接続確立 / プラグイン型MCP / 300+ツール）</h2>
+<p><strong>SNS自動投稿MCP</strong>。Instagram/TikTok/X/Facebook/YouTube等15プラットフォーム対応。導入済み・<strong>2026-08-11 接続確立</strong>（Instagram/TikTok/YouTube 3アカウント連携確認）。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -998,12 +1036,21 @@ CONTEXT_WINDOW = 1_000_000
 </table></div>
 <p><strong>使いどころ</strong>: TikTok/Instagram等への自動投稿、SNS分析、投稿スケジュール管理</p>
 <p><strong>料金</strong>: 最初2アカウント無料 → 3つ目以降 $6/月</p>
-<p><strong>セットアップ</strong>: 公式<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>方式で導入（手動の <code>url</code> + <code>headers</code> + <code>env</code> 設定は非推奨 — <code>${VAR}</code> <span class="term" tabindex="0">変数展開<span class="term-popup">$HOME のように変数名が書かれた場所を、実際の値に置き換えること</span></span>が動作しない場合あり）</p>
+<p><strong>セットアップ</strong>: 公式プラグイン方式で導入（手動の <code>url</code> + <code>headers</code> + <code>env</code> 設定は非推奨 — <code>${VAR}</code> <span class="term" tabindex="0">変数展開<span class="term-popup">$HOME のように変数名が書かれた場所を、実際の値に置き換えること</span></span>が動作しない場合あり）</p>
 <pre><code class="language-bash">/plugin marketplace add zernio-dev/zernio-claude-plugin
 /plugin install zernio@zernio
 # APIキー入力 → システムキーチェーンに保存
 </code></pre>
+<p><strong>⚠️ プラグイン型MCPの有効化手順（2026-08-11 接続確立で判明）</strong>:
+プラグインがインストール済みでも <code>.claude.json</code> の <code>enabledPlugins</code> が <code>null</code>（未有効化）だとセッション起動時にロードされない。APIキー（<code>ZERNIO_API_KEY</code>・<code>.secrets.env</code> で <code>export</code> 付き必須）・<code>.mcp.json</code> 設定・再起動だけでは繋がらない。以下の3ステップが必要:</p>
+<pre><code>/plugin            → zernio 選択 → &quot;Install for you (user scope)&quot;
+/reload-plugins    → 一度目はキャッシュ警告（MCPツールが変わる旨）
+/reload-plugins --force   → 実反映（&quot;3 plugin MCP servers&quot; ロード）
+</code></pre>
+<p>※ user scope（全リポジトリで利用可能）が推奨。project/local scope は範囲が狭い。
+※ 有効化後 <code>zernio:accounts</code> スキル or <code>accounts_list</code> で接続テスト（接続済みアカウント一覧が返れば成功）。</p>
 <p><strong>投稿テスト結果</strong>（2026-06-13）: 4プラットフォーム（Discord / Instagram / TikTok / YouTube）の下書き投稿・クロス投稿・一覧取得・削除まで全て正常動作を確認。即時投稿（<code>publish_now=True</code>）も利用可能。</p>
+<p><strong>接続確認</strong>（2026-08-11）: 有効化3ステップで接続確立。3アカウント（Instagram: &lt;USERNAME&gt;4416 / TikTok: &lt;USERNAME&gt;4416 / YouTube: &lt;USERNAME&gt;-n2o）連携確認済み。詳細: <code>01_DECISIONS/claude-code/2026-08-11_Zernio-MCP接続確立-プラグイン有効化が真因.md</code></p>
 <hr />
 <h2>セキュリティ: APIキーの管理</h2>
 <p>全MCPサーバーは <code>~/.secrets.env</code> からAPIキーを読み込むラッ<span class="term" tabindex="0">パース<span class="term-popup">文字で書かれたデータを、プログラムが扱える構造に変換すること。JSONパース＝JSON文字列→データ構造</span></span>クリプト経由で起動する。<strong>settings.jsonにAPIキーを直接記載しない。</strong></p>
@@ -1111,7 +1158,7 @@ start-&lt;name&gt;.sh
 <li>以前は9サーバー（~35kトークン）だったが、使用頻度分析で最適化後、exa・画像分析・web_readerを追加</li>
 <li><strong>クイックリファレンス</strong>: <a href="https://fukukei23.github.io/guides/claude-code-mcp-catalog/">ガイドサイト - MCPサーバーカタログ</a></li>
 </ul>
-<div class="callout callout-tip"><p><strong>現場の知見</strong>: MCPツールは呼び出した時だけコストが発生するわけではない。<strong>ツール定義だけで毎ターン消費</strong>される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ <a href="12-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">12_現場の知見</a></p></div>
+<div class="callout callout-tip"><p><strong>現場の知見</strong>: MCPツールは呼び出した時だけコストが発生するわけではない。<strong>ツール定義だけで毎ターン消費</strong>される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ <a href="12-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
 <hr />
 <h2>サーバーの追加・削除</h2>
 <h3>追加</h3>
@@ -1132,7 +1179,7 @@ start-&lt;name&gt;.sh
 <li><code>C:\Users\&lt;user&gt;\AppData\Local\Packages\&lt;Claudeのパッケージフォルダ&gt;\LocalCache\Roaming\Claude\claude_desktop_config.json</code> — <strong>サンドボックス化パッケージキャッシュ内</strong>（2026-06・2026-07の2回の実測ではMicrosoft Store版で使われるのはここだった）</li>
 </ol>
 <div class="callout callout-warn"><p>⚠️ 上記「候補3が本物」は2回の実測に基づく現時点の知見であり、アプリの<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>アップや配布形態変更で今後も同じとは限らない。次に同じ問題が起きた時も、この記述を鵜呑みにせず必ず下記「判別方法」で都度再確認すること。</p></div>
-<p><strong>判別方法</strong>: 既に動いている他のMCPサーバーのエントリの <code>args</code>（<code>wsl -d Ubuntu -- bash &lt;path&gt;</code> のような<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>形式）が、UI上の接続ログ（<code>/mcp</code> → サーバー詳細）に表示される実際の起動コマンドと一致しているファイルが「本物」。3つの候補に同名・類似のサーバーエントリがあっても、起動コマンドが実際のログと食い違っていれば、それは使われていない古いコピーである。</p>
+<p><strong>判別方法</strong>: 既に動いている他のMCPサーバーのエントリの <code>args</code>（<code>wsl -d Ubuntu -- bash &lt;path&gt;</code> のようなコマンド形式）が、UI上の接続ログ（<code>/mcp</code> → サーバー詳細）に表示される実際の起動コマンドと一致しているファイルが「本物」。3つの候補に同名・類似のサーバーエントリがあっても、起動コマンドが実際のログと食い違っていれば、それは使われていない古いコピーである。</p>
 <p>最も手軽な確認手順は、<strong>設定画面（設定 → 開発者 → ローカルMCPサーバー）で「設定を編集」ボタンを押し、開いたエクスプローラーが指すファイルパスをそのまま使う</strong>こと（2026-07-06のgemini追加でこの手順に気づくまで、無関係な古い<code>claude_desktop_config.json</code>を編集し続けて2回再起動しても直らない、という事故を繰り返した）。</p>
 <p>詳細な調査の経緯: <code>01_DECISIONS/claude-code/2026-06-07_minimax-official-MCP接続トラブル解決と動画生成成功.md</code>（初出・minimax-official）、<code>01_DECISIONS/claude-code/2026-07-06_Windows-Desktop版Gemini-MCP真因確定-MSIXconfig特定.md</code>（再発・gemini・「設定を編集」ボタンでの特定手順を確立）</p>
 <h3>トラブルシューティング: 「設定ファイルの2層問題」（WSL CLI版）</h3>
@@ -1223,36 +1270,6 @@ for path in ['.claude/settings.json', '.claude.json']:
 <li>「スクリプトで定型的に実行したい」→ gh コマンド / curl に置き換えてMCPを切る</li>
 </ul>
 <p>→ GitHub の基本概念・gh コマンドの詳細は <strong><a href="https://fukukei23.github.io/github-basics/">GitHub 基礎ガイド</a></strong> を参照</p>
-<hr />
-<h2>MCPサーバーのユニットテスト（gemini / glm / MiniMax）</h2>
-<p>自作MCPサーバー3本（<code>gemini-mcp-server.py</code> / <code>glm-mcp-server.py</code> / <code>minimax-mcp-server.py</code>）には <strong>常駐サーバーの契約を固定するユニットテスト</strong> が併設されている（2026-08-18 gemini版に倣って glm / MiniMax版を追加）。これらは <strong>urllib を<span class="term" tabindex="0">モック<span class="term-popup">テスト用の「偽物」。本物の代わりに決まった値を返すようにして、テスト対象だけを確実に検査できるようにする</span></span>し実API不要</strong> で、glm MCP / MiniMax MCP に依存する<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>が全滅しないよう契約（<span class="term" tabindex="0">関数<span class="term-popup">一連の処理をまとめて名前を付けたもの。呼び出すたびに同じ処理が実行される。プログラムの基本単位</span></span>名・<span class="term" tabindex="0">引数<span class="term-popup">コマンドや関数に渡す補足の指定。ls -la の -la の部分のように、動作を細かく指示する値</span></span>・戻り値の型）を担保する。</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>サーバー</th>
-<th>テストファイル</th>
-<th>実行コマンド</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>gemini</td>
-<td><code>~/.claude/scripts/mcp/test_gemini_mcp_server.py</code></td>
-<td><code>cd ~/projects/claude-config &amp;&amp; python3 -m pytest scripts/mcp/test_gemini_mcp_server.py -q</code></td>
-</tr>
-<tr>
-<td>glm</td>
-<td><code>~/.claude/scripts/mcp/test_glm_mcp_server.py</code></td>
-<td><code>cd ~/projects/claude-config &amp;&amp; python3 -m pytest scripts/mcp/test_glm_mcp_server.py -q</code></td>
-</tr>
-<tr>
-<td>MiniMax</td>
-<td><code>~/.claude/scripts/mcp/test_minimax_mcp_server.py</code></td>
-<td><code>cd ~/projects/claude-config &amp;&amp; python3 -m pytest scripts/mcp/test_minimax_mcp_server.py -q</code></td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>使いどころ</strong>: 自作MCPのサーバー実装を改修した時の回帰検知、<code>.secrets.env</code> のキー追加で <code>_load_key</code> の探索経路が変わった時の確認（<code>01_DECISIONS/claude-code/2026-08-22__load_secret本番経路Windows側で鍵を読めない</code> の修正と同種の検証基盤）。</p>
 <hr />
 <h2>MCPツール使い分けガイド</h2>
 <p>詳細な使い分け基準は別ドキュメントを参照:</p>
