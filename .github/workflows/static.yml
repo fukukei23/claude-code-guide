@@ -34,6 +34,9 @@ jobs:
       - name: Convert Markdown to HTML
         run: python3 convert.py
 
+      - name: Generate llms.txt / llms-full.txt
+        run: python3 generate_llms.py
+
       - name: Copy assets
         run: |
           rm -rf docs/assets
