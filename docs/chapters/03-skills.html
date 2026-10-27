@@ -1057,6 +1057,34 @@ Claude Code がその指示に従って動作
 </tr>
 </tbody>
 </table></div>
+<h3 id="expo-app-bootstrap"><code>expo-app-bootstrap</code>（カスタムスキル）</h3>
+<p>ローカル完結 Expo / React Native アプリの土台（expo-sqlite + migration framework + Repository 層 + 検証ゲート）の立ち上げ手順。MicroWin Sprint A で確立した検証済み構成（144テスト+MLR 3ラウンド検証済み）を複製する。2026-10-27 新設（バックログ L155・oss-first ゲート通過後）。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>トリガー</td>
+<td>「新しいアプリ作る」「Expo アプリの土台」「migration framework 複製」「MicroWin と同じ構成で」</td>
+</tr>
+<tr>
+<td>方式選び</td>
+<td>生 PRAGMA（小規模）/ Drizzle（頻繁変更・ただし table-rebuild のデータ消失バグ drizzle-orm#5782 に注意）/ 検証済み framework 複製（長期運用・本スキル本線）</td>
+</tr>
+<tr>
+<td>複製元</td>
+<td><code>~/projects/microwin-app/src/lib/migration/</code>（3ファイル477行）+ <code>repository.ts</code>・消失時は正典記録から再構築</td>
+</tr>
+<tr>
+<td>品質設計</td>
+<td>1 migration = 1 transaction（txn オブジェクト契約）・checksum は tx 外事前計算・fail-closed・IF NOT EXISTS 冪等</td>
+</tr>
+</tbody>
+</table></div>
 <h3 id="safety-pattern-rm-truncate">スキル実装の Safety Pattern — <code>rm</code> を <code>:&gt;file</code>（truncate）に置換</h3>
 <p><strong>原則</strong>: スキル内でファイルを空にしたい時は <code>rm -f file &amp;&amp; touch file</code> ではなく <code>: &gt; file</code> を使う。Blast Radius 警告（rm 系の権限ダイアログ）を構造的に回避しつつ、冪等性も確保できる。</p>
 <div class="table-wrapper"><table>
