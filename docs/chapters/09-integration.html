@@ -332,22 +332,23 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 </thead>
 <tbody>
 <tr>
-<td>Claude Opus 4.7</td>
-<td>最高品質・複雑タスク</td>
-<td>GLM-5.3にルーティング</td>
+<td>Claude Opus 5.5</td>
+<td>最高品質・複雑タスク（現行Opus）</td>
+<td><span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>がGLM-5.3へ自動差替</td>
 </tr>
 <tr>
-<td>Claude Sonnet 4.6</td>
-<td>バランス型</td>
-<td><span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>経由で利用可能</td>
+<td>Claude Sonnet 5.5</td>
+<td>バランス型（現行Sonnet）</td>
+<td>プロキシ経由でGLM/MiniMaxに差替</td>
 </tr>
 <tr>
-<td>Claude Haiku 4.5</td>
-<td>高速・低コスト</td>
-<td>API経由で利用可能</td>
+<td>Claude Haiku 5.5</td>
+<td>高速・低コスト（現行Haiku・1Mコンテキスト）</td>
+<td>プロキシ経由でGLM/MiniMaxに差替</td>
 </tr>
 </tbody>
 </table></div>
+<div class="callout callout-info"><p>※ 2026-10時点の現行ラインナップ。旧表記（Opus 4.7 / Sonnet 4.6 / Haiku 4.5）はレガシーモデル。glm-rate-proxy はモデル名を自動差替するため選択したClaudeモデル名に関係なくGLM/MiniMaxが応答する（詳細: <a href="18-glm-rate-proxy.html">18_glm-rate-proxy</a>）。</p></div>
 <h3>切替方法</h3>
 <ul>
 <li><code>/model</code> <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span></li>

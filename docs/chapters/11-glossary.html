@@ -237,9 +237,9 @@
 <h3>Compact（コンパクション）</h3>
 <p>会話を要約して圧縮する処理。<code>/compact</code>で手動実行、または自動（Autocompact）で実行される。→ <a href="02-commands.html#compact">02_コマンド一覧</a></p>
 <h3>Context（コンテキスト）</h3>
-<p>Claude Codeが一度に処理できる情報の総量。<span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>、ツール定義、メモリ、会話履歴等で構成される。最大200kトークン。→ <a href="01-basics.html">01_基礎概念</a></p>
+<p>Claude Codeが一度に処理できる情報の総量。<span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>、ツール定義、メモリ、会話履歴等で構成される。最大1Mトークン（2026-10時点の現行全モデル・旧Haiku 4.5のみ200K）。→ <a href="01-basics.html">01_基礎概念</a></p>
 <h3>Context Window（<span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span>）</h3>
-<p>一度に処理できるテキストの最大量。Claude Codeでは200kトークン。</p>
+<p>一度に処理できるテキストの最大量。Claude Codeでは現行モデルで1Mトークン（旧Haiku 4.5は200K）。</p>
 <p>&lt;a id=&quot;context-saturation&quot;&gt;&lt;/a&gt;</p>
 <h3>コンテキスト飽和（Context Saturation）</h3>
 <p>コンテキストウィンドウ（<strong>トークン</strong>）が会話履歴やツール結果で満杯になり、CCが停止・またはAutocompactが強制発動する状態。バイト数ではなくトークンが上限。</p>
