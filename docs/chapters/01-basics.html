@@ -284,7 +284,7 @@
 </tr>
 <tr>
 <td><strong>コンテキスト上限</strong></td>
-<td>モデル依存（2026-10時点の現行全モデル〔Fable 5.1 / Opus 5.5 / Sonnet 5.5 / Haiku 5.5〕は1M・200Kは旧Haiku 4.5のみ）</td>
+<td>モデル依存（2026-10時点の現行全モデル〔Fable 5.1 / Opus 5.5 / Sonnet 5.5 / Haiku 5.5〕は1M・max output 128K・200Kは旧Haiku 4.5のみ）</td>
 <td>同左（モデル依存）</td>
 </tr>
 <tr>
@@ -488,10 +488,10 @@ LLM（Claude Sonnet / Opus / Haiku）
 graph LR
     subgraph "1M トークン コンテキストウィンドウ（2026-10時点の現行全モデル）"
         A["システムプロンプト<br/>~0.6%"]
-        B["ツール定義<br/>~2%"]
+        B["ツール定義<br/>~4%"]
         C["メモリ・スキル<br/>~0.5%"]
         D["会話履歴<br/>~0.5%"]
-        E["空き容量<br/>~96%"]
+        E["空き容量<br/>~91%"]
     end
 </div></div><h2>コンテキストの仕組み</h2>
 <p>Claude Code は <strong><span class="term" tabindex="0">コンテキストウィンドウ<span class="term-popup">AIが一度に「覚えていられる」会話・資料の容量上限のこと。作業が長くなると上限に近づき、古い内容の把握が荒くなる（＝自動で要約圧縮される）</span></span></strong>（2026-10時点の現行全モデル〔Fable 5.1 / Opus 5.5 / Sonnet 5.5 / Haiku 5.5〕は最大1M<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>・200Kは旧Haiku 4.5のみ）の中で動作する。セッション開始時に以下がロードされる。</p>
