@@ -995,7 +995,7 @@ CONTEXT_WINDOW = 1_000_000
 </table></div>
 <p><strong>使いどころ</strong>: Windows Desktop版でコード生成・レビュー・説明など開発全般の処理をGLMに委譲したい場合。
 <strong>注意（Windows Desktop版）</strong>: ZAI APIキーが設定されていないと接続不可。
-<strong>注意（WSL CLI版）</strong>: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ <a href="18-glm-rate-proxy.html">13_glm-rate-proxy</a></p>
+<strong>注意（WSL CLI版）</strong>: glm-rate-proxyが起動していないと接続不可（ただし実際には呼び出す必要がない）。→ <a href="#">13_glm-rate-proxy</a></p>
 <div class="callout callout-info"><p><strong>実装</strong>: <code>~/.claude/scripts/mcp/glm-mcp-server.py</code> — 自作Pythonスクリプト。glm-rate-proxyとは<strong>別ファイル</strong>。glm-rate-proxyはWSL CLI版のエンドポイント制御担当、glm MCPサーバーはMCPプロトコル経由の呼び出し担当。</p></div>
 <hr />
 <h2 id="zernio">zernio（導入済み・接続確立 / プラグイン型MCP / 300+ツール）</h2>
@@ -1158,7 +1158,7 @@ start-&lt;name&gt;.sh
 <li>以前は9サーバー（~35kトークン）だったが、使用頻度分析で最適化後、exa・画像分析・web_readerを追加</li>
 <li><strong>クイックリファレンス</strong>: <a href="https://fukukei23.github.io/guides/claude-code-mcp-catalog/">ガイドサイト - MCPサーバーカタログ</a></li>
 </ul>
-<div class="callout callout-tip"><p><strong>現場の知見</strong>: MCPツールは呼び出した時だけコストが発生するわけではない。<strong>ツール定義だけで毎ターン消費</strong>される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ <a href="12-tips.html#a-%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%B5%8C%E6%B8%88%E5%AD%A6">11_現場の知見</a></p></div>
+<div class="callout callout-tip"><p><strong>現場の知見</strong>: MCPツールは呼び出した時だけコストが発生するわけではない。<strong>ツール定義だけで毎ターン消費</strong>される。使っていないサーバーを残すと、1ターンごとに無駄なトークンを消費し続ける。→ <a href="#">11_現場の知見</a></p></div>
 <hr />
 <h2>サーバーの追加・削除</h2>
 <h3>追加</h3>

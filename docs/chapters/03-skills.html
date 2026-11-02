@@ -678,7 +678,7 @@ Claude Code がその指示に従って動作
 <p><strong>個人ナレッジベース（knowledge-base）を<span class="term" tabindex="0">RAG<span class="term-popup">Retrieval-Augmented Generation（ラグ・検索拡張生成）の略。AIに答えさせる前に、自分の文書から関連箇所を検索して渡し、その内容に基づいて答えさせる仕組み</span></span>検索</strong>。ripgrep全文検索 + sentence-transformers によるリランクで、1,900件超のMarkdownから関連ドキュメントを5件表示。</p>
 <ul>
 <li><strong>呼び出し</strong>: 「SSOTから探して: &lt;キーワード&gt;」<code>/ssot-search</code></li>
-<li><strong>詳細</strong>: <a href="19-ssot-search.html">14_SSOTから探して</a></li>
+<li><strong>詳細</strong>: <a href="#">14_SSOTから探して</a></li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/ssot-search/</code>）</li>
 <li><strong><span class="term" tabindex="0">カバレッジ<span class="term-popup">テストがコードのどれくらいの割合を確認できているかを表す数字（％）。80%なら、コードの8割が少なくとも1回はテストで実行されたことになる</span></span>可視化（False Negative 対策・spec v3）</strong>: 検索結果末尾に母数・フィルタ結果・除外量・次点候補・低抽出率警告🚨(&lt;5%)を表示。「N件ヒット＝全部だ」でなく「未確認領域が残る」と気づける。<code>--no-coverage</code>（表示抑制）・<code>--log-coverage</code>（JSON stderr・計測用途）</li>
 </ul>
@@ -845,7 +845,6 @@ Claude Code がその指示に従って動作
 <li><strong>🤖 Claude Code changelog 日本語サマリ挨拶表示（2026-09-03 追加）</strong>: 起動時の英文通知「Got N features, M bugfixes...」を毎回気になっていた問題を解決。<code>knowledge-base/00★SYSTEM/claude-code/claude-code-changelog-ja.md</code>（公式 changelog を日本語で要約・直近 3 バージョン取得）を Step1 で検出し、Step3 の挨拶ブロックに begin/end マーカーで機械抽出して混ぜる。<code>DAYS_OLD</code> 14 日超で警告モード・30 日超でスキップ。macOS date フォールバック・BEGIN/END マーカー方式で changelog-ja フォーマット変更に耐性。詳細: <a href="#">2026-09-03_Claude-Code-changelog日本語和訳とresume-session挨拶組み込み</a></li>
 <li><strong>タブ名リネーム案内（2026-10-24追加・2026-10-25 /rename 経路訂正）</strong>: タスクが1つに決まった時点（Step 4a）で「📱 タブ名を『&lt;セッション名&gt;』に変えておくと次に迷いません（入力欄で <code>/rename &lt;名前&gt;</code> が最速）」を<strong>1回だけ</strong>出力する。<strong>CCからタブ名を書換できない</strong>（タイトルはAnthropicクラウド側管理・書換用内部MCP <code>ccd_session_mgmt</code> はGateway→WSL構成に注入されない＝2026-10-23実測）ため、変更はふくけいの操作（<code>/rename</code> コマンドまたは手動リネームUI）となり、その導線をCCが出す</li>
 <li><strong>セッションの呼称規約（2026-10-24追加）</strong>: セッションを指す時は<strong>タスク名が主・WT4は括弧の補助</strong>（「Sleep as Android解体(c495)」形式）。デスクトップアプリUIにはWT4（セッションID先頭4桁）が表示されないため、WT4単体で指示すると該当タブが特定できない</li>
-<li><strong>長時間セッションでの新規実装着手の注意（2026-10-25追加・W42💡2）</strong>: <strong>約18時間超の連続セッションでは、長文Write主体の新規実装タスクを着手しない</strong>（既存タスクの収尾・記録・commitは可）。劣化は長文Writeに限定して現れる実測が2回（2026-10-09 Write 2回連続破損〔チャンク分割方式で回避実証〕・2026-10-17 Write 3回連続乱れ〔機械ゲート3/3捕捉・本番混入ゼロ〕）。機械ゲートは事後捕捉であり着手前の予防はこの行が担う</li>
 <li><strong>種別</strong>: カスタムスキル（<code>~/.claude/skills/resume-session/</code>）</li>
 </ul>
 <h3 id="codebase-memory"><code>codebase-memory</code>（カスタムスキル）</h3>
@@ -1085,6 +1084,38 @@ Claude Code がその指示に従って動作
 </tr>
 </tbody>
 </table></div>
+<h3 id="note-comment"><code>note-comment</code>（カスタムスキル）</h3>
+<p>note記事URLを渡すと5段構成のコメント下書き（具体引用≥2→感情→同類項→問題提起→CTA）を生成する集客運用スキル。2026-10-28 新設（note-funnel設計の一部・実体験YAML+主語配分ルール+機械検証付き）。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>トリガー</td>
+<td>「コメント下書き」「note-comment」「この記事にコメントしたい」</td>
+</tr>
+<tr>
+<td>機械検証</td>
+<td>引用実在性（<code>verify_quote.py</code>・正規化+最小文字数）+ AI臭チェック（<code>ai_stink_check.py</code>・対比構文/定型表現/感嘆符/挨拶/箇条書きの閾値）をPASS必須</td>
+</tr>
+<tr>
+<td>実体験制約</td>
+<td>同類項・問題提起は <code>experiences.yaml</code> からのみ・<strong>主語配分ルール</strong>: 言及は「AIに指示して回している運用」レベルに限り、AIの発見を自分の発見と言わない</td>
+</tr>
+<tr>
+<td>投稿方針</td>
+<td><strong>投稿は必ず人間が手動コピペ</strong>（機械投稿・ブラウザ自動化は禁止）・誘導なし＞無理なリンク</td>
+</tr>
+<tr>
+<td>正典</td>
+<td><code>~/projects/note-funnel/</code>（scripts・実体験YAML・誘導先候補）+ spec（knowledge-base docs/superpowers/specs/2026-10-28_note-funnel-集客コメント自動化-design.md）</td>
+</tr>
+</tbody>
+</table></div>
 <h3 id="safety-pattern-rm-truncate">スキル実装の Safety Pattern — <code>rm</code> を <code>:&gt;file</code>（truncate）に置換</h3>
 <p><strong>原則</strong>: スキル内でファイルを空にしたい時は <code>rm -f file &amp;&amp; touch file</code> ではなく <code>: &gt; file</code> を使う。Blast Radius 警告（rm 系の権限ダイアログ）を構造的に回避しつつ、冪等性も確保できる。</p>
 <div class="table-wrapper"><table>
@@ -1125,6 +1156,15 @@ Claude Code がその指示に従って動作
 </ul>
 <p><strong>判断軸</strong>: スキル内で「中身を 0byte にしたい」用途は <strong>ほぼ全て <code>: &gt; file</code> で置換可能</strong>。真に削除が必要な場面（ディレクトリ削除等）だけ <code>rm -r</code> を使い、その時は Blast Radius 警告が必要コストと割り切る。<strong><code>settings.json</code> への <code>Bash(rm *)</code> allow 追加は Blast Radius 拡大リスクのため常用しない</strong>。</p>
 <div class="callout callout-warn"><p>💡 <strong>章の落とし所</strong>: 同じ手順を3度書いたらスキル化を検討。作りすぎ注意。</p></div>
+<hr />
+<h2>📊 skill-usage（スキル使用実績集計システム・2026-10-27）</h2>
+<p><strong>スキル資産の使用実績を週次自動集計</strong>。<code>~/.claude/logs/tool-usage-*.csv</code>（PostToolUse hook自動記録）を決定論Pythonスクリプトで週次集計し、成果は週次reflectionで人間レビューして確定する。</p>
+<ul>
+<li><strong>構成</strong>: 集計スクリプト（<code>scripts/obsidian/aggregate_skill_usage.py</code>）+ system crontab 日曜5:17 + 週次reflection Phase 3.5（成果レビュー統合）</li>
+<li><strong>台帳</strong>: <code>50_PROJECTS/claude-config/skill-usage/</code>（Phase 0中は <code>_phase0/</code>）</li>
+<li><strong>使いどころ</strong>: スキル資産の価値判定（off判断）の材料・2026-08-25 doctorクリーンアップの恒常化</li>
+<li><strong>設計正典</strong>: <code>docs/superpowers/specs/2026-10-27_スキル使用実績記録-design.md</code>（MLR 6ラウンド検証済）</li>
+</ul>
 
         </article>
 

@@ -236,7 +236,7 @@
 <li>要約が残るので文脈は保持される</li>
 <li><code>/clear</code> との違い: <strong>文脈を残すか捨てるか</strong></li>
 </ul>
-<div class="callout callout-info"><p>どちらも<a href="11-glossary.html#context-saturation">コンテキスト飽和</a>対策。文脈を引き継ぎたいなら <code>/compact</code>、完全に切り替えるなら <code>/clear</code>。</p></div>
+<div class="callout callout-info"><p>どちらも<a href="#">コンテキスト飽和</a>対策。文脈を引き継ぎたいなら <code>/compact</code>、完全に切り替えるなら <code>/clear</code>。</p></div>
 <h3>&lt;a id=&quot;context&quot;&gt;&lt;/a&gt;<code>/context</code> — コンテキスト使用量の確認</h3>
 <p>現在の<strong>コンテキスト使用量</strong>を表示する。</p>
 <ul>
@@ -244,7 +244,7 @@
 <li>各MCPサーバーのツール数とトークン消費が分かる</li>
 <li><strong>注意</strong>: 1回の実行で約4kトークンを消費する。多用に注意</li>
 </ul>
-<p>出力例（※ glm-5.3等カスタムモデルを利用した自環境の実測例・公式現行モデルでは分母が1M表示になります）:</p>
+<p>出力例:</p>
 <pre><code>Context Usage
   GLM-5.3
   58.3k/200k tokens (29%)
@@ -297,12 +297,12 @@
 <tr>
 <td><code>/clear</code></td>
 <td><code>/reset</code> <code>/new</code></td>
-<td>会話履歴を完全リセット（システム・MCP・メモリは残る）。<a href="11-glossary.html#context-saturation">コンテキスト飽和</a>対策</td>
+<td>会話履歴を完全リセット（システム・MCP・メモリは残る）。<a href="#">コンテキスト飽和</a>対策</td>
 </tr>
 <tr>
 <td><code>/compact</code></td>
 <td>—</td>
-<td>古い会話を要約して圧縮（文脈は保持）。<code>/clear</code>との違い: <strong>文脈を残すか捨てるか</strong>。<a href="11-glossary.html#context-saturation">コンテキスト飽和</a>対策</td>
+<td>古い会話を要約して圧縮（文脈は保持）。<code>/clear</code>との違い: <strong>文脈を残すか捨てるか</strong>。<a href="#">コンテキスト飽和</a>対策</td>
 </tr>
 <tr>
 <td><code>/add-dir &lt;path&gt;</code></td>

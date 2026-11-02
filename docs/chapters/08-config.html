@@ -543,8 +543,8 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 </tr>
 </tbody>
 </table></div>
-<p><strong>glm-rate-proxy経由のルーティング変数</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> / <code>ANTHROPIC_BASE_URL</code> / <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 等）→ <a href="18-glm-rate-proxy.html">13_glm-rate-proxy</a> で詳述。</p>
-<div class="callout callout-info"><p><strong>auto-compact制御の罠（パターンB運用）</strong>: glm-5.3等のカスタムモデルは Claude Code で <strong>200K認識</strong>される。<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000</code> を設定しても200Kに <strong>cap</strong> されるため無意味（statusLine表示と本体判定がズレて「1% until auto-compact」が異常早発動）。auto-compact を止めるには <code>DISABLE_AUTO_COMPACT=1</code>。glm-5.3 を真に1M認識させるには <code>DISABLE_COMPACT=1</code> + <code>CLAUDE_CODE_MAX_CONTEXT_TOKENS=1000000</code>（ただし手動<code>/compact</code>も不可）。※この200K認識はカスタムモデル（GLM-5.3）表示の実測であり、Claude公式モデルの仕様（2026-10時点で現行全モデル1M）とは無関係。→ <a href="#">AUTO_COMPACT_WINDOW訂正・パターンB運用移行</a></p></div>
+<p><strong>glm-rate-proxy経由のルーティング変数</strong>（<code>ANTHROPIC_AUTH_TOKEN</code> / <code>ANTHROPIC_BASE_URL</code> / <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 等）→ <a href="#">13_glm-rate-proxy</a> で詳述。</p>
+<div class="callout callout-info"><p><strong>auto-compact制御の罠（パターンB運用）</strong>: glm-5.3等のカスタムモデルは Claude Code で <strong>200K認識</strong>される。<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000</code> を設定しても200Kに <strong>cap</strong> されるため無意味（statusLine表示と本体判定がズレて「1% until auto-compact」が異常早発動）。auto-compact を止めるには <code>DISABLE_AUTO_COMPACT=1</code>。glm-5.3 を真に1M認識させるには <code>DISABLE_COMPACT=1</code> + <code>CLAUDE_CODE_MAX_CONTEXT_TOKENS=1000000</code>（ただし手動<code>/compact</code>も不可）。→ <a href="#">AUTO_COMPACT_WINDOW訂正・パターンB運用移行</a></p></div>
 <div class="callout callout-warn"><p><strong>MCP_TOOL_TIMEOUT を設定する理由</strong>: GLM-5.3等の思考型モデルは長い生成に60秒以上かかることがある。未設定だと <code>MCP error -32001 (Request timed out)</code> が連続発生する。glm-mcp-server.py は直列処理なので1件目のタイムアウトが2件目を巻き込む連鎖に注意。値はミリ秒単位（300000 = 5分）。→ <a href="#">GLM MCPタイムアウト修正</a></p></div>
 <div class="callout callout-info"><p><strong>WSL CLI版でglm MCPをdisabledにする理由</strong>: WSL CLI版ではCLI本体がGLMで動作するためglm MCPは二重呼び出しになり不要。<code>command</code>/<code>url</code> を省略すると「設定不備」警告が出るため、<code>disabled: true</code> を設定して警告を抑制。Desktop App版では <code>false</code> に戻すだけで再利用可。</p></div>
 <h3>&lt;a id=&quot;settings-local&quot;&gt;&lt;/a&gt;プロジェクト設定: <code>&lt;repo&gt;/.claude/settings.json</code></h3>
@@ -561,7 +561,7 @@ Routines画面などのアプリ組み込みUIはCLAUDE.mdでは制御できな�
 <li>しかし削除する際は<strong>両方から削除</strong>する必要がある</li>
 <li><code>claude mcp remove</code> CLIコマンドを使うと両方に反映される</li>
 </ul>
-<div class="callout callout-tip"><p><strong>現場の知見</strong>: <code>settings.json</code> だけ手動編集してMCPサーバーを削除しても、<code>~/.claude.json</code> に定義が残っていれば次回起動時に復元される。削除は必ず <code>claude mcp remove</code> で。→ <a href="12-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
+<div class="callout callout-tip"><p><strong>現場の知見</strong>: <code>settings.json</code> だけ手動編集してMCPサーバーを削除しても、<code>~/.claude.json</code> に定義が残っていれば次回起動時に復元される。削除は必ず <code>claude mcp remove</code> で。→ <a href="#">11_現場の知見</a></p></div>
 <hr />
 <h2>&lt;a id=&quot;secrets&quot;&gt;&lt;/a&gt;シークレット管理</h2>
 <p>APIキー等の機密情報は <code>~/.secrets.env</code> に一元管理。</p>
@@ -952,7 +952,7 @@ git config --global url.&quot;https://github.com/&quot;.insteadOf &quot;git@gith
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-tip"><p><strong>現場の知見</strong>: Desktopアプリのコンテキスト過多はAnthropicのアップデート待ち。当面はWSL CLI版をメインで使用する。→ <a href="12-tips.html">11_現場の知見</a></p></div>
+<div class="callout callout-tip"><p><strong>現場の知見</strong>: Desktopアプリのコンテキスト過多はAnthropicのアップデート待ち。当面はWSL CLI版をメインで使用する。→ <a href="#">11_現場の知見</a></p></div>
 <hr />
 <h2>一時envオーバーライドでのモデル試験（2026-08-29）</h2>
 <p><code>ANTHROPIC_DEFAULT_SONNET_MODEL=&lt;モデル&gt; claude -p &quot;...&quot;</code> で<strong>本番settings.jsonを変更せずに</strong>新モデルをCLI実セッションで試験できる（プロセス単位のenv上書き・稼働中タブと次回起動に影響ゼロ・失敗時の戻し操作も不要）。</p>
@@ -966,6 +966,40 @@ ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5.3-flash claude -p &quot;/path/to.png をRea
 <ul>
 <li>glm-rate-proxyはnormal時モデル名をパススルーのため<strong><span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>再起動も不要</strong></li>
 <li>詳細: <a href="#">2026-08-29_一時envオーバーライドでのLLMモデル試験手法</a></li>
+</ul>
+<hr />
+<h2>権限ルール（permissions）— 複合コマンドは必ずask（2026-11-01実測）</h2>
+<p><code>permissions.allow</code> のBashルールは<strong>単発コマンドにのみ機能</strong>し、複合コマンド（<code>&amp;&amp;</code>・<code>;</code>・<code>||</code>・改行で結合）はルールの有無に関わらず<strong>必ずask dialogが出る</strong>（Desktop auto mode実測・単発は通過）。</p>
+<ul>
+<li>ルール形式は正規のprefix形式 <code>Bash(cmd:*)</code> を推奨（glob形式 <code>Bash(mkdir *)</code> スペース+<code>*</code>は併存可）</li>
+<li>頻発するaskの恒久化は<strong>設定追加ではなく発生源（スキル指示文・スクリプト）を単発コマンド化</strong>する</li>
+<li>詳細: <a href="#">2026-11-01_ssot-recordフラグ複合コマンドask恒久化</a></li>
+</ul>
+<h3>波括弧変数は静的検証を不能にする（2026-11-01追記・new-session確定コマンド実測）</h3>
+<p><code>${PIPESTATUS[0]}</code> 等の<strong>波括弧変数（<code>${...}</code>）がコマンドに1つでもあると、コマンド全体が「実行前に検証不能」扱いになり、allowルールが存在しても「A variable in braces can't be checked」で1回限り許可しか出ない</strong>（恒久化不可・設定だけでは解消不能）。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>書き方</th>
+<th>権限挙動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>echo &quot;EXIT=$?&quot;</code>（<code>$?</code>のみ）</td>
+<td>✅ 検証可能・allow一致で通過</td>
+</tr>
+<tr>
+<td><code>echo &quot;X=${PIPESTATUS[0]}&quot;</code></td>
+<td>❌ 全体が検証不能・1回限り許可のみ</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><span class="term" tabindex="0">パイプ<span class="term-popup">コマンドの結果を次のコマンドへ流し込む「｜」記号の仕組み。「検索する → 結果を数える」のように処理をつなげられる</span></span>後の生exit codeは <strong><code>set -o pipefail</code> + <code>$?</code></strong> で取る（PIPESTATUS不要・<code>Bash(set -o pipefail)</code>はallow済み）</li>
+<li>複合コマンドの訂正観察（同日）: <strong>全セグメントがallow一致の複合（<code>rm &lt;path&gt;; echo &quot;X=$?&quot;</code>・<code>cd ~/x &amp;&amp; pwd; echo</code> 等）は無音通過を実測</strong> — 上記「複合は必ずask」は未allowセグメント混入時の可能性が高い（auto mode内実測・モード切替の限界あり）</li>
+<li><code>rm -f</code> は <code>Bash(rm -f *)</code> がaskのため、恒久化対象は<strong>plain rm+パスglob allow</strong>（例: <code>Bash(rm /home/&lt;USER&gt;/.claude/state/ssot-record-session-count*)</code>・exit 1=既に無いを正常系として扱う）</li>
+<li>詳細: <a href="#">2026-11-01_new-session確定コマンド権限<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>恒久化</a></li>
 </ul>
 <hr />
 <h2>Windows Desktop（Claude Desktopアプリ）の設定ファイル</h2>

@@ -283,7 +283,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tbody>
 </table></div>
 <div class="callout callout-tip"><p>💡 ※2026-07-02統合撤去: 2026-06-30に追加していた minimax系<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ブロック（matcher <code>mcp__minimax-(official|video)__.*</code>・<code>exit 2</code>）は、32MB真因=glm-rate-proxy <code>client_max_size</code> 未設定と判明（9ac5f24fd解決）したため PreToolUse hook を削除し撤去。minimax-official/video は日常セッションで即呼び可能。</p></div>
-<div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="12-tips.html#b-%E8%90%BD%E3%81%A8%E3%81%97%E7%A9%B4%E3%83%8F%E3%83%9E%E3%82%8A%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88">11_現場の知見</a></p></div>
+<div class="callout callout-warn"><p><strong>現場の知見</strong>: フックのスクリプトがエラー（exit code ≠ 0）を返すと、ツールの実行がサイレントにブロックされる。意図せぬブロックに注意。→ <a href="#">11_現場の知見</a></p></div>
 <div class="callout callout-info"><p><strong>クロスプラットフォーム対応</strong>: フックスクリプトで <code>python3</code> を直接呼ぶとWindows Git Bashで動作しない。<code>run-security-check.sh</code> ラッパーが python3 / python / wsl を自動検出する。Bashフックは純<span class="term" tabindex="0">bash<span class="term-popup">バッシュ。Linux等で使われる標準的なシェル（コマンド入力を受け付ける程序）の名前。シェルスクリプトを書く時の定番</span></span>（<span class="term" tabindex="0">grep<span class="term-popup">グレップ。ファイルやテキストの中から、指定したパターンを含む行を抜き出すコマンド。大量のファイルから目的の言葉を探す時の定番</span></span>/sed）で<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>解析しpython3に依存しない。</p></div>
 <p>ブロックされるコマンドの例:</p>
 <ul>
@@ -723,6 +723,11 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td></td>
 <td><code>check-ai-eval-pending-consistency.sh</code></td>
 <td>AIリポ評価書き戻し漏れ検知（knowledge-base pre-commit local hook・2026-09-14）: 評価mdにverdict確定（<code>- verdict: skip/keep</code> 固定形式・太字許容）があるのにpending-ai-repos.jsonに残存ならcommitをblock（casefold正規化・対話入力なし・fail-open・自己修復1コマンド表示）。バイパス=<code>SKIP_EVAL_PENDING_CHECK=1</code> または使い捨てフラグ <code>.eval-pending-check-approve</code>（承認ログに記録）。書き戻し自体は <code>ai-eval-writeback.py</code>（RUN_ID付き生出力）で実行</td>
+</tr>
+<tr>
+<td></td>
+<td><code>check-system-entry-gate.sh</code></td>
+<td>入口gate・00_SYSTEM直下新規md検知（knowledge-base pre-commit local hook・2026-10-27・L684 Phase3）: stagedに00_SYSTEM直下の新規md（status=A・修改は対象外）があれば正典4要件（変更権限1つ/参照者確定/<span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>なし/生成元明確）+ハブマッピング.md未記載を検知してshadow警告（verbose・commit継続・exit 0）。enforce化は誤発火実測後に別判断。TDD 9テスト+実機verbose確認済み</td>
 </tr>
 <tr>
 <td><strong>Notification</strong></td>
