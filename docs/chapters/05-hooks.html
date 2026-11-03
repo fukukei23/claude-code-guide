@@ -249,8 +249,8 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>の読み込み、初期化処理、設定の検証、ハンドオフ読込</td>
 </tr>
 <tr>
-<td>備考</td>
-<td>なし</td>
+<td>この環境の設定</td>
+<td><span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キーは環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span>で管理</td>
 </tr>
 </tbody>
 </table></div>
@@ -273,8 +273,8 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td>セキュリティチェック、危険<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>のブ<span class="term" tabindex="0">ロック<span class="term-popup">複数の処理が同時に同じ対象を触って衝突するのを防ぐ「鍵」の仕組み。鍵を持っている間は他の処理は待つか諦める</span></span>、入力検証</td>
 </tr>
 <tr>
-<td>備考</td>
-<td>なし</td>
+<td>この環境の設定</td>
+<td>危険コマンドを自動ブロック</td>
 </tr>
 <tr>
 <td>ブロック可能</td>
@@ -289,8 +289,8 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <ul>
 <li><code>bash -x</code>（<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>出力でシークレット露出の恐れ）</li>
 <li><code>cat -A</code>（特殊文字表示でシークレット露出の恐れ）</li>
-<li>マスクなしの <code>grep</code>（<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キーを含むファイルの検索）</li>
-<li>フィルタなしの <code>env</code>（全環境<span class="term" tabindex="0">変数<span class="term-popup">値を入れておく名前付きの箱。x = 1 のように名前に値を紐付けて、後で使い回す</span></span>の表示）</li>
+<li>マスクなしの <code>grep</code>（APIキーを含むファイルの検索）</li>
+<li>フィルタなしの <code>env</code>（全環境変数の表示）</li>
 </ul>
 <h3>&lt;a id=&quot;posttooluse&quot;&gt;&lt;/a&gt;PostToolUse</h3>
 <p><strong>ツール実行後</strong>に実行。</p>
@@ -311,8 +311,8 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td>ログ記録、実行結果の後処理、設定の自動同期、通知</td>
 </tr>
 <tr>
-<td>備考</td>
-<td>なし</td>
+<td>この環境の設定</td>
+<td>ツール使用ログ記録、commit検知（SSOT記録トリガー）、settings.jsonの自動同期、<span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>変更のmirror、<strong>guard-settings-write</strong>（Task6 α C'案・settings.json への TOKEN 書込を内容ベース<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>検知で防御・✅実装済 2026-07-31・2026-08-01 層2.5 Shannon entropy追加でhex/base64-only TOKEN捕捉・test 80/80・2026-08-12 H恒久対策: クォート付きURL正規化(split_inner_args)で偽陽性<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>解消・test 85/85）・<strong>declare-playwright-use</strong>（2026-10-10新設・matcher <code>^mcp__plugin_playwright_playwright__browser_</code>で限定・Playwright使用を宣言jsonに自動記録＝宣言忘れを構造的に消す・<code>pw-declare-wrap.sh</code> timeoutラッパ経由でguard誤爆回避・<strong>2026-11-01 matcher拡張</strong>：<code>^mcp__(plugin_playwright_playwright|playwright-nightloop)__browser_</code> に変更しnightloop専用MCPも宣言対象に・lock走査もnightloopプロファイル追加）</td>
 </tr>
 </tbody>
 </table></div>
@@ -335,8 +335,8 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <td>クリーンアップ、ログ保存、ハンドオフ情報の書き出し</td>
 </tr>
 <tr>
-<td>備考</td>
-<td>なし</td>
+<td>この環境の設定</td>
+<td>セッション終了時に記録</td>
 </tr>
 </tbody>
 </table></div>
@@ -482,7 +482,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-mcp-guide-sync.sh</code></td>
-<td>MCPガイドとの<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>検知</td>
+<td>MCPガイドとの差分検知</td>
 </tr>
 <tr>
 <td></td>
@@ -522,7 +522,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>skill-guard.sh</code></td>
-<td><span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>定義の整合性ガード</td>
+<td>スキル定義の整合性ガード</td>
 </tr>
 <tr>
 <td></td>
@@ -677,7 +677,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>check-fail-coverage.sh</code>（2026-09-01拡張）</td>
-<td>検証系完了宣言に<strong>検証範囲宣言セクション検査を追加</strong>: タイプI（exit code）/II（diff・hash）/III（判断文＋反証チェックリスト必須・30%上限）の宣言・異常系min(2,N)種・宣言内EXIT=Nのtool_result突合（エコー無効）・境界省略理由。<strong>grace期間〜2026-09-15は警告のみ→enforce</strong>（<code>FCC_FORCE_ENFORCE=1</code>でテスト用に強制）。spec: <code>docs/superpowers/specs/2026-09-01_テストは充分-体系化-design.md</code>。<strong>2026-09-08: Windows Desktop版settings.jsonにも登録</strong>（Stop・独立エントリ）。<strong>2026-09-16: MVR第2ステップ実装</strong>（省略行の値レベル制約機械判定〔TBD/なし単独無効・代替は採否3語+約N行必須・リスク検知不能時は数値必須〕+読み取り専用実行検証〔根拠欄のgrep/find/wc/lsをhookが実行しゼロ件なら警告〕+承認理由最小形式+omitted_scope/宣誓タグ組合せ検証・<span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span> 53 tests緑・grace中は警告のみ） <strong>2026-09-16: D1 shadow誤発火2経路修正</strong>（ADHOC_RE降格=shadow-t2a観測のみ+python -c書込は.write(高精度でt1捕捉維持+Edit断片AST<span class="term" tabindex="0">パース<span class="term-popup">文字で書かれたデータを、プログラムが扱える構造に変換すること。JSONパース＝JSON文字列→データ構造</span></span>除外=Write全文のみ対象・tests 53→56緑・第1回shadow判定2/3不成立→9/23再判定cron 94f9b3bc・claude-config 4e829bf） <strong>2026-10-22: D1経路待機応答skip+stop_hook_active再突入ガード実装</strong>（差戻し後の再Stop〔payloadの<code>stop_hook_active: true</code>〕は無条件通過=CC公式推奨パターン・待機スコア判定をD1ブロック前に移動しD1経路のblockでもscore≥2の待機応答をskip・同一応答9連続差戻し<span class="term" tabindex="0">ループ<span class="term-popup">同じ処理の繰り返し、または一連の作業サイクルのこと。プログラミングではfor文等の繰り返し構造、開発では「計画→実装→検証」の反復サイクルを指す</span></span>遮断・テスト4件新設+pytest 11緑・claude-config b331811）</td>
+<td>検証系完了宣言に<strong>検証範囲宣言セクション検査を追加</strong>: タイプI（exit code）/II（diff・hash）/III（判断文＋反証チェックリスト必須・30%上限）の宣言・異常系min(2,N)種・宣言内EXIT=Nのtool_result突合（エコー無効）・境界省略理由。<strong>grace期間〜2026-09-15は警告のみ→enforce</strong>（<code>FCC_FORCE_ENFORCE=1</code>でテスト用に強制）。spec: <code>docs/superpowers/specs/2026-09-01_テストは充分-体系化-design.md</code>。<strong>2026-09-08: Windows Desktop版settings.jsonにも登録</strong>（Stop・独立エントリ）。<strong>2026-09-16: MVR第2ステップ実装</strong>（省略行の値レベル制約機械判定〔TBD/なし単独無効・代替は採否3語+約N行必須・リスク検知不能時は数値必須〕+読み取り専用実行検証〔根拠欄のgrep/find/wc/lsをhookが実行しゼロ件なら警告〕+承認理由最小形式+omitted_scope/宣誓タグ組合せ検証・<span class="term" tabindex="0">TDD<span class="term-popup">テスト駆動開発。先にテストを書き、そのテストを通すようにコードを書く進め方。「何をもって正しいとするか」を最初に固定できる</span></span> 53 tests緑・grace中は警告のみ） <strong>2026-09-16: D1 shadow誤発火2経路修正</strong>（ADHOC_RE降格=shadow-t2a観測のみ+python -c書込は.write(高精度でt1捕捉維持+Edit断片AST<span class="term" tabindex="0">パース<span class="term-popup">文字で書かれたデータを、プログラムが扱える構造に変換すること。JSONパース＝JSON文字列→データ構造</span></span>除外=Write全文のみ対象・tests 53→56緑・第1回shadow判定2/3不成立→9/23再判定cron 94f9b3bc・claude-config 4e829bf） <strong>2026-10-22: D1経路待機応答skip+stop_hook_active再突入ガード実装</strong>（差戻し後の再Stop〔payloadの<code>stop_hook_active: true</code>〕は無条件通過=CC公式推奨パターン・待機スコア判定をD1ブロック前に移動しD1経路のblockでもscore≥2の待機応答をskip・同一応答9連続差戻しループ遮断・テスト4件新設+pytest 11緑・claude-config b331811）</td>
 </tr>
 <tr>
 <td></td>

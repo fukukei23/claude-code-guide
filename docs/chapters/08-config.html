@@ -279,7 +279,7 @@ Layer 1: グローバル（全プロジェクト共通）
 <li><strong>内容</strong>: 言語設定、LLM利用ポリシー、セキュリティルール、コーディング原則、SSOT参照</li>
 <li><strong>トークン</strong>: ~2.4k（常にロードされる）</li>
 </ul>
-<p>グローバルCLAUDE.mdに含まれるもの:</p>
+<p>この環境のグローバルCLAUDE.mdに含まれるもの:</p>
 <ul>
 <li>日本語回答ルール</li>
 <li>モデルルーティング（上位モデル → バランス型 → 軽量型）</li>
@@ -766,6 +766,49 @@ backups/
 backup-*/
 </code></pre>
 <div class="callout callout-info"><p>教訓：hook は <code>.gitignore</code> を読んでくれない。<code>.bak</code> を作ったら <code>.bak</code> のまま commit される。「作らない」ではなく「無視する」設計にすること。</p></div>
+<hr />
+<h2>この環境の設定ファイル一覧</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>場所</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/.claude/CLAUDE.md</code></td>
+<td>グローバル</td>
+<td>全プロジェクト共通ルール</td>
+</tr>
+<tr>
+<td><code>~/.claude/settings.json</code></td>
+<td>グローバル</td>
+<td>MCP・権限・フック設定</td>
+</tr>
+<tr>
+<td><code>~/.claude.json</code></td>
+<td>グローバル</td>
+<td>追加設定（settings.jsonと統合）</td>
+</tr>
+<tr>
+<td><code>~/.secrets.env</code></td>
+<td>グローバル</td>
+<td>APIキー一元管理</td>
+</tr>
+<tr>
+<td><code>&lt;repo&gt;/CLAUDE.md</code></td>
+<td>プロジェクト</td>
+<td>プロジェクト固有ルール</td>
+</tr>
+<tr>
+<td><code>&lt;repo&gt;/.claude/settings.json</code></td>
+<td>プロジェクト</td>
+<td>プロジェクト固有設定</td>
+</tr>
+</tbody>
+</table></div>
 <hr />
 <h2>&lt;a id=&quot;windows-vs-wsl&quot;&gt;&lt;/a&gt;Windows Desktop vs WSL CLI — 設定の違い</h2>
 <p>WSL2環境では <strong>Windows Desktopアプリ</strong> と <strong>WSL CLI</strong> の2つのClaude Codeが共存する。設定ファイル・管理系統・ツール定義のシリアライズに重要な違いがある。</p>

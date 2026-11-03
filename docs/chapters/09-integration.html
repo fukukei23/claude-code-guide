@@ -327,7 +327,7 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <tr>
 <th>モデル</th>
 <th>特徴</th>
-<th>備考</th>
+<th>この環境の設定</th>
 </tr>
 </thead>
 <tbody>
@@ -354,6 +354,16 @@ claude -p &quot;PRのレビューをして&quot; --allowedTools &quot;Bash,Read&
 <li><code>/fast</code> で高速モード切替（Opusの高速出力）</li>
 <li><code>model</code> パラメータでサブエージェントのモデル指定</li>
 </ul>
+<h3>この環境のLLMルーティング</h3>
+<pre><code>通常タスク → 🟡 GLM-5.3（glm_ask経由）
+    ↓ 失敗時
+フォールバック → Haiku
+    ↓ 大量処理
+大量処理 → Haiku等の軽量モデル
+    ↓ 要許可
+高品質タスク → 🔵 Sonnet（ユーザー許可必須）
+</code></pre>
+<hr />
 <h2>Claude Desktop Appとの違い</h2>
 <div class="table-wrapper"><table>
 <thead>
