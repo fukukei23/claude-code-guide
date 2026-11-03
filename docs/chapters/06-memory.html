@@ -97,6 +97,12 @@
             CLI操作・キーバインド
         </a>
         
+        <a href="10.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            用語集
+        </a>
+        
         <a href="11-glossary.html"
            class="sidebar-link">
             <span class="sidebar-icon">📖</span>
@@ -347,6 +353,17 @@ graph TD
 <li>コードのパターンやファイル構造は<strong>メモリに保存しない</strong>（コードから直接読めるため）</li>
 <li>Git履歴も<strong>メモリに保存しない</strong>（<code>git log</code>が正）</li>
 <li><strong>メモリは無料ではない</strong> — MEMORY.md + 各ファイルが毎ターン読み込まれ、<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を消費。増えすぎると数千トークン/ターンの固定消費になる → <a href="#">11_現場の知見</a></li>
+</ul>
+<hr />
+<h2>この環境のメモリ構成</h2>
+<pre><code>~/.claude/projects/-mnt-c-WINDOWS-system32/memory/
+├── MEMORY.md                       ← インデックス（82トークン）
+├── reference_linear_nexuscore.md    ← NexusCoreタスク管理の参照
+└── project_nexuscore_refactoring.md ← NexusCore開発状況
+</code></pre>
+<ul>
+<li>メモリ消費: ~82トークン（非常に軽量）</li>
+<li>グローバルCLAUDE.md: ~2.4kトークン</li>
 </ul>
 <hr />
 <h2>CLAUDE.mdの3層構造（Instruction Memory）</h2>
