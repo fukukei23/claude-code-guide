@@ -1,0 +1,34 @@
+# Claude Code Guide（日本語ガイド）
+
+> Claude Code（CLI・Desktopアプリ）の日本語解説サイト — 基礎概念からスキル/フック/MCP設定、コスト最適化、現場の知見まで全28章
+
+## Chapters
+
+- [早見表](https://fukukei23.github.io/claude-code-guide/chapters/00-cheatsheet.html): 全機能チートシート
+- [基礎概念](https://fukukei23.github.io/claude-code-guide/chapters/01-basics.html): Claude Codeの3つの形態とコンテキストの仕組み
+- [コマンド一覧](https://fukukei23.github.io/claude-code-guide/chapters/02-commands.html): ビルトインコマンドの全解説
+- [スキルシステム](https://fukukei23.github.io/claude-code-guide/chapters/03-skills.html): スキルの仕組みと活用方法
+- [MCPサーバー](https://fukukei23.github.io/claude-code-guide/chapters/04-mcp.html): MCPツールの使い分けと設定
+- [フック](https://fukukei23.github.io/claude-code-guide/chapters/05-hooks.html): 4種のフックでClaude Codeを自動化
+- [メモリ](https://fukukei23.github.io/claude-code-guide/chapters/06-memory.html): セッションをまたぐ記憶の仕組み
+- [エージェント](https://fukukei23.github.io/claude-code-guide/chapters/07-agents.html): サブエージェントの並列活用
+- [設定ファイル](https://fukukei23.github.io/claude-code-guide/chapters/08-config.html): CLAUDE.md・settings.json・3層構造
+- [統合](https://fukukei23.github.io/claude-code-guide/chapters/09-integration.html): IDE連携・リモート・モデル切替
+- [CLI操作・キーバインド](https://fukukei23.github.io/claude-code-guide/chapters/10-keybindings.html): プロンプト入力欄の編集操作 — 全選択/消去/行編集/Vim/履歴/Windows特有
+- [用語集](https://fukukei23.github.io/claude-code-guide/chapters/11-glossary.html): A〜Zの用語解説
+- [現場の知見](https://fukukei23.github.io/claude-code-guide/chapters/12-tips.html): 実践テクニックと落とし穴
+- [外部参考資料](https://fukukei23.github.io/claude-code-guide/chapters/13-external-references.html): 自分の実体験ではないが参考になる情報源
+- [エージェント工学の階層](https://fukukei23.github.io/claude-code-guide/chapters/14-agent-engineering-layers.html): プロンプトからグラフまで5層の設計地図と自己診断
+- [公式ドキュメント索引](https://fukukei23.github.io/claude-code-guide/chapters/15-official-docs-index.html): 公式ドキュメント364ページの1行要約と新規ページ監視
+- [知識の保存先の使い分け](https://fukukei23.github.io/claude-code-guide/chapters/16-knowledge-storage.html): どこに何を書くか
+- [dev-cycle](https://fukukei23.github.io/claude-code-guide/chapters/17-dev-cycle.html): コード品質改善サイクル — スイープ→レビュー→Issue化→自律実装
+- [GLM Rate Proxy](https://fukukei23.github.io/claude-code-guide/chapters/18-glm-rate-proxy.html): ZAI/GLMで動かす低コスト運用 — モデルルーティング・Thinking制御
+- [SSOTから探して](https://fukukei23.github.io/claude-code-guide/chapters/19-ssot-search.html): 個人ナレッジベースへのRAG検索
+- [コスト最適化](https://fukukei23.github.io/claude-code-guide/chapters/20-cost-optimization.html): GLM/MiniMaxルーティング（独自構成）
+- [ループシステム（Loop Engineering）](https://fukukei23.github.io/claude-code-guide/chapters/21-loop-system.html): Daily Triage→人間承認→検証付き自律実行の全体像と、外部LLMレビューを組み込む理由
+- [決定ログ](https://fukukei23.github.io/claude-code-guide/chapters/22-decisions-log.html): 設計判断の図解入り記録 — どういう考えで決めたか
+- [公式ドキュメント索引](https://fukukei23.github.io/claude-code-guide/chapters/22.html): 447ページの1行要約と新規ページ監視
+- [バージョン管理](https://fukukei23.github.io/claude-code-guide/chapters/23-version-management.html): Claude Codeの更新・ダウングレード・プロキシ環境の注意
+- [スマホからのリモート操作](https://fukukei23.github.io/claude-code-guide/chapters/24-mobile-remote.html): 公式Remote Controlの制約を実測し、Moshi+mosh+Tailscale+tmuxで外出先から自宅のClaude Codeを操作する環境を構築する手順
+- [Windows⇔WSL 設定同期](https://fukukei23.github.io/claude-code-guide/chapters/25-windows-wsl.html): WSL CLI版とWindows Desktop版の2環境での設定配置と同期の考え方 — WSL symlink方式の罠を実測4パターンで検証し、確認コマンド付きで解説
+- [Skill カタログ](https://fukukei23.github.io/claude-code-guide/chapters/skill-catalog.html): Skill カタログ
