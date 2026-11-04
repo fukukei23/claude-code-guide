@@ -199,6 +199,12 @@
             Windows⇔WSL 設定同期
         </a>
         
+        <a href="26-desktop-mod.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            Claude Code Desktop 改造
+        </a>
+        
         <a href="skill-catalog.html"
            class="sidebar-link">
             <span class="sidebar-icon">📄</span>
@@ -873,6 +879,7 @@ backup-*/
 </table></div>
 <blockquote>
 <p><strong>注意</strong>: Desktop Extensionsの場所はWindows Storeアプリパッケージの内部にあり、通常の設定フォルダからは見えない。MCP serverやplugin設定とは<strong>完全に別の管理系統</strong>。</p>
+<p>💡 <strong>推論リクエストの送信先（サードパーティ推論・3Pモード）は別系統</strong>: MCP設定とは独立した「接続」設定で、Gateway（GLM/MiniMax<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>）やClaude APIへ差し替えられる。切替手順（サブスク⇔Gateway両方向）と <code>inferenceProvider</code> の仕様は <strong><a href="26-desktop-mod.html">26章 Claude Code Desktop 改造</a></strong> 参照。</p>
 <p>⚠️ <strong>候補ファイルが複数あり、しかも「どれが本物か」は時期によって変わりうる（決め打ち禁止）</strong>: 2026-05時点の調査（<a href="#">2026-05-20_デスクトップアプリMCP-223k問題調査</a>）では<code>settings.json</code>と<code>AppData\Roaming\Claude\claude_desktop_config.json</code>(候補①)の内容が一致しており、当時はどちらも「有効」に見えていた。おそらく当時は複数の候補ファイルを手動で同時に編集していたため、どれが真の読み込み元か区別する必要が一度もなかった。2026-07-06に<code>gemini</code>を候補①相当(settings.json)にだけ追加したことで初めて食い違いが表面化し、候補②(MSIXパッケージ内)が本物だと判明した。<strong>Windows Desktopアプリの内部<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>（配布形態・設定読み込みロジック）はアプリ更新で今後も変わりうる</strong>ため、上表の「候補②が本物」という記述も恒久的な前提にしない。</p>
 <p>⚠️ <strong>「設定したのに接続されない」時の確認手順（推測で編集しない・都度確認）</strong>: <strong>アプリ内「設定 → 開発者 → ローカルMCPサーバー」パネルの「設定を編集」ボタンを押し、その時点でエクスプローラーが開く実際のファイルパスをそのまま使う</strong>のが、時期によらず通用する最も確実な方法（2026-07-06 gemini追加時に確立した手順）。詳細: <a href="04-mcp.html">04_MCPサーバー</a> の「設定したのに接続されない」トラブルシューティング節、事例は <a href="#">2026-07-06_Windows-Desktop版Gemini-MCP真因確定-MSIXconfig特定</a> 参照。</p></div>
 <h3>設定の独立性</h3>
@@ -1013,7 +1020,7 @@ ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5.3-flash claude -p -c &quot;今日は何曜�
 ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5.3-flash claude -p &quot;/path/to.png をReadして書き起こして&quot; --allowedTools &quot;Read&quot;
 </code></pre>
 <ul>
-<li>glm-rate-proxyはnormal時モデル名をパススルーのため<strong><span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>再起動も不要</strong></li>
+<li>glm-rate-proxyはnormal時モデル名をパススルーのため<strong>プロキシ再起動も不要</strong></li>
 <li>詳細: <a href="#">2026-08-29_一時envオーバーライドでのLLMモデル試験手法</a></li>
 </ul>
 <hr />

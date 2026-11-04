@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Desktop 改造 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI Claude Code Desktop 改造の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="Claude Code Desktop 改造 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI Claude Code Desktop 改造の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/26-desktop-mod.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="10.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            用語集
+        </a>
+        
+        <a href="11-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="12-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="13-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="14-agent-engineering-layers.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            エージェント工学の階層
+        </a>
+        
+        <a href="15-official-docs-index.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="16-knowledge-storage.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗂️</span>
+            知識の保存先の使い分け
+        </a>
+        
+        <a href="17-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="18-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="19-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="20-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="21-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="22-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="22.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="23-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
+        </a>
+        
+        <a href="24-mobile-remote.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📱</span>
+            スマホからのリモート操作
+        </a>
+        
+        <a href="25-windows-wsl.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪟</span>
+            Windows⇔WSL 設定同期
+        </a>
+        
+        <a href="26-desktop-mod.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🔧</span>
+            Claude Code Desktop 改造
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="25-windows-wsl.html" class="nav-prev">← Windows⇔WSL 設定同期</a>
+            
+            
+            <a href="skill-catalog.html" class="nav-next">Skill カタログ →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: Claude Code Desktop 改造
+icon: 🔧
+slug: 26-desktop-mod
+card_desc: サードパーティ推論（3Pモード）でDesktopアプリの推論エンジンをGLM/MiniMaxに差し替える — サブスク⇔Gatewayの両方向切替手順と公式ドキュメント照合済みの既知<span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span></h2>
+<h1>26 Claude Code Desktop 改造 — 3P推論でGLM/MiniMaxを使う</h1>
+<div class="callout callout-info"><p>最終更新: 2026-11-05 | 対象: Claude Desktopアプリ（Windows/Mac・Codeタブ付き）・公式ドキュメント照合済み</p></div>
+<h2>この章の目的</h2>
+<p>Claude Desktopアプリの推論リクエストの送信先は設定で差し替えられる。本章では推論エンジンを <strong>サブスクログイン ⇔ 自前Gateway（GLM/MiniMax<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>）</strong> の間で往復させる手順と、そこで判明した仕様を1ページにまとめる。</p>
+<p><strong>結論</strong>: Gatewayへ向けるのは設定ウィンドウのGUIで完結。サブスクへ戻すのは <strong>設定の削除＋再起動</strong> が正規ルート。<strong>ドロップダウンに「サブスクへ戻す」選択肢は存在しない</strong>（1P/3P切替の専用UIは未<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>・公式ドキュメント照合・2026-11-05時点）。</p>
+<hr />
+<h2>概要: なぜ・何ができるか</h2>
+<h3>3P推論モードとは</h3>
+<p>Claude Desktopアプリはサードパーティ推論（third-party inference・3Pモード）を公式にサ<span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>している。設定ウィンドウ（「サードパーティ推論の設定」→「接続」）で送信先を指定すると、アプリ全体の推論がそこへ向く。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>標準モード（サブスク）</th>
+<th>3Pモード</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="term" tabindex="0">認証<span class="term-popup">「あなたは誰か」を確認すること。パスワードや鍵で本人であることを確かめる手続き</span></span></td>
+<td>claude.ai ログイン（Pro/Max）</td>
+<td>設定した認証情報のみ</td>
+</tr>
+<tr>
+<td>課金</td>
+<td>サブスク枠の消費</td>
+<td>設定先に依存（従量課金・自前プロキシ等）</td>
+</tr>
+<tr>
+<td>推論先</td>
+<td>Anthropic</td>
+<td>Gateway・<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>キーで指定した先</td>
+</tr>
+<tr>
+<td><span class="term" tabindex="0">フォールバック<span class="term-popup">メインの手段が使えなくなった時に、自動的に予備の手段へ切り替える仕組み。「本命が失敗したら副えに任せる」二段構え</span></span></td>
+<td>—</td>
+<td><strong>なし</strong>（設定したソースのみ使用）</td>
+</tr>
+</tbody>
+</table></div>
+<p>設定画面の注意書き通り「認証情報ソースを選択します。設定すると、そのソースのみが使用されます（フォールバックなし）」。つまり3P設定が存在する限り、サブスク側へは自動フォールバックしない。</p>
+<h3>何ができるか・なぜ「改造」と呼ぶか</h3>
+<ul>
+<li>Desktopアプリの推論を <strong>GLM/MiniMaxなど安価なモデル</strong> に差し替え、コード・チャットを低コストで回せる</li>
+<li>週間クォータが枯渇したプロキシ側から <strong>サブスクへ一時退避</strong> し、枠が回復したらまた戻す、という運用ができる</li>
+<li>一般ユーザーはあまり行わない構成（公式の1P/3P切替UIは未実装・GitHub上で要望が存在する状態）で、「<span class="term" tabindex="0">設定ファイル<span class="term-popup">プログラムの動作を決める設定値を書いたファイル。コード本体を書き換えずに、設定だけ変えられるようにする</span></span>を書き換えてアプリの挙動を変える」点で改造に近い</li>
+</ul>
+<h3>前提</h3>
+<ul>
+<li><a href="18-glm-rate-proxy.html">18章 GLM Rate Proxy</a> で構築したプロキシ（<code>http://localhost:8787</code>）が動いていること（本章はプロキシの作り方には踏み込まない）</li>
+<li>設定変更のたびに <strong>アプリが再起動する</strong> ため、作業中のCodeタブ<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>が消えてよいタイミングで実施する</li>
+</ul>
+<hr />
+<h2>接続の仕組み</h2>
+<h3>設定ファイルを開く</h3>
+<p>設定ウィンドウの <strong>Developer → Open Developer Config File</strong> で推論設定の<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span>ファイルが開く。実際の設定例（Gateway・GLM運用時）:</p>
+<pre><code class="language-json">{
+  &quot;inferenceGatewayBaseUrl&quot;: &quot;http://localhost:8787&quot;,
+  &quot;inferenceGatewayApiKey&quot;: &quot;&lt;ゲートウェイAPIキー&gt;&quot;,
+  &quot;modelDiscoveryEnabled&quot;: false,
+  &quot;modelPrefer1mContext&quot;: true,
+  &quot;inferenceModels&quot;: [
+    {
+      &quot;name&quot;: &quot;claude-sonnet-5&quot;,
+      &quot;labelOverride&quot;: &quot;GLM（プロキシ経由）&quot;,
+      &quot;supports1m&quot;: true,
+      &quot;prefer1m&quot;: true
+    }
+  ],
+  &quot;inferenceModelPricingEnabled&quot;: true,
+  &quot;inferenceProvider&quot;: &quot;gateway&quot;,
+  &quot;inferenceCredentialKind&quot;: &quot;static&quot;
+}
+</code></pre>
+<p>設定ウィンドウの「エクスポート」ボタンでこのJSONをファイル保存でき、「インポート」で復元できる。切替のたびに再入力しないためにも、両方向の設定JSONを保存しておくと楽。</p>
+<h3>inferenceProvider の値一覧</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>値</th>
+<th>意味</th>
+<th>認証</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>（未設定）</strong></td>
+<td>標準モード＝サブスクログイン</td>
+<td>claude.aiログイン</td>
+</tr>
+<tr>
+<td><code>gateway</code></td>
+<td>自前Gateway</td>
+<td>静的APIキー・認証スキーム（bearer / x-api-key）</td>
+</tr>
+<tr>
+<td><code>anthropic</code></td>
+<td>Claude API</td>
+<td>Consoleサインイン or <code>sk-ant-</code> キー</td>
+</tr>
+<tr>
+<td><code>bedrock</code> / <code>mantle</code> / <code>vertex</code> / <code>foundry</code></td>
+<td>各クラウドのマネージド版</td>
+<td>各クラウドの認証</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>未設定＝標準モード</strong> が公式リファレンスの定義（「When this key is unset, the app opens in standard mode」）。「<span class="term" tabindex="0">デフォルト<span class="term-popup">指定がない時に自動的に使われる初期値・初期設定のこと</span></span>＝サブスク」に対応する値は存在せず、<strong>戻すには設定自体を消す</strong>。</p>
+<h3>認証体系の違い（最重要の注意点）</h3>
+<p>設定ウィンドウの選択肢にある「Claude API」は <strong>サブスクではありません</strong>。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>経路</th>
+<th>課金体系</th>
+<th>サブスク枠が使えるか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>claude.aiログイン（標準モード）</td>
+<td>Pro/Maxサブスク</td>
+<td>✅ 使える</td>
+</tr>
+<tr>
+<td>Claude API（<code>anthropic</code>）</td>
+<td>Anthropic Console組織の<strong>従量課金</strong></td>
+<td>❌ 使えない</td>
+</tr>
+<tr>
+<td>Gateway（自前プロキシ）</td>
+<td>プロキシ先の料金（GLM/MiniMax等）</td>
+<td>❌ 別体系</td>
+</tr>
+</tbody>
+</table></div>
+<p>「Claude API」を選ぶとConsoleアカウントの残高から従量課金される。サブスクに戻したい場面で「Claude API」を選ぶと別財布にお金を払うことになるので選ばない。</p>
+<hr />
+<h2>実践: サブスク ⇔ Gateway 切替手順</h2>
+<h3>Gateway（GLM/MiniMax）へ切り替える</h3>
+<ol>
+<li>設定ウィンドウ → 接続 → 送信先「<strong>Gateway</strong>」を選択</li>
+<li>ゲートウェイ ベースURL: <code>http://localhost:8787</code>（プロキシの待ち受けアドレス）</li>
+<li>認証情報の種類: <strong>静的APIキー</strong> / ゲートウェイAPIキー: プロキシ側で決めた値 / ゲートウェイ認証スキーム: <strong>bearer</strong></li>
+<li>モデル設定は <code>inferenceModels</code> で上書き（名前 <code>claude-sonnet-5</code>・ラベル・1Mコンテキスト優先など）</li>
+<li>「<strong>接続をテスト</strong>」で疎通確認 →「<strong>変更を適用</strong>」</li>
+<li>アプリが再起動し、左下のステータス表示が「<code>&lt;ユーザー名&gt; · Gateway</code>」に変われば成功</li>
+</ol>
+<h3>サブスク（標準モード）へ戻す</h3>
+<ol>
+<li>設定ウィンドウ右上の <strong>「エクスポート」</strong> で現在の設定JSONを保存（次にGatewayへ戻す時のバックアップ）</li>
+<li><strong>Developer → Open Developer Config File</strong> で設定ファイルを開く</li>
+<li><strong>内容を空にするかファイルごと削除</strong>して保存</li>
+<li>アプリを <strong>終了 → 再起動</strong></li>
+<li>左下ステータス表示から「Gateway」表記が消え、claude.aiサインインの標準モードになれば成功</li>
+</ol>
+<div class="callout callout-warn"><p>⚠ 設定ファイルに <code>disableDeploymentModeChooser: true</code> や <code>bootstrapUrl</code> など、3Pモードを要求するキーが残っていると、<strong>サブスクログインの選択肢自体が隠される</strong>ことがある。戻す時は完全に空にする。</p></div>
+<h3>切替のタイミングと実行中セッション</h3>
+<ul>
+<li>「変更を適用」は <strong>設定書き込み後すぐにアプリを再起動（relaunch）する</strong>。実行中のCodeタブセッションは再起動で終わる</li>
+<li>変更の反映は <strong>次回起動から</strong>（実行中セッションの途中で推論先が差し替わることはない）</li>
+<li>設定ファイルを直接編集した場合、実行中アプリは約10分毎に変更を再チェックし、再起動要の変更は猶予期間の後にダイアログ表示 → アイドル時に自動再起動する（デフォルト挙動）</li>
+</ul>
+<hr />
+<h2>注意点と既知仕様</h2>
+<ul>
+<li><strong>1P/3P切替のネイティブUIは未実装</strong>: ドロップダウンに「サブスクへ戻す」選択肢はなく、設定削除が正規ルート（GitHub上で切替UIの要望issueが存在）</li>
+<li><strong>3Pモードにはフォールバックがない</strong>: 設定した送信先が落ちていると推論が失敗する。プロキシ運用と併用する場合はプロキシの自動起動（systemd等）を先に固めておく（18章参照）</li>
+<li><strong>Windows環境ではWSL側プロキシへの転送が必要</strong>: DesktopアプリはWindows側で動くため、<code>localhost:8787</code> をWSL側へ <code>netsh interface portproxy</code> で転送する構成が実用的（18章のアーキテクチャ節参照）</li>
+<li><strong>モデル名は <code>claude-sonnet-5</code> 等のClaude名を維持</strong>: アプリがClaudeモデル名を前提にするため、<code>inferenceModels</code> で実際のバックエンドへのラベル上書き（「GLM（プロキシ経由）」等）を行うのが運用しやすい</li>
+<li>公式ドキュメント: https://claude.com/docs/third-party/claude-desktop/ （overview / configuration / in-app-configuration / claude-api）</li>
+</ul>
+<hr />
+<h2>💡 やさしい補足（初心者向け）</h2>
+<ul>
+<li><strong>設定は「回線の乗り換え手続き」のようなもの</strong>: Gatewayへ乗り換えるのは選択肢から選ぶだけ。でも「元の回線（サブスク）に戻す」だけのボタンは用意されていないので、設定を丸ごと消す＝解約手続きが正規ルート</li>
+<li><strong>「Claude API」は別財布</strong>: サブスク（月額制）とClaude API（従量課金）は財布が別。「API」の名前で選ぶと月額ではなく使った分だけ別に請求される</li>
+<li><strong>変更を適用するとアプリは一度閉じる</strong>: 設定は次回起動から効く。書きかけの作業があるセッションは先に締めてから切替える</li>
+<li><strong>エクスポートしておけば戻しは簡単</strong>: 切替前の設定をJSONで保存しておけば、次に戻す時はインポートで済む</li>
+</ul>
+<hr />
+<h2>あわせて読む</h2>
+<ul>
+<li><a href="18-glm-rate-proxy.html">18章 GLM Rate Proxy</a> — プロキシ本体の構築・運用・トラブルシューティング</li>
+<li><a href="08-config.html">08章 設定ファイル</a> — Desktopアプリの設定ファイル一覧とWSL/Windows環境差</li>
+<li><a href="20-cost-optimization.html">20章 コスト<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span>構成</a> — 料金体系ごとの使い分けの考え方</li>
+</ul>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="25-windows-wsl.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🪟 Windows⇔WSL 設定同期</span>
+            </a>
+            
+            
+            <a href="skill-catalog.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📄 Skill カタログ</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

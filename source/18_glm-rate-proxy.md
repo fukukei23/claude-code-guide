@@ -3,7 +3,7 @@
 > 💡 **章の核**: プロキシはLLMコストの調整弁。止まったらproxy-doctorで診断。
 
 
-> **⚠️ 旧記述の訂正（2026-10-14）**: 以前は「Windows Desktopアプリ版はエンドポイント変更できないため本プロキシは使用しない」だったが、**Anthropicが2026-07-09にthird-party inferenceモードをGA化**したことでDesktop側もGateway接続（Developer Mode → Configure Third-Party Inference）で本プロキシに接続可能になった。本環境でも主力Desktop移行Phase 0でDesktop側が本プロキシを使用中（Windows localhost:8787 → portproxy(v6tov4) → WSL 127.0.0.1:8787・正典: [LLMルーティングSSOT](../共通ルール/LLMルーティング.md)）。Desktop側でのLLM呼出運用は実行指示書 `70_PROMPTS/coding/windows-desktop-glm-review.md` 参照。MCP（glm/minimax）は併用可能な補完経路（[04_MCPサーバー](04-mcp.html#glm)）。
+> **⚠️ 旧記述の訂正（2026-10-14）**: 以前は「Windows Desktopアプリ版はエンドポイント変更できないため本プロキシは使用しない」だったが、**Anthropicが2026-07-09にthird-party inferenceモードをGA化**したことでDesktop側もGateway接続（Developer Mode → Configure Third-Party Inference）で本プロキシに接続可能になった。本環境でも主力Desktop移行Phase 0でDesktop側が本プロキシを使用中（Windows localhost:8787 → portproxy(v6tov4) → WSL 127.0.0.1:8787・正典: [LLMルーティングSSOT](../共通ルール/LLMルーティング.md)）。Desktop側でのLLM呼出運用は実行指示書 `70_PROMPTS/coding/windows-desktop-glm-review.md` 参照。MCP（glm/minimax）は併用可能な補完経路（[04_MCPサーバー](04-mcp.html#glm)）。Desktop側の推論接続をサブスク⇔Gatewayで往復させる切替手順は **[26章 Claude Code Desktop 改造](26-desktop-mod.html)** 参照。
 
 Claude Code CLIのバックエンドをAnthropicからZAI（GLM-5.3）に切り替えるローカルプロキシの仕組みと運用ガイド。
 
