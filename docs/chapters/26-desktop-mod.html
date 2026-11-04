@@ -328,7 +328,7 @@ card_desc: サードパーティ推論（3Pモード）でDesktopアプリの推
 <tr>
 <td><code>anthropic</code></td>
 <td>Claude API</td>
-<td>Consoleサインイン or <code>sk-ant-</code> キー</td>
+<td><strong>Console</strong>サインイン or <code>sk-ant-</code> キー（Console＝API従量課金の<strong>別アカウント</strong>・claude.aiサブスクとは紐づかない）</td>
 </tr>
 <tr>
 <td><code>bedrock</code> / <code>mantle</code> / <code>vertex</code> / <code>foundry</code></td>
@@ -367,6 +367,7 @@ card_desc: サードパーティ推論（3Pモード）でDesktopアプリの推
 </tbody>
 </table></div>
 <p>「Claude API」を選ぶとConsoleアカウントの残高から従量課金される。サブスクに戻したい場面で「Claude API」を選ぶと別財布にお金を払うことになるので選ばない。</p>
+<div class="callout callout-warn"><p>⚠ 「Sign in with Claude Console」の「サインイン」は <strong>claude.aiのサブスクログインではありません</strong>。Console（console.anthropic.com）はAPI専用の管理サイトで、アカウント・課金ともサブスクとは完全に独立している。ConsoleサインインでDesktopを使うと、サブスクの月額枠は一切使われず、代わりにConsoleのクレジットからAPI従量課金で請求される。</p></div>
 <hr />
 <h2>実践: サブスク ⇔ Gateway 切替手順</h2>
 <h3>Gateway（GLM/MiniMax）へ切り替える</h3>

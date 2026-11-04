@@ -79,7 +79,7 @@ Claude Desktopアプリはサードパーティ推論（third-party inference・
 |---|---|---|
 | **（未設定）** | 標準モード＝サブスクログイン | claude.aiログイン |
 | `gateway` | 自前Gateway | 静的APIキー・認証スキーム（bearer / x-api-key） |
-| `anthropic` | Claude API | Consoleサインイン or `sk-ant-` キー |
+| `anthropic` | Claude API | **Console**サインイン or `sk-ant-` キー（Console＝API従量課金の**別アカウント**・claude.aiサブスクとは紐づかない） |
 | `bedrock` / `mantle` / `vertex` / `foundry` | 各クラウドのマネージド版 | 各クラウドの認証 |
 
 **未設定＝標準モード** が公式リファレンスの定義（「When this key is unset, the app opens in standard mode」）。「デフォルト＝サブスク」に対応する値は存在せず、**戻すには設定自体を消す**。
@@ -95,6 +95,8 @@ Claude Desktopアプリはサードパーティ推論（third-party inference・
 | Gateway（自前プロキシ） | プロキシ先の料金（GLM/MiniMax等） | ❌ 別体系 |
 
 「Claude API」を選ぶとConsoleアカウントの残高から従量課金される。サブスクに戻したい場面で「Claude API」を選ぶと別財布にお金を払うことになるので選ばない。
+
+> ⚠ 「Sign in with Claude Console」の「サインイン」は **claude.aiのサブスクログインではありません**。Console（console.anthropic.com）はAPI専用の管理サイトで、アカウント・課金ともサブスクとは完全に独立している。ConsoleサインインでDesktopを使うと、サブスクの月額枠は一切使われず、代わりにConsoleのクレジットからAPI従量課金で請求される。
 
 ---
 
