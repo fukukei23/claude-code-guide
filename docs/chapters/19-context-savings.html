@@ -241,30 +241,32 @@ desc: cache_read課金構造・718M事故実測・「日をまたぐらnew-sessi
 この章は「実測 → 運用 → 機械化」の実践記録。基礎理論は <a href="12-tips.html">12_現場の知見 セクションA「コンテキスト経済学」</a>・プロバイダー切替は <a href="20-cost-optimization.html">20_コスト<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span>構成</a> が正典。</p></div>
 <h2>1. 課金構造の理解 — cache_read がすべての元凶</h2>
 <p><a href="12-tips.html">12章A「コンテキスト経済学」</a> で学んだ「毎ターン全文脈再送」が、実際のAPI消費としてどう現れるかの実践編。</p>
-<h3>Z.ai（GLM Coding Plan）の独自事情: cache_read もクォータフルカウント</h3>
-<p>Anthropic API の<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span><span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>は「キャッシュ読み取りは通常入力の1/10程度」だが、<strong>Z.ai は cache_read（キャッシュヒットした読み取り）もクォータをフルカウントする</strong>。</p>
+<h3>Z.ai（GLM Coding Plan）の事情: cache_read は0.56倍換算（免除ではない）</h3>
+<p>Anthropic API の<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span><span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>は「キャッシュ読み取りは通常入力の1/10（10%）程度」だが、Z.ai Coding Plan（2026-07-30 移行のクレジット制）は<strong>キャッシュ済み入力を0.56倍換算でカウントする</strong>。公式クレジット式（GLM-5.3-Flash）: <code>(入力×2.3 + キャッシュ入力×0.56 + 出力×8) / 10,000</code>。API従量課金ではキャッシュ入力は約1/5の単価（入力$0.15 → キャッシュ$0.03）。<strong>フルカウントではないが、Anthropic の10%と比べると5.6倍重い</strong>。</p>
 <p>つまり:</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>状況</th>
 <th>Anthropic 的挙動</th>
-<th>Z.ai 的挙動</th>
+<th>Z.ai Coding Plan 的挙動</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>キャッシュヒットで文脈再送</td>
-<td>割引あり（低コスト）</td>
-<td><strong>フルカウント</strong>（割引なし）</td>
+<td>約10%でカウント</td>
+<td><strong>約56%でカウント</strong>（フル免除ではない）</td>
 </tr>
 <tr>
 <td>文脈を肥大させ続ける</td>
-<td>それでもキャッシュで緩和される</td>
-<td><strong>消費が文脈サイズに正比例して増える</strong></td>
+<td>キャッシュで大幅緩和される</td>
+<td>0.56倍の重課金が蓄積して増える</td>
 </tr>
 </tbody>
 </table></div>
+<p>さらに Coding Plan の<strong>週次許容量はキャッシュヒット率で変動</strong>する（公式表・GLM-5.3-Flash Max枠: ヒット率95%で2,047-4,095M / 96%で2,101-4,202M / 98%で2,217-4,433M）。オフピーク時間帯の使用は0.5倍率（ピークは1倍）。</p>
+<p>実測検証（2026-11-10）: 直近7日の<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>935.1M（ヒット率95.8%）を公式表に当てると 935.1M ÷ 4,202M = <strong>22.3% ≈ ダッシュボード表示23%と定量一致</strong>（フルカウントモデルでは約150%になり矛盾）。ヒット率95.5-95.8%の実測で<strong>キャッシュ自体は正常に機能している</strong>。</p>
 <p>実測（2026-11-10・11-09 00:00 JST以降の transcript usage 集計）:</p>
 <pre><code>総消費: 927.5M tok
   cache_read: 96.4% ← ほぼすべてが「キャッシュ読み取り」
@@ -274,8 +276,8 @@ desc: cache_read課金構造・718M事故実測・「日をまたぐらnew-sessi
 <p>この 96.4% は Z.ai ダッシュボードの 96.7% Cache 表示と定量一致した。つまり<strong>この環境の消費額のほぼ全量は「過去の会話の再送信」で占められている</strong>。</p>
 <h3>消費の読み方（実務ルール）</h3>
 <ul>
-<li>「キャッシュ効率が良い（96% Cache）」は Anthropic では良いニュース、Z.ai では<strong>悪いニュース</strong>（=過去分の再送が大量に起きている＝文脈が肥大している）</li>
-<li>使用率の加速に気付いたら、まず疑うべきは<strong>巨大<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の存在</strong>（新規タスクを打つ＝文脈全量をもう一度送る）</li>
+<li>「キャッシュ効率が良い（96% Cache）」は Anthropic では良いニュース、Z.ai Coding Plan では<strong>半分ニュース</strong>（=過去分の再送が大量に起きている＝文脈が肥大している・ただしヒット率が上がると週次枠も増える効果があり、0.56倍の課金はフル免除ではない）</li>
+<li>使用率の加速に気付いたら、まず疑うべきは<strong>巨大<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の存在</strong>（新規タスクを打つ＝文脈全量をもう一度送る・キャッシュが効いていても0.56倍の重課金対象）</li>
 </ul>
 <h2>2. 実測事例: 2026-11-10 の 718M 事故</h2>
 <h3>何が起きたか</h3>
@@ -369,7 +371,7 @@ desc: cache_read課金構造・718M事故実測・「日をまたぐらnew-sessi
 <tr>
 <td>案D</td>
 <td>auto-compact に任せる</td>
-<td>GLM<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>経由の compact 動作が未実測・コンパクション自体が<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を消費する落とし穴あり（下記節5参照）</td>
+<td>GLM<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>経由の compact 動作が未実測・コンパクション自体がトークンを消費する落とし穴あり（下記節5参照）</td>
 </tr>
 </tbody>
 </table></div>
