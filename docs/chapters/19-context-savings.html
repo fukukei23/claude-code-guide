@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コンテキスト節約術 — Claude Code Guide</title>
+    <meta name="description" content="Claude Code CLI コンテキスト節約術の解説 — AIコーディングアシスタント完全ガイド">
+    <meta property="og:title" content="コンテキスト節約術 — Claude Code Guide">
+    <meta property="og:description" content="Claude Code CLI コンテキスト節約術の解説">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/claude-code-guide/chapters/19-context-savings.html">
+    <meta property="og:image" content="https://fukukei23.github.io/claude-code-guide/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">⚡ Claude Code Guide</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-cheatsheet.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📋</span>
+            早見表
+        </a>
+        
+        <a href="01-basics.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            基礎概念
+        </a>
+        
+        <a href="02-commands.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⌨️</span>
+            コマンド一覧
+        </a>
+        
+        <a href="03-skills.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            スキルシステム
+        </a>
+        
+        <a href="04-mcp.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            MCPサーバー
+        </a>
+        
+        <a href="05-hooks.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪝</span>
+            フック
+        </a>
+        
+        <a href="06-memory.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧠</span>
+            メモリ
+        </a>
+        
+        <a href="07-agents.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🤖</span>
+            エージェント
+        </a>
+        
+        <a href="08-config.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚙️</span>
+            設定ファイル
+        </a>
+        
+        <a href="09-integration.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            統合
+        </a>
+        
+        <a href="10-keybindings.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🎛️</span>
+            CLI操作・キーバインド
+        </a>
+        
+        <a href="10.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            用語集
+        </a>
+        
+        <a href="11-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+        <a href="12-tips.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💡</span>
+            現場の知見
+        </a>
+        
+        <a href="13-external-references.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔗</span>
+            外部参考資料
+        </a>
+        
+        <a href="14-agent-engineering-layers.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            エージェント工学の階層
+        </a>
+        
+        <a href="15-official-docs-index.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="16-knowledge-storage.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗂️</span>
+            知識の保存先の使い分け
+        </a>
+        
+        <a href="17-dev-cycle.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            dev-cycle
+        </a>
+        
+        <a href="18-glm-rate-proxy.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            GLM Rate Proxy
+        </a>
+        
+        <a href="19-ssot-search.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            SSOTから探して
+        </a>
+        
+        <a href="19-context-savings.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">✂️</span>
+            コンテキスト節約術
+        </a>
+        
+        <a href="20-cost-optimization.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">💰</span>
+            コスト最適化
+        </a>
+        
+        <a href="21-loop-system.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔁</span>
+            ループシステム（Loop Engineering）
+        </a>
+        
+        <a href="22-decisions-log.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🧩</span>
+            決定ログ
+        </a>
+        
+        <a href="22.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            公式ドキュメント索引
+        </a>
+        
+        <a href="23-version-management.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            バージョン管理
+        </a>
+        
+        <a href="24-mobile-remote.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📱</span>
+            スマホからのリモート操作
+        </a>
+        
+        <a href="25-windows-wsl.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🪟</span>
+            Windows⇔WSL 設定同期
+        </a>
+        
+        <a href="26-desktop-mod.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔧</span>
+            Claude Code Desktop 改造
+        </a>
+        
+        <a href="skill-catalog.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📄</span>
+            Skill カタログ
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="19-ssot-search.html" class="nav-prev">← SSOTから探して</a>
+            
+            
+            <a href="20-cost-optimization.html" class="nav-next">コスト最適化 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>slug: 19-context-savings
+title: コンテキスト節約術
+icon: ✂️
+desc: cache_read課金構造・718M事故実測・「日をまたぐらnew-session」運用と警告<span class="term" tabindex="0">hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span></h2>
+<h1>コンテキスト節約術 — <span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>消費を抑える・毎ターン課金構造と戦う</h1>
+<div class="callout callout-tip"><p>最終更新: 2026-11-10 | 起源: 2026-11-10 の GLM-5.3-Flash 週間枠23%消費事故の実測調査
+この章は「実測 → 運用 → 機械化」の実践記録。基礎理論は <a href="12-tips.html">11_現場の知見 セクションA「コンテキスト経済学」</a>・プロバイダー切替は <a href="20-cost-optimization.html">20_コスト<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span>構成</a> が正典。</p></div>
+<h2>1. 課金構造の理解 — cache_read がすべての元凶</h2>
+<p><a href="12-tips.html">12章A「コンテキスト経済学」</a> で学んだ「毎ターン全文脈再送」が、実際のAPI消費としてどう現れるかの実践編。</p>
+<h3>Z.ai（GLM Coding Plan）の独自事情: cache_read もクォータフルカウント</h3>
+<p>Anthropic API の<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span><span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>は「キャッシュ読み取りは通常入力の1/10程度」だが、<strong>Z.ai は cache_read（キャッシュヒットした読み取り）もクォータをフルカウントする</strong>。</p>
+<p>つまり:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>状況</th>
+<th>Anthropic 的挙動</th>
+<th>Z.ai 的挙動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>キャッシュヒットで文脈再送</td>
+<td>割引あり（低コスト）</td>
+<td><strong>フルカウント</strong>（割引なし）</td>
+</tr>
+<tr>
+<td>文脈を肥大させ続ける</td>
+<td>それでもキャッシュで緩和される</td>
+<td><strong>消費が文脈サイズに正比例して増える</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>実測（2026-11-10・11-09 00:00 JST以降の transcript usage 集計）:</p>
+<pre><code>総消費: 927.5M tok
+  cache_read: 96.4% ← ほぼすべてが「キャッシュ読み取り」
+  input:       3.4%
+  output:      0.3%
+</code></pre>
+<p>この 96.4% は Z.ai ダッシュボードの 96.7% Cache 表示と定量一致した。つまり<strong>この環境の消費額のほぼ全量は「過去の会話の再送信」で占められている</strong>。</p>
+<h3>消費の読み方（実務ルール）</h3>
+<ul>
+<li>「キャッシュ効率が良い（96% Cache）」は Anthropic では良いニュース、Z.ai では<strong>悪いニュース</strong>（=過去分の再送が大量に起きている＝文脈が肥大している）</li>
+<li>使用率の加速に気付いたら、まず疑うべきは<strong>巨大<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>の存在</strong>（新規タスクを打つ＝文脈全量をもう一度送る）</li>
+</ul>
+<h2>2. 実測事例: 2026-11-10 の 718M 事故</h2>
+<h3>何が起きたか</h3>
+<p>ふくけいが Z.ai ダッシュボードで「累計753.33M・週間23%を約4時間で到達」を視認（11-10 11:16）。調査の結果:</p>
+<p><strong>22:00-02:59 の4時間で 718M tok 消費。その 100% が巨大セッション3本</strong>:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>セッション</th>
+<th>消費</th>
+<th>その後の文脈サイズ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6577（story図解）</td>
+<td>268.2M（37%）</td>
+<td>68.2万 tok</td>
+</tr>
+<tr>
+<td>821a（formula-pad）</td>
+<td>246.7M（34%）</td>
+<td>72.3万 tok（676リクエスト・1req平均54.7万）</td>
+</tr>
+<tr>
+<td>91ce（視角パック）</td>
+<td>203.3M（28%）</td>
+<td>59.9万 tok</td>
+</tr>
+</tbody>
+</table></div>
+<p>6日間にわたり誰も気付かずセッションを継続し、文脈が60-72万tokまで成長。以後の毎ターンが「60万tokの再送」として課金され続けた。</p>
+<h3>除外確認（誤犯しやすい疑い先の実測）</h3>
+<ul>
+<li>夜間harness（NexusCore・1回10-18万tok）→ 誤差レベル</li>
+<li>durable <span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span> 37件（03-09時 3-10M/h）→ 誤差レベル</li>
+<li>新セッションの固定コスト（後述11万tok）→ 日次払いで誤差</li>
+</ul>
+<h3>固定コストの実測: 新セッションでも約11万tok/日</h3>
+<p>新セッションの初回文脈は 10.5-11.4万 tok（3セッション実測）。内訳:</p>
+<ul>
+<li>CLAUDE.md + rules + memory索引等のSSOT類 ≈ 11K tok = <strong>全体の1割のみ</strong></li>
+<li>残り9割は harness 固定部分（<span class="term" tabindex="0">システムプロンプト<span class="term-popup">AIに最初から組み込まれている「基本の指示書」。ユーザーの発話とは別に、AIの振る舞い方の土台を決めている。CLAUDE.md等はここに近い形で常に読み込まれる</span></span>等）</li>
+</ul>
+<p>→ 「セッションを区切ると固定費がかかる」は正しいが、11万tokは巨大セッションの毎ターン再送（60-72万tok×複数ターン）と比べれば誤差。</p>
+<h3>hook 差戻しリトライの単価</h3>
+<p>hook がツール実行を差戻すと、リトライ1回につき<strong>文脈全量の再送</strong>が発生する。</p>
+<p>実測: M2.1セッション（11:38-11:46の8分）で51リクエスト・37.11M tok → <strong>1リトライ ≈ 74万 tok</strong>（文脈が肥大した状態での発生）。</p>
+<p>→ 巨大セッションで hook 差戻しを繰り返すと「1リトライ = 巨大な消費」になり得る。hook 設定の間違いは文脈が小さいうちに直すのが経済的。</p>
+<h2>3. 運用術 — 「日をまたぐら new-session」</h2>
+<h3>採用した運用（ふくけい確定判断）</h3>
+<p><strong>ふくけいの確定判断</strong>: 「API消費量節約を最重視。文脈サイズ＝消費単価の制御レバー」</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>運用</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>日をまたぐら new-session</strong></td>
+<td>前回タスクから日が変わる時点で new-session <span class="term" tabindex="0">スキル<span class="term-popup">Claude Codeで「特定の作業手順」をパッケージ化したもの。SKILL.mdに手順を書いておくと、対応する場面でAIがその手順を読み込んで従う。経験を再利用する仕組み</span></span>で引き継ぎ。文脈は自然に 20-25万 tok に収まる（作業増分は1日約10万 tok 実測）</td>
+</tr>
+<tr>
+<td>1タスク1セッション</td>
+<td>タスクが変わったら区切る。長寿命セッションに追い打ちを掛けない</td>
+</tr>
+<tr>
+<td>hook 差戻しは早めに潰す</td>
+<td>リトライ単価が文脈比例（74万tok実測）。文脈が小さい内に hook 設定を修正する</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>効果（推定・案A採用時）</strong>: 文脈を20-25万 tok に保つことで、消費は約 <strong>1/3.5</strong> に減る。</p>
+<h3>検討で却下した案（理由込み・再提案しない）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>案</th>
+<th>内容</th>
+<th>却下理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>案A′</td>
+<td>文脈 15-20万 tok で強制区切り</td>
+<td>固定費11万 tok を引くと作業増分が4万 tok しか残らず、実運用に合わない</td>
+</tr>
+<tr>
+<td>案D</td>
+<td>auto-compact に任せる</td>
+<td>GLM<span class="term" tabindex="0">プロキシ<span class="term-popup">通信の中継役。「クライアント→プロキシ→本来の宛先」の順に通信を一度経由させる仕組みで、仲介者が経路の切替・集計・制限等を担当する</span></span>経由の compact 動作が未実測・コンパクション自体が<span class="term" tabindex="0">トークン<span class="term-popup">AIにとっての「文字数」のようなもの。AIは文章をトークンという小片に区切って処理する。課金や入力上限（コンテキストウィンドウ）はこの単位で数えられる</span></span>を消費する落とし穴あり（下記節5参照）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>注意: 切りすぎの悪循環</h3>
+<p>区切りすぎると handoff が粗くなり、翌日に調査やり直し＝消費増の悪循環に入る。「日をまたぐ」を基準に、タスクの状態が handoff に書ける粒度で区切るのが実運用の落とし所。</p>
+<h2>4. 機械化 — context-size-warn hook</h2>
+<h3><span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span>済み: PostToolUse hook <code>context-size-warn.sh</code></h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>タイミング</td>
+<td>PostToolUse（matcher=&quot;&quot;・全ツール）</td>
+</tr>
+<tr>
+<td>警告閾値</td>
+<td>25万 tok 超</td>
+</tr>
+<tr>
+<td>再警告条件</td>
+<td>前回警告から <strong>5万 tok 増分ごとに1回</strong>（アラート疲労対策）</td>
+</tr>
+<tr>
+<td>強警告</td>
+<td>50万 tok 超</td>
+</tr>
+<tr>
+<td>state</td>
+<td><code>~/.claude/state/context-size-warn/&lt;session_id&gt;</code></td>
+</tr>
+<tr>
+<td>一時上書き</td>
+<td><code>CONTEXT_WARN_TH</code> / <code>CONTEXT_WARN_STEP</code> <span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>（テスト用）</td>
+</tr>
+</tbody>
+</table></div>
+<p>動作例（実測・<span class="term" tabindex="0">pip<span class="term-popup">ピップ。Pythonのライブラリ（部品）をインストールするコマンド。Pythonの買い物カートのようなもの</span></span>e test）: 未満=無出力 / 超過=systemMessage で「約22万 tok に達しました」表示 / 抑制=2回目は無出力。</p>
+<p><strong>Desktop UI の「セッションコスト（推定）」は harness 表示で CC 側から追記不可</strong>のため、この hook 経由の systemMessage 表示が代替手段。</p>
+<p>設定時の注意（既知回避則）: <code>settings.json</code> に hook <span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>を書く際は <strong><code>~</code> 形式の digit-free パス限定</strong>（<span class="term" tabindex="0">絶対パス<span class="term-popup">一番上（ルート）から数えた完全な住所のようなファイルの場所表記。「/home/…」で始まる</span></span>に数字が入ると <code>guard-settings-write</code> 層2の TOKEN様判定で誤検知する・2026-09-29 記録済み。詳細は 00★SYSTEM/セキュリティ設定ハブ.md 参照）。</p>
+<h3>候補（未実装）: statusLine 監視</h3>
+<p>statusLine での常時表示も機械化候補だが、現状は hook の systemMessage 表示で運用開始。必要になったら本節に追記する。</p>
+<h2>5. 外部知見マップ — 詳細は各ソースで・本節は地図</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>ソース</th>
+<th>主題</th>
+<th>この環境への当てはめ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anthropic Engineering</td>
+<td>prompt caching / context editing / sub-agent 分離の3戦略</td>
+<td>caching は <strong>Z.ai では割引が効かない</strong>ため効果限定・context editing（古いツール結果の削除）と sub-agent 分離（本tasksを<span class="term" tabindex="0">サブエージェント<span class="term-popup">メインのAIから独立して呼び出される「作業班」のAI。親の会話を汚さずに調査等を任せられ、結果の報告だけを受け取る。並行して複数動かすこともできる</span></span>に切り出し親の文脈を薄く保つ）は文脈抑制の打ち手として参照</td>
+</tr>
+<tr>
+<td>Claude Cookbook</td>
+<td>コンテキスト管理の実装例</td>
+<td>Anthropic API 前提の実装が多いため Z.ai の cache_read フルカウント事情とは照合が必要</td>
+</tr>
+<tr>
+<td>Claude Code 公式 docs（コスト管理ページ）</td>
+<td>/compact・context editing・sub-agents 等の公式機能説明</td>
+<td>機能の前提理解に。compact は本環境では未実測（節3案D参照）</td>
+</tr>
+<tr>
+<td>KDnuggets 等の解説記事</td>
+<td>コンテキスト管理の一般論</td>
+<td>「毎ターン全文脈再送」構造の背景理解に</td>
+</tr>
+<tr>
+<td>AWS 4層 CE（Context Engineering）</td>
+<td>コンテキストエンジニアリングの層構造モデル</td>
+<td>用語整理の参考</td>
+</tr>
+</tbody>
+</table></div>
+<h3>compaction 自体が有料の落とし穴</h3>
+<p><a href="12-tips.html">12章D「よくある誤解」</a> の「コンパクション（compact）＝要約品質が高い」の訂正に実質を加えると: <strong>compact は要約生成のためにモデルを1回まるごと動かすため、要約の材料になった文脈全量の再送＋要約出力分の消費が発生する</strong>。「圧縮タダ」ではなく「一回払いで後続ターンの単価を下げる」操作。巨大文脈に対して実行するとその1回の消費自体が大きい。</p>
+<p>→ 詳細な外部リンク・翻訳版は <a href="13-external-references.html">16_外部参考資料</a> 参照。</p>
+<h2>6. 自前記事リンク</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>記事</th>
+<th>状態</th>
+<th>関連</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://zenn.dev/%3CUSERNAME%3E/articles/context-engineering-47kb-tool">Context Engineering入門: 47KBのPythonファイルでLLM入力を最適化する</a></td>
+<td>公開済み</td>
+<td>入力（文脈）最適化の自作実装</td>
+</tr>
+<tr>
+<td><a href="https://zenn.dev/%3CUSERNAME%3E/articles/llm-routing-one-month-report">月間27億トークンを処理したLLMルーティングの実運用レ<span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span></a></td>
+<td>公開済み</td>
+<td>ルーティング構成の実測報告</td>
+</tr>
+<tr>
+<td>Claude Codeの<span class="term" tabindex="0">MCP<span class="term-popup">Model Context Protocol（エムシーピー）の略。AIに外部ツール（検索・GitHub・データベース等）を繋ぐための共通接続規格。USBのような「差せば繋がる」仕組みでAIの能力を拡張する</span></span>ツールがコンテキストを圧迫する問題の調査と最適化記録</td>
+<td>下書き（未公開・公開後にリンク追記）</td>
+<td>MCP定義の毎ターン消費問題</td>
+</tr>
+<tr>
+<td>月間15億トークンをGLM APIで捌くLLMルーティングの実運用（3ヶ月目）</td>
+<td>下書き（未公開・公開後にリンク追記）</td>
+<td>本件（GLM使用量管理）と同系統</td>
+</tr>
+</tbody>
+</table></div>
+<h2>💡 やさしい補足（初心者向け）</h2>
+<ul>
+<li><strong>毎ターン「過去の会話全部」をもう一度送っている</strong>: AIとの会話は「続きだけ送る」のではなく「最初から全部もう一度送る」仕組み。会話が長いほど1回の送信が重い</li>
+<li><strong>キャッシュが効いていても課金される（この環境では）</strong>: Z.aiの課金では「前回と同じ部分の読み取り」も普通の使用量として数える。つまり長い会話を続けると消費がどんどん増える</li>
+<li><strong>対策はシンプル</strong>: 「日が変わったら会話を新しく引き継ぐ（new-session）」だけで、消費は約1/3.5に減る</li>
+<li><strong>警告が出たら区切るサイン</strong>: 25万トークン超の警告hookが自動で教えてくれる。警告を見たら new-session の合図</li>
+</ul>
+<hr />
+<div class="callout callout-tip"><p>💡 <strong>章の落とし所</strong>: 文脈サイズ＝消費単価の制御レバー。日をまたぐら new-session・25万 tok 警告で区切る。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="19-ssot-search.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">📄 SSOTから探して</span>
+            </a>
+            
+            
+            <a href="20-cost-optimization.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">💰 コスト最適化</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>Claude Code Guide — <a href="https://github.com/fukukei23/claude-code-guide">GitHub</a>
+         · <a href="https://fukukei23.github.io/ssot-guide/">SSOT Guide</a>
+         · <a href="https://fukukei23.github.io/loop-engineering-guide/">Loop Engineering Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

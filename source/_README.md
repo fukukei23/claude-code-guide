@@ -27,6 +27,7 @@
 | dev-cycle | [17_dev-cycle.md](17_dev-cycle.md) | コード品質改善の自律サイクル | 2〜3p |
 | GLM Rate Proxy | [18_glm-rate-proxy.md](18_glm-rate-proxy.md) | GLM/MiniMaxルーティングプロキシ | 2〜3p |
 | SSOTから探して | [19_ssot-search.md](19_ssot-search.md) | 個人ナレッジベースのRAG検索 | 2〜3p |
+| コンテキスト節約術 | [19_コンテキスト節約術.md](19_コンテキスト節約術.md) | cache_read課金構造・718M事故実測・日をまたぐらnew-session | 2〜3p |
 | コスト最適化 | [20_コスト最適化構成.md](20_コスト最適化構成.md) | GLM/MiniMaxルーティング（独自構成） | 3〜4p |
 | スキルマップ | （HTML専用・[公開ページ](https://fukukei23.github.io/claude-code-guide/chapters/16-skill-map.html)） | フェーズ別スキル選択のインタラクティブ早見表 | — |
 | バージョン管理 | [23_バージョン管理.md](23_バージョン管理.md) | 更新・ダウングレード手順・プロキシ環境の注意 | 2〜3p |
