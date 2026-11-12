@@ -685,7 +685,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <tr>
 <td></td>
 <td><code>context-usage-inject.sh</code></td>
-<td>全発話で毎ターンtranscript最後のassistant usageを集計し&lt;context_usage&gt;タグで応答コンテキストへ注入（形式: 「現在のコンテキスト: 約NNNk tok（1M窓の約NN%・実測値・context-size-warn.shと同源）」・transcript_path不在/ファイル不在/ctx=0時は無注入・<code>~/.claude/state/context-usage-hook/disabled</code> で無効化・1M窓は<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code>環境変数で上書き可・2026-11-12新設・CCが文脈サイズを測定ゼロで断定した事故の根治・PostToolUse警告hookと役割分担: 警告=人間向け・注入=CC向け）</td>
+<td>全発話で毎ターンtranscript末尾1MB内の最後のassistant usageを集計し&lt;context_usage&gt;タグで応答コンテキストへ注入（形式: 「現在のコンテキスト: 約NNNk tok（窓1Mの約NN%・直前assistant応答時点・実測値・context-size-warn.shと同源）」・窓ラベルは実窓を動的表示〔<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code>で上書き可・未設定時1M〕・transcript_path不在/ファイル不在/ctx=0時は無注入・<code>~/.claude/state/context-usage-hook/disabled</code> で無効化・2026-11-12新設・CCが文脈サイズを測定ゼロで断定した事故の根治・MLR r1 4機21指摘採用統合済み〔tail -c化・窓動的ラベル・鮮度文言〕・PostToolUse警告hookと役割分担: 警告=人間向け・注入=CC向け）</td>
 </tr>
 <tr>
 <td></td>
