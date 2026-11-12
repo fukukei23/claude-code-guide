@@ -362,7 +362,7 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 <p>エラー・ブロック時（Notification）、ツール失敗時（PostToolUseFailure）に実行。Discord通知等の異常系ハンドリングに使用。</p>
 <h3>PermissionRequest（承認要求時）</h3>
 <p>承認<span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>が出た瞬間に実行（2026-09-29配線・<code>notify-windows-approval.sh</code>）。Windows側でbeep2回+MessageBoxを出す通知専用hook（async fire-and-forget）。実発火E2E済み（ask ルールでPermissionRequestを発生させて音/ポップアップを人間観測）。</p>
-<div class="callout callout-warn"><p>⚠️ <strong>settings.jsonに書くhookコマンドは <code>~</code> 形式digit-freeに限定すること</strong>（2026-09-29実測）: guard-settings-write の層2（長文字列32字+文字種3種=TOKEN様判定）が、<code>/home/&lt;USER&gt;</code>（数字入り<span class="term" tabindex="0">絶対パス<span class="term-popup">一番上（ルート）から数えた完全な住所のようなファイルの場所表記。「/home/…」で始まる</span></span>）や <code>exit 2</code>（数字）を含むコマンド文字列をTOKENと誤判定して<strong>復元</strong>する。<code>~/.claude/...</code> 形式（小文字+記号のみ=文字種2種）ならCLEAN通過。数字が必要な処理（exit 2への変換等）はラッパスクリプト側に分離する（実例: <code>run-vision-pack-gate.sh</code>）。詳細: [[01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/2026-09-29_通知と視角パックhook配線完了-guard層2誤検知原因特定.md]]</p></div>
+<div class="callout callout-warn"><p>⚠️ <strong>settings.jsonに書くhookコマンドは <code>~</code> 形式digit-freeに限定すること</strong>（2026-09-29実測）: guard-settings-write の層2（長文字列32字+文字種3種=TOKEN様判定）が、<code>/home/&lt;USER&gt;</code>（数字入り<span class="term" tabindex="0">絶対パス<span class="term-popup">一番上（ルート）から数えた完全な住所のようなファイルの場所表記。「/home/…」で始まる</span></span>）や <code>exit 2</code>（数字）を含むコマンド文字列をTOKENと誤判定して<strong>復元</strong>する。<code>~/.claude/...</code> 形式（小文字+記号のみ=文字種2種）ならCLEAN通過。数字が必要な処理（exit 2への変換等）はラッパスクリプト側に分離する（実例: <code>run-vision-pack-gate.sh</code>）。詳細: [[01_DE<span class="term" tabindex="0">CI<span class="term-popup">Continuous Integration（シーアイ・継続的インテグレーション）の略。コードを変更するたびに自動でテストとチェックを回し、壊れていないかを常に確認する仕組み</span></span>SIONS/claude-code/2026-09-29_通知と視角パックhook配線完了-guard層2誤検知原因特定.md]]・<strong>2026-11-10 同型再発実測</strong>: <code>bash /home/&lt;USER&gt;/...</code>（絶対パス数字入り）でlayer2_long=True→復元（bypassで迂回後<code>~</code>形式へ書き換え済み）・詳細: [[01_DECISIONS/claude-code/2026-11-10_GLM-Flash使用量異常調査-文脈肥大対策]]</p></div>
 <hr />
 <h2>設定方法</h2>
 <p>フックは <code>settings.json</code> の <code>hooks</code> セクションに定義する。</p>
@@ -684,6 +684,11 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tr>
 <tr>
 <td></td>
+<td><code>context-usage-inject.sh</code></td>
+<td>全発話で毎ターンtranscript最後のassistant usageを集計し&lt;context_usage&gt;タグで応答コンテキストへ注入（形式: 「現在のコンテキスト: 約NNNk tok（1M窓の約NN%・実測値・context-size-warn.shと同源）」・transcript_path不在/ファイル不在/ctx=0時は無注入・<code>~/.claude/state/context-usage-hook/disabled</code> で無効化・1M窓は<code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code>環境変数で上書き可・2026-11-12新設・CCが文脈サイズを測定ゼロで断定した事故の根治・PostToolUse警告hookと役割分担: 警告=人間向け・注入=CC向け）</td>
+</tr>
+<tr>
+<td></td>
 <td><code>check-consult-balance.sh</code></td>
 <td>相談トリガーを含む直前user発言への回答に同意表現（正しいです/賛成です/その通り 等）があり<strong>根拠（【根拠】/出典/実測/引用/データ 等）と反証（【反証】/デメリット/懸念点/未検証 等）の両方が無い</strong>場合のみ1回だけ差戻し（案B・根拠付き同意は常に許可=「正しいことは正しいと言える」・2026-09-06 3機レビューで改訂）。モード=warn(既定)/shadow/enforce（<code>CLAUDE_CONSULT_BALANCE_MODE</code> 環境変数または state モードファイル・同一メッセージhashガード・テスト10ケース緑・2026-09-06新設・同日r1レビューで案B改訂・就活相談迎合事故の機械的防止）</td>
 </tr>
@@ -760,6 +765,91 @@ PostToolUse フックが発火 ──→ ログ記録・後処理
 </tbody>
 </table></div>
 <div class="callout callout-info"><p>SessionStartは19コマンド構成。初期化・セキュリティ・SSOT同期・設定チェック・日次自動発動の5カテゴリに分類される。PreToolUseの <code>check-command-safety.py</code> は <code>run-security-check.sh</code> ラッパー経由でクロスプラットフォーム対応。</p></div>
+<h2>CCへの情報注入仕組み（2026-11-12正典化・ふくけい発案）</h2>
+<p>CCのターンには、発言本文以外に hook 経由の「追加情報」が届く。UIには表示されないため人間には見えないが、CCはこれを読んで応答に反映する。本セクションは「CCに届く/届かない」の<strong>経路</strong>の正典。各hookの個別<span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>（実装契約・キャッシュ・無効化）は上の「現在のフック構成（実態）」テーブル・タイミング別の早見は「hook実行タイミング早見」を参照（重複掲載はしない）。</p>
+<h3>注入と表示の2経路（公式仕様・code.claude.com/docs/hooks・2026-11-12確認）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>経路</th>
+<th>宛先</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平文 stdout</td>
+<td><strong>CCに注入</strong></td>
+<td><code>UserPromptSubmit</code> / <code>UserPromptExpansion</code> / <code>SessionStart</code> / <code>PostModelSwitch</code> の4イベントでは、exit 0時の stdout がそのままコンテキストに追加される。他のイベントでは stdout はdebug logにのみ書かれCCには届かない</td>
+</tr>
+<tr>
+<td><code>hookSpecificOutput.additionalContext</code>（JSON出力）</td>
+<td><strong>CCに注入</strong></td>
+<td>注入位置はイベント別: UserPromptSubmit=送信プロンプトの隣・SessionStart=会話先頭・Stop系=ターン末尾・PreToolUse/PostToolUse系=ツール結果の隣</td>
+</tr>
+<tr>
+<td><code>systemMessage</code>（JSON出力）</td>
+<td><strong>人間への表示のみ</strong></td>
+<td>トランスクリプトに警告表示されるが CCの文脈には入らない（実例: <code>context-size-warn.sh</code> はPostToolUseでsystemMessage警告=人間表示専用・2026-11-10新設）</td>
+</tr>
+<tr>
+<td><code>reason</code>（decision:block時）</td>
+<td><strong>人間への表示のみ</strong></td>
+<td>ブロック理由としてふくけいに表示・コンテキストには追加されない</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>注入はどちらの経路も「フック名で始まる system-reminder」にラップされて届く（実測例: <code>&lt;system-reminder&gt;UserPromptSubmit hook success: &lt;current_time&gt;...&lt;/current_time&gt;&lt;/system-reminder&gt;</code>）。トランスクリプト上の可視エントリとしては現れない</li>
+<li>複数hookが同一イベントで additionalContext を返せば <strong>全値が届く</strong>（本環境では UserPromptSubmit 4本が発話内容に応じて最大4個届く・無条件注入の current_time+context_usage は毎ターン必ず届く）</li>
+<li>注入文字数は 10,000 字上限・超過分はセッションディレクトリのファイルへ書き出され、先頭2,000字プレビュー付きのファイルパスに置換される</li>
+<li>注入文に <code>&lt;system-reminder&gt;</code> を含めると無害化（<code>&lt;</code>→<code>&amp;lt;</code>）される</li>
+<li>stderr は CC に見えない（exit 0時）・<span class="term" tabindex="0">タイムアウト<span class="term-popup">待ち時間の上限。指定時間内に応答が無ければ「失敗」とみなして打ち切る仕組み</span></span>時は additionalContext を含む出力ごと破棄（UserPromptSubmitの既定タイムアウトは30秒）</li>
+<li>UserPromptSubmit はプロンプトの置換不可（並行注入のみ）・matcher 非対応（常に全発話で発火）・<code>exit 2</code> または <code>decision:&quot;block&quot;</code> でプロンプトがCCに到達する前に停止できる</li>
+<li><code>--continue</code>/<code>--resume</code> では過去フックを再実行せず保存済み注入文をリプレイする（SessionStartのみresume時に再実行 = <code>&lt;current_time&gt;</code>等の時刻系注入は新鮮な値で復帰）</li>
+</ul>
+<h3>注入hook4本と正典リンク（UserPromptSubmit・全て平文stdout経路）</h3>
+<p>実装契約・キャッシュ・無効化の詳細は「現在のフック構成（実態）」テーブル内の各行を参照:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>hookスクリプト</th>
+<th>注入タイミング</th>
+<th>注入内容（1行）</th>
+<th>設計正典</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/.claude/scripts/session/consult-balance-inject.sh</code></td>
+<td>条件付き: 相談語彙検出+発言8字以上</td>
+<td>迎合防止指示（事実/意見主張分離・根拠なしなら反証1つ）</td>
+<td>実例: [[00★SYSTEM/参考資料/LLMサボりバイアス実例/2026-09-05_就活戦略相談での迎合同調-未検証の市場読みを正しいと肯定.md]]</td>
+</tr>
+<tr>
+<td><code>~/projects/claude-config/scripts/hooks/status-first-inject.sh</code></td>
+<td>条件付き: モデル語検出・同一セッション60秒キャッシュ</td>
+<td><code>&lt;proxy_status&gt;</code>カプセル（status実測値）</td>
+<td>[[01_DECISIONS/claude-code/2026-09-21_status-first規則と日付注入hook統合設計.md]]</td>
+</tr>
+<tr>
+<td><code>~/projects/claude-config/scripts/hooks/current-time-inject.sh</code></td>
+<td>無条件・毎ターン</td>
+<td><code>&lt;current_time&gt;</code>タグ（date実測）</td>
+<td>同上（実装記録: [[01_DECISIONS/claude-code/2026-09-22_status-first規則hook機械化と日付注入hook実装.md]]）</td>
+</tr>
+<tr>
+<td><code>~/projects/claude-config/scripts/hooks/context-usage-inject.sh</code></td>
+<td>無条件・毎ターン</td>
+<td><code>&lt;context_usage&gt;</code>タグ（transcript最後のassistant usage実測・1M窓%）</td>
+<td>[[01_DECISIONS/claude-code/2026-11-12_コンテキスト使用量注入hook実装.md]]（2026-11-12新設・4本目）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>SessionStartが冒頭に届けるもの（実測・2026-11-12）</h3>
+<p>構成の一覧は上の「現在のフック構成（実態）」のSessionStartテーブル参照。その出力は <strong>CCの会話先頭にコンテキストとして届く</strong>（人間への表示と同時に・CCも読む）。2026-11-12実測でCCが受け取ったもの: 前回handoffプレビュー・今日/昨日のSSOT日記+🟢進行中タスク表・active-sessions stale🟢チェック結果・Code Discovery Protocol（<code>~/.claude/hooks/cbm-session-reminder</code>・matcher startup/resume/clear/compact）・superpowers導入文（plugin由来のSessionStart hook・settings.jsonとは別経路）・各種チェック警告（submodule/claude-config同期・プロキシ互換性等）。大きい出力は<code>&lt;persisted-output&gt;</code>としてファイル保存され・先頭プレビューのみ届く（CCは必要時にファイルを読む）。</p>
+<h3>逆方向の注意（CCに届けたい時の設計指針）</h3>
+<p>PreToolUse / PostToolUse 系のhookは既定ではCCに注入されない（systemMessage は人間表示のみ）。CCに見せたいhookは注入対象イベント（上の4種）に置くか additionalContext フィールドを使う（例: <code>warn-naming-rules.sh</code> はPreToolUseで additionalContext 警告・表参照）。</p>
 <h3>state日付管理による日次自動発動パターン（再利用可能）</h3>
 <p><code>check-ssot-check-staleness.sh</code> が実装する「stateファイルの日付で1日1回を制御」する汎用パターン。CronCreateは REPL idle時しか発火しないが、SessionStart hookはセッション開始で確実に走るため、この組合せで「忘れない」を担保する。</p>
 <pre><code class="language-bash">STATE=&quot;$HOME/.claude/state/&lt;task&gt;-last-run&quot;
@@ -968,6 +1058,193 @@ exit 0
 </tbody>
 </table></div>
 <p>→ テスト21件: <a href="#">テスト実行ガイド.md</a></p>
+<h2>差戻し系（block）フックの設計原則とコスト（2026-11-11・ふくけい指示）</h2>
+<div class="callout callout-info"><p>差戻し系フックを「掌握し・コンテキスト肥大化を予防しながら運用する」ための統合セクション。
+個別フックの詳細仕様は上の「現在のフック構成（実態）」テーブル参照。本セクションは一覧・コスト・block/警告の選択基準・運用ルールを扱う。</p></div>
+<h3>一覧（block差戻しを実施するフック・2026-11-11実測）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>タイミング</th>
+<th>スクリプト</th>
+<th>検査内容</th>
+<th>block条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stop</td>
+<td><code>check-fail-coverage.sh</code></td>
+<td>検証網羅性</td>
+<td>検証系完了報告に検証範囲宣言セクション無し</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>check-plain-explanation.sh</code></td>
+<td>平易解説4要素</td>
+<td>報告に欠落（同一メッセージ1回限定）</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>check-observation-claim.sh</code></td>
+<td>観察3要素</td>
+<td>観察期間入り報告の欠落（1回限定）</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>check-zero-assert.sh</code></td>
+<td>ゼロ断定</td>
+<td>固定プロトコル再検索の実績無し</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>check-yagi-output.sh</code></td>
+<td>推奨案サボり4項目</td>
+<td>欠落（1回限定）</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>check-template-recommended.sh</code></td>
+<td>テンプレ惰性踏襲</td>
+<td>自評価無しの「(recommended)」コピペ</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>check-consult-balance.sh</code></td>
+<td>迎合</td>
+<td>同意のみで根拠+反証無し（1回限定・warn既定）</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>check-mlr-ledger-coverage.sh</code></td>
+<td>MLR台帳</td>
+<td>レビュー実行日の判断収束台帳未更新</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>check-model-stay.sh</code></td>
+<td>glm-5.3戻し忘れ検知（2026-09-01新設）</td>
+<td>手動glm指定の放置・ターン数条件+デバウンスで警告</td>
+</tr>
+<tr>
+<td>PostToolUse</td>
+<td><code>verify-post-tool-use.sh</code></td>
+<td>.py変更後検証</td>
+<td>ruff/pytest失敗・timeout（exit 2）</td>
+</tr>
+<tr>
+<td>PreToolUse</td>
+<td><code>guard-destructive-commands.sh</code></td>
+<td>破壊的コマンド</td>
+<td>27パターン検知でdeny</td>
+</tr>
+<tr>
+<td>PreToolUse</td>
+<td><code>enforce-ssot-record.sh</code></td>
+<td>SSOT記録経路</td>
+<td>手動Write/Editで<code>01_DECISIONS/</code>作成（スキル経由のみ許可）</td>
+</tr>
+<tr>
+<td>PreToolUse</td>
+<td><code>proxy-op-gate.sh</code></td>
+<td>プロキシ操作</td>
+<td>ボード宣言無しでask</td>
+</tr>
+<tr>
+<td>PreToolUse</td>
+<td><code>git-suction-guard.sh</code> / <code>diary-write-guard.sh</code></td>
+<td>git吸着・日記上書き</td>
+<td>ask / deny</td>
+</tr>
+</tbody>
+</table></div>
+<h3>コスト実測（2026-11-11・約10時間セッション1本）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>実測値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>transcript全量</td>
+<td>3,217,341バイト（約3.2MB）</td>
+</tr>
+<tr>
+<td>注入系（current_time 40回+proxy_status 9回）</td>
+<td>約7,100文字 ≈ 約3,500トークン（全体の約1%）</td>
+</tr>
+<tr>
+<td>差戻しメッセージ本文（約8回発火）</td>
+<td>約4,500文字 ≈ 約2,500トークン</td>
+</tr>
+<tr>
+<td>差戻し後のCC再応答【推定】</td>
+<td>1回あたり1,500-3,000トークン×約8回 ≈ 12,000-24,000トークン</td>
+</tr>
+<tr>
+<td>hook起因コスト合計【推定】</td>
+<td>約18,000-30,000トークン ≈ transcript全体の約6-10%</td>
+</tr>
+<tr>
+<td>セッション開始時のSessionStart注入【実測】</td>
+<td>handoff約15KB+日記約109KB ≈ 約6万トークン（開始時に固定載入）</td>
+</tr>
+</tbody>
+</table></div>
+<p>→ <strong>差戻しの真のコストはメッセージ本文でなく「差戻し後の再応答でその時点の文脈全量を再送信する」点</strong>（課金相当≈文脈全量×約0.63【クレジット制換算】・正典実測では文脈74万tokのセッションで1リトライ≈74万tok〔2026-11-10_GLM-Flash使用量異常調査 L44〕）。差戻しを増やす=コンテキスト肥大化を加速する。高頻度発火するフックの緩和判断にこの数字を使う。</p>
+<h3>block vs 警告の選択基準（新規フック追加時に適用）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>判断軸</th>
+<th>block（差戻し）にすべき</th>
+<th>警告（additionalContext）で足りる</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>検出対象の実害</td>
+<td>虚偽報告・検証回避・迎合など<strong>正確性に直結</strong></td>
+<td>表示形式・文言など<strong>読解の助けに直結</strong></td>
+</tr>
+<tr>
+<td>誤検知時のコスト</td>
+<td>低い（正当な作業でも1回差戻しで済む）</td>
+<td>高い（形式矯正のために差戻し1回分の再応答=文脈全量再送・課金相当は文脈サイズ比例で発生）</td>
+</tr>
+<tr>
+<td>発火頻度</td>
+<td>低頻度（週数回以下）</td>
+<td>高頻度（毎日〜毎報告）</td>
+</tr>
+<tr>
+<td>判定の機械性</td>
+<td>客観的（EXIT・実コマンド結果等で判定可能）</td>
+<td>主観的判定を含む</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>導入原則</strong>: 新規フックは shadow/warn で運用を開始し、誤検知率を実測してから enforce 化を判断する（規範例: check-observation-claim の grace 実測〔warn 51件中 block 0・誤検知代理指標11.8%&lt;50%〕→2026-10-03 enforce 化）。</p>
+<h3>緩和判断の記録（2026-11-11・MLR r1 4機40指摘統合版・ふくけい決定反映済み）</h3>
+<ul>
+<li><code>check-plain-explanation.sh</code>: <strong>警告化実装済み（2026-11-11 ふくけい決定「①警告化OK」・claude-config <code>06a2fbe</code> push済み）</strong>。既定モード=警告（差戻しJSONを出さず警告文をstdout注入して通す）・<code>PLAIN_EXPLANATION_MODE=block</code> で従来の差戻しに戻せる（revert容易性）。【MLR A5採用】サンプル検証実施: 自セッション分7件は全て真陽性（解説不十分を実確認）・他セッション分13件はtranscript突合未実施（限界・構造的に形式欠落のみ検知する設計のため誤検知は低い評価）。テスト24本（既存22+新規2・race系1本はHEADでも失敗の既存問題で範囲外）</li>
+<li><code>fail-coverage.sh</code>（389回/17日=約23回/日）: ふくけい決定「②(c) 条件絞り込み」=「明確な虚偽宣言のみblock・書き忘れは警告へ」。【MLR A6採用】「明確な虚偽」の定義を文書化してから実装（虚偽=完了宣言があるのにEXIT=N・生ログが無い/EXIT値がtool_resultと突合できない等）。<strong>実装完了（2026-11-12・claude-config <code>49e98d6</code>+MLR r1採用対応<code>4cc4c02</code> push済み）</strong>: 既定モード=警告（虚偽宣言系3経路〔引用不在・引用無し・宣言内捏造〕のみMODE不問でblock・書き忘れ系は警告表示で通す・<code>FAIL_COVERAGE_MODE=block</code>で従来の全差戻しに戻せる）・警告通過時はdispatch.logに<code>warned-</code>接頭辞記録（集計で差戻しと区別）・未知モード値は設定警告+<code>mode-config-invalid</code>dispatch記録・EXIT引用は全件検査化（旧[:3]の見逃し対策）。TDD 79緑・MLR r1=20指摘採用3+r2（blind再レビュー）=14指摘採用2（警告付き通過は<code>warned-</code>単独記録=pass二重計上防止）+件数突合はTDD実装で誤検知不可避と判明し撤回（自由テキスト内EXIT=Nは説明文にも出現し引用件数を数えられない=構造的限界として記録・実レビュー記録: <code>60_MLR_LOGS/2026-11-12_fail-coverage実装レビュー/</code>）。旧grace機構（<code>FCC_FORCE_ENFORCE</code>・時間ベース〜2026-10-15）は設定ベース（MODE）へ置換</li>
+<li><code>verify-post-tool-use.sh</code>: 発火が実品質修正に繋がった（本セッション: ruff F401修正2件+TDD RED確認2回）→ 維持</li>
+<li>Stop系の実害防止系（zero-assert / observation-claim / yagi / consult-balance / template-recommended / mlr-ledger / model-stay）: 虚偽報告・検証回避・迎合・高消費モデル放置の防止=正確性に直結・低頻度 → 維持。【MLR A8採用】大文脈セッション（数十万tok超）での発火は1回あたり高コストになる注記つき・根本防御は context-size-warn hook（25万tok警告）との組合せ</li>
+<li>コスト実測の母数【MLR A2採用】: 本セッションの課金計算に使った885回=高頻度2hook（plain-explanation 496+fail-coverage 389）のみの合計・全hook合計は1,408回（観測期間がhook毎に不統一のため統合課金計算は高頻度2hookに限定）</li>
+<li>精度向上の選択肢【MLR A7採用】: dispatch.logへの文脈サイズ記録追加（約30分実装）で「平均文脈15万tok」仮定を実測化できる（現状は仮定・幅28M〜168M相当【推定】）</li>
+</ul>
+<h3>教訓: フック不在判定の誤報告（2026-11-11実測）</h3>
+<p><code>check-model-stay.sh</code> を「実体が無い（死んだエントリ）」と誤報告した経緯: ①settings.json一覧からパスを<code>session/</code>と取り違えてhead実行（ENoentで不在断定）②再確認の<code>find ~/.claude</code>（<strong><code>-L</code>なし</strong>）が0件=<code>~/.claude/scripts/hooks</code>が<code>claude-config</code>へのsymlinkのため中を辿らず恒常0件。実体は実在（3547バイト・2026-09-01新設のglm戻し忘れ検知）で正常稼働中。<strong>教訓: symlink配下の検索は<code>find -L</code>を使う・「実体無し」断定はsettings.jsonの登録パスそのもので確認する</strong></p>
+<h3>運用ルール（新規フック追加時に実施）</h3>
+<ol>
+<li>本ガイド「現在のフック構成（実態）」テーブルへ行追加（個別仕様）</li>
+<li>差戻し系なら本セクションの一覧表へも追加+「block vs 警告」基準での判断記録</li>
+<li>導入は shadow/warn から開始・誤検知率を実測して enforce 化を判断</li>
+<li>ssot-record で記録（<code>自動化.md</code> 更新は既存フロー・本セクションへの追記を含める）</li>
+</ol>
 <h2>自律タスクループ（Stop <span class="term" tabindex="0">Hook<span class="term-popup">Claude Codeの特定のタイミング（ツール実行前後・セッション開始時等）で自動処理を差し込む仕組み。「保存前にチェック」「終了時に記録」等を機械的に強制できる</span></span> 応用）</h2>
 <h3>概要</h3>
 <p>GitHub Issue を順番に自動実装するイベント駆動ループ。<br />
@@ -1083,7 +1360,7 @@ print('停止しました')
 <td><code>~/.claude/settings.json</code> の <code>hooks.PreToolUse</code> に Bash matcher で1行 + <code>hooks.PostToolUse</code> に `Bash</td>
 </tr>
 <tr>
-<td><span class="term" tabindex="0">仕様<span class="term-popup">「どう動くべきか」の取り決め。仕様書＝要件と動作の定義を書いた文書</span></span>詳細</td>
+<td>仕様詳細</td>
 <td><a href="#">docs/superpowers/specs/2026-07-30-guard-settings-write-post-detection-design.md</a></td>
 </tr>
 <tr>
