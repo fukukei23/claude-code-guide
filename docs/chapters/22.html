@@ -231,7 +231,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 455ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 470ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -244,9 +244,9 @@
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
 <p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>235ページ</strong>（言語別索引11件は対象外）+
-<code>platform.claude.com</code> のLLM工学関連7セクション <strong>220ページ</strong>
+<code>platform.claude.com</code> のLLM工学関連7セクション <strong>235ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>455ページ</strong>・最終更新 2026-11-12。</p>
+合計 <strong>470ページ</strong>・最終更新 2026-11-13。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -1249,7 +1249,7 @@
 </table></div>
 <h2>Platform 公式（platform.claude.com・LLM工学関連）</h2>
 <h3>Build with Claude（プロンプト・コンテキスト・effort等）</h3>
-<p><strong>61ページ</strong></p>
+<p><strong>64ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1393,6 +1393,18 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/preserved-thinking">思考保持（Preserved Thinking）</a></td>
 <td>Claude の推論能力を保ちながら関数呼び出しを使うための機能。thinking ブロックを保持してツール実行時のパフォーマンスとコストを<span class="term" tabindex="0">最適化<span class="term-popup">速さ・コスト・品質等の指標が良くなるように調整すること</span></span>。</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/preserved-thinking/change-tools-or-instructions">ツールや指示を変更しながらプレフィックスチェックを失敗させない方法</a></td>
+<td>preserved thinking対応モデルでは過去ターンを変更せず追記で指示・ツール・systemメッセージを更新し思考を保持する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/preserved-thinking/fix-bound-to-a-different-conversation">別の会話にバインドされた思考ブロックの修正</a></td>
+<td>思考ブロックの400エラーをdrop_blockで停止し、履歴を追記専用にして恒久的に回避</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/preserved-thinking/prefix-checks">Prefix checks on thinking blocks</a></td>
+<td>思考ブロックのプレフィックス検査内容、失敗時の400エラー対応、追加専用統合の推奨事項を解説</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">プロンプトキャッシュ</a></td>
@@ -1809,7 +1821,7 @@
 </tbody>
 </table></div>
 <h3>Managed Agents（エージェント基盤）</h3>
-<p><strong>41ページ</strong></p>
+<p><strong>53ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -1915,6 +1927,10 @@
 <td>エージェントのアクセスと動作を制限する設定を、重要度順にまとめた推奨構成一覧</td>
 </tr>
 <tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-data-and-access">セルフホスト型Claude Managed Agentsのデータとアクセス</a></td>
+<td>接続先、送信データ、ログ保存、アクセス権、テナント分離を説明</td>
+</tr>
+<tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-custom-tools">セルフホスト型サンドボックスでのカスタムツール</a></td>
 <td>サンドボックス内のSDKワーカーに独自ツールを登録し、エージェントからMCPサーバー経由で社内システムへ安全にアクセス可能にする方法を解説</td>
 </tr>
@@ -1941,6 +1957,50 @@
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes">セルフホスト型サンドボックス</a></td>
 <td>ツール実行をユーザー自身のインフラで行い、データやネットワークの境界を保持するManaged Agentsの仕組み</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted">セルフホスト型 Claude Managed Agents</a></td>
+<td>サービスとサンドボックスを自社インフラで運用し、モデル提供元も選択可能</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/agent-identity">エージェントIDと認証情報</a></td>
+<td>短命JWTでエージェントを識別し、秘密マネージャと出力ゲートウェイで認証情報を安全に管理</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/call-the-api">セルフホスト型サーバーでAPIを呼び出す</a></td>
+<td>ANTHROPIC_BASE_URLとANTHROPIC_API_KEYを設定し、SDK・cURL・ant CLIでセッション開始と応答取得</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/configuration-reference">設定リファレンス</a></td>
+<td>セルフホスト型サーバーの設定場所、キー、環境変数、資格情報の渡し方を解説</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/configure">Single sign-on</a></td>
+<td>OIDCトークンで認証し、グループ別の権限付与とEntra ID対応を設定する</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/console">サーバー上のコンソールを使用</a></td>
+<td>セルフホスト型Managed Agentsサーバーのコンソール設定とエージェント実行方法</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/differences">ホスト型サービスとの違い</a></td>
+<td>セルフホスト型は推論プロバイダー選択やSSO等の機能を持つ一方、ホスト型との差異を確認</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/inference-provider">Inference provider</a></td>
+<td>セルフホスト型サーバーをBedrock、Google Cloud、Foundry、独自ゲートウェイなどの推論プロバイダーへ接続する設定方法</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/kubernetes">Kubernetesへのデプロイ</a></td>
+<td>2つのHelmチャートでセルフホスト型Claude Managed AgentsをKubernetesに導入し、サンドボックスでセッションを実行する手順</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/quickstart">自己ホスト型Claude Managed Agentsのクイックスタート</a></td>
+<td>Docker Composeで開発環境を確認し、初回セッションを実行する手順</td>
+</tr>
+<tr>
+<td><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted/upgrade">セルフホスト型Claude Managed Agentsのアップグレード</a></td>
+<td>KubernetesとDocker Composeでのアップグレード・ロールバック手順とバージョン別対応</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/session-observability">セッションの検査と使用状況の追跡</a></td>
