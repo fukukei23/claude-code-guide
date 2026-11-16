@@ -712,6 +712,15 @@ def parse_task_date(text: str) -&gt; date | None:
 <li><strong>使う場面</strong>: 「このプロジェクト、だらしなくなってきたな」を一気に綺麗にしたい時</li>
 </ul>
 <hr />
+<h3>lang_fix（簡体字混入対策ツール群・2026-11-02）</h3>
+<p>自律ループ実装コードの日本語出力に簡体字が混ざる問題を、データ生成とランタイムの2層で防ぐツール群（<code>scripts/auto-dev/</code> 配下）:</p>
+<ul>
+<li><code>gen_lang_fix_data.py</code> — 辞書生成<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span>（開発時ワンオフ）。OpenCC辞書＋Unihan kIRG_JSource（JIS収録字）から「簡体字専用字の検知集合」と「日本語漢字への変換マップ」を機械生成する。<strong>生成物 <code>lang_fix_data.py</code> はコミット対象</strong>で、実行時は生成物だけを見る（OpenCC等の実行時依存を持たない＝対象プロジェクトに依存を追加しない設計）</li>
+<li><code>lang_fix.py</code> — ランタイム検知・変換（delta分断の語再結合・非ラテン混入除去・2語正規語検出）</li>
+<li><code>review_lib.py</code> ＋ <code>tests/test_review_lib.py</code> — レビュー共通<span class="term" tabindex="0">ライブラリ<span class="term-popup">よく使う機能をまとめて再利用可能にした部品集。作りかけの部品を組み込んで使うことで、同じものを一から作らずに済む</span></span>とテスト</li>
+</ul>
+<p>正典（導入経緯・MLR r6/r7の修復記録）: <code>01_DECISIONS/claude-code/2026-11-02_簡体字混入対策④-lang_fix実装.md</code></p>
+<hr />
 <h2>実績（参考）</h2>
 <div class="table-wrapper"><table>
 <thead>

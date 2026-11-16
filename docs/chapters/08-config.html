@@ -1092,6 +1092,15 @@ ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5.3-flash claude -p &quot;/path/to.png をRea
 <li>詳細: <a href="#">2026-09-29_Desktop移行Phase0実機接続成功とenv方式無効の特定</a></li>
 </ul>
 <hr />
+<h3>視角パック <span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>（vision-pack・v4.4・2026-11-10）</h3>
+<p>vision-pack（視線解析パック）のroot cronを <code>/etc/cron.d/vision-pack</code> として配備する（<code>install.sh</code> がsudoで設置）:</p>
+<ul>
+<li>日次実行: <code>17 4 * * * root /usr/local/sbin/update-n2-count.sh</code> ＋ <strong>5分チック <code>*/5 * * * *</code></strong>（catch-up機構）</li>
+<li><strong>catch-up機構</strong>: 5分チックは<code>update-n2-count.sh</code>内の当日ガード①で<span class="term" tabindex="0">冪等<span class="term-popup">めいとう。「同じ操作を2回実行しても、1回実行した時と同じ結果になる」性質。再実行時の二重登録等の事故を防ぐ設計</span></span>（実行済みなら即skip・errors不問・無限リトライなし）＝スリープ欠損からの復帰は復帰後最初のチックで自動補完される（MLR r1-r3・改訂案v3・<code>60_MLR_LOGS/2026-11-09_視角パックcatch-up設計レビュー</code>）</li>
+<li><code>update-n2-count.sh</code>（v4.4）の処理順: flock → preflight → log上限 → 当日ガード① → 権限再適用 → 日次pick（当日ガード②付き）→ N=2更新 → heartbeat暫定書込（原子的）→ 監査hook → errors込み再書込 → 権限再適用+log</li>
+<li>テスト: <code>tests/test_vision_pack_catchup.py</code>（catch-up経路の<span class="term" tabindex="0">回帰テスト<span class="term-popup">変更後に「以前動いていた機能が壊れていないか」を確認するテスト。直したつもりが別の場所を壊す事故の防止</span></span>）</li>
+</ul>
+<hr />
 <h2>💡 やさしい補足（初心者向け）</h2>
 <ul>
 <li><strong>設定は3層</strong>: 全体共通・プロジェクト固有・ローカル（自分だけ）。細かいほど優先される</li>
