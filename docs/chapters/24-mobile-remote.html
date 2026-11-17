@@ -235,7 +235,7 @@
 <h2>title: スマホからのリモート操作
 icon: 📱
 slug: 24-mobile-remote
-card_desc: 公式Remote Controlの制約を実測し、Moshi+mosh+Tailscale+tmuxで外出先から自宅のClaude Codeを操作する環境を構築する手順</h2>
+card_desc: 公式Remote Controlの制約を実測し、Moshi+mosh+Tailscale+tmux構成とOpenMausBot（チャットUI型・WSL内CCをエンジン化）の2方式で外出先から自宅のClaude Codeを操作する手順</h2>
 <h1>24 スマホからのリモート操作 — 外出先から自宅の Claude Code を触る構成</h1>
 <div class="callout callout-info"><p>スマホから自宅 PC の Claude Code を安全に操作する環境を、公式機能の制約を実測して bypass した記録。モバイル回線に切り替えても<span class="term" tabindex="0">セッション<span class="term-popup">Claude Codeの1回の対話単位。起動から終了までの会話と作業状態のこと。長く使うと内容が混ざるため、トピックの区切りで新セッションに引き継ぐ運用をする</span></span>が死なない mosh 構成までの手順。</p></div>
 <hr />
@@ -354,6 +354,110 @@ mosh-server new -v
 <li>モデル通信は自宅 PC 側のままなので、<strong>プロキシ/gateway 環境でも制約を受けない</strong></li>
 <li>「切れない」は mosh と tmux の二重構造で担保する（通信と作業の両面）</li>
 <li>スリープは越えられない壁——外出先で繋がらないときはまず PC の状態を疑う</li>
+</ul>
+<h2>方法2: OpenMausBot（チャットUI型・2026-11-17追加実測）</h2>
+<p>GitHub人気OSS <strong>OpenMausBot</strong>（24.1k★）を使うと、「<span class="term" tabindex="0">ターミナル<span class="term-popup">文字だけでパソコンと対話する画面。コマンドを打ち込むと結果が文字で返ってくる。Claude Code CLIはここで動く</span></span>を握る」代わりに「<strong>チャット画面からAIエージェントに頼む</strong>」形で自宅の Claude Code を操作できます。自分のマシンにインストール済みの CLI（claude / codex / grok）を<strong>自分のログイン・サブスクリプションのまま</strong>エンジンとして登録する思想（bring-your-own-agent）で、プロキシ環境でも制約を受けません。</p>
+<p><strong>Moshi構成との違い</strong>: Moshi は「ターミナルの画面を遠隔で握る」ので操作は人間。OpenMausBot はチャットで頼むとエージェントが動く。承認カード（Allow/Deny）がチャット内に出る点は CC の permission モデルと同じです。</p>
+<h3>全体構成（実測）</h3>
+<pre><code class="language-text">スマホ/ブラウザ（OpenMausBot専用アプリ or Webアプリ）
+   │  ペアリングHTTPS（--tailscale / --tunnel 対応）
+   ▼
+Windows側 OpenMausBot（Electron・ハーネス 127.0.0.1:8799）
+   │  ACP over stdio（customAcp ドライバー）
+   ▼
+wsl.exe -e ~/bin/claude-code-acp-wsl.sh（ラッパー）
+   │  ①nvm PATH補正 ②--version対応 ③cwd Windows→/mnt/c 変換
+   ▼
+WSL内 claude-code-acp 0.16.2 → Claude Code SDK → claude CLI
+   │  ~/.claude/settings.json（ANTHROPIC_BASE_URL=glm-rate-proxy）
+   ▼
+glm-rate-proxy(localhost:8787) → ZAI GLM
+</code></pre>
+<h3>導入手順（実測・WSL2 + プロキシ環境）</h3>
+<ol>
+<li><strong>Windowsにインストール</strong>: GitHub Releases（<code>milind-soni/openmausbot-releases</code>）から <code>OpenMausBot-setup.exe</code>（約258MB）。⚠ Windows版は<strong>未署名</strong>（macOSのみ署名済み）・SmartScreen警告が出たら詳細情報→実行</li>
+<li><strong>WSL内にACPアダプタ</strong>: <code>npm install -g @zed-industries/claude-code-acp</code>（Claude Code SDKベース・nvm環境なら通常PATHでは見えないので次のラッパー必須）</li>
+<li><strong>ラッパー作成</strong> <code>~/bin/claude-code-acp-wsl.sh</code>（chmod +x 忘れずに）:</li>
+</ol>
+<pre><code class="language-bash">#!/bin/bash
+export PATH=&quot;/home/&lt;user&gt;/.nvm/versions/node/v&lt;ver&gt;/bin:$PATH&quot;
+if [ &quot;$1&quot; = &quot;--version&quot; ]; then echo &quot;claude-code-acp 0.16.2&quot;; exit 0; fi
+python3 -u -c '
+import sys, re
+pat = re.compile(r&quot;\&quot;cwd\&quot;\s*:\s*\&quot;(C:[^\&quot;]+)\&quot;&quot;)
+for line in sys.stdin:
+    out = line
+    m = pat.search(line)
+    if m:
+        w = m.group(1)
+        u = &quot;/mnt/c&quot; + w[2:].replace(&quot;\\\\&quot;, &quot;/&quot;)
+        out = line.replace(m.group(0), &quot;\&quot;cwd\&quot;:\&quot;&quot; + u + &quot;\&quot;&quot;)
+    sys.stdout.write(out)
+    sys.stdout.flush()
+' | claude-code-acp &quot;$@&quot; 2&gt;&gt; ~/.cache/claude-code-acp-wsl.log
+</code></pre>
+<ol start="4">
+<li><strong>エンジン登録</strong>: <code>C:\Users\&lt;user&gt;\.openmausbot\config.json</code> に追記（アプリ再起動で読み込まれる）:</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;instances&quot;: {
+    &quot;claude-wsl&quot;: {
+      &quot;driver&quot;: &quot;customAcp&quot;,
+      &quot;displayName&quot;: &quot;Claude (WSL)&quot;,
+      &quot;environment&quot;: {},
+      &quot;config&quot;: { &quot;cli&quot;: &quot;wsl.exe -e /home/&lt;user&gt;/bin/claude-code-acp-wsl.sh&quot; }
+    }
+  }
+}
+</code></pre>
+<ol start="5">
+<li><strong>設定画面でセットアップ</strong>: 歯車 → AI → 「その他のプロバイダー」→ Claude (WSL) → セットアップ。緑ドット「準備完了」になればOK</li>
+</ol>
+<h3>落とし穴3件（実測）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>解決</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「version check timed out after 8 seconds」</td>
+<td>claude-code-acp本体は<code>--version</code>で<strong>空出力</strong>して終了する（文字列を出さない）</td>
+<td>ラッパーで<span class="term" tabindex="0">バージョン<span class="term-popup">ソフトウェアやファイルの「どの時点の状態か」を示す番号。v1.2等。更新のたびに番号が上がる</span></span>文字列を出力してexit 0</td>
+</tr>
+<tr>
+<td>テスト時に「cannot be launched inside another Claude Code session」</td>
+<td>CCセッションの子<span class="term" tabindex="0">プロセス<span class="term-popup">動いているプログラム1つ1つの実体。番号（PID）で管理される</span></span>は<code>CLAUDECODE</code><span class="term" tabindex="0">環境変数<span class="term-popup">プログラムの外側（OS側）で設定する値の入れ物。プログラムを書き換えずに設定を切り替えられる。APIキー等の秘密の値はソースコードに直書きせずここに入れるのが安全な定石</span></span>を持つ（ネスト検知）</td>
+<td>テスト時は<code>env -u CLAUDECODE</code>・実機（アプリ経由）は非該当</td>
+</tr>
+<tr>
+<td>「Query closed before response received (session/new)」</td>
+<td>アプリはsession/newに <strong><code>cwd: C:\Users\...</code>（Windowsパス）</strong> を渡し、WSL内アダプタが即死</td>
+<td>ラッパーにstdin中継で <code>/mnt/c/</code> 変換を<span class="term" tabindex="0">実装<span class="term-popup">設計や仕様を、実際に動くコードに作り込むこと。「実装済み」＝コードとして完成している状態</span></span></td>
+</tr>
+</tbody>
+</table></div>
+<p>変換実装の注意: <code>&quot;C:\\Users&quot;</code>（<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span><span class="term" tabindex="0">エスケープ<span class="term-popup">特別な意味を持つ文字（&lt; &gt; 等）を、ただの文字として扱われるよう別の書き方に変えること。画面表示や注入攻撃の防止に使う</span></span>2バイト）を <code>w[3:]</code> で切ると <code>C:</code> 後の2バイトのうち1個を切り捨ててJSON壊れ。<code>w[2:]</code> + prefix <code>/mnt/c</code> が正解（バイトレベルで<span class="term" tabindex="0">単体テスト<span class="term-popup">関数など部品単位で動作を確認するテスト。pytestはPythonの定番テスト実行道具。変更のたびに自動で回して壊れていないことを担保する</span></span>推奨）。</p>
+<h3>スマホとの繋ぎ方（README実測・2026-11-17時点）</h3>
+<ul>
+<li><strong>ペアリング</strong>: PC側で <code>openmausbot serve</code> を実行するとペアリングリンク/QRコードが表示される。⚠ スマホから <span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span> リンクは使えない → <code>--tailscale</code>（ふくけい環境に適合）・<code>--lan</code>・<code>--tunnel</code>・<code>--public-url</code> のいずれかでリモート公開する</li>
+<li><strong>スマホ側アプリ</strong>: AndroidはQRコードがそのままアプリリンク・iOSはアプリリンクまたはWebリンク。<strong>確実なのは Safari/Chrome から「ホーム画面に追加」でPWA化</strong>（standalone phone app）</li>
+<li>⚠ READMEに「hosted/mobile connectivity is still being built（構築中）」の表記あり — モバイル経路は要検証</li>
+</ul>
+<h3>成功確認の方法（実測済み）</h3>
+<ol>
+<li>プロキシログに <code>agent-sdk</code> UA のリクエストが記録される: <code>journalctl --user -u glm-rate-proxy | grep agent-sdk</code> → <code>POST /v1/messages 200</code> + <code>Captured actual model (SSE): glm-5.3-flash</code></li>
+<li>チャットの応答にCCの設定が反映される（バッジ表示ルール等）</li>
+<li>設定 → AI → Claude (WSL) が緑ドット「準備完了」</li>
+</ol>
+<h3>注意点</h3>
+<ul>
+<li>OpenMausBotのツール群（チーム・ブラウザ・PC操作）は<strong>WSL内エンジンからは使えない</strong>（アプリUI明示の警告）— チャット応答のみ・「自宅のCCに話しかける」用途</li>
+<li>企業サインインは個人環境ではエラー（Admin portalアドレス設定が無い）— ローカル利用はサインイン不要で動く</li>
+<li>Windows版インストーラは未署名（v0.1.165時点）</li>
 </ul>
 
         </article>
