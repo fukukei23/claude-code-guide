@@ -441,12 +441,22 @@ for line in sys.stdin:
 </tbody>
 </table></div>
 <p>変換実装の注意: <code>&quot;C:\\Users&quot;</code>（<span class="term" tabindex="0">JSON<span class="term-popup">ジェイソン。データを記述する標準的な書式の1つ。設定ファイルやデータのやり取りに広く使われ、「名前: 値」の組み合わせで書く</span></span><span class="term" tabindex="0">エスケープ<span class="term-popup">特別な意味を持つ文字（&lt; &gt; 等）を、ただの文字として扱われるよう別の書き方に変えること。画面表示や注入攻撃の防止に使う</span></span>2バイト）を <code>w[3:]</code> で切ると <code>C:</code> 後の2バイトのうち1個を切り捨ててJSON壊れ。<code>w[2:]</code> + prefix <code>/mnt/c</code> が正解（バイトレベルで<span class="term" tabindex="0">単体テスト<span class="term-popup">関数など部品単位で動作を確認するテスト。pytestはPythonの定番テスト実行道具。変更のたびに自動で回して壊れていないことを担保する</span></span>推奨）。</p>
-<h3>スマホとの繋ぎ方（README実測・2026-11-17時点）</h3>
+<h3>スマホとの繋ぎ方（実測・2026-11-18・Galaxy Z Flip7で往復完遂）</h3>
 <ul>
-<li><strong>ペアリング</strong>: PC側で <code>openmausbot serve</code> を実行するとペアリングリンク/QRコードが表示される。⚠ スマホから <span class="term" tabindex="0">localhost<span class="term-popup">ローカルホスト。「自分のPCの中」を指す特別なアドレス。localhost:8787 のような書式は「自分のPCの8787番ポート」の意味</span></span> リンクは使えない → <code>--tailscale</code>（ふくけい環境に適合）・<code>--lan</code>・<code>--tunnel</code>・<code>--public-url</code> のいずれかでリモート公開する</li>
-<li><strong>スマホ側アプリ</strong>: AndroidはQRコードがそのままアプリリンク・iOSはアプリリンクまたはWebリンク。<strong>確実なのは Safari/Chrome から「ホーム画面に追加」でPWA化</strong>（standalone phone app）</li>
-<li>⚠ READMEに「hosted/mobile connectivity is still being built（構築中）」の表記あり — モバイル経路は要検証</li>
+<li><strong>⚠ 最初に知るべき制約（実測）</strong>: デスクトップアプリで起動中のサーバーは、CLIの <code>openmausbot pair</code> が拒否される（「The OpenMausBot desktop app runs this server, so it only pairs devices from the app itself」）。アプリUIの Settings → Phone &amp; devices からペアリングするか、<strong>CLIでペアリングするなら独立サーバー方式</strong>を使う</li>
+<li><strong>⚠ <span class="term" tabindex="0">ポート<span class="term-popup">同じPCの中で複数のプログラムが通信を待ち受けるための「窓口番号」。8787番・3000番のように番号で区別する</span></span>注意（実測）</strong>: デスクトップアプリは 8799 に加え <strong>8800 もlistenしている</strong>。独立サーバーは 8880台の空きポートを選ぶ（実測では8888）</li>
 </ul>
+<p><strong>独立サーバー方式の手順（実測・engine設定引き継ぎ込み）</strong>:</p>
+<ol>
+<li><strong>engine設定をコピー</strong>: 既存 <code>C:\Users\&lt;user&gt;\.openmausbot\config.json</code> の <code>instances</code>（例: claude-wsl）を新しいdata-dirへコピー（例: <code>C:\Users\&lt;user&gt;\.openmausbot-mobile\config.json</code>・<code>instances</code> と <code>onboarding</code> の2キーでOK）</li>
+<li><strong>起動</strong>: <code>npx openmausbot serve --port 8888 --data-dir C:\Users\&lt;user&gt;\.openmausbot-mobile --tailscale --no-open</code> → <code>Reach http://&lt;machine&gt;.&lt;tailnet&gt;.ts.net:8888 ✓ answers as this server</code> と出ればOK</li>
+<li><strong>Tailscale <span class="term" tabindex="0">HTTP<span class="term-popup">エイチティーティーピー。Webの通信で使われる基本的な約束事（プロトコル）。ブラウザとサーバー、プログラム同士のやり取りの共通言語</span></span>S証明書が使えないアカウントでも動く</strong>: <code>your Tailscale account does not support getting TLS certs</code> が出ても、サーバーは <code>http://&lt;machine&gt;.&lt;tailnet&gt;.ts.net:8888</code> でlistenし、tailnet限定+WireGuard暗号化で実用になる（公式docsもこの挙動を明記）</li>
+<li><strong>ペアコード発行</strong>: <code>npx openmausbot pair --port 8888 --data-dir &lt;dir&gt; --public-url http://&lt;machine&gt;.&lt;tailnet&gt;.ts.net:8888 --ttl 24h</code> → 12桁コード+リンク+QRが出力される（<strong>コードは1回限り</strong>・検証等で消費したら再発行）</li>
+<li><strong>スマホで開く</strong>: リンク（<code>/pair#code=&lt;12桁&gt;</code>）をスマホのChromeで開くとコードが自動処理されてペアリング完了 →「Open the app」でチャット画面 → Chromeメニュー「インストール/ホーム画面に追加」でPWA化</li>
+<li><strong>複数デバイス</strong>: <code>openmausbot devices</code> で一覧・<code>devices revoke &lt;id&gt;</code> で個別失効。機数分の<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>ペアリング可（各機にTailscale参加+都度コード発行が必要）</li>
+</ol>
+<p><strong>実測結果（2026-11-18）</strong>: Galaxy Z Flip7 とペアリング → スマホUIからメッセージ送信 → WSL内CC（GLM）の応答が返る往復を、スマホのスクショとAPIポーリングの両方で確認。スマホ側はadbワイヤレス<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>（<code>adb pair &lt;IP&gt;:&lt;port&gt; &lt;6桁&gt;</code> → <code>adb connect</code> → <code>screencap -d &lt;display-id&gt; -p</code>）でCCから自動検証まで可能（⚠ Z7のような2ディスプレイ構成は <code>screencap</code> に <code>-d &lt;display-id&gt;</code> 指定が必須・未指定だとPNGでなく警告テキストが返る）</p>
+<p>⚠ 恒久化の注意: <code>serve</code> を手動起動した場合、その<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>/セッションを閉じるとサーバーも停止する。常時運用するには <code>openmausbot service install</code>（Windowsサービス化・実測未実施）</p>
 <h3>成功確認の方法（実測済み）</h3>
 <ol>
 <li>プロキシログに <code>agent-sdk</code> UA のリクエストが記録される: <code>journalctl --user -u glm-rate-proxy | grep agent-sdk</code> → <code>POST /v1/messages 200</code> + <code>Captured actual model (SSE): glm-5.3-flash</code></li>
