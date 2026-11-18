@@ -456,7 +456,20 @@ for line in sys.stdin:
 <li><strong>複数デバイス</strong>: <code>openmausbot devices</code> で一覧・<code>devices revoke &lt;id&gt;</code> で個別失効。機数分の<span class="term" tabindex="0">並列<span class="term-popup">複数の処理を同時に進めること。順番に1つずつやる「直列」の対義語</span></span>ペアリング可（各機にTailscale参加+都度コード発行が必要）</li>
 </ol>
 <p><strong>実測結果（2026-11-18）</strong>: Galaxy Z Flip7 とペアリング → スマホUIからメッセージ送信 → WSL内CC（GLM）の応答が返る往復を、スマホのスクショとAPIポーリングの両方で確認。スマホ側はadbワイヤレス<span class="term" tabindex="0">デバッグ<span class="term-popup">不具合の原因を特定して直すこと。ログや実行の跡を辿って、どこで期待と違う動きをしたかを突き止める作業</span></span>（<code>adb pair &lt;IP&gt;:&lt;port&gt; &lt;6桁&gt;</code> → <code>adb connect</code> → <code>screencap -d &lt;display-id&gt; -p</code>）でCCから自動検証まで可能（⚠ Z7のような2ディスプレイ構成は <code>screencap</code> に <code>-d &lt;display-id&gt;</code> 指定が必須・未指定だとPNGでなく警告テキストが返る）</p>
-<p>⚠ 恒久化の注意: <code>serve</code> を手動起動した場合、その<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>/セッションを閉じるとサーバーも停止する。常時運用するには <code>openmausbot service install</code>（Windowsサービス化・実測未実施）</p>
+<h3>常時化（PC再起動後も自動起動・実測2026-11-18）</h3>
+<ul>
+<li><strong><code>openmausbot service install</code> は Windows 非対応</strong>（CLI help実測・v0.1.169時点: &quot;writes a systemd unit (Linux) or a launchd agent (macOS)&quot;）。Windowsでの恒久化は下記のスタートアップ方式を使う</li>
+<li><strong>生存挙動の実測</strong>: バックグラウンド実行（CCセッションのbackgroundタスク等）で起動した <code>serve</code> は、そのセッション/タブを閉じても<strong>生存する</strong>（Windows側でプロセスが切り離されて動くため）— 真に消えるのは <strong>PC再起動・ログオフ時</strong>。ターミナルのウィンドウ自体を閉じた場合は停止する</li>
+</ul>
+<p><strong>スタートアップ方式の手順（実測・管理者権限不要）</strong>:</p>
+<ol>
+<li><strong>バージョン固定インストール</strong>: Windows側で <code>npm i -g openmausbot@0.1.165</code>（npx<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>依存を断つ・テザリング直後の不安定なネットワークでも起動できる）</li>
+<li><strong>起動<span class="term" tabindex="0">スクリプト<span class="term-popup">自動実行できる小さなプログラム。手順を書いたテキストファイルの形をしている</span></span></strong> <code>openmausbot-serve.cmd</code>（C:\Users&lt;user&gt;\ 直下）: ①tailscale待ち（最大3分・<code>tailscale status</code> ポーリング）②ポート8888の二重起動ガード（<code>netstat | findstr</code>）③<code>openmausbot serve ...</code> 起動（ログは <code>openmausbot-serve.log</code> へ追記・5MBでローテ）④異常終了時は30秒待って無限再起動</li>
+<li><strong>非表示ランチャー</strong> <code>openmausbot-serve-launcher.vbs</code>: <code>CreateObject(&quot;WScript.Shell&quot;).Run &quot;&quot;&quot;...serve.cmd&quot;&quot;&quot;, 0, False</code> — ログオン時にコンソール窓を出さないための皮</li>
+<li><strong>スタートアップ登録</strong>: <code>Win+R → shell:startup</code> フォルダに launcher.vbs へのショートカット（.lnk）を置く</li>
+<li><strong>再ペア用ショートカット</strong> <code>OpenMausBot再ペア.cmd</code>（デスクトップ）: ネット切替等でブラウザ側のペア鍵が失効した時、<code>openmausbot pair</code> のコード発行+URL表示を1クリックで行う（⚠ cmdに日本語を書く場合はCP932保存・UTF-8だと文字化け）</li>
+</ol>
+<p><strong>ネット切替（Wi-Fi↔テザリング）の挙動（実測）</strong>: サーバープロセスはネットワーク切替の影響を受けない（ローカルlisten・Tailscale経由の到達はtailscaleが自動再接続・数秒〜数十秒）。ただし<strong>ブラウザ側のペア鍵は切替で失効する機種がある</strong>（Chromeのタブ破棄が疑い・実測で機差: 生存する機種と失効する機種があった）→ 再ペア.cmdで復旧。スマホ側は**PWA化（ホーム画面に追加）**しておくとタブ破棄されにくく失効が減る見込み。サーバー側のペアエントリは切替で消えない（30日有効・data-dirのsessions.jsonに永続）</p>
 <h3>成功確認の方法（実測済み）</h3>
 <ol>
 <li>プロキシログに <code>agent-sdk</code> UA のリクエストが記録される: <code>journalctl --user -u glm-rate-proxy | grep agent-sdk</code> → <code>POST /v1/messages 200</code> + <code>Captured actual model (SSE): glm-5.3-flash</code></li>
