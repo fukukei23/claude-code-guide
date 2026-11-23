@@ -232,6 +232,8 @@ durable cron 以外に OS の crontab に直接登録している定期実行。
 | `17 9 * * 0` | wsl-windows-config-check.sh（WSL⇔Windows設定突合・毎週日曜） |
 | `*/15 * * * *` | proxy-norai-check.sh（野良プロキシ検知・flock+HOME/PATH固定） |
 | `17 3 1 * *` | regen-wait-keywords.sh（KW更新・毎月1日） |
+| `17 6 * * *` | mellojoy monitor_liveness.py（mellojoy監視・毎日） |
+| `6,21,36,51 * * * *` | openmausbot-watch.sh（OpenMausBot serve 8888監視・15分毎・LISTENINGプローブ+Discord通知） |
 
 > 💡 **ポイント**: crontab に直接書くエントリは `HOME=` / `PATH=` を明示するか `bash` 経由で呼ぶ（cron は非ログインシェルで `.bashrc` を読まないため `gh` 等のコマンドが見つからない・APIキーも `.secrets.env` をラッパーで source する必要がある）。詳細は[自動化.md](https://github.com/fukukei23/obsidian-ssot)参照。
 

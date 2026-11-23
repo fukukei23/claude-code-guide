@@ -520,6 +520,14 @@ bash ~/.claude/scripts/auto-dev/start.sh --auto my-repo
 <td><code>17 3 1 * *</code></td>
 <td>regen-wait-keywords.sh（KW更新・毎月1日）</td>
 </tr>
+<tr>
+<td><code>17 6 * * *</code></td>
+<td>mellojoy monitor_liveness.py（mellojoy監視・毎日）</td>
+</tr>
+<tr>
+<td><code>6,21,36,51 * * * *</code></td>
+<td>openmausbot-watch.sh（OpenMausBot serve 8888監視・15分毎・LISTENINGプローブ+Discord通知）</td>
+</tr>
 </tbody>
 </table></div>
 <div class="callout callout-tip"><p>💡 <strong>ポイント</strong>: crontab に直接書くエントリは <code>HOME=</code> / <code>PATH=</code> を明示するか <code>bash</code> 経由で呼ぶ（cron は非ログイン<span class="term" tabindex="0">シェル<span class="term-popup">ユーザーとOSの間に入って、コマンド入力を受け付けて実行する程序。ターミナルで打つコマンドを実際に処理する部分</span></span>で <code>.bashrc</code> を読まないため <code>gh</code> 等のコマンドが見つからない・APIキーも <code>.secrets.env</code> をラッパーで source する必要がある）。詳細は<a href="https://github.com/%3CUSERNAME%3E/knowledge-base">自動化.md</a>参照。</p></div>
