@@ -231,7 +231,7 @@
         </div>
 
         <article class="chapter-body">
-            <h1>22 公式ドキュメント索引 — 473ページの1行要約と新規ページ監視</h1>
+            <h1>22 公式ドキュメント索引 — 489ページの1行要約と新規ページ監視</h1>
 <div class="callout callout-info"><p>Anthropic公式ドキュメントのうち Claude Code 全ページと platform 側のLLM工学関連
 セクションを一括要約した索引。毎日の監視<span class="term" tabindex="0">cron<span class="term-popup">クロン。Linuxで「毎日6時」「30分ごと」等の定期実行を予約する仕組み。予約実行の登録表（crontab）に書いて運用する</span></span>が公式サイトの新規ページを検出し、
 この章へ自動追記する。</p></div>
@@ -243,10 +243,10 @@
 <li><strong>層の対応は第21章</strong> — <span class="term" tabindex="0">プロンプト<span class="term-popup">AIに渡す指示文のこと。「この機能を作って」「この文を直して」等</span></span>〜グラフの5層のどれに効くページかは
 <a href="21-agent-engineering-layers.html">第21章 <span class="term" tabindex="0">エージェント<span class="term-popup">与えられた目標に向かって、自分で手順を組み立てて作業を進めるAIプログラム。質問に答えるだけのチャットAIと違い、「調べる→書く→確認する」を自律的に行う</span></span>工学の階層</a> で俯瞰できる</li>
 </ol>
-<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>237ページ</strong>（言語別索引11件は対象外）+
+<p>対象範囲: <code>code.claude.com</code> の英語コンテンツ <strong>253ページ</strong>（言語別索引11件は対象外）+
 <code>platform.claude.com</code> のLLM工学関連7セクション <strong>236ページ</strong>
 （<span class="term" tabindex="0">API<span class="term-popup">Application Programming Interface（エーピーアイ）の略。あるプログラムの機能を、別のプログラムから呼び出せるようにした「窓口」</span></span>リファレンス等の機械生成ページは対象外）。
-合計 <strong>473ページ</strong>・最終更新 2026-11-19。</p>
+合計 <strong>489ページ</strong>・最終更新 2026-11-24。</p>
 <h2>新規ページ監視の仕組み</h2>
 <p>公式ドキュメントは <code>llms.txt</code>（全ページの機械可読索引）を公開している。
 監視cronが毎日この索引を取得して既知URLリストと<span class="term" tabindex="0">差分<span class="term-popup">変更前後の違い。git diffのように「何がどう変わったか」を示すもの</span></span>を取り、新規ページを検出すると:</p>
@@ -260,7 +260,7 @@
 <hr />
 <h2>Claude Code 公式（code.claude.com・全ページ）</h2>
 <h3>基本・概要・始め方</h3>
-<p><strong>150ページ</strong></p>
+<p><strong>166ページ</strong></p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -300,6 +300,34 @@
 <tr>
 <td><a href="https://code.claude.com/docs/en/analytics">チームの使用状況をアナリティクスで追跡する</a></td>
 <td>Claude Codeの利用状況・導入・貢献指標を分析ダッシュボードで確認できる</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/approvals-classifiers">Claude Approvals 分類器</a></td>
+<td>分類器が承認ルールにリスク判断を提供し、結果に応じて必要な承認人数を動的に決める</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/approvals-github-rules">Claude ApprovalsとGitHubルール</a></td>
+<td>Claude承認チェックとGitHubの必須レビュー・CODEOWNERS・自動<span class="term" tabindex="0">マージ<span class="term-popup">分かれていた変更を1つに統合すること。ブランチで進めた作業を本体（main）に取り込む作業</span></span>が連携する仕組みを解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/approvals-policy">Claude Approvals ポリシーファイルリファレンス</a></td>
+<td><code>.claude/approvals.yml</code>のキー、ルール適用、承認数、判定の例を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/approvals-pull-requests">Claude承認で<span class="term" tabindex="0">プルリクエスト<span class="term-popup">「この変更を本体に取り込んでください」とレビューを求める仕組み（GitHubの機能）。自分の変更を他人が確認してから統合するフローに使う</span></span>を承認する</a></td>
+<td>Claude Approvalsのチェックタイトルと対応手順、コメント<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>、Fork対応を確認</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/approvals-setup">Claude Approvals のセットアップ</a></td>
+<td>GitHubリポジトリでClaude Approvalsを有効化する手順。前提条件、observeモードでのpolicyファイル作成、Code Review通過時のClaude承認と2人承認ルールの設定、必須チェック化まで解説。</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/approvals-troubleshooting">Claude Approvalsのトラブルシューティング</a></td>
+<td>チェック未表示や不合格、ポリシー拒否、分類器の回答なしを対処</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/approvals">Claude Approvals</a></td>
+<td>GitHub PRにポリシーを適用し、経路別の必要な承認数とClaudeの承認可否を判定する</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/artifacts">セッション出力をArtifactとして共有する</a></td>
@@ -394,12 +422,16 @@
 <td>Claude Security<span class="term" tabindex="0">プラグイン<span class="term-popup">本体に後から差し込んで機能を足す追加部品。Claude Codeにもプラグイン機構がある</span></span>で、複数エージェントが連携してコードベースの脆弱性をスキャンし、検出結果をもとにパッチを生成・適用できる</td>
 </tr>
 <tr>
+<td><a href="https://code.claude.com/docs/en/claude-ship">Claude Ship</a></td>
+<td>GitHub PR向けのCode Review、PR Steward、Claude Approvals の連携と設定方法</td>
+</tr>
+<tr>
 <td><a href="https://code.claude.com/docs/en/claude-tag">Claude Tag（Slack統合）</a></td>
 <td>Slackチャンネルで<code>@Claude</code>をチーム共有アイデンティティとして利用可能にする統合機能（Team/Enterprise向け）</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/cli-reference">CLIリファレンス</a></td>
-<td>Claude Codeの<span class="term" tabindex="0">コマンド<span class="term-popup">ターミナルに入力してコンピュータに与える一行の指示。lsやcdのように『プログラム名+補足指定』で構成される</span></span>ラインインターフェースの完全リファレンス（コマンド・フラグ一覧）</td>
+<td>Claude Codeのコマンドラインインターフェースの完全リファレンス（コマンド・フラグ一覧）</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/cloud-environments">クラウド環境の構成</a></td>
@@ -714,6 +746,26 @@
 <td>カスタムプラグインをスキル・エージェント・フック・MCPサーバーで作成・共有する方法を解説</td>
 </tr>
 <tr>
+<td><a href="https://code.claude.com/docs/en/pr-steward-pull-requests">プルリクエストで PR Steward を使用する</a></td>
+<td>PR Stewardの追加表示、コメント、修正コミットと停止・制限方法</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/pr-steward-security">PR Stewardがアクセスできるもの</a></td>
+<td>GitHub上の権限、実行環境、コメント読み取り、承認・マージの制限を説明</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/pr-steward-setup">PR Stewardのセットアップ</a></td>
+<td>PR Stewardを有効化し、レビュー必須・spending上限・起動条件や対象リポジトリを設定する手順</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/pr-steward-troubleshooting">PR Stewardのトラブルシューティング</a></td>
+<td>PR Stewardが起動しない・停止した・一時停止した原因と、投稿メッセージによる対処法を解説</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/pr-steward">PR Steward</a></td>
+<td>GitHubのプルリクエストを監視し、チェック失敗や<span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>、レビューコメントを自動修正する</td>
+</tr>
+<tr>
 <td><a href="https://code.claude.com/docs/en/prompt-caching">プロンプト<span class="term" tabindex="0">キャッシュ<span class="term-popup">一度得た結果を取っておいて、次回は同じ計算をせず使い回す仕組み。速くなるが、元のデータが変わった時の更新忘れに注意</span></span>の仕組み</a></td>
 <td>APIが同一プレフィックスを再利用し変更部分のみ課金される仕組みと無効化要因を解説</td>
 </tr>
@@ -806,6 +858,18 @@
 <td>システム要件、インストール方法、更新・アンインストール手順を解説</td>
 </tr>
 <tr>
+<td><a href="https://code.claude.com/docs/en/share-sessions">セッションの共有</a></td>
+<td>クラウドまたはRemote Controlセッションをリンクで共有し、閲覧範囲や停止方法を確認</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/ship-command-troubleshooting">/shipと/stewardのトラブルシューティング</a></td>
+<td>/shipや/stewardの表示・起動、コミット、監視停止などの症状別の対処法を案内</td>
+</tr>
+<tr>
+<td><a href="https://code.claude.com/docs/en/ship-command">/shipと/stewardでプルリクエストを準備する</a></td>
+<td>Claude Codeで変更をPR化し、レビューや失败的チェック、コメントに対応して修正する</td>
+</tr>
+<tr>
 <td><a href="https://code.claude.com/docs/en/skills">スキル拡張ガイド</a></td>
 <td>スキル（SKILL.md）の作成・管理・共有方法およびバンドルスキルの制御を解説</td>
 </tr>
@@ -863,7 +927,7 @@
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/worktrees">ワークツリーで並列セッションを実行する</a></td>
-<td>git worktreeでセッションを分離し、編集の<span class="term" tabindex="0">競合<span class="term-popup">複数の処理・人が同時に同じものを触って衝突すること。gitでは同時に同じファイルを編集すると競合（コンフリクト）が起きる</span></span>を防ぎ並列作業を実現する方法</td>
+<td>git worktreeでセッションを分離し、編集の競合を防ぎ並列作業を実現する方法</td>
 </tr>
 <tr>
 <td><a href="https://code.claude.com/docs/en/zero-data-retention">ゼロデータ保持（ZDR）</a></td>
@@ -1880,7 +1944,7 @@
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/github">GitHubへのアクセス</a></td>
-<td>エージェントをGitHubリポジトリに接続し、クローン・読み取り・<span class="term" tabindex="0">プルリクエスト<span class="term-popup">「この変更を本体に取り込んでください」とレビューを求める仕組み（GitHubの機能）。自分の変更を他人が確認してから統合するフローに使う</span></span>作成を行う方法を説明する</td>
+<td>エージェントをGitHubリポジトリに接続し、クローン・読み取り・プルリクエスト作成を行う方法を説明する</td>
 </tr>
 <tr>
 <td><a href="https://platform.claude.com/docs/en/managed-agents/mcp-connector">MCPコネクタ</a></td>
